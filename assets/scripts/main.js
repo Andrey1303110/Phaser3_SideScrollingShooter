@@ -11,6 +11,6 @@ var config = {
         autoCenter: Phaser.Scale.CENTER_BOTH,
     },
 
-    scene: [BootScene, PreloadScene, GameScene],
+    scene: [BootScene, PreloadScene, StartScene, GameScene],
 };
 var game = new Phaser.Game(config);
