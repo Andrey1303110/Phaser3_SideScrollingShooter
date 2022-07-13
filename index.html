@@ -17,11 +17,12 @@
 			box-sizing: border-box;
 		}
         @font-face {
-            font-family: 'BaksoSapi';
-            src: url("assets/fonts/BaksoSapi/BaksoSapi.otf");
+            font-family: 'HeyComic';
+            src: url("assets/fonts/HeyComic/HeyComic.otf") format("opentype"),
+                 url("assets/fonts/HeyComic/HeyComic.ttf") format("opentype");
         }
         .font {
-            font-family: 'BaksoSapi';
+            font-family: 'HeyComic';
             position: absolute;
             left: -100vw;
             top: -100vw;
@@ -35,6 +36,7 @@
     <script src="assets/scripts/libs/phaser.min.js"></script>
     <script src="assets/scripts/scenes/BootScene.js"></script>
     <script src="assets/scripts/scenes/PreloadScene.js"></script>
+    <script src="assets/scripts/scenes/StartScene.js"></script>
     <script src="assets/scripts/scenes/GameScene.js"></script>
     <script src="assets/scripts/main.js"></script>
 </body>
