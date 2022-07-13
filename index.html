@@ -7,13 +7,15 @@
     <title>Game</title>
     <style>
         body {
-            padding: 0;
-            margin: 0;
-        }
-        canvas {
-            padding: 0;
-            margin: 0;
-        }
+			margin: 0 !important;
+			overflow: hidden;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+		canvas {
+			box-sizing: border-box;
+		}
         @font-face {
             font-family: 'BaksoSapi';
             src: url("assets/fonts/BaksoSapi/BaksoSapi.otf");
@@ -29,7 +31,11 @@
 </head>
 <body>
     <div class="font">.</div>
+    <div id="gameDiv"></div>
     <script src="assets/scripts/libs/phaser.min.js"></script>
+    <script src="assets/scripts/scenes/BootScene.js"></script>
+    <script src="assets/scripts/scenes/PreloadScene.js"></script>
+    <script src="assets/scripts/scenes/GameScene.js"></script>
     <script src="assets/scripts/main.js"></script>
 </body>
 </html>
