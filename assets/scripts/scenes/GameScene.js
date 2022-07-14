@@ -3,9 +3,14 @@ class GameScene extends Phaser.Scene {
         super("Game");
     }
 
+    init(){
+        
+    }
+
     create() {
         this.setEndpoints();
         this.createBG();
+        this.cursors = this.input.keyboard.createCursorKeys();
         this.createPlayer();
     }
 
@@ -36,6 +41,10 @@ class GameScene extends Phaser.Scene {
                 no_margin_right: (config.width / 2) + (((config.height / document.body.clientHeight) * document.body.clientWidth) / 2),
             };
         }
+    }
+
+    update(){
+        this.player.move();
     }
 
     createBG(){
