@@ -4,7 +4,7 @@ class GameScene extends Phaser.Scene {
     }
 
     init(){
-        
+
     }
 
     create() {
@@ -45,10 +45,12 @@ class GameScene extends Phaser.Scene {
 
     update(){
         this.player.move();
+        this.sceneBG.tilePositionX += this.sceneBG.width / 10000 * this.speed;
     }
 
     createBG(){
-        this.sceneBG = this.add.sprite(config.width / 2, config.height / 2, 'scene_bg');
+        this.sceneBG = this.add.tileSprite(0, 0, config.width, config.height, 'scene_bg').setOrigin(0);
+        this.speed = 25;
     }
 
     createPlayer(){
