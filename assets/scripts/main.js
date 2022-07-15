@@ -18,40 +18,64 @@ var config = {
     },
 
     scene: [BootScene, PreloadScene, StartScene, GameScene],
+
+    levels: {
+        1: {
+            enemies: 10,
+            enemiesDelay: 1500,
+            enemyVelocity: 165,
+        },
+        2: {
+            enemies: 10,
+            enemiesDelay: 1250,
+            enemyVelocity: 200,
+        },
+        3: {
+            enemies: 10,
+            enemiesDelay: 1050,
+            enemyVelocity: 230,
+        },
+        4: {
+            enemies: 10,
+            enemiesDelay: 900,
+            enemyVelocity: 225,
+        },
+        5: {
+            enemies: 10,
+            enemiesDelay: 775,
+            enemyVelocity: 245,
+        }
+    }
 };
 
 var game = new Phaser.Game(config);
 
 var screenEndpoints = {};
-(function setEndpoints() {
-    if (document.body.clientWidth >= document.body.clientHeight) {
-        if (document.body.clientWidth / document.body.clientHeight < 16 / 9) {
-            screenEndpoints = {
-                left: (config.width / 2) - document.body.clientWidth / 2 * (config.height / document.body.clientHeight) + (document.body.clientWidth * .1),
-                right: (config.width / 2) + document.body.clientWidth / 2 * (config.height / document.body.clientHeight) - (document.body.clientWidth * .1),
-                no_margin_left: (config.width / 2) - (((config.height / document.body.clientHeight) * document.body.clientWidth) / 2),
-                no_margin_right: (config.width / 2) + (((config.height / document.body.clientHeight) * document.body.clientWidth) / 2),
-            };
-        }
-        else {
-            screenEndpoints = {
-                left: (config.width * .075),
-                right: config.width - (config.width * .075),
-                no_margin_left: 0,
-                no_margin_right: config.width,
-            };
-        }
+function setEndpoints() {
+    if ((document.body.clientWidth / document.body.clientHeight) === (16 / 9)) {
+        screenEndpoints.left = 0;
+        screenEndpoints.right = config.width;
         screenEndpoints.top = 0;
         screenEndpoints.bottom = config.height;
+    } else {
+        if (document.body.clientWidth >= document.body.clientHeight) {
+            if ((document.body.clientWidth / document.body.clientHeight) < (16 / 9)) {
+                screenEndpoints.left = (config.width / 2) - (((config.height / document.body.clientHeight) * document.body.clientWidth) / 2);
+                screenEndpoints.right = (config.width / 2) + (((config.height / document.body.clientHeight) * document.body.clientWidth) / 2);
+                screenEndpoints.top = 0;
+                screenEndpoints.bottom = config.height;
+            } else {
+                screenEndpoints.left = 0;
+                screenEndpoints.right = config.width;
+                screenEndpoints.top = (config.height - ((config.width / config.height) / (document.body.clientWidth / document.body.clientHeight) * config.height)) / 2;
+                screenEndpoints.bottom = config.height - (config.height - ((config.width / config.height) / (document.body.clientWidth / document.body.clientHeight) * config.height)) / 2;
+            }
+    
+        } else {
+            screenEndpoints.left = (config.width / 2) - (((config.height / document.body.clientHeight) * document.body.clientWidth) / 2);
+            screenEndpoints.right = (config.width / 2) + (((config.height / document.body.clientHeight) * document.body.clientWidth) / 2);
+            screenEndpoints.top = 0;
+            screenEndpoints.bottom = config.height;
+        }
     }
-    else {
-        screenEndpoints = {
-            left: (config.width / 2) - document.body.clientWidth / 2 * (config.height / document.body.clientHeight) + (document.body.clientWidth * .1),
-            right: (config.width / 2) + document.body.clientWidth / 2 * (config.height / document.body.clientHeight) - (document.body.clientWidth * .1),
-            no_margin_left: (config.width / 2) - (((config.height / document.body.clientHeight) * document.body.clientWidth) / 2),
-            no_margin_right: (config.width / 2) + (((config.height / document.body.clientHeight) * document.body.clientWidth) / 2),
-            top: ((config.width / config.width) / (document.body.clientWidth / document.body.clientHeight) * config.height) / 2,
-            bottom: config.height - (((config.width / config.width) / (document.body.clientWidth / document.body.clientHeight) * config.height) / 2),
-        };
-    }
-}());
+};
