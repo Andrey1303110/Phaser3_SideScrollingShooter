@@ -26,22 +26,22 @@ var config = {
             enemyVelocity: 165,
         },
         2: {
-            enemies: 10,
+            enemies: 15,
             enemiesDelay: 1250,
             enemyVelocity: 200,
         },
         3: {
-            enemies: 10,
+            enemies: 25,
             enemiesDelay: 1050,
             enemyVelocity: 230,
         },
         4: {
-            enemies: 10,
+            enemies: 45,
             enemiesDelay: 900,
             enemyVelocity: 225,
         },
         5: {
-            enemies: 10,
+            enemies: 60,
             enemiesDelay: 775,
             enemyVelocity: 245,
         }
