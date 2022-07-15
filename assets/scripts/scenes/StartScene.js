@@ -16,8 +16,8 @@ class StartScene extends Phaser.Scene {
     }
 
     createStartText(){
-        this.startText = this.add.text(config.width / 2, config.height * .85, 'Tap to start', {
-            font: '52px HeyComic',
+        this.startText = this.add.text(config.width / 2, screenEndpoints.bottom - config.height * .175, 'Tap to start', {
+            font: '42px HeyComic',
             fill: '#f0f0f0',
         }).setOrigin(0.5);
 
