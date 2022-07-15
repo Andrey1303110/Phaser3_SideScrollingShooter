@@ -1,10 +1,10 @@
 class Player extends Phaser.GameObjects.Sprite {
-    constructor(scene, x, y){
+    constructor(scene, x, y) {
         super(scene, x, y, 'dragon', 'dragon1');
         this.init();
     }
 
-    init(){
+    init() {
         this.scene.add.existing(this);
         this.scene.physics.add.existing(this);
         this.body.enable = true;
@@ -12,15 +12,27 @@ class Player extends Phaser.GameObjects.Sprite {
         this.spriteNum = 1;
     }
 
-    preUpdate (time, delta) {
+    preUpdate(time, delta) {
         super.preUpdate(time, delta);
         this.spriteNum++;
         let sprite_num = Math.round(this.spriteNum / 4) % 5 + 1;
         this.setTexture('dragon', `dragon${sprite_num}`);
     }
 
-    move(){
+    move() {
         this.body.setVelocity(0);
+
+        if (this.y < screenEndpoints.top + this.displayHeight / 2) {
+            return this.y+=2;
+        } else if (this.y > screenEndpoints.bottom - this.displayHeight / 2) {
+            return this.y-=2;
+        }
+
+        if (this.x < screenEndpoints.left + this.displayWidth / 2) {
+            return this.x+=2;
+        } else if (this.x > screenEndpoints.right - this.displayWidth / 2) {
+            return this.x-=2;
+        }
 
         if (this.scene.cursors.left.isDown) {
             this.body.setVelocityX(-this.velocity);
