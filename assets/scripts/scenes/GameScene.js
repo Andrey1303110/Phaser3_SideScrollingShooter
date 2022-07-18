@@ -19,6 +19,7 @@ class GameScene extends Phaser.Scene {
     update() {
         this.sceneBG.tilePositionX += this.sceneBG.width / 10000 * this.speed;
         this.player.move();
+        this.player.shooting();
     }
 
     createBG() {

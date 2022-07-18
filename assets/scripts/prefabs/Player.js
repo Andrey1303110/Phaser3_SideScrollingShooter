@@ -10,13 +10,27 @@ class Player extends Phaser.GameObjects.Sprite {
         this.body.enable = true;
         this.velocity = 500;
         this.spriteNum = 1;
+        this.fires = new Fires(this.scene);
     }
 
     preUpdate(time, delta) {
         super.preUpdate(time, delta);
         this.spriteNum++;
-        let sprite_num = Math.round(this.spriteNum / 4) % 5 + 1;
+        let sprite_num = Math.round(this.spriteNum / 7) % 5 + 1;
         this.setTexture('dragon', `dragon${sprite_num}`);
+    }
+
+    shooting(){
+        if (this.scene.cursors.space.isDown && !this.fires_activate) {
+            this.fires.createFire(this);
+            this.fires_activate = true;
+            
+            this.fireTimer = this.scene.time.addEvent({
+                delay: 150,
+                callback: ()=>{this.fires_activate = false},
+                callbackScope: this,
+            });
+        }
     }
 
     move() {
