@@ -28,7 +28,7 @@ class GameScene extends Phaser.Scene {
     }
 
     createPlayer() {
-        this.player = new Player(this, screenEndpoints.left, config.height / 2);
+        this.player = new Player({scene: this});
         player = this.player;
     }
 

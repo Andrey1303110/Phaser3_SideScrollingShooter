@@ -1,23 +1,54 @@
-class Player extends Phaser.GameObjects.Sprite {
-    constructor(scene, x, y) {
-        super(scene, x, y, 'dragon', 'dragon1');
-        this.init();
+class Player extends MovableObject {
+    constructor(data) {
+        super({
+            scene: data.scene, 
+            x: screenEndpoints.left,
+            y: config.height/2, 
+            texture: 'dragon',
+            frame: 'dragon1',
+            velocity: config.player.velocity
+        });
     }
 
-    init() {
+    init(data) {
+        super.init(data);
         this.scene.add.existing(this);
         this.scene.physics.add.existing(this);
         this.body.enable = true;
         this.velocity = 500;
-        this.spriteNum = 1;
+        this.spriteNum = 0;
         this.fires = new Fires(this.scene);
+        this.scene.events.on('update', this.updateFrame, this);
+        this.last_frame = 1;
+        this.tween_fly = null;
     }
 
-    preUpdate(time, delta) {
-        super.preUpdate(time, delta);
+    updateFrame() {
         this.spriteNum++;
-        let sprite_num = Math.round(this.spriteNum / 7) % 5 + 1;
-        this.setTexture('dragon', `dragon${sprite_num}`);
+        let sprite_num = Math.round(this.spriteNum / 10) % 6 + 1;
+        if (sprite_num !== this.last_frame) {
+            let last_y = this.y;
+            this.setTexture('dragon', `dragon${sprite_num}`);
+            if (sprite_num === 1) {
+                this.tween_fly = this.scene.tweens.add({
+                    targets: this,
+                    y: last_y + this.displayHeight/2,
+                    ease: 'Linear',
+                    duration: 375,
+                    onComplete: ()=>{this.tween_fly = null}
+                });
+            }
+            else if (sprite_num === 4) {
+                this.tween_fly = this.scene.tweens.add({
+                    targets: this,
+                    y: last_y - this.displayHeight/2,
+                    ease: 'Linear',
+                    duration: 375,
+                    onComplete: ()=>{this.tween_fly = null}
+                });
+            }
+        }
+        this.last_frame = sprite_num;
     }
 
     shooting(){
@@ -26,7 +57,7 @@ class Player extends Phaser.GameObjects.Sprite {
             this.fires_activate = true;
             
             this.fireTimer = this.scene.time.addEvent({
-                delay: 150,
+                delay: config.player.fireReload,
                 callback: ()=>{this.fires_activate = false},
                 callbackScope: this,
             });
@@ -54,10 +85,15 @@ class Player extends Phaser.GameObjects.Sprite {
             this.body.setVelocityX(this.velocity);
         }
 
-        if (this.scene.cursors.up.isDown) {
-            this.body.setVelocityY(-this.velocity);
-        } else if (this.scene.cursors.down.isDown) {
-            this.body.setVelocityY(this.velocity);
+        if (this.scene.cursors.up.isDown || this.scene.cursors.down.isDown) {
+            if (this.tween_fly) {
+                this.tween_fly.paused = true;
+            }
+            if (this.scene.cursors.up.isDown) {
+                this.body.setVelocityY(-this.velocity);
+            } else if (this.scene.cursors.down.isDown) {
+                this.body.setVelocityY(this.velocity);
+            }
         }
     }
 }

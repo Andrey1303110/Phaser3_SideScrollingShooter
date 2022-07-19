@@ -19,6 +19,12 @@ var config = {
 
     scene: [BootScene, PreloadScene, StartScene, GameScene],
 
+    player: {
+        velocity: 500,
+        fireVelocity: 1250,
+        fireReload: 175,
+    },
+
     levels: {
         1: {
             enemies: 10,

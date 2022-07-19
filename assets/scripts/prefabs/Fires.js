@@ -10,7 +10,7 @@ class Fires extends Phaser.Physics.Arcade.Group {
             fire = Fire.generate(this.scene, source);
             this.add(fire);
         } else {
-            fire.reset(source);
+            fire.reset(source.x + source.displayWidth/2, source.y);
         }
         
         fire.move();
