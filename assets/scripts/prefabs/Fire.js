@@ -1,13 +1,13 @@
 class Fire extends MovableObject {
-    static generate(scene, player) {
+    static generate(scene, source) {
         const data = {
             scene: scene,
-            x: player.x + player.displayWidth * .5,
-            y: player.y,
-            texture: 'fire',
-            velocity: config.player.fireVelocity,
+            x: source.x + source.displayWidth / 2 * source.weapon.origin.x,
+            y: source.y,
+            texture: source.weapon.texture,
+            velocity: source.weapon.velocity,
+            scale: source.weapon.scale,
         };
-
         return new Fire(data);
     }
 
