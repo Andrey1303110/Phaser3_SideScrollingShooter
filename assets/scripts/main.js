@@ -22,14 +22,14 @@ var config = {
     Player: {
         velocity: 500,
         fireVelocity: 1000,
-        fireReload: 175,
+        fireReload: 375,
         fireScale: 0.5,
     },
 
     Enemy: {
-        velocity: 500,
+        velocity: 1500,
         fireVelocity: 450 * -1,
-        fireReload: 1000,
+        fireReload: 1500,
         fireScale: 0.35,
     },
 
@@ -37,27 +37,27 @@ var config = {
         1: {
             enemies: 10,
             enemiesDelay: 1500,
-            enemyVelocity: 165,
+            enemyVelocity: 250,
         },
         2: {
             enemies: 15,
             enemiesDelay: 1250,
-            enemyVelocity: 200,
+            enemyVelocity: 290,
         },
         3: {
             enemies: 25,
             enemiesDelay: 1050,
-            enemyVelocity: 230,
+            enemyVelocity: 340,
         },
         4: {
             enemies: 45,
             enemiesDelay: 900,
-            enemyVelocity: 225,
+            enemyVelocity: 400,
         },
         5: {
             enemies: 60,
             enemiesDelay: 775,
-            enemyVelocity: 245,
+            enemyVelocity: 470,
         }
     }
 };
