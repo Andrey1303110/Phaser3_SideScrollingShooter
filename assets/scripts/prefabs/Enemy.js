@@ -28,7 +28,7 @@ class Enemy extends MovableObject {
         super.init(data);
         this.fires = new Fires(this.scene);
         this.timer = this.scene.time.addEvent({
-            delay: data.weapon.delay,
+            delay: data.weapon.delay * (Math.random() + 1),
             loop: true,
             callback: this.shooting,
             callbackScope: this,
@@ -37,7 +37,6 @@ class Enemy extends MovableObject {
     }
 
     shooting() {
-        if (this.isDead()) return;
         this.fires.createFire(this);
     }
 

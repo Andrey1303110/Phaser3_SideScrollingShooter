@@ -14,7 +14,12 @@ class Enemies extends Phaser.Physics.Arcade.Group {
 
     tick(){
         if (this.createdCount < this.countMax) {
-            this.createEnemy();
+            this.scene.time.addEvent({
+                delay: config.levels[this.scene.currentLevel].enemiesDelay * (Math.random() + 1),
+                callback: this.createEnemy,
+                callbackScope: this,
+            });
+
         } else {
             this.timer.remove();
         }

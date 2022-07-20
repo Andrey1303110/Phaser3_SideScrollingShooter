@@ -14,6 +14,7 @@ class GameScene extends Phaser.Scene {
         this.cursors = this.input.keyboard.createCursorKeys();
         this.createPlayer();
         this.enemies = new Enemies(this);
+        this.addOverlap();
     }
 
     update() {
@@ -30,6 +31,15 @@ class GameScene extends Phaser.Scene {
     createPlayer() {
         this.player = new Player({scene: this});
         player = this.player;
+    }
+
+    addOverlap(){
+        this.physics.add.overlap(this.player.fires, this.enemies, this.onOverlap, undefined, this);
+    }
+
+    onOverlap(source, target){
+        source.setAlive(false);
+        target.setAlive(false);
     }
 
     getMaxEnemyHeightFrame(){
