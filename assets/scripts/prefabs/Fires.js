@@ -17,5 +17,7 @@ class Fires extends Phaser.Physics.Arcade.Group {
         
         fire.move();
         this.createdCount++;
+        let sound = source.scene.sound.add(`${source.weapon.texture}_launch`);
+        sound.play({volume: 0.35});
     }
 }

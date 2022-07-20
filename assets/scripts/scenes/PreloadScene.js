@@ -8,6 +8,8 @@ class PreloadScene extends Phaser.Scene {
         this.load.atlas('enemy', 'assets/sprites/enemy.png', 'assets/sprites/enemy.json');
         this.load.image('fire', 'assets/sprites/fire.png');
         this.load.image('rocket', 'assets/sprites/rocket.png');
+        this.load.audio('rocket_launch', 'assets/sounds/rocket_launch.mp3');
+        this.load.audio('fire_launch', 'assets/sounds/fire_launch.mp3');
     }
 
     create() {
