@@ -31,8 +31,12 @@ class Player extends MovableObject {
     }
 
     updateFrame() {
+        if (!this.active) {
+            return;
+        }
         this.spriteNum++;
         let sprite_num = Math.round(this.spriteNum / 9) % 6 + 1;
+        let sound = this.scene.sound.add('wings');
         if (sprite_num !== this.last_frame) {
             let last_y = this.y;
             this.setTexture('dragon', `dragon${sprite_num}`);
@@ -46,11 +50,12 @@ class Player extends MovableObject {
                 });
             }
             else if (sprite_num === 3) {
+                sound.play({volume: 0.15});
                 this.tween_fly = this.scene.tweens.add({
                     targets: this,
                     y: last_y - this.displayHeight / 2,
                     ease: 'Linear',
-                    duration: 275,
+                    duration: 250,
                     onComplete: () => { this.tween_fly = null }
                 });
             }

@@ -10,6 +10,8 @@ class PreloadScene extends Phaser.Scene {
         this.load.image('rocket', 'assets/sprites/rocket.png');
         this.load.audio('rocket_launch', 'assets/sounds/rocket_launch.mp3');
         this.load.audio('fire_launch', 'assets/sounds/fire_launch.mp3');
+        this.load.audio('explosion_small', 'assets/sounds/explosion_small.mp3');
+        this.load.audio('wings', 'assets/sounds/wings.mp3');
     }
 
     create() {

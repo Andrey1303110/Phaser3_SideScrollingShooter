@@ -5,10 +5,11 @@ class Enemy extends MovableObject {
         return { x, y, frame: `enemy${Phaser.Math.Between(1, 4)}` };
     }
 
-    static generate(scene) {
+    static generate(scene, fires) {
         const data = Enemy.generateAttr(scene);
         return new Enemy({
             scene,
+            fires,
             x: data.x,
             y: data.y,
             texture: 'enemy',
@@ -26,7 +27,7 @@ class Enemy extends MovableObject {
 
     init(data) {
         super.init(data);
-        this.fires = new Fires(this.scene);
+        this.fires = data.fires;
         this.timer = this.scene.time.addEvent({
             delay: data.weapon.delay * (Math.random() + 1),
             loop: true,
