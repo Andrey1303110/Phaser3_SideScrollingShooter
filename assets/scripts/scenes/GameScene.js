@@ -42,7 +42,7 @@ class GameScene extends Phaser.Scene {
 
     createPlayer() {
         this.player = new Player({scene: this});
-        player = this.player;
+        player = this.player;        
     }
 
     createEnemies(){
@@ -64,6 +64,7 @@ class GameScene extends Phaser.Scene {
         if (source !== this.player && target !== this.player) {
             this.currentScore += target.reward * this.currentLevel;
             this.scoreText.text = this.currentScore;
+            Boom.generate(this, target.x, target.y);
         }
 
         source.setAlive(false);
