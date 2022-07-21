@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,31 +8,36 @@
     <title>Game</title>
     <style>
         body {
-			margin: 0 !important;
-			overflow: hidden;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-		}
-		canvas {
-			box-sizing: border-box;
-		}
-        @font-face {
-            font-family: 'HeyComic';
-            src: url("assets/fonts/HeyComic/HeyComic.otf") format("opentype"),
-                 url("assets/fonts/HeyComic/HeyComic.ttf") format("opentype");
+            margin: 0 !important;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
+
+        canvas {
+            box-sizing: border-box;
+        }
+
+        @font-face {
+            font-family: 'DishOut';
+            src: url("assets/fonts/DishOut/DishOut.otf") format("opentype"),
+                url("assets/fonts/DishOut/DishOut.ttf") format("opentype");
+        }
+
         @font-face {
             font-family: 'Army';
-            src: url("assets/fonts/HeyComic/ARMY_RUST.ttf") format("opentype");
+            src: url("assets/fonts/ArmyRust/ArmyRust.ttf") format("opentype");
         }
+
         .font {
-            font-family: 'HeyComic';
+            font-family: 'DishOut';
             position: absolute;
             left: -100vw;
             top: -100vw;
             visibility: hidden;
         }
+
         .font2 {
             font-family: 'Army';
             position: absolute;
@@ -41,6 +47,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="font">.</div>
     <div class="font2">.</div>
@@ -58,4 +65,5 @@
     <script src="assets/scripts/scenes/GameScene.js"></script>
     <script src="assets/scripts/main.js"></script>
 </body>
+
 </html>
