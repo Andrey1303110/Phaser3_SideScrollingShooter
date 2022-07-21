@@ -24,7 +24,7 @@ class GameScene extends Phaser.Scene {
     }
 
     createBG() {
-        this.sceneBG = this.add.tileSprite(0, 0, config.width, config.height, 'scene_bg').setOrigin(0);
+        this.sceneBG = this.add.tileSprite(0, 0, config.width, config.height, 'scene_bg_0').setOrigin(0);
         this.speed = config.levels[this.currentLevel].enemyVelocity * .075;
     }
 
@@ -41,6 +41,9 @@ class GameScene extends Phaser.Scene {
     }
 
     onOverlap(source, target){
+        if (target.x > config.width + target.displayWidth/2) {
+            return;
+        }
         source.setAlive(false);
         target.setAlive(false);
         this.sound.add('explosion_small').play();

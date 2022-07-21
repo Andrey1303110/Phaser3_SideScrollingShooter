@@ -9,7 +9,7 @@ class StartScene extends Phaser.Scene {
     }
 
     createBG(){
-        this.sceneBG = this.add.sprite(0, 0, 'scene_bg').setOrigin(0).setInteractive();
+        this.sceneBG = this.add.sprite(0, 0, 'scene_bg_0').setOrigin(0).setInteractive();
         this.sceneBG.on('pointerdown', ()=>{
             this.scene.start('Game');
         }, this);
