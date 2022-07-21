@@ -15,6 +15,21 @@ class Player extends MovableObject {
                 origin: {x: 1, y: 0.5},
             }
         });
+
+        const frames = this.scene.anims.generateFrameNames('dragon',{
+            prefix: 'dragon',
+            start: 1,
+            end: 6,
+        });
+
+        this.scene.anims.create({
+            key: 'fly',
+            frames,
+            frameRate: 8,
+            repeat: -1,
+        });
+
+        this.play('fly');
     }
 
     init(data) {
@@ -22,45 +37,42 @@ class Player extends MovableObject {
         this.scene.add.existing(this);
         this.scene.physics.add.existing(this);
         this.body.enable = true;
-        this.spriteNum = 0;
         this.fires = new Fires(this.scene);
         this.scene.events.on('update', this.updateFrame, this);
-        this.last_frame = 1;
+        this.last_frame = 'dragon1';
         this.tween_fly = null;
         this.weapon = data.weapon;
+        this.wingsSound = this.scene.sound.add('wings');
     }
 
     updateFrame() {
         if (!this.active) {
             return;
         }
-        this.spriteNum++;
-        let sprite_num = Math.round(this.spriteNum / 9) % 6 + 1;
-        let sound = this.scene.sound.add('wings');
-        if (sprite_num !== this.last_frame) {
+
+        if (this.frame.name !== this.last_frame) {
             let last_y = this.y;
-            this.setTexture('dragon', `dragon${sprite_num}`);
-            if (sprite_num === 6) {
+            if (this.frame.name === 'dragon6') {
                 this.tween_fly = this.scene.tweens.add({
                     targets: this,
-                    y: last_y + this.displayHeight / 2,
+                    y: last_y + this.displayHeight / 3,
                     ease: 'Linear',
                     duration: 425,
                     onComplete: () => { this.tween_fly = null }
                 });
             }
-            else if (sprite_num === 3) {
-                sound.play({volume: 0.15});
+            else if (this.frame.name === 'dragon3') {
+                this.wingsSound.play({volume: 0.15});
                 this.tween_fly = this.scene.tweens.add({
                     targets: this,
-                    y: last_y - this.displayHeight / 2,
+                    y: last_y - this.displayHeight / 3,
                     ease: 'Linear',
                     duration: 250,
                     onComplete: () => { this.tween_fly = null }
                 });
             }
         }
-        this.last_frame = sprite_num;
+        this.last_frame = this.frame.name;
     }
 
     shooting() {
