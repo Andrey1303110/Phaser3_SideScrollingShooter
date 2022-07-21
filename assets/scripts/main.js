@@ -22,7 +22,7 @@ var config = {
     Player: {
         velocity: 500,
         fireVelocity: 1000,
-        fireReload: 375,
+        fireReload: 425,
         fireScale: 0.5,
     },
 
