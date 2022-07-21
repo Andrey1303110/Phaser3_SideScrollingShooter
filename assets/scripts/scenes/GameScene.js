@@ -13,7 +13,8 @@ class GameScene extends Phaser.Scene {
         this.getMaxEnemyHeightFrame();
         this.cursors = this.input.keyboard.createCursorKeys();
         this.createPlayer();
-        this.enemies = new Enemies(this);
+        this.createEnemies();
+        this.createCompleteEvents();
         this.addOverlap();
     }
 
@@ -33,11 +34,25 @@ class GameScene extends Phaser.Scene {
         player = this.player;
     }
 
+    createEnemies(){
+        this.enemies = new Enemies(this);
+    }
+
     addOverlap(){
         this.physics.add.overlap(this.player.fires, this.enemies, this.onOverlap, undefined, this);
         this.physics.add.overlap(this.enemies.fires, this.player, this.onOverlap, undefined, this);
         this.physics.add.overlap(this.player.fires, this.enemies.fires, this.onOverlap, undefined, this);
         this.physics.add.overlap(this.player, this.enemies, this.onOverlap, undefined, this);
+    }
+
+    createCompleteEvents(){
+        this.player.emit('killed');
+        this.player.once('killed', this.onComplete, this);
+        this.events.on('enemies-killed', this.onComplete, this);
+    }
+
+    onComplete(){
+        this.scene.start('Start');
     }
 
     onOverlap(source, target){

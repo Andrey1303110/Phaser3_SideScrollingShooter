@@ -1,10 +1,11 @@
 class Enemies extends Phaser.Physics.Arcade.Group {
     constructor(scene) {
-        super();
+        super(scene.physics.world, scene);
         this.scene = scene;
         this.fires = new Fires(this.scene);
         this.countMax = config.levels[scene.currentLevel].enemies;
-        this.createdCount = 0;
+        this.killed = 0;
+        this.createdCount = 1;
         this.timer = this.scene.time.addEvent({
             delay: config.levels[scene.currentLevel].enemiesDelay,
             loop: true,
@@ -31,6 +32,7 @@ class Enemies extends Phaser.Physics.Arcade.Group {
 
         if (!enemy) {
             enemy = Enemy.generate(this.scene, this.fires);
+            enemy.on('killed', this.onEnemyKilled, this);
             this.add(enemy);
         } else {
             enemy.reset();
@@ -38,5 +40,12 @@ class Enemies extends Phaser.Physics.Arcade.Group {
 
         enemy.move();
         this.createdCount++;
+    }
+
+    onEnemyKilled(){
+        this.killed++;
+        if(this.killed >= this.countMax) {
+            this.scene.events.emit('enemies-killed');
+        }
     }
 }
