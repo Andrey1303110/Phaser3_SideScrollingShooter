@@ -21,8 +21,19 @@
             src: url("assets/fonts/HeyComic/HeyComic.otf") format("opentype"),
                  url("assets/fonts/HeyComic/HeyComic.ttf") format("opentype");
         }
+        @font-face {
+            font-family: 'Army';
+            src: url("assets/fonts/HeyComic/ARMY_RUST.ttf") format("opentype");
+        }
         .font {
             font-family: 'HeyComic';
+            position: absolute;
+            left: -100vw;
+            top: -100vw;
+            visibility: hidden;
+        }
+        .font2 {
+            font-family: 'Army';
             position: absolute;
             left: -100vw;
             top: -100vw;
@@ -32,6 +43,7 @@
 </head>
 <body>
     <div class="font">.</div>
+    <div class="font2">.</div>
     <div id="gameDiv"></div>
     <script src="assets/scripts/libs/phaser.min.js"></script>
     <script src="assets/scripts/prefabs/MovableObject.js"></script>
