@@ -35,7 +35,7 @@ var config = {
 
     levels: {
         1: {
-            enemies: 10,
+            enemies: 8,
             enemiesDelay: 1500,
             enemyVelocity: 250,
         },
