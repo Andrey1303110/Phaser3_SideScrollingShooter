@@ -9,7 +9,7 @@ var config = {
         }
     },
 
-    backgroundColor: 'black',
+    backgroundColor: '#F3F3F3',
     parent: 'gameDiv',
     orientation: Phaser.Scale.LANDSCAPE,
     scale: {
@@ -18,6 +18,8 @@ var config = {
     },
 
     scene: [BootScene, PreloadScene, StartScene, GameScene],
+    
+    currentLevel: 1,
 
     Player: {
         velocity: 500,
@@ -33,6 +35,11 @@ var config = {
         fireScale: 0.35,
     },
 
+    reward: {
+        enemy: 250,
+        rocket: 50,
+    },
+
     levels: {
         1: {
             enemies: 8,
@@ -42,22 +49,22 @@ var config = {
         2: {
             enemies: 15,
             enemiesDelay: 1250,
-            enemyVelocity: 290,
+            enemyVelocity: 275,
         },
         3: {
             enemies: 25,
             enemiesDelay: 1050,
-            enemyVelocity: 340,
+            enemyVelocity: 305,
         },
         4: {
-            enemies: 45,
+            enemies: 40,
             enemiesDelay: 900,
-            enemyVelocity: 400,
+            enemyVelocity: 340,
         },
         5: {
             enemies: 60,
             enemiesDelay: 775,
-            enemyVelocity: 470,
+            enemyVelocity: 370,
         }
     }
 };
