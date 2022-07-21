@@ -1,11 +1,14 @@
 var player;
+var test;
 class GameScene extends Phaser.Scene {
     constructor() {
         super("Game");
     }
 
-    init() {
-        this.currentLevel = 1;
+    init(data) {
+        this.currentLevel = config.currentLevel;
+        data.completed ? this.currentScore = data.score : this.currentScore = 0;
+        this.maxLevel = Object.keys(config.levels)[Object.keys(config.levels).length-1];
     }
 
     create() {
@@ -16,6 +19,7 @@ class GameScene extends Phaser.Scene {
         this.createEnemies();
         this.createCompleteEvents();
         this.addOverlap();
+        this.createScoreText();
     }
 
     update() {
@@ -25,8 +29,15 @@ class GameScene extends Phaser.Scene {
     }
 
     createBG() {
-        this.sceneBG = this.add.tileSprite(0, 0, config.width, config.height, 'scene_bg_0').setOrigin(0);
-        this.speed = config.levels[this.currentLevel].enemyVelocity * .075;
+        this.sceneBG = this.add.tileSprite(0, 0, config.width, config.height, 'scene_bg_1').setOrigin(0).setAlpha(.65);
+        this.speed = config.levels[this.currentLevel].enemyVelocity * .06;
+    }
+
+    createScoreText(){
+        this.scoreText = this.add.text(screenEndpoints.right - config.width * .01, screenEndpoints.top + config.width * .01, this.currentScore, {
+            font: `${config.width * .03}px DishOut`,
+            fill: '#EA0000',
+        }).setOrigin(1, 0).setAlpha(.75);
     }
 
     createPlayer() {
@@ -45,6 +56,21 @@ class GameScene extends Phaser.Scene {
         this.physics.add.overlap(this.player, this.enemies, this.onOverlap, undefined, this);
     }
 
+    onOverlap(source, target){
+        if (target.x > config.width + target.displayWidth/2) {
+            return;
+        }
+
+        if (source !== this.player && target !== this.player) {
+            this.currentScore += target.reward * this.currentLevel;
+            this.scoreText.text = this.currentScore;
+        }
+
+        source.setAlive(false);
+        target.setAlive(false);
+        this.sound.add('explosion_small').play();
+    }
+
     createCompleteEvents(){
         this.player.emit('killed');
         this.player.once('killed', this.onComplete, this);
@@ -52,16 +78,13 @@ class GameScene extends Phaser.Scene {
     }
 
     onComplete(){
-        this.scene.start('Start');
-    }
-
-    onOverlap(source, target){
-        if (target.x > config.width + target.displayWidth/2) {
-            return;
+        if (config.currentLevel < this.maxLevel) {
+            config.currentLevel++;
         }
-        source.setAlive(false);
-        target.setAlive(false);
-        this.sound.add('explosion_small').play();
+        this.scene.start('Start', {
+            score: this.currentScore,
+            completed: this.player.active,
+        });
     }
 
     getMaxEnemyHeightFrame(){
