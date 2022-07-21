@@ -22,6 +22,7 @@ class Enemy extends MovableObject {
                 scale: config.Enemy.fireScale,
                 origin: {x: -1, y: 0.5},
             },
+            reward: config.reward.enemy,
         });
     }
 
