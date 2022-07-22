@@ -37,6 +37,12 @@ class MovableObject extends Phaser.GameObjects.Sprite {
 
         if (!status) {
             this.emit('killed');
+            if (this.launch_sound) {
+                this.launch_sound.stop();
+                if (this.launch_sound.stop()) {
+                    this.launch_sound.destroy();
+                }
+            }
         }
     }
 

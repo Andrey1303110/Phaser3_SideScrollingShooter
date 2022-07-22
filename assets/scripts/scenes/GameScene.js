@@ -27,6 +27,7 @@ class GameScene extends Phaser.Scene {
         this.createCompleteEvents();
         this.addOverlap();
         this.createScoreText();
+        this.createSounds();
     }
 
     update() {
@@ -36,8 +37,8 @@ class GameScene extends Phaser.Scene {
     }
 
     createBG() {
-        this.sceneBG = this.add.tileSprite(0, 0, config.width, config.height, 'scene_bg_9').setOrigin(0).setAlpha(.65);
-        this.speed = config.levels[this.currentLevel].enemyVelocity * .06;
+        this.sceneBG = this.add.tileSprite(0, 0, config.width, config.height, `scene_bg_${Phaser.Math.Between(0, 12)}`).setOrigin(0).setAlpha(.65);
+        this.speed = config.levels[this.currentLevel].velocity * .06;
     }
 
     createScoreText(){
@@ -54,6 +55,19 @@ class GameScene extends Phaser.Scene {
 
     createEnemies(){
         this.enemies = new Enemies(this);
+    }
+
+    createSounds(){
+        if (this.sounds) {
+            return;
+        }
+        this.sounds = {
+            rocket_launch: this.sound.add('rocket_launch'),
+            fire_launch: this.sound.add('fire_launch'),
+            missile_launch: this.sound.add('missile_launch'),
+            explosion_small: this.sound.add('explosion_small'),
+            wings: this.sound.add('wings'),
+        };
     }
 
     addOverlap(){
@@ -76,7 +90,7 @@ class GameScene extends Phaser.Scene {
 
         source.setAlive(false);
         target.setAlive(false);
-        this.sound.add('explosion_small').play();
+        this.sounds.explosion_small.play();
     }
 
     createCompleteEvents(){
@@ -91,11 +105,12 @@ class GameScene extends Phaser.Scene {
             completed: this.player.active,
             level: this.currentLevel,
         });
+        this.game.sound.stopAll();
     }
 
     getMaxEnemyHeightFrame(){
         let max_frame_height = 0;
-        let frames = this.textures.list.enemy.frames;
+        let frames = this.textures.list.helicopter.frames;
 
         Object.keys(frames).forEach(function(key) {
             if (frames[key].cutHeight > max_frame_height) {

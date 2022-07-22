@@ -42,7 +42,6 @@ class Player extends MovableObject {
         this.last_frame = 'dragon1';
         this.tween_fly = null;
         this.weapon = data.weapon;
-        this.wingsSound = this.scene.sound.add('wings');
     }
 
     updateFrame() {
@@ -62,7 +61,7 @@ class Player extends MovableObject {
                 });
             }
             else if (this.frame.name === 'dragon3') {
-                this.wingsSound.play({volume: 0.15});
+                this.scene.sounds.wings.play({volume: 0.2});
                 this.tween_fly = this.scene.tweens.add({
                     targets: this,
                     y: last_y - this.displayHeight / 3,

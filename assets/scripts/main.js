@@ -21,48 +21,75 @@ var config = {
 
     Player: {
         velocity: 500,
-        fireVelocity: 1000,
+        fireVelocity: 1250,
         fireReload: 425,
         fireScale: 0.5,
     },
 
-    Enemy: {
-        velocity: 1500,
-        fireVelocity: 450 * -1,
-        fireReload: 1500,
-        fireScale: 0.35,
+    Enemies: {
+        names: ['jet', 'helicopter'],
+        helicopter: {
+            velocity: 375,
+            weapon: 'rocket',
+        },
+        jet: {
+            velocity: 425,
+            weapon: 'missile',
+        },
+    },
+
+    Weapons: {
+        fire: {
+            reload: 425,
+            velocity: 1250,
+            scale: 0.35,
+        },
+        rocket: {
+            reward: 75,
+            reload: 1250,
+            velocity: 415 * -1,
+            scale: 0.35,
+        },
+        missile: {
+            reward: 75,
+            reload: 1750,
+            velocity: 575 * -1,
+            scale: 0.45,
+        }
     },
 
     reward: {
-        enemy: 250,
-        rocket: 50,
+        jet: 350,
+        helicopter: 250,
+        missile: 125,
+        rocket: 75,
     },
 
     levels: {
         1: {
             enemies: 6,
             enemiesDelay: 1500,
-            enemyVelocity: 250,
+            velocity: 250,
         },
         2: {
             enemies: 10,
             enemiesDelay: 1250,
-            enemyVelocity: 270,
+            velocity: 265,
         },
         3: {
             enemies: 16,
             enemiesDelay: 1050,
-            enemyVelocity: 295,
+            velocity: 285,
         },
         4: {
             enemies: 25,
             enemiesDelay: 900,
-            enemyVelocity: 330,
+            velocity: 315,
         },
         5: {
             enemies: 36,
             enemiesDelay: 775,
-            enemyVelocity: 355,
+            velocity: 340,
         }
     }
 };
