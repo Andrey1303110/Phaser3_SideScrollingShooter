@@ -6,7 +6,14 @@ class GameScene extends Phaser.Scene {
     }
 
     init(data) {
-        this.currentLevel = config.currentLevel;
+        if (data.completed) {
+            if (this.currentLevel < this.maxLevel) {
+                this.currentLevel++;
+            }
+        }
+        else {
+            this.currentLevel = 1;
+        }
         data.completed ? this.currentScore = data.score : this.currentScore = 0;
         this.maxLevel = Object.keys(config.levels)[Object.keys(config.levels).length-1];
     }
@@ -29,7 +36,7 @@ class GameScene extends Phaser.Scene {
     }
 
     createBG() {
-        this.sceneBG = this.add.tileSprite(0, 0, config.width, config.height, 'scene_bg_1').setOrigin(0).setAlpha(.65);
+        this.sceneBG = this.add.tileSprite(0, 0, config.width, config.height, 'scene_bg_9').setOrigin(0).setAlpha(.65);
         this.speed = config.levels[this.currentLevel].enemyVelocity * .06;
     }
 
@@ -79,12 +86,10 @@ class GameScene extends Phaser.Scene {
     }
 
     onComplete(){
-        if (config.currentLevel < this.maxLevel) {
-            config.currentLevel++;
-        }
         this.scene.start('Start', {
             score: this.currentScore,
             completed: this.player.active,
+            level: this.currentLevel,
         });
     }
 
