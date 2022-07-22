@@ -18,8 +18,6 @@ var config = {
     },
 
     scene: [BootScene, PreloadScene, StartScene, GameScene],
-    
-    currentLevel: 1,
 
     Player: {
         velocity: 500,
@@ -42,29 +40,29 @@ var config = {
 
     levels: {
         1: {
-            enemies: 8,
+            enemies: 6,
             enemiesDelay: 1500,
             enemyVelocity: 250,
         },
         2: {
-            enemies: 15,
+            enemies: 10,
             enemiesDelay: 1250,
-            enemyVelocity: 275,
+            enemyVelocity: 270,
         },
         3: {
-            enemies: 25,
+            enemies: 16,
             enemiesDelay: 1050,
-            enemyVelocity: 305,
+            enemyVelocity: 295,
         },
         4: {
-            enemies: 40,
+            enemies: 25,
             enemiesDelay: 900,
-            enemyVelocity: 340,
+            enemyVelocity: 330,
         },
         5: {
-            enemies: 60,
+            enemies: 36,
             enemiesDelay: 775,
-            enemyVelocity: 370,
+            enemyVelocity: 355,
         }
     }
 };
