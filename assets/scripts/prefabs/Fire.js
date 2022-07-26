@@ -17,6 +17,10 @@ class Fire extends MovableObject {
         this.launch_sound.play({volume: 0.35});
     }
 
+    reset() {
+        return false;
+    }
+
     isDead() {
         return (this.x > config.width + this.displayWidth || this.x < -this.displayWidth);
     }
