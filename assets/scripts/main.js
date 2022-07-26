@@ -29,11 +29,11 @@ var config = {
     Enemies: {
         names: ['jet', 'helicopter'],
         helicopter: {
-            velocity: 375,
+            velocity: 175,
             weapon: 'rocket',
         },
         jet: {
-            velocity: 425,
+            velocity: 325,
             weapon: 'missile',
         },
     },
