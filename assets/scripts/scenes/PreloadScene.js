@@ -4,6 +4,9 @@ class PreloadScene extends Phaser.Scene {
     }
 
     preload() {
+        for (let i = 1; i <= 12; i++) {
+            this.load.image(`scene_bg_${i}`, `assets/sprites/background${i}.png`);
+        }
         this.load.atlas('dragon', 'assets/sprites/dragon.png', 'assets/sprites/dragon.json');
         this.load.atlas('jet', 'assets/sprites/jet.png', 'assets/sprites/jet.json');
         this.load.atlas('helicopter', 'assets/sprites/helicopter.png', 'assets/sprites/helicopter.json');
