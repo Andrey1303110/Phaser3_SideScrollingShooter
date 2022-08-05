@@ -1,4 +1,4 @@
-class LevelSelect extends Phaser.Scene {
+class GameTypeSelect extends Phaser.Scene {
     constructor() {
         super("Levels");
     }
