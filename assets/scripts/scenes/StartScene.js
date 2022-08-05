@@ -12,7 +12,13 @@ class StartScene extends Phaser.Scene {
     }
 
     createBG(data) {
-        this.sceneBG = this.add.sprite(0, 0, 'scene_bg_0').setOrigin(0).setInteractive();
+        this.sceneBG = this.add.sprite(config.width / 2, config.height / 2, 'bg').setAlpha(.925).setOrigin(.5).setInteractive();
+
+        let scaleX = this.cameras.main.width / this.sceneBG.width;
+        let scaleY = this.cameras.main.height / this.sceneBG.height;
+        let scale = Math.max(scaleX, scaleY);
+        this.sceneBG.setScale(scale).setScrollFactor(0);
+        
         this.sceneBG.on('pointerdown', () => {
             this.scene.start('Game', data);
         }, this);
