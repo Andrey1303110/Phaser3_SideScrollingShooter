@@ -4,8 +4,8 @@ class PreloadScene extends Phaser.Scene {
     }
 
     preload() {
-        for (let i = 1; i <= 12; i++) {
-            this.load.image(`scene_bg_${i}`, `assets/sprites/background${i}.png`);
+        for (let i = 1; i <= config.Levels.length; i++) {
+            this.load.image(`bg${i}`, `assets/sprites/bg${i}.png`);
         }
         this.load.atlas('dragon', 'assets/sprites/dragon.png', 'assets/sprites/dragon.json');
         this.load.atlas('jet', 'assets/sprites/jet.png', 'assets/sprites/jet.json');
@@ -14,6 +14,11 @@ class PreloadScene extends Phaser.Scene {
         this.load.image('fire', 'assets/sprites/fire.png');
         this.load.image('rocket', 'assets/sprites/rocket.png');
         this.load.image('missile', 'assets/sprites/missile.png');
+        this.load.image('button_campaign', 'assets/sprites/button_campaign.png');
+        this.load.image('button_unlim', 'assets/sprites/button_unlim.png');
+        this.load.image('map', 'assets/sprites/map.png');
+        this.load.image('battle', 'assets/sprites/battle.png');
+        this.load.image('flag', 'assets/sprites/flag.png');
         this.load.audio('rocket_launch', 'assets/sounds/rocket_launch.mp3');
         this.load.audio('fire_launch', 'assets/sounds/fire_launch.mp3');
         this.load.audio('missile_launch', 'assets/sounds/missile_launch.mp3');
@@ -22,6 +27,6 @@ class PreloadScene extends Phaser.Scene {
     }
 
     create() {
-        this.scene.start('Start');
+        this.scene.start('Levels');
     }
 }
