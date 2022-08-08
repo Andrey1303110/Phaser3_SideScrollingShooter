@@ -3,21 +3,21 @@ class Enemies extends Phaser.Physics.Arcade.Group {
         super(scene.physics.world, scene);
         this.scene = scene;
         this.fires = new Fires(this.scene);
-        this.countMax = config.levels[scene.currentLevel].enemies;
+        this.countMax = config.Levels[scene.currentLevel].enemies;
         this.killed = 0;
         this.createdCount = 0;
         this.timer = this.scene.time.addEvent({
-            delay: config.levels[scene.currentLevel].enemiesDelay,
+            delay: config.Levels[scene.currentLevel].enemiesDelay,
             loop: true,
             callback: this.tick,
             callbackScope: this,
         });
     }
 
-    tick(){
+    tick() {
         if (this.createdCount < this.countMax) {
             this.scene.time.addEvent({
-                delay: config.levels[this.scene.currentLevel].enemiesDelay * (Phaser.Math.Between(5, 15) * .1),
+                delay: config.Levels[this.scene.currentLevel].enemiesDelay * (Phaser.Math.Between(5, 15) * .1),
                 callback: this.createEnemy,
                 callbackScope: this,
             });
@@ -27,7 +27,7 @@ class Enemies extends Phaser.Physics.Arcade.Group {
         }
     }
 
-    createEnemy(){
+    createEnemy() {
         this.createdCount++;
         let enemy = this.getFirstDead();
 
@@ -41,9 +41,9 @@ class Enemies extends Phaser.Physics.Arcade.Group {
         enemy.move();
     }
 
-    onEnemyKilled(){
+    onEnemyKilled() {
         this.killed++;
-        if(this.killed >= this.countMax) {
+        if (this.killed >= this.countMax) {
             this.scene.events.emit('enemies-killed');
         }
     }

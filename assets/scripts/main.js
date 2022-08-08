@@ -17,12 +17,14 @@ var config = {
         autoCenter: Phaser.Scale.CENTER_BOTH,
     },
 
-    scene: [BootScene, PreloadScene, StartScene, GameScene],
+    scene: [BootScene, PreloadScene, GameTypeSelect, MapScene, StartScene, GameScene],
+
+    currentLevel: localStorage.getItem('currentLevel') ?? 1,
 
     Player: {
         velocity: 500,
         fireVelocity: 1250,
-        fireReload: 425,
+        fireReload: 25,
         fireScale: 0.5,
     },
 
@@ -45,14 +47,12 @@ var config = {
             scale: 0.35,
         },
         rocket: {
-            reward: 75,
-            reload: 1250,
+            reload: 1950,
             velocity: 415 * -1,
             scale: 0.35,
         },
         missile: {
-            reward: 75,
-            reload: 1750,
+            reload: 2550,
             velocity: 575 * -1,
             scale: 0.45,
         }
@@ -65,33 +65,135 @@ var config = {
         rocket: 75,
     },
 
-    levels: {
-        1: {
-            enemies: 6,
+    Levels: [
+        {
+            level: 1,
+            name: 'Kyiv Pechersk',
+            x: 485,
+            y: 175,
+                enemies: 3,
             enemiesDelay: 1500,
             velocity: 250,
         },
-        2: {
-            enemies: 10,
+        {
+            level: 2,
+            name: 'Odesa',
+            x: 506,
+            y: 490,
+                enemies: 6,
             enemiesDelay: 1250,
             velocity: 265,
         },
-        3: {
-            enemies: 16,
-            enemiesDelay: 1050,
+        {
+            level: 3,
+            name: 'Kharkiv',
+            x: 758,
+            y: 179,
+                enemies: 9,
+            enemiesDelay: 1150,
             velocity: 285,
         },
-        4: {
-            enemies: 25,
-            enemiesDelay: 900,
+        {
+            level: 4,
+            name: 'Kyiv Podil',
+            x: 430,
+            y: 135,
+                enemies: 14,
+            enemiesDelay: 1050,
             velocity: 315,
         },
-        5: {
-            enemies: 36,
-            enemiesDelay: 775,
+        {
+            level: 5,
+            name: 'Mariupol Azovstal',
+            x: 890,
+            y: 397,
+                enemies: 20,
+            enemiesDelay: 1025,
             velocity: 340,
-        }
-    }
+        },
+        {
+            level: 6,
+            name: 'Vinnitsia Soborna',
+            x: 353,
+            y: 287,
+                enemies: 27,
+            enemiesDelay: 1025,
+            velocity: 340,
+        },
+        {
+            level: 7,
+            name: 'Kyiv Voskresenka',
+            x: 435,
+            y: 195,
+                enemies: 35,
+            enemiesDelay: 1020,
+            velocity: 340,
+        },
+        {
+            level: 8,
+            name: 'Lviv Plocha Runok',
+            x: 105,
+            y: 248,
+                enemies: 43,
+            enemiesDelay: 1010,
+            velocity: 340,
+        },
+        {
+            level: 9,
+            name: 'Dnipro',
+            x: 720,
+            y: 311,
+                enemies: 52,
+            enemiesDelay: 1000,
+            velocity: 340,
+        },
+        {
+            level: 10,
+            name: 'Genichesk',
+            x: 732,
+            y: 509,
+            enemies: 62,
+            enemiesDelay: 990,
+            velocity: 340,
+        },
+        {
+            level: 11,
+            name: 'Donetsk',
+            x: 874,
+            y: 333,
+            enemies: 73,
+            enemiesDelay: 980,
+            velocity: 340,
+        },
+        {
+            level: 12,
+            name: 'Zaporizha',
+            x: 735,
+            y: 366,
+            enemies: 85,
+            enemiesDelay: 970,
+            velocity: 340,
+        },
+        {
+            level: 13,
+            name: 'Sevastopol Balaklava',
+            x: 676,
+            y: 640,
+            enemies: 98,
+            enemiesDelay: 960,
+            velocity: 340,
+        },
+        {
+            level: 14,
+            name: 'Lugansk',
+            x: 956,
+            y: 261,
+            enemies: 112,
+            enemiesDelay: 950,
+            velocity: 340,
+        },
+
+    ]
 };
 
 var game = new Phaser.Game(config);

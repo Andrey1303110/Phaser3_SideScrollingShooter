@@ -8,7 +8,7 @@ class GameScene extends Phaser.Scene {
     init(data) {
         this.currentLevel = data.level;
         data.completed ? this.currentScore = data.score : this.currentScore = 0;
-        this.maxLevel = Object.keys(config.levels)[Object.keys(config.levels).length-1];
+        //this.maxLevel = Object.keys(config.Levels)[Object.keys(config.Levels).length-1];
     }
 
     create(data) {
@@ -31,10 +31,10 @@ class GameScene extends Phaser.Scene {
 
     createBG(data) {
         this.sceneBG = this.add.tileSprite(0, 0, config.width, config.height, `bg${data.level}`).setOrigin(0).setAlpha(.65);
-        this.speed = config.levels[this.currentLevel].velocity * .06;
+        this.speed = config.Levels[this.currentLevel].velocity * .06;
     }
 
-    createScoreText(){
+    createScoreText() {
         this.scoreText = this.add.text(screenEndpoints.right - config.width * .01, screenEndpoints.top + config.width * .01, this.currentScore, {
             font: `${config.width * .03}px DishOut`,
             fill: '#EA0000',
@@ -42,15 +42,15 @@ class GameScene extends Phaser.Scene {
     }
 
     createPlayer() {
-        this.player = new Player({scene: this});
-        player = this.player;        
+        this.player = new Player({ scene: this });
+        player = this.player;
     }
 
-    createEnemies(){
+    createEnemies() {
         this.enemies = new Enemies(this);
     }
 
-    createSounds(){
+    createSounds() {
         if (this.sounds) {
             return;
         }
@@ -63,15 +63,15 @@ class GameScene extends Phaser.Scene {
         };
     }
 
-    addOverlap(){
+    addOverlap() {
         this.physics.add.overlap(this.player.fires, this.enemies, this.onOverlap, undefined, this);
         this.physics.add.overlap(this.enemies.fires, this.player, this.onOverlap, undefined, this);
         this.physics.add.overlap(this.player.fires, this.enemies.fires, this.onOverlap, undefined, this);
         this.physics.add.overlap(this.player, this.enemies, this.onOverlap, undefined, this);
     }
 
-    onOverlap(source, target){
-        if (target.x > config.width + target.displayWidth/2) {
+    onOverlap(source, target) {
+        if (target.x > config.width + target.displayWidth / 2) {
             return;
         }
 
@@ -86,14 +86,14 @@ class GameScene extends Phaser.Scene {
         this.sounds.explosion_small.play();
     }
 
-    createCompleteEvents(){
+    createCompleteEvents() {
         this.player.emit('killed');
         this.player.once('killed', this.onComplete, this);
         this.events.once('enemies-killed', this.onComplete, this);
     }
 
-    onComplete(){
-        if(this.player.active && config.currentLevel <= this.currentLevel) {
+    onComplete() {
+        if (this.player.active && config.currentLevel <= this.currentLevel) {
             config.currentLevel++;
             localStorage.setItem('currentLevel', config.currentLevel);
         }
@@ -101,11 +101,11 @@ class GameScene extends Phaser.Scene {
         this.game.sound.stopAll();
     }
 
-    getMaxEnemyHeightFrame(){
+    getMaxEnemyHeightFrame() {
         let max_frame_height = 0;
         let frames = this.textures.list.helicopter.frames;
 
-        Object.keys(frames).forEach(function(key) {
+        Object.keys(frames).forEach(function (key) {
             if (frames[key].cutHeight > max_frame_height) {
                 max_frame_height = frames[key].cutHeight;
             }
