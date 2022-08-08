@@ -60,13 +60,19 @@ class MapScene extends Phaser.Scene {
             .setOrigin(0.5)
             .setInteractive()
             .on('pointerdown', this.selectLevel)
+            .setDepth(1);
         dot.info = object;
 
         if (object.level > config.currentLevel) {
             dot.setAlpha(0.6).setScale(2/3)
                .on('pointerdown', ()=>{this.sounds.error.play({volume: .33})});
+            dot.active = false;
         } else {
-            dot.setAlpha(1).on('pointerdown', ()=>{this.sounds.select.play({volume: .33})});
+            dot
+                .setAlpha(1)
+                .on('pointerdown', ()=>{this.sounds.select.play({volume: .33})})
+                .setDepth(Object.keys(config.Levels)[Object.keys(config.Levels).length-1]);
+            dot.active = true;
             if (config.currentLevel > object.level) {
                 dot.setTexture('flag').setOrigin(0, 1);
             } else {
@@ -88,7 +94,9 @@ class MapScene extends Phaser.Scene {
     }
 
     selectLevel(){
-        this.scene.scene.start('Game', this.info);
+        if (this.active) {
+            this.scene.scene.start('Game', this.info);
+        }   
     }
 
     createSounds(){
