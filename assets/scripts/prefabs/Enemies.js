@@ -5,7 +5,7 @@ class Enemies extends Phaser.Physics.Arcade.Group {
         this.fires = new Fires(this.scene);
         this.countMax = config.levels[scene.currentLevel].enemies;
         this.killed = 0;
-        this.createdCount = 1;
+        this.createdCount = 0;
         this.timer = this.scene.time.addEvent({
             delay: config.levels[scene.currentLevel].enemiesDelay,
             loop: true,
@@ -28,6 +28,7 @@ class Enemies extends Phaser.Physics.Arcade.Group {
     }
 
     createEnemy(){
+        this.createdCount++;
         let enemy = this.getFirstDead();
 
         if (!enemy) {
@@ -38,7 +39,6 @@ class Enemies extends Phaser.Physics.Arcade.Group {
             enemy.reset();
         }
         enemy.move();
-        this.createdCount++;
     }
 
     onEnemyKilled(){
