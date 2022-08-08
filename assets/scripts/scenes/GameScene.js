@@ -6,20 +6,13 @@ class GameScene extends Phaser.Scene {
     }
 
     init(data) {
-        if (data.completed) {
-            if (this.currentLevel < this.maxLevel) {
-                this.currentLevel++;
-            }
-        }
-        else {
-            this.currentLevel = 1;
-        }
+        this.currentLevel = data.level;
         data.completed ? this.currentScore = data.score : this.currentScore = 0;
         this.maxLevel = Object.keys(config.levels)[Object.keys(config.levels).length-1];
     }
 
-    create() {
-        this.createBG();
+    create(data) {
+        this.createBG(data);
         this.getMaxEnemyHeightFrame();
         this.cursors = this.input.keyboard.createCursorKeys();
         this.createPlayer();
@@ -36,8 +29,8 @@ class GameScene extends Phaser.Scene {
         this.player.shooting();
     }
 
-    createBG() {
-        this.sceneBG = this.add.tileSprite(0, 0, config.width, config.height, `scene_bg_${Phaser.Math.Between(0, 12)}`).setOrigin(0).setAlpha(.65);
+    createBG(data) {
+        this.sceneBG = this.add.tileSprite(0, 0, config.width, config.height, `bg${data.level}`).setOrigin(0).setAlpha(.65);
         this.speed = config.levels[this.currentLevel].velocity * .06;
     }
 
@@ -96,15 +89,15 @@ class GameScene extends Phaser.Scene {
     createCompleteEvents(){
         this.player.emit('killed');
         this.player.once('killed', this.onComplete, this);
-        this.events.on('enemies-killed', this.onComplete, this);
+        this.events.once('enemies-killed', this.onComplete, this);
     }
 
     onComplete(){
-        this.scene.start('Start', {
-            score: this.currentScore,
-            completed: this.player.active,
-            level: this.currentLevel,
-        });
+        if(this.player.active && config.currentLevel <= this.currentLevel) {
+            config.currentLevel++;
+            localStorage.setItem('currentLevel', config.currentLevel);
+        }
+        this.scene.start('Map');
         this.game.sound.stopAll();
     }
 
