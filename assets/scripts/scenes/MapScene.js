@@ -31,26 +31,6 @@ class MapScene extends Phaser.Scene {
         config.Levels.forEach(element => {
             this.createDot(element)
         });
-
-        /*
-        this.buttons[name] = this.add.sprite(config.width / 2, config.height * y_pos, 'button_' + name)
-        .setScale(.65)
-        .setAlpha(.75)
-        .setOrigin(.5)
-        .setInteractive()
-        .on('pointerdown', this.gameSelect);
-        this.buttons[name].name = name;
-
-        const textTitle = name.toUpperCase();
-        const textStyle = {
-            font: `${config.width*.03}px DishOut`,
-            fill: '#f0f0f0',
-        };
-        this.add.text(this.buttons[name].x, this.buttons[name].y, textTitle, textStyle).setOrigin(0.5);
-
-        this.buttons[name].on('pointerover', ()=>{this.buttons[name].setAlpha(1)});
-        this.buttons[name].on('pointerout', ()=>{this.buttons[name].setAlpha(.75)});
-        */
     }
 
     createDot(object){
@@ -60,7 +40,7 @@ class MapScene extends Phaser.Scene {
             .setOrigin(0.5)
             .setInteractive()
             .on('pointerdown', this.selectLevel)
-            .setDepth(1);
+            //.setDepth(1);
         dot.info = object;
 
         if (object.level > config.currentLevel) {
@@ -71,7 +51,7 @@ class MapScene extends Phaser.Scene {
             dot
                 .setAlpha(1)
                 .on('pointerdown', ()=>{this.sounds.select.play({volume: .33})})
-                .setDepth(Object.keys(config.Levels)[Object.keys(config.Levels).length-1]);
+                //.setDepth(Object.keys(config.Levels)[Object.keys(config.Levels).length-1]);
             dot.active = true;
             if (config.currentLevel > object.level) {
                 dot.setTexture('flag').setOrigin(0, 1);
@@ -95,8 +75,126 @@ class MapScene extends Phaser.Scene {
 
     selectLevel(){
         if (this.active) {
-            this.scene.scene.start('Game', this.info);
+            this.scene.createLevelCard(this.info);
         }   
+    }
+
+    createLevelCard(info){
+        let bg_rect = this.add.rectangle(config.width / 2, config.height / 2, config.width, config.height, '0x000000', 0).setInteractive();
+
+        let first_anim_duration = 365;
+
+        this.tweens.add({
+            targets: bg_rect,
+            fillAlpha: 0.45,
+            ease: 'Linear',
+            duration: first_anim_duration,
+        })
+
+        let frame = this.add.sprite(config.width / 2, config.height/2, 'frame');
+        frame.displayHeight = config.height * .795
+        let texts = [];
+
+        texts.push(this.add.text(frame.x, frame.y - frame.displayHeight/2 + frame.displayHeight * .086, 'MISSION', {
+            font: `${frame.displayWidth * .13}px DishOut`,
+            fill: '#0a0a0a',
+        }).setOrigin(0.5).setAlpha(0.55));
+
+        texts.push(this.add.text(frame.x, frame.y - frame.displayHeight/2 + frame.displayHeight * .25, `Level ${info.level}`, {
+            font: `${frame.displayWidth * .0925}px DishOut`,
+            fill: '#0a0a0a',
+        }).setOrigin(0.5).setAlpha(0.8));
+
+        texts.push(this.add.text(frame.x, frame.y - frame.displayHeight/2 + frame.displayHeight * .37, 'City', {
+            font: `${frame.displayWidth * .055}px DishOut`,
+            fill: '#0a0a0a',
+        }).setOrigin(0.5).setAlpha(0.8));
+
+        texts.push(this.add.text(frame.x, frame.y - frame.displayHeight/2 + frame.displayHeight * .44, info.name, {
+            font: `${frame.displayWidth * .06175}px DishOut`,
+            fill: '#0a0a0a',
+        }).setOrigin(0.5).setAlpha(0.8));
+
+        if (info.hiScore) {
+            texts.push(this.add.text(frame.x, frame.y - frame.displayHeight/2 + frame.displayHeight * .58, `Hi score: ${info.hiScore}`, {
+                font: `${frame.displayWidth * .049}px DishOut`,
+                fill: '#E2B80D',
+            }).setOrigin(0.5).setAlpha(0.8));
+        }
+
+        texts.push(this.add.text(frame.x, frame.y - frame.displayHeight/2 + frame.displayHeight * .71, `Enemies - ${info.enemies}`, {
+            font: `${frame.displayWidth * .051}px DishOut`,
+            fill: '#EA0000',
+        }).setOrigin(0.5).setAlpha(0.8));
+
+        this.sounds.stamp.play();
+
+        let stamp = this.add.sprite(frame.x, frame.y, 'stamp').setAlpha(0).setAngle(31).setScale(2.5);
+
+        let timeline = this.tweens.createTimeline();
+
+        timeline.add({
+            targets: stamp,
+            scale: .26,
+            x: frame.x + frame.displayWidth/2 - frame.displayWidth * .27,
+            y: frame.y + frame.displayWidth/2 - frame.displayHeight * .26,
+            alpha: 0.85,
+            ease: 'Power3',
+            duration: first_anim_duration,
+        });
+        timeline.add({
+            targets: stamp,
+            scale: .305,
+            alpha: 0.55,
+            ease: 'Power2',
+            duration: first_anim_duration * .75,
+            onComplete: () => {
+                let start_button = this.add.text(frame.x, frame.y + frame.displayHeight/2 - frame.displayHeight * .09, 'START', {
+                    font: `${frame.displayWidth * .105}px DishOut`,
+                    fill: '#51E04A',
+                })
+                .setOrigin(0.5)
+                .setAlpha(0.5)
+                .setInteractive()
+                .on('pointerdown', ()=>{this.gameStart(info)})
+                .on('pointerover', ()=>{start_button.setAlpha(.85)})
+                .on('pointerout', ()=>{start_button.setAlpha(.55)});
+                texts.push(start_button);
+
+                let close_button = this.add.sprite(screenEndpoints.right - config.width * .035, screenEndpoints.top + config.width * .035, 'close')
+                .setAlpha(0.65)
+                .setInteractive()
+                .on('pointerdown', ()=>{this.cardClose({bg_rect, frame, texts, stamp, close_button})})
+                .on('pointerover', ()=>{close_button.setAlpha(.85)})
+                .on('pointerout', ()=>{close_button.setAlpha(.65)});
+            }
+        });
+
+        timeline.play();
+    }
+
+    cardClose(data){
+        data.bg_rect.destroy();
+        data.frame.destroy();
+        data.stamp.destroy();
+        data.close_button.destroy();
+        data.texts.forEach(element => {
+            element.destroy();
+        });
+    }
+
+    gameStart(info){
+        this.sounds.ready.play();
+
+        let bg_rect = this.add.rectangle(config.width / 2, config.height / 2, config.width, config.height, '0x000000', 0).setInteractive();
+
+        this.tweens.add({
+            targets: bg_rect,
+            fillAlpha: 1,
+            ease: 'Linear',
+            duration: this.sounds.ready.duration * 1000 * .7,
+            onComplete: ()=>{ this.scene.start('Game', info) }
+        });
     }
 
     createSounds(){
@@ -106,6 +204,8 @@ class MapScene extends Phaser.Scene {
         this.sounds = {
             select: this.sound.add('select'),
             error: this.sound.add('error'),
+            stamp: this.sound.add('stamp'),
+            ready: this.sound.add('ready'),
         };
     }
 
