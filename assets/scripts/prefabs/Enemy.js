@@ -25,6 +25,7 @@ class Enemy extends MovableObject {
     init(data) {
         super.init(data);
         this.enemy_type = data.enemy_type;
+        this.fires_activate = true;
         this.setWeapon();
         this.reward = config.reward[data.texture];
         this.fires = data.fires;
@@ -46,8 +47,14 @@ class Enemy extends MovableObject {
         }
     }
 
+    stopTimer(){
+        this.fires_activate = false;
+    }
+
     shooting() {
-        this.fires.createFire(this);
+        if (this.fires_activate) {
+            this.fires.createFire(this);
+        }
     }
 
     reset() {

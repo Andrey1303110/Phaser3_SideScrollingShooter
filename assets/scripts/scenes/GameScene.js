@@ -61,6 +61,8 @@ class GameScene extends Phaser.Scene {
             missile_launch: this.sound.add('missile_launch'),
             explosion_small: this.sound.add('explosion_small'),
             wings: this.sound.add('wings'),
+            died: this.sound.add('died'),
+            win: this.sound.add('win'),
         };
     }
 
@@ -94,7 +96,16 @@ class GameScene extends Phaser.Scene {
     }
 
     onComplete() {
+        let bg_rect = this.add.rectangle(config.width / 2, config.height / 2, config.width, config.height, '0x000000', 0).setInteractive().setDepth(9999999);
+        let final_text = this.add.text(bg_rect.x, bg_rect.y, '', {
+            font: `${config.width * .03}px DishOut`,
+            fill: '#EA0000',
+        }).setOrigin(0.5).setAlpha(0).setDepth(bg_rect.depth);
+        this.game.sound.stopAll();
+
         if (this.player.active) {
+            this.sounds.win.play();
+            final_text.text = "GLORY TO UKRAINE!";
             if (this.info.hiScore < this.currentScore) {
                 let hiScores = localStorage.getItem('hiScores').split(',');
                 hiScores[this.currentLevel - 1] = this.currentScore;
@@ -105,10 +116,25 @@ class GameScene extends Phaser.Scene {
                 config.currentLevel++;
                 localStorage.setItem('currentLevel', config.currentLevel);
             }
+        } else {
+            final_text.text = "HEROES DON'T DIE!";
+            this.sounds.died.play();
         }
 
-        this.scene.start('Map');
-        this.game.sound.stopAll();
+        this.tweens.add({
+            targets: [bg_rect, final_text],
+            fillAlpha: 1,
+            alpha: 1,
+            scale: final_text.scale * 2,
+            ease: 'Linear',
+            duration: this.sounds.died.duration * 1000 * .75,
+            onComplete: ()=>{ this.scene.start('Map') }
+        })
+
+        this.enemies.stopTimer();
+        this.enemies.children.entries.forEach(enemy => {
+            enemy.stopTimer();
+        });
     }
 
     getMaxEnemyHeightFrame() {
