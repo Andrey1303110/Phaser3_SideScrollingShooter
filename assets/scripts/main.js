@@ -74,7 +74,6 @@ var config = {
             enemies: 3,
             enemiesDelay: 2500,
             velocity: 250,
-            hiScore: 100,
         },
         {
             level: 2,
@@ -84,7 +83,6 @@ var config = {
             enemies: 6,
             enemiesDelay: 2250,
             velocity: 265,
-            hiScore: 0,
         },
         {
             level: 3,
@@ -94,7 +92,6 @@ var config = {
             enemies: 9,
             enemiesDelay: 2150,
             velocity: 285,
-            hiScore: 0,
         },
         {
             level: 4,
@@ -104,7 +101,6 @@ var config = {
             enemies: 14,
             enemiesDelay: 2050,
             velocity: 315,
-            hiScore: 0,
         },
         {
             level: 5,
@@ -114,7 +110,6 @@ var config = {
             enemies: 20,
             enemiesDelay: 2025,
             velocity: 340,
-            hiScore: 0,
         },
         {
             level: 6,
@@ -124,7 +119,6 @@ var config = {
             enemies: 27,
             enemiesDelay: 2025,
             velocity: 340,
-            hiScore: 0,
         },
         {
             level: 7,
@@ -134,7 +128,6 @@ var config = {
             enemies: 35,
             enemiesDelay: 2020,
             velocity: 340,
-            hiScore: 0,
         },
         {
             level: 8,
@@ -144,7 +137,6 @@ var config = {
             enemies: 43,
             enemiesDelay: 2010,
             velocity: 340,
-            hiScore: 0,
         },
         {
             level: 9,
@@ -154,7 +146,6 @@ var config = {
             enemies: 52,
             enemiesDelay: 2000,
             velocity: 340,
-            hiScore: 0,
         },
         {
             level: 10,
@@ -164,7 +155,6 @@ var config = {
             enemies: 62,
             enemiesDelay: 1990,
             velocity: 340,
-            hiScore: 0,
         },
         {
             level: 11,
@@ -174,7 +164,6 @@ var config = {
             enemies: 73,
             enemiesDelay: 1980,
             velocity: 340,
-            hiScore: 0,
         },
         {
             level: 12,
@@ -184,7 +173,6 @@ var config = {
             enemies: 85,
             enemiesDelay: 1970,
             velocity: 340,
-            hiScore: 0,
         },
         {
             level: 13,
@@ -194,7 +182,6 @@ var config = {
             enemies: 98,
             enemiesDelay: 1960,
             velocity: 340,
-            hiScore: 0,
         },
         {
             level: 14,
@@ -204,7 +191,6 @@ var config = {
             enemies: 112,
             enemiesDelay: 1950,
             velocity: 340,
-            hiScore: 0,
         },
 
     ]
@@ -241,3 +227,15 @@ function setEndpoints() {
         }
     }
 };
+
+function initHiScores(){
+    let arr = [];
+    for (let i = 0; i < Object.keys(config.Levels).length; i++) {
+        arr[i] = 0;
+    }
+    localStorage.setItem('hiScores', arr);
+};
+
+if (!localStorage.getItem('hiScores')) {
+    initHiScores();
+}

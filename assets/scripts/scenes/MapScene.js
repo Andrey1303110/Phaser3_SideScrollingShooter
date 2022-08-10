@@ -28,8 +28,10 @@ class MapScene extends Phaser.Scene {
     }
 
     createButtons(){
+        let i = 0;
         config.Levels.forEach(element => {
-            this.createDot(element)
+            this.createDot(element);
+            i++;
         });
     }
 
@@ -80,6 +82,9 @@ class MapScene extends Phaser.Scene {
     }
 
     createLevelCard(info){
+        let currentLevelHiScore = localStorage.getItem('hiScores').split(',')[info.level-1];
+        info.hiScore = currentLevelHiScore;
+
         let bg_rect = this.add.rectangle(config.width / 2, config.height / 2, config.width, config.height, '0x000000', 0).setInteractive();
 
         let first_anim_duration = 365;
@@ -115,8 +120,8 @@ class MapScene extends Phaser.Scene {
             fill: '#0a0a0a',
         }).setOrigin(0.5).setAlpha(0.8));
 
-        if (info.hiScore) {
-            texts.push(this.add.text(frame.x, frame.y - frame.displayHeight/2 + frame.displayHeight * .58, `Hi score: ${info.hiScore}`, {
+        if (currentLevelHiScore > 0) {
+            texts.push(this.add.text(frame.x, frame.y - frame.displayHeight/2 + frame.displayHeight * .58, `Hi score: ${currentLevelHiScore}`, {
                 font: `${frame.displayWidth * .049}px DishOut`,
                 fill: '#E2B80D',
             }).setOrigin(0.5).setAlpha(0.8));

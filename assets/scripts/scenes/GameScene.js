@@ -6,8 +6,9 @@ class GameScene extends Phaser.Scene {
     }
 
     init(data) {
-        this.currentLevel = data.level;
-        data.completed ? this.currentScore = data.score : this.currentScore = 0;
+        this.info = data;
+        this.currentLevel = this.info.level;
+        this.currentScore = 0;
         //this.maxLevel = Object.keys(config.Levels)[Object.keys(config.Levels).length-1];
     }
 
@@ -93,10 +94,19 @@ class GameScene extends Phaser.Scene {
     }
 
     onComplete() {
-        if (this.player.active && config.currentLevel <= this.currentLevel) {
-            config.currentLevel++;
-            localStorage.setItem('currentLevel', config.currentLevel);
+        if (this.player.active) {
+            if (this.info.hiScore < this.currentScore) {
+                let hiScores = localStorage.getItem('hiScores').split(',');
+                hiScores[this.currentLevel - 1] = this.currentScore;
+                localStorage.setItem('hiScores', hiScores.join());
+            }
+            
+            if (config.currentLevel <= this.currentLevel) {
+                config.currentLevel++;
+                localStorage.setItem('currentLevel', config.currentLevel);
+            }
         }
+
         this.scene.start('Map');
         this.game.sound.stopAll();
     }
