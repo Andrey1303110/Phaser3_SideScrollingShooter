@@ -6,6 +6,7 @@ class GameScene extends Phaser.Scene {
     }
 
     init(data) {
+        localStorage.setItem('firstTimePlay', '0');
         this.info = data;
         this.currentLevel = this.info.level;
         this.currentScore = 0;
@@ -80,6 +81,8 @@ class GameScene extends Phaser.Scene {
         }
 
         if (source !== this.player && target !== this.player) {
+            let old_value = Number(localStorage.getItem(`losses_${target.texture.key}`));
+            localStorage.setItem(`losses_${target.texture.key}`, ++old_value);
             this.currentScore += target.reward * this.currentLevel;
             this.scoreText.text = this.currentScore;
             Boom.generate(this, target.x, target.y);

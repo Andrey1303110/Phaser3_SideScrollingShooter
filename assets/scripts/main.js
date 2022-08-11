@@ -21,6 +21,13 @@ var config = {
 
     currentLevel: localStorage.getItem('currentLevel') ?? 1,
 
+    Losses: {
+        jet: localStorage.getItem('losses_jet') ?? 0,
+        helicopter: localStorage.getItem('losses_helicopter') ?? 0,
+        rocket: localStorage.getItem('losses_rocket') ?? 0,
+        missile: localStorage.getItem('losses_missile') ?? 0
+    },
+
     Player: {
         velocity: 500,
     },
@@ -189,8 +196,9 @@ var config = {
             enemiesDelay: 1950,
             velocity: 340,
         },
+    ],
 
-    ]
+    firstTimePlay: localStorage.getItem('firstTimePlay') ?? '1',
 };
 
 var game = new Phaser.Game(config);
@@ -233,6 +241,13 @@ function initHiScores(){
     localStorage.setItem('hiScores', arr);
 };
 
-if (!localStorage.getItem('hiScores')) {
+function initLosses(){
+    Object.keys(config.Losses).forEach(name => {
+        localStorage.setItem(`losses_${name}`, 0);
+    });
+};
+
+if (localStorage.getItem('firstTimePlay') !== '0') {
     initHiScores();
+    initLosses();
 }

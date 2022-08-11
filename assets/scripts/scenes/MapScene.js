@@ -12,6 +12,7 @@ class MapScene extends Phaser.Scene {
         this.createBG();
         this.createMap();
         this.createButtons();
+        this.createLosses();
     }
 
     createBG() {
@@ -201,6 +202,34 @@ class MapScene extends Phaser.Scene {
             onComplete: ()=>{
                 this.scene.start('Game', info);
             }
+        });
+    }
+
+    createLosses(){
+        if (this.losses_text) {
+            this.losses_text.forEach(element => {
+                element.destroy();
+            });
+        }
+
+        let points = {
+            x: screenEndpoints.left + config.width * .033,
+            y: config.height * .635,
+        }
+
+        this.losses_text = [];
+
+        this.losses_text.push(this.add.text(points.x, points.y, 'Total russian losses:', {
+            font: `${config.width * .025}px DishOut`,
+            fill: '#EA0000',
+        }).setOrigin(0, 0.5).setAlpha(0.75));
+
+        Object.keys(config.Losses).forEach(name => {
+            points.y += config.width * .0285;
+            this.losses_text.push(this.add.text(points.x, points.y, `${name}s: ${localStorage.getItem(`losses_${name}`)}`, {
+                font: `${config.width * .0215}px DishOut`,
+                fill: '#000000',
+            }).setOrigin(0, 0.5).setAlpha(0.75));
         });
     }
 
