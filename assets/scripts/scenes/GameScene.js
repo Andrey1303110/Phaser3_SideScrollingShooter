@@ -9,6 +9,7 @@ class GameScene extends Phaser.Scene {
         this.info = data;
         this.currentLevel = this.info.level;
         this.currentScore = 0;
+        this.black_bg = null;
         //this.maxLevel = Object.keys(config.Levels)[Object.keys(config.Levels).length-1];
     }
 
@@ -96,11 +97,15 @@ class GameScene extends Phaser.Scene {
     }
 
     onComplete() {
-        let bg_rect = this.add.rectangle(config.width / 2, config.height / 2, config.width, config.height, '0x000000', 0).setInteractive().setDepth(9999999);
-        let final_text = this.add.text(bg_rect.x, bg_rect.y, '', {
+        if (this.black_bg) {
+            return;
+        }
+
+        this.black_bg = this.add.rectangle(config.width / 2, config.height / 2, config.width, config.height, '0x000000', 0).setInteractive().setDepth(9999999);
+        let final_text = this.add.text(this.black_bg.x, this.black_bg.y, '', {
             font: `${config.width * .03}px DishOut`,
             fill: '#EA0000',
-        }).setOrigin(0.5).setAlpha(0).setDepth(bg_rect.depth);
+        }).setOrigin(0.5).setAlpha(0).setDepth(this.black_bg.depth);
         this.game.sound.stopAll();
 
         if (this.player.active) {
@@ -122,13 +127,16 @@ class GameScene extends Phaser.Scene {
         }
 
         this.tweens.add({
-            targets: [bg_rect, final_text],
+            targets: [this.black_bg, final_text],
             fillAlpha: 1,
             alpha: 1,
             scale: final_text.scale * 2,
             ease: 'Linear',
             duration: this.sounds.died.duration * 1000 * .75,
-            onComplete: ()=>{ this.scene.start('Map') }
+            onComplete: ()=>{
+                this.scene.start('Map');
+                this.scene.stop();
+            }
         })
 
         this.enemies.stopTimer();

@@ -198,7 +198,9 @@ class MapScene extends Phaser.Scene {
             fillAlpha: 1,
             ease: 'Linear',
             duration: this.sounds.ready.duration * 1000 * .7,
-            onComplete: ()=>{ this.scene.start('Game', info) }
+            onComplete: ()=>{
+                this.scene.start('Game', info);
+            }
         });
     }
 
