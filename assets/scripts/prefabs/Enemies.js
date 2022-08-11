@@ -3,11 +3,11 @@ class Enemies extends Phaser.Physics.Arcade.Group {
         super(scene.physics.world, scene);
         this.scene = scene;
         this.fires = new Fires(this.scene);
-        this.countMax = config.Levels[scene.currentLevel].enemies;
+        this.countMax = config.Levels[scene.currentLevel-1].enemies;
         this.killed = 0;
         this.createdCount = 0;
         this.timer = this.scene.time.addEvent({
-            delay: config.Levels[scene.currentLevel].enemiesDelay,
+            delay: config.Levels[scene.currentLevel-1].enemiesDelay,
             loop: true,
             callback: this.tick,
             callbackScope: this,
@@ -15,16 +15,11 @@ class Enemies extends Phaser.Physics.Arcade.Group {
     }
 
     tick() {
-        if (this.createdCount < this.countMax) {
-            this.scene.time.addEvent({
-                delay: config.Levels[this.scene.currentLevel].enemiesDelay * (Phaser.Math.Between(5, 15) * .1),
-                callback: this.createEnemy,
-                callbackScope: this,
-            });
-
-        } else {
-            this.timer.remove();
-        }
+        this.scene.time.addEvent({
+            delay: config.Levels[this.scene.currentLevel-1].enemiesDelay * (Phaser.Math.Between(50, 150) * .01),
+            callback: this.createEnemy,
+            callbackScope: this,
+        });
     }
 
     stopTimer(){
@@ -32,17 +27,21 @@ class Enemies extends Phaser.Physics.Arcade.Group {
     }
 
     createEnemy() {
-        this.createdCount++;
-        let enemy = this.getFirstDead();
+        if (this.countMax > this.createdCount) {
+            let enemy = this.getFirstDead();
 
-        if (!enemy) {
-            enemy = Enemy.generate(this.scene, this.fires);
-            enemy.on('killed', this.onEnemyKilled, this);
-            this.add(enemy);
+            if (!enemy) {
+                enemy = Enemy.generate(this.scene, this.fires);
+                enemy.on('killed', this.onEnemyKilled, this);
+                this.add(enemy);
+            } else {
+                enemy.reset();
+            }
+            enemy.move();
+            this.createdCount++;
         } else {
-            enemy.reset();
+            this.timer.remove();
         }
-        enemy.move();
     }
 
     onEnemyKilled() {
