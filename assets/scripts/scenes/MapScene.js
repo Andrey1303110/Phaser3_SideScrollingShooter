@@ -11,8 +11,9 @@ class MapScene extends Phaser.Scene {
         this.createSounds();
         this.createBG();
         this.createMap();
-        this.createButtons();
+        this.createMissions();
         this.createLosses();
+        this.addReturnButton();
     }
 
     createBG() {
@@ -28,7 +29,7 @@ class MapScene extends Phaser.Scene {
         this.map = this.add.sprite(config.width / 2, config.height / 2, 'map').setAlpha(.65).setOrigin(.5).setScale(1.25);
     }
 
-    createButtons(){
+    createMissions(){
         let i = 0;
         config.Levels.forEach(element => {
             this.createDot(element);
@@ -231,6 +232,13 @@ class MapScene extends Phaser.Scene {
                 fill: '#000000',
             }).setOrigin(0, 0.5).setAlpha(0.75));
         });
+    }
+
+    addReturnButton(){
+        this.add.sprite(screenEndpoints.left + config.width * .015, screenEndpoints.top + config.width * .015, 'return')
+            .setAlpha(0.65)
+            .setInteractive()
+            .on('pointerdown', ()=>{this.scene.start('Levels')}, this);
     }
 
     createSounds(){
