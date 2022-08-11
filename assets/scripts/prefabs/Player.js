@@ -9,9 +9,9 @@ class Player extends MovableObject {
             velocity: config.Player.velocity,
             weapon: {
                 texture: 'fire',
-                delay: config.Player.fireReload,
-                velocity: config.Player.fireVelocity,
-                scale: config.Player.fireScale,
+                delay: config.Weapons.fire.reload,
+                velocity: config.Weapons.fire.velocity,
+                scale: config.Weapons.fire.scale,
                 origin: {x: 1, y: 0.5},
             }
         });
@@ -80,7 +80,7 @@ class Player extends MovableObject {
             this.fires_activate = true;
 
             this.fireTimer = this.scene.time.addEvent({
-                delay: config.Player.fireReload,
+                delay: this.weapon.delay,
                 callback: () => { this.fires_activate = false },
                 callbackScope: this,
             });

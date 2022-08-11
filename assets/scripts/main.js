@@ -23,9 +23,6 @@ var config = {
 
     Player: {
         velocity: 500,
-        fireVelocity: 1250,
-        fireReload: 25,
-        fireScale: 0.5,
     },
 
     Enemies: {
@@ -43,8 +40,8 @@ var config = {
     Weapons: {
         fire: {
             reload: 425,
-            velocity: 1250,
-            scale: 0.35,
+            velocity: 750,
+            scale: 0.5,
         },
         rocket: {
             reload: 1950,
