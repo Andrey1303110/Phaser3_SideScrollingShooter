@@ -6,7 +6,9 @@ class GameScene extends Phaser.Scene {
     }
 
     init(data) {
-        localStorage.setItem('firstTimePlay', '0');
+        if (localStorage.getItem('firstTimePlay') !== '0') {
+            localStorage.setItem('firstTimePlay', '0');
+        }
         this.info = data;
         this.currentLevel = this.info.level;
         this.currentScore = 0;
