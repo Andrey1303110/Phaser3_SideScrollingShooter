@@ -3,11 +3,11 @@ class Enemies extends Phaser.Physics.Arcade.Group {
         super(scene.physics.world, scene);
         this.scene = scene;
         this.fires = new Fires(this.scene);
-        this.countMax = config.Levels[scene.currentLevel-1].enemies;
+        this.countMax = this.scene.info.enemies;
         this.killed = 0;
         this.createdCount = 0;
         this.timer = this.scene.time.addEvent({
-            delay: config.Levels[scene.currentLevel-1].enemiesDelay,
+            delay: this.scene.info.enemiesDelay,
             loop: true,
             callback: this.tick,
             callbackScope: this,
@@ -16,7 +16,7 @@ class Enemies extends Phaser.Physics.Arcade.Group {
 
     tick() {
         this.scene.time.addEvent({
-            delay: config.Levels[this.scene.currentLevel-1].enemiesDelay * (Phaser.Math.Between(50, 150) * .01),
+            delay: this.scene.info.enemiesDelay * (Phaser.Math.Between(50, 150) * .01),
             callback: this.createEnemy,
             callbackScope: this,
         });
