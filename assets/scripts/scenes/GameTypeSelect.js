@@ -48,6 +48,7 @@ class GameTypeSelect extends Phaser.Scene {
                 this.scene.scene.start('Map');
                 break;
             case 'unlim':
+                this.scene.scene.start('Game', config.unlim);
                 break;
         }
     }

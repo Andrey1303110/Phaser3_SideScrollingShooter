@@ -198,6 +198,14 @@ var config = {
         },
     ],
 
+    unlim: {
+        unlim: true,
+        level: 20,
+        enemies: 999,
+        enemiesDelay: 1750,
+        velocity: 350,
+    },
+
     firstTimePlay: localStorage.getItem('firstTimePlay') ?? '1',
 };
 
@@ -239,6 +247,7 @@ function initHiScores(){
         arr[i] = 0;
     }
     localStorage.setItem('hiScores', arr);
+    localStorage.setItem('unlimHiScores', 0);
 };
 
 function initLosses(){

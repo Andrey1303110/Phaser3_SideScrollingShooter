@@ -36,15 +36,34 @@ class GameScene extends Phaser.Scene {
     }
 
     createBG(data) {
-        this.sceneBG = this.add.tileSprite(0, 0, config.width, config.height, `bg${data.level}`).setOrigin(0).setAlpha(.65);
-        this.speed = config.Levels[this.currentLevel].velocity * .06;
+        let bg_image = `bg${data.level}`
+
+        if (data?.unlim) {
+            this.speed = this.info.velocity * .06;
+            bg_image = `bg${Phaser.Math.Between(1, config.Levels.length)}`;
+        } else {
+            this.speed = config.Levels[this.currentLevel].velocity * .06;
+        }
+
+        this.sceneBG = this.add.tileSprite(0, 0, config.width, config.height, bg_image).setOrigin(0).setAlpha(.65);
     }
 
     createScoreText() {
+        if (this.hiScoreText) {
+            this.hiScoreText.destroy();
+        }
+
         this.scoreText = this.add.text(screenEndpoints.right - config.width * .01, screenEndpoints.top + config.width * .01, this.currentScore, {
             font: `${config.width * .03}px DishOut`,
             fill: '#EA0000',
         }).setOrigin(1, 0).setAlpha(.75);
+
+        if (this.info?.unlim) {
+            this.hiScoreText = this.add.text(config.width/2, screenEndpoints.top + config.width * .01, 'High score: ' + localStorage.getItem('unlimHiScores'), {
+                font: `${config.width * .03}px DishOut`,
+                fill: '#EA0000',
+            }).setOrigin(0.5, 0).setAlpha(.75);
+        }
     }
 
     createPlayer() {
@@ -117,6 +136,7 @@ class GameScene extends Phaser.Scene {
         if (this.player.active) {
             this.sounds.win.play();
             final_text.text = "GLORY TO UKRAINE!";
+
             if (this.info.hiScore < this.currentScore) {
                 let hiScores = localStorage.getItem('hiScores').split(',');
                 hiScores[this.currentLevel - 1] = this.currentScore;
@@ -130,6 +150,12 @@ class GameScene extends Phaser.Scene {
         } else {
             final_text.text = "HEROES DON'T DIE!";
             this.sounds.died.play();
+
+            if (this.info.unlim) {
+                if (localStorage.getItem('unlimHiScores') < this.currentScore) {
+                    localStorage.setItem('unlimHiScores', this.currentScore);
+                }
+            }
         }
 
         this.tweens.add({
@@ -140,7 +166,11 @@ class GameScene extends Phaser.Scene {
             ease: 'Linear',
             duration: this.sounds.died.duration * 1000 * .75,
             onComplete: ()=>{
-                this.scene.start('Map');
+                if (this.info.unlim) {
+                    this.scene.start('Levels');
+                } else {
+                    this.scene.start('Map');
+                }
                 this.scene.stop();
             }
         })
@@ -156,7 +186,6 @@ class GameScene extends Phaser.Scene {
             .setAlpha(0.65)
             .setInteractive()
             .on('pointerdown', ()=>{
-                //this.pausedGame();
                 this.scene.launch('Pause');
                 this.scene.pause();
             }, this);
