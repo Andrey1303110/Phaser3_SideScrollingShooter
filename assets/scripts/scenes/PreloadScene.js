@@ -25,6 +25,10 @@ class PreloadScene extends Phaser.Scene {
         this.load.image('stamp', 'assets/sprites/stamp.png');
         this.load.image('close', 'assets/sprites/close.png');
         this.load.image('return', 'assets/sprites/return.png');
+        this.load.image('pause', 'assets/sprites/pause.png');
+        this.load.image('pause_bg', 'assets/sprites/pause_bg.png');
+        this.load.image('restart', 'assets/sprites/restart.png');
+        this.load.image('play', 'assets/sprites/play.png');
         
         this.load.audio('select', 'assets/sounds/select.wav');
         this.load.audio('error', 'assets/sounds/error.mp3');

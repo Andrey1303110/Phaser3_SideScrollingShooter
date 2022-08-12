@@ -24,6 +24,7 @@ class GameScene extends Phaser.Scene {
         this.addOverlap();
         this.createScoreText();
         this.createSounds();
+        this.addPauseButton();
     }
 
     update() {
@@ -146,6 +147,17 @@ class GameScene extends Phaser.Scene {
         this.enemies.children.entries.forEach(enemy => {
             enemy.stopTimer();
         });
+    }
+
+    addPauseButton(){
+        this.add.sprite(screenEndpoints.left + config.width * .015, screenEndpoints.top + config.width * .015, 'pause')
+            .setAlpha(0.65)
+            .setInteractive()
+            .on('pointerdown', ()=>{
+                //this.pausedGame();
+                this.scene.launch('Pause');
+                this.scene.pause();
+            }, this);
     }
 
     getMaxEnemyHeightFrame() {

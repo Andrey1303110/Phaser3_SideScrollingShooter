@@ -17,7 +17,7 @@ var config = {
         autoCenter: Phaser.Scale.CENTER_BOTH,
     },
 
-    scene: [BootScene, PreloadScene, GameTypeSelect, MapScene, StartScene, GameScene],
+    scene: [BootScene, PreloadScene, GameTypeSelect, MapScene, StartScene, GameScene, PauseScene],
 
     currentLevel: localStorage.getItem('currentLevel') ?? 1,
 
