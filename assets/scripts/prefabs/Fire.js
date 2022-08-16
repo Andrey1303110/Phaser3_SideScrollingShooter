@@ -5,8 +5,8 @@ class Fire extends MovableObject {
             x: source.x + source.displayWidth / 2 * source.weapon.origin.x,
             y: source.y,
             texture: source.weapon.texture,
-            velocity: config.Weapons[source.weapon.texture].velocity,
-            scale: config.Weapons[source.weapon.texture].scale,
+            velocity: source.weapon.velocity,
+            scale: source.weapon.scale,
             reward: config.reward[source.weapon.texture],
         };
         return new Fire(data);

@@ -7,13 +7,14 @@ class GameTypeSelect extends Phaser.Scene {
         this.buttons = [];
     }
 
-    create(data) {
-        this.createBG(data);
-        this.createButton('campaign', .35);
-        this.createButton('unlim', .65);
+    create() {
+        this.createBG();
+        this.createButton('campaign', .25);
+        this.createButton('unlim', .5);
+        this.createButton('upgrade', .75);
     }
 
-    createBG(data) {
+    createBG() {
         this.sceneBG = this.add.sprite(config.width / 2, config.height / 2, 'bg').setAlpha(.925).setOrigin(.5).setInteractive();
 
         let scaleX = this.cameras.main.width / this.sceneBG.width;
@@ -25,7 +26,7 @@ class GameTypeSelect extends Phaser.Scene {
     createButton(name, y_pos){
         this.buttons[name] = this.add.sprite(config.width / 2, config.height * y_pos, 'button_' + name)
         .setScale(.65)
-        .setAlpha(.75)
+        .setAlpha(.65)
         .setOrigin(.5)
         .setInteractive()
         .on('pointerdown', this.gameSelect);
@@ -49,6 +50,9 @@ class GameTypeSelect extends Phaser.Scene {
                 break;
             case 'unlim':
                 this.scene.scene.start('Game', config.unlim);
+                break;
+            case 'upgrade':
+                this.scene.scene.start('Upgrade');
                 break;
         }
     }

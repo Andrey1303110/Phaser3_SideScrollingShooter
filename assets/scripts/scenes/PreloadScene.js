@@ -18,6 +18,7 @@ class PreloadScene extends Phaser.Scene {
         this.load.image('missile', 'assets/sprites/missile.png');
         this.load.image('button_campaign', 'assets/sprites/button_campaign.png');
         this.load.image('button_unlim', 'assets/sprites/button_unlim.png');
+        this.load.image('button_upgrade', 'assets/sprites/button_upgrade.png');
         this.load.image('map', 'assets/sprites/map.png');
         this.load.image('battle', 'assets/sprites/battle.png');
         this.load.image('flag', 'assets/sprites/flag.png');
@@ -29,6 +30,9 @@ class PreloadScene extends Phaser.Scene {
         this.load.image('pause_bg', 'assets/sprites/pause_bg.png');
         this.load.image('restart', 'assets/sprites/restart.png');
         this.load.image('play', 'assets/sprites/play.png');
+        this.load.image('scale', 'assets/sprites/scale.png');
+        this.load.image('reload', 'assets/sprites/reload.png');
+        this.load.image('velocity', 'assets/sprites/velocity.png');
         
         this.load.audio('select', 'assets/sounds/select.wav');
         this.load.audio('error', 'assets/sounds/error.mp3');

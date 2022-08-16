@@ -17,7 +17,7 @@ var config = {
         autoCenter: Phaser.Scale.CENTER_BOTH,
     },
 
-    scene: [BootScene, PreloadScene, GameTypeSelect, MapScene, StartScene, GameScene, PauseScene],
+    scene: [BootScene, PreloadScene, GameTypeSelect, MapScene, StartScene, GameScene, PauseScene, UpgradeScene],
 
     currentLevel: localStorage.getItem('currentLevel') ?? 1,
 
@@ -46,7 +46,7 @@ var config = {
 
     Weapons: {
         fire: {
-            reload: 425,
+            reload: 500,
             velocity: 750,
             scale: 0.5,
         },
@@ -60,6 +60,18 @@ var config = {
             velocity: 575 * -1,
             scale: 0.45,
         }
+    },
+
+    weapons_units: {
+        reload: 'ms',
+        velocity: 'm/s',
+        scale: '%',
+    },
+
+    upgradeColors: {
+        reload: '9CDD05',
+        velocity: 'FF2407',
+        scale: '0291F7',
     },
 
     reward: {
@@ -256,7 +268,47 @@ function initLosses(){
     });
 };
 
+function initUpgardeLevels(){
+    let weaponStats = Object.keys(config.Weapons.fire);
+    for (let i = 0; i < weaponStats.length; i++) {
+        const key = weaponStats[i];
+        //localStorage.setItem(`playerWeapon_${key}`, config.Weapons.fire[key]);
+        localStorage.setItem(`playerWeapon_${key}`, 1);
+    }
+};
+
+function setWeaponConf(data){
+    let weapons = Object.keys(config.Weapons.fire);
+
+    if (data.init) {
+        for (let i = 0; i < weapons.length; i++) {
+            const key = weapons[i];
+            const level = localStorage.getItem(`playerWeapon_${key}`);
+    
+            for (let j = 1; j < level; j++) {
+                if (key === 'reload') {
+                    config.Weapons.fire[key] -= config.Weapons.fire[key] * .05;
+                } else {
+                    config.Weapons.fire[key] += config.Weapons.fire[key] * .05;
+                }
+                console.log(config.Weapons.fire[key]);
+            }
+        }
+    } else {
+        if (data.key === 'reload') {
+            config.Weapons.fire[data.key] -= config.Weapons.fire[data.key] * .05;
+        } else {
+            config.Weapons.fire[data.key] += config.Weapons.fire[data.key] * .05;
+        }
+        console.log(config.Weapons.fire[data.key]);
+        return config.Weapons.fire[data.key];
+    }
+}
+
 if (localStorage.getItem('firstTimePlay') !== '0') {
     initHiScores();
     initLosses();
+    initUpgardeLevels();
 }
+
+setWeaponConf({init: true});
