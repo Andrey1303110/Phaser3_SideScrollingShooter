@@ -11,6 +11,7 @@ class UpgradeScene extends Phaser.Scene {
         this.createBG();
         this.createPlayer();
         this.addReturnButton();
+        this.createSounds();
     }
 
     createBG() {
@@ -133,7 +134,7 @@ class UpgradeScene extends Phaser.Scene {
             targets: this,
             ease: 'Linear',
             alpha: .5,
-            duration: 450,
+            duration: 750,
             onComplete: ()=>{ this.clicked = false }
         })
 
@@ -141,6 +142,7 @@ class UpgradeScene extends Phaser.Scene {
     }
 
     createUpgradeAnimation(name){
+        this.sounds.upgrade.play({volume: .2});
         let objects_nums = 20;
         for (let i = 0; i < objects_nums; i++) {
             let data = {
@@ -148,7 +150,7 @@ class UpgradeScene extends Phaser.Scene {
                 y: Phaser.Math.Between((this.player.y - this.player.displayHeight * .5) * 100, (this.player.y + this.player.displayHeight * .5) * 100) / 100,
                 scale: config.height * .075 * (Phaser.Math.Between(50, 150) / 100),
                 alpha: Phaser.Math.Between(75, 100) / 100,
-                duration: Phaser.Math.Between(550, 1250),
+                duration: Phaser.Math.Between(750, 1500),
             }
 
             let plus_symbol = this.add.text(data.x, data.y, '+', {
@@ -172,5 +174,15 @@ class UpgradeScene extends Phaser.Scene {
             .setAlpha(0.65)
             .setInteractive()
             .on('pointerdown', ()=>{this.scene.start('Levels')}, this);
+    }
+
+    createSounds() {
+        if (this.sounds) {
+            return;
+        }
+        this.sounds = {
+            wings: this.sound.add('wings'),
+            upgrade: this.sound.add('upgrade'),
+        };
     }
 }
