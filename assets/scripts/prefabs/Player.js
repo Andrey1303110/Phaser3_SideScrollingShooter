@@ -71,9 +71,8 @@ class Player extends MovableObject {
                         duration: 350,
                         onComplete: () => { this.tween_fly = null }
                     });
-                } else {
-                    this.scene.sounds.wings.play({volume: 0.2});
                 }
+                this.scene.sounds.wings.play({volume: 0.1});
             }
         }
         this.last_frame = this.frame.name;
