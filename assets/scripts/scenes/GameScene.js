@@ -96,9 +96,9 @@ class GameScene extends Phaser.Scene {
 
     addOverlap() {
         this.physics.add.overlap(this.player.fires, this.enemies, this.onOverlap, undefined, this);
-        //this.physics.add.overlap(this.enemies.fires, this.player, this.onOverlap, undefined, this);
+        this.physics.add.overlap(this.enemies.fires, this.player, this.onOverlap, undefined, this);
         this.physics.add.overlap(this.player.fires, this.enemies.fires, this.onOverlap, undefined, this);
-        //this.physics.add.overlap(this.player, this.enemies, this.onOverlap, undefined, this);
+        this.physics.add.overlap(this.player, this.enemies, this.onOverlap, undefined, this);
     }
 
     onOverlap(source, target) {
@@ -218,6 +218,9 @@ class GameScene extends Phaser.Scene {
     }
 
     updateProgressBar(){
+        if (this.info?.unlim) {
+            return;
+        }
         let score = {
             start: this.getRequiredScoreOnLevel(config.currentLevelPlayer - 1),
             end: this.getRequiredScoreOnLevel(config.currentLevelPlayer),
