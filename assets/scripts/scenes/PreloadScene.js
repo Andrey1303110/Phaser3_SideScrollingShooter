@@ -21,6 +21,7 @@ class PreloadScene extends Phaser.Scene {
         this.load.image('button_upgrade', 'assets/sprites/button_upgrade.png');
         this.load.image('map', 'assets/sprites/map.png');
         this.load.image('battle', 'assets/sprites/battle.png');
+        this.load.image('ruby', 'assets/sprites/ruby.png');
         this.load.image('flag', 'assets/sprites/flag.png');
         this.load.image('frame', 'assets/sprites/frame.png');
         this.load.image('stamp', 'assets/sprites/stamp.png');
@@ -33,6 +34,8 @@ class PreloadScene extends Phaser.Scene {
         this.load.image('scale', 'assets/sprites/scale.png');
         this.load.image('reload', 'assets/sprites/reload.png');
         this.load.image('velocity', 'assets/sprites/velocity.png');
+        this.load.image('progressBar', 'assets/sprites/progressBar.png');
+        this.load.image('progressBarFill', 'assets/sprites/progressBarFill.png');
         
         this.load.audio('select', 'assets/sounds/select.wav');
         this.load.audio('error', 'assets/sounds/error.mp3');
@@ -46,6 +49,7 @@ class PreloadScene extends Phaser.Scene {
         this.load.audio('died', 'assets/sounds/died.mp3');
         this.load.audio('win', 'assets/sounds/win.mp3');
         this.load.audio('upgrade', 'assets/sounds/upgrade.mp3');
+        this.load.audio('level_up', 'assets/sounds/level_up.mp3');
     }
 
     create() {

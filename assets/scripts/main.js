@@ -19,7 +19,16 @@ var config = {
 
     scene: [BootScene, PreloadScene, GameTypeSelect, MapScene, StartScene, GameScene, PauseScene, UpgradeScene],
 
-    currentLevel: localStorage.getItem('currentLevel') ?? 1,
+    currentLevelScene: localStorage.getItem('currentLevelScene') ?? 1,
+    currentLevelPlayer: localStorage.getItem('currentLevelPlayer') ?? 1,
+    totalScore: localStorage.getItem('totalScore') ?? 0,
+    money: localStorage.getItem('money') ?? 0,
+
+    level: {
+        scoreCof: 1.2,
+        levelCof: 1.3,
+        score: 500,
+    },
 
     Losses: {
         jet: localStorage.getItem('losses_jet') ?? 0,
@@ -69,16 +78,16 @@ var config = {
     },
 
     upgradeColors: {
-        reload: '9CDD05',
+        reload: '66E210',
         velocity: 'FF2407',
         scale: '0291F7',
     },
 
     reward: {
-        jet: 350,
-        helicopter: 250,
-        missile: 125,
-        rocket: 75,
+        jet: 375,
+        helicopter: 275,
+        missile: 150,
+        rocket: 100,
     },
 
     Levels: [
@@ -212,9 +221,9 @@ var config = {
 
     unlim: {
         unlim: true,
-        level: 20,
+        level: 10,
         enemies: 999,
-        enemiesDelay: 1750,
+        enemiesDelay: 1250,
         velocity: 350,
     },
 
@@ -243,7 +252,7 @@ function setEndpoints() {
                 screenEndpoints.top = (config.height - ((config.width / config.height) / (document.body.clientWidth / document.body.clientHeight) * config.height)) / 2;
                 screenEndpoints.bottom = config.height - (config.height - ((config.width / config.height) / (document.body.clientWidth / document.body.clientHeight) * config.height)) / 2;
             }
-    
+
         } else {
             screenEndpoints.left = (config.width / 2) - (((config.height / document.body.clientHeight) * document.body.clientWidth) / 2);
             screenEndpoints.right = (config.width / 2) + (((config.height / document.body.clientHeight) * document.body.clientWidth) / 2);
@@ -253,7 +262,7 @@ function setEndpoints() {
     }
 };
 
-function initHiScores(){
+function initHiScores() {
     let arr = [];
     for (let i = 0; i < Object.keys(config.Levels).length; i++) {
         arr[i] = 0;
@@ -262,13 +271,13 @@ function initHiScores(){
     localStorage.setItem('unlimHiScores', 0);
 };
 
-function initLosses(){
+function initLosses() {
     Object.keys(config.Losses).forEach(name => {
         localStorage.setItem(`losses_${name}`, 0);
     });
 };
 
-function initUpgardeLevels(){
+function initUpgardeLevels() {
     let weaponStats = Object.keys(config.Weapons.fire);
     for (let i = 0; i < weaponStats.length; i++) {
         const key = weaponStats[i];
@@ -277,21 +286,20 @@ function initUpgardeLevels(){
     }
 };
 
-function setWeaponConf(data){
+function setWeaponConf(data) {
     let weapons = Object.keys(config.Weapons.fire);
 
     if (data.init) {
         for (let i = 0; i < weapons.length; i++) {
             const key = weapons[i];
             const level = localStorage.getItem(`playerWeapon_${key}`);
-    
+
             for (let j = 1; j < level; j++) {
                 if (key === 'reload') {
                     config.Weapons.fire[key] -= config.Weapons.fire[key] * .05;
                 } else {
                     config.Weapons.fire[key] += config.Weapons.fire[key] * .05;
                 }
-                console.log(config.Weapons.fire[key]);
             }
         }
     } else {
@@ -300,7 +308,6 @@ function setWeaponConf(data){
         } else {
             config.Weapons.fire[data.key] += config.Weapons.fire[data.key] * .05;
         }
-        console.log(config.Weapons.fire[data.key]);
         return config.Weapons.fire[data.key];
     }
 }
@@ -309,6 +316,8 @@ if (localStorage.getItem('firstTimePlay') !== '0') {
     initHiScores();
     initLosses();
     initUpgardeLevels();
+    localStorage.setItem('currentLevelPlayer', config.currentLevelPlayer);
+    localStorage.setItem('money', config.money);
 }
 
-setWeaponConf({init: true});
+setWeaponConf({ init: true });

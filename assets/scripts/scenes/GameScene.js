@@ -10,7 +10,7 @@ class GameScene extends Phaser.Scene {
             localStorage.setItem('firstTimePlay', '0');
         }
         this.info = data;
-        this.currentLevel = this.info.level;
+        this.currentLevelScene = this.info.level;
         this.currentScore = 0;
         this.black_bg = null;
         //this.maxLevel = Object.keys(config.Levels)[Object.keys(config.Levels).length-1];
@@ -27,6 +27,9 @@ class GameScene extends Phaser.Scene {
         this.createScoreText();
         this.createSounds();
         this.addPauseButton();
+        if (!this.info?.unlim) {
+            this.addProgressBar();
+        }
     }
 
     update() {
@@ -42,7 +45,7 @@ class GameScene extends Phaser.Scene {
             this.speed = this.info.velocity * .06;
             bg_image = `bg${Phaser.Math.Between(1, config.Levels.length)}`;
         } else {
-            this.speed = config.Levels[this.currentLevel].velocity * .06;
+            this.speed = config.Levels[this.currentLevelScene].velocity * .06;
         }
 
         this.sceneBG = this.add.tileSprite(0, 0, config.width, config.height, bg_image).setOrigin(0).setAlpha(.65);
@@ -59,7 +62,7 @@ class GameScene extends Phaser.Scene {
         }).setOrigin(1, 0).setAlpha(.75);
 
         if (this.info?.unlim) {
-            this.hiScoreText = this.add.text(config.width/2, screenEndpoints.top + config.width * .01, 'High score: ' + localStorage.getItem('unlimHiScores'), {
+            this.hiScoreText = this.add.text(config.width / 2, screenEndpoints.top + config.width * .01, 'High score: ' + localStorage.getItem('unlimHiScores'), {
                 font: `${config.width * .03}px DishOut`,
                 fill: '#EA0000',
             }).setOrigin(0.5, 0).setAlpha(.75);
@@ -87,14 +90,15 @@ class GameScene extends Phaser.Scene {
             wings: this.sound.add('wings'),
             died: this.sound.add('died'),
             win: this.sound.add('win'),
+            level_up: this.sound.add('level_up'),
         };
     }
 
     addOverlap() {
         this.physics.add.overlap(this.player.fires, this.enemies, this.onOverlap, undefined, this);
-        this.physics.add.overlap(this.enemies.fires, this.player, this.onOverlap, undefined, this);
+        //this.physics.add.overlap(this.enemies.fires, this.player, this.onOverlap, undefined, this);
         this.physics.add.overlap(this.player.fires, this.enemies.fires, this.onOverlap, undefined, this);
-        this.physics.add.overlap(this.player, this.enemies, this.onOverlap, undefined, this);
+        //this.physics.add.overlap(this.player, this.enemies, this.onOverlap, undefined, this);
     }
 
     onOverlap(source, target) {
@@ -105,9 +109,17 @@ class GameScene extends Phaser.Scene {
         if (source !== this.player && target !== this.player) {
             let old_value = Number(localStorage.getItem(`losses_${target.texture.key}`));
             localStorage.setItem(`losses_${target.texture.key}`, ++old_value);
-            this.currentScore += target.reward * this.currentLevel;
+            let reward = Number((target.reward * Math.pow(config.level.scoreCof, this.currentLevelScene - 1)).toFixed(0));
+            this.currentScore += reward;
+            if (!this.info?.unlim) {
+                let last_score = Number(config.totalScore);
+                localStorage.setItem('totalScore', last_score + reward);
+                config.totalScore = last_score + reward;
+            }
             this.scoreText.text = this.currentScore;
             Boom.generate(this, target.x, target.y);
+
+            this.updateProgressBar();
         }
 
         source.setAlive(false);
@@ -139,13 +151,13 @@ class GameScene extends Phaser.Scene {
 
             if (this.info.hiScore < this.currentScore) {
                 let hiScores = localStorage.getItem('hiScores').split(',');
-                hiScores[this.currentLevel - 1] = this.currentScore;
+                hiScores[this.currentLevelScene - 1] = this.currentScore;
                 localStorage.setItem('hiScores', hiScores.join());
             }
-            
-            if (config.currentLevel <= this.currentLevel) {
-                config.currentLevel++;
-                localStorage.setItem('currentLevel', config.currentLevel);
+
+            if (config.currentLevelScene <= this.currentLevelScene) {
+                config.currentLevelScene++;
+                localStorage.setItem('currentLevelScene', config.currentLevelScene);
             }
         } else {
             final_text.text = "HEROES DON'T DIE!";
@@ -165,7 +177,7 @@ class GameScene extends Phaser.Scene {
             scale: final_text.scale * 2,
             ease: 'Linear',
             duration: this.sounds.died.duration * 1000 * .75,
-            onComplete: ()=>{
+            onComplete: () => {
                 if (this.info.unlim) {
                     this.scene.start('Levels');
                 } else {
@@ -181,14 +193,94 @@ class GameScene extends Phaser.Scene {
         });
     }
 
-    addPauseButton(){
+    addPauseButton() {
         this.add.sprite(screenEndpoints.left + config.width * .015, screenEndpoints.top + config.width * .015, 'pause')
             .setAlpha(0.65)
             .setInteractive()
-            .on('pointerdown', ()=>{
+            .on('pointerdown', () => {
                 this.scene.launch('Pause');
                 this.scene.pause();
             }, this);
+    }
+
+    addProgressBar(){
+        this.progressBar = this.add.sprite(config.width/2, screenEndpoints.top + config.width * .0225, 'progressBar')
+            .setAlpha(0.95);
+        this.progressBar.fillProgress = this.add.sprite(this.progressBar.x + this.progressBar.displayWidth * .1, this.progressBar.y + this.progressBar.displayHeight * .04, 'progressBarFill')
+            .setAlpha(0.95);
+        
+        this.progressBar.levelText = this.add.text(this.progressBar.x - this.progressBar.displayWidth * .38, this.progressBar.y - this.progressBar.displayHeight * .035, config.currentLevelPlayer, {
+            font: `${this.progressBar.displayHeight * .545}px DishOut`,
+            fill: '#FFFFFF',
+        }).setOrigin(0.5).setAlpha(0.75);
+
+        this.updateProgressBar();
+    }
+
+    updateProgressBar(){
+        let score = {
+            start: this.getRequiredScoreOnLevel(config.currentLevelPlayer - 1),
+            end: this.getRequiredScoreOnLevel(config.currentLevelPlayer),
+            diff: this.getRequiredScoreOnLevel(config.currentLevelPlayer) - this.getRequiredScoreOnLevel(config.currentLevelPlayer - 1)
+        };
+        let currentProgress = (config.totalScore - score.start)/score.diff;
+        if (config.currentLevelPlayer < 2) {
+            currentProgress = config.totalScore/score.diff;
+        }
+
+        if (currentProgress >= 1) {
+            this.increaseLevel();
+            score = {
+                start: this.getRequiredScoreOnLevel(config.currentLevelPlayer - 1),
+                end: this.getRequiredScoreOnLevel(config.currentLevelPlayer),
+                diff: this.getRequiredScoreOnLevel(config.currentLevelPlayer) - this.getRequiredScoreOnLevel(config.currentLevelPlayer - 1)
+            };
+            currentProgress = 1 - (-1 * (config.totalScore - score.end)/score.diff);
+        }
+
+        this.progressBar.fillProgress.frame.cutWidth = this.progressBar.fillProgress.displayWidth * currentProgress;
+        this.progressBar.fillProgress.frame.updateUVs();
+        this.progressBar.text = config.currentLevelPlayer;
+    }
+
+    increaseLevel(){
+        this.sounds.level_up.play({volume: .5});
+        config.currentLevelPlayer++;
+        localStorage.setItem('currentLevelPlayer', config.currentLevelPlayer);
+
+        let text = this.add.text(config.width/2, config.height/2, config.currentLevelPlayer, {
+            font: `${config.width * .25}px DishOut`,
+            fill: '#FFFFFF',
+        }).setOrigin(0.5).setAlpha(0);
+        
+        this.tweens.add({
+            targets: text,
+            alpha: 1,
+            x: this.progressBar.levelText.x,
+            y: this.progressBar.levelText.y,
+            scale: this.progressBar.levelText.displayWidth/text.displayWidth,
+            ease: 'Linear',
+            duration: 500,
+            onComplete: () => {
+                text.destroy();
+                this.progressBar.levelText.text = config.currentLevelPlayer;
+            }
+        });
+
+        this.increaseMoney();
+    }
+
+    getRequiredScoreOnLevel(level){
+        let result = 0;
+        for (let i = 0; i < level; i++) {
+            result += Number((config.level.score * Math.pow(config.level.levelCof, i)).toFixed(0));
+        }
+        return result;
+    }
+
+    increaseMoney(){
+        ++config.money;
+        localStorage.setItem('money', config.money);
     }
 
     getMaxEnemyHeightFrame() {
