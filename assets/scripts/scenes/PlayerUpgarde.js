@@ -155,9 +155,9 @@ class UpgradeScene extends Phaser.Scene {
         this.checkAvailable(this.buttons[data.key]);
     }
 
-    decreaseMoney(){
+    decreaseMoney(value){
         if (config.money) {
-            --config.money;
+            config.money -= value;
             localStorage.setItem('money', config.money);
             this.moneyText.text = config.money;
         }
@@ -176,7 +176,7 @@ class UpgradeScene extends Phaser.Scene {
 
         let value = localStorage.getItem(`playerWeapon_${this.name}`);
 
-        if (this.scene.decreaseMoney() === false) {
+        if (this.scene.decreaseMoney(this.cost) === false) {
             return;
         }
 
