@@ -14,6 +14,7 @@ class MapScene extends Phaser.Scene {
         this.createMissions();
         this.createLosses();
         this.addReturnButton();
+        this.addAvailableMoney();
     }
 
     createBG() {
@@ -239,6 +240,19 @@ class MapScene extends Phaser.Scene {
             .setAlpha(0.65)
             .setInteractive()
             .on('pointerdown', () => { this.scene.start('Levels') }, this);
+    }
+
+    addAvailableMoney(){
+        const style = {
+            font: `${config.width * .031}px DishOut`,
+            fill: '#FFFFFF',
+        };
+
+        this.moneyIcon = this.add.sprite(screenEndpoints.right - config.height * .075, screenEndpoints.top + config.height * .075, 'ruby')
+            .setScale(.25)
+            .setInteractive()
+            .on('pointerdown', ()=>{this.scene.start('Upgrade')});
+        this.moneyText = this.add.text(this.moneyIcon.x - this.moneyIcon.displayWidth, this.moneyIcon.y, config.money, style).setOrigin(.5).setAlpha(1);
     }
 
     createSounds() {
