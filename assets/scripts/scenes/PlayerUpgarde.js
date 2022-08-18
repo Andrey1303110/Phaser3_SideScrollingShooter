@@ -70,7 +70,7 @@ class UpgradeScene extends Phaser.Scene {
                 multiplier = 100;
             }
 
-            const value = Math.round(config.Weapons.fire[key] * multiplier) / multiplier * multiplier;
+            const value = (Math.round(config.Weapons.fire[key] * multiplier) / multiplier * multiplier).toFixed(0);
 
             const x = config.width * .57;
             const y = (config.height/2 - height/2) + (height / weaponStats.length) * i;

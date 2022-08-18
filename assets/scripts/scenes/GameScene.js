@@ -13,7 +13,6 @@ class GameScene extends Phaser.Scene {
         this.currentLevelScene = this.info.level;
         this.currentScore = 0;
         this.black_bg = null;
-        //this.maxLevel = Object.keys(config.Levels)[Object.keys(config.Levels).length-1];
     }
 
     create(data) {
