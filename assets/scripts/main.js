@@ -95,6 +95,7 @@ var config = {
     },
 
     reward: {
+        missile_2: 750,
         strategic_jet: 500,
         jet: 375,
         helicopter: 275,
@@ -118,7 +119,7 @@ var config = {
             x: 506,
             y: 490,
             enemies: 8,
-            enemiesDelay: 2000,
+            enemiesDelay: 2250,
             velocity: 265,
         },
         {
@@ -127,7 +128,7 @@ var config = {
             x: 758,
             y: 179,
             enemies: 11,
-            enemiesDelay: 1750,
+            enemiesDelay: 2000,
             velocity: 285,
         },
         {
@@ -136,7 +137,7 @@ var config = {
             x: 430,
             y: 135,
             enemies: 15,
-            enemiesDelay: 1550,
+            enemiesDelay: 1750,
             velocity: 315,
         },
         {
@@ -145,7 +146,7 @@ var config = {
             x: 890,
             y: 397,
             enemies: 21,
-            enemiesDelay: 1300,
+            enemiesDelay: 1600,
             velocity: 340,
         },
         {
@@ -154,7 +155,7 @@ var config = {
             x: 353,
             y: 287,
             enemies: 28,
-            enemiesDelay: 1100,
+            enemiesDelay: 1450,
             velocity: 340,
         },
         {
@@ -163,7 +164,7 @@ var config = {
             x: 435,
             y: 195,
             enemies: 39,
-            enemiesDelay: 900,
+            enemiesDelay: 1300,
             velocity: 340,
         },
         {
@@ -172,7 +173,7 @@ var config = {
             x: 105,
             y: 248,
             enemies: 50,
-            enemiesDelay: 800,
+            enemiesDelay: 1150,
             velocity: 340,
         },
         {
@@ -181,7 +182,7 @@ var config = {
             x: 720,
             y: 311,
             enemies: 65,
-            enemiesDelay: 700,
+            enemiesDelay: 1075,
             velocity: 340,
         },
         {
@@ -190,7 +191,7 @@ var config = {
             x: 732,
             y: 509,
             enemies: 82,
-            enemiesDelay: 650,
+            enemiesDelay: 1000,
             velocity: 340,
         },
         {
@@ -199,7 +200,7 @@ var config = {
             x: 874,
             y: 333,
             enemies: 100,
-            enemiesDelay: 550,
+            enemiesDelay: 925,
             velocity: 340,
         },
         {
@@ -208,7 +209,7 @@ var config = {
             x: 735,
             y: 366,
             enemies: 120,
-            enemiesDelay: 500,
+            enemiesDelay: 850,
             velocity: 340,
         },
         {
@@ -217,7 +218,7 @@ var config = {
             x: 676,
             y: 640,
             enemies: 145,
-            enemiesDelay: 450,
+            enemiesDelay: 775,
             velocity: 340,
         },
         {
@@ -226,7 +227,7 @@ var config = {
             x: 956,
             y: 261,
             enemies: 200,
-            enemiesDelay: 425,
+            enemiesDelay: 700,
             velocity: 340,
         },
     ],
