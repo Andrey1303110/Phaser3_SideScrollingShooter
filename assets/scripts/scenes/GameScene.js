@@ -107,20 +107,30 @@ class GameScene extends Phaser.Scene {
         }
 
         if (source !== this.player && target !== this.player) {
-            let old_value = Number(localStorage.getItem(`losses_${target.texture.key}`));
-            localStorage.setItem(`losses_${target.texture.key}`, ++old_value);
+            if (!this.info?.unlim) {
+                let losses_name = target.texture.key;
+                if (target.texture.key === 'strategic_jet') {
+                    losses_name = 'jet';
+                } else if (target.texture.key === 'missile_2') {
+                    losses_name = 'missile';
+                }
+                let old_value = Number(localStorage.getItem(`losses_${losses_name}`));
+                localStorage.setItem(`losses_${losses_name}`, ++old_value);
+            }
+
             let reward = Number((target.reward * Math.pow(config.level.scoreCof, this.currentLevelScene - 1)).toFixed(0));
             this.currentScore += reward;
+
             if (!this.info?.unlim) {
                 let last_score = Number(config.totalScore);
                 localStorage.setItem('totalScore', last_score + reward);
                 config.totalScore = last_score + reward;
             }
             this.scoreText.text = this.currentScore;
-            Boom.generate(this, target.x, target.y);
-
             this.updateProgressBar();
         }
+
+        Boom.generate(this, target.x, target.y);
 
         source.setAlive(false);
         target.setAlive(false);
