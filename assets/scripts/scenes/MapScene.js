@@ -169,7 +169,8 @@ class MapScene extends Phaser.Scene {
                     .on('pointerout', () => { start_button.setAlpha(.55) });
                 texts.push(start_button);
 
-                let close_button = this.add.sprite(screenEndpoints.right - config.width * .035, screenEndpoints.top + config.width * .035, 'close')
+                let close_button = this.add.sprite(frame.x + frame.displayWidth/2, frame.y - frame.displayHeight/2, 'close')
+                    .setOrigin(1.3, -.35)
                     .setAlpha(0.65)
                     .setInteractive()
                     .on('pointerdown', () => { this.cardClose({ bg_rect, frame, texts, stamp, close_button }) })
