@@ -2,8 +2,19 @@ class Enemy extends MovableObject {
     static generateAttr(scene) {
         const x = screenEndpoints.right + config.width * .25;
         const y = Phaser.Math.Between(screenEndpoints.top + scene.maxEnemyFrameHeight / 2, screenEndpoints.bottom - scene.maxEnemyFrameHeight / 2);
-        const enemy_type = config.Enemies.names[Phaser.Math.Between(0, 1)];
+
+        let enemy_nums = 0;
+
+        if (scene.info.level > 4) {
+            enemy_nums = 1;
+            if (scene.info.level > 8) {
+                enemy_nums = 2;
+            }
+        }
+
+        const enemy_type = Object.keys(config.Enemies)[Phaser.Math.Between(0, enemy_nums)];
         const enemy_frame = `enemy${Phaser.Math.Between(1, 4)}`;
+
         return { x, y, enemy_frame, enemy_type };
     }
 
@@ -17,7 +28,7 @@ class Enemy extends MovableObject {
             y: data.y,
             enemy_type: data.enemy_type,
             texture: data.enemy_type,
-            frame: data.frame,
+            frame: data.enemy_frame,
             velocity: config.Enemies[data.enemy_type].velocity * -1,
         });
     }
