@@ -42,14 +42,20 @@ var config = {
     },
 
     Enemies: {
-        names: ['jet', 'helicopter'],
         helicopter: {
             velocity: 175,
             weapon: 'rocket',
+            nums: 4,
         },
         jet: {
             velocity: 325,
             weapon: 'missile',
+            nums: 4,
+        },
+        strategic_jet: {
+            velocity: 400,
+            weapon: 'missile_2',
+            nums: 4,
         },
     },
 
@@ -60,14 +66,19 @@ var config = {
             scale: 0.5,
         },
         rocket: {
-            reload: 1950,
+            reload: 1500,
             velocity: 415 * -1,
             scale: 0.35,
         },
         missile: {
-            reload: 2550,
+            reload: 1750,
             velocity: 575 * -1,
             scale: 0.45,
+        },
+        missile_2: {
+            reload: 2000,
+            velocity: 1000 * -1,
+            scale: 0.5,
         }
     },
 
@@ -84,6 +95,7 @@ var config = {
     },
 
     reward: {
+        strategic_jet: 500,
         jet: 375,
         helicopter: 275,
         missile: 150,
@@ -96,8 +108,8 @@ var config = {
             name: 'Kyiv Pechersk',
             x: 485,
             y: 175,
-            enemies: 3,
-            enemiesDelay: 2200,
+            enemies: 5,
+            enemiesDelay: 2500,
             velocity: 250,
         },
         {
@@ -105,8 +117,8 @@ var config = {
             name: 'Odesa',
             x: 506,
             y: 490,
-            enemies: 6,
-            enemiesDelay: 1950,
+            enemies: 8,
+            enemiesDelay: 2000,
             velocity: 265,
         },
         {
@@ -114,7 +126,7 @@ var config = {
             name: 'Kharkiv',
             x: 758,
             y: 179,
-            enemies: 10,
+            enemies: 11,
             enemiesDelay: 1750,
             velocity: 285,
         },

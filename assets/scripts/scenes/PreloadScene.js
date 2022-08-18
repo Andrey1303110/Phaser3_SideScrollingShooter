@@ -9,6 +9,7 @@ class PreloadScene extends Phaser.Scene {
         }
         this.load.atlas('dragon', 'assets/sprites/dragon.png', 'assets/sprites/dragon.json');
         this.load.atlas('jet', 'assets/sprites/jet.png', 'assets/sprites/jet.json');
+        this.load.atlas('strategic_jet', 'assets/sprites/strategic_jet.png', 'assets/sprites/strategic_jet.json');
         this.load.atlas('helicopter', 'assets/sprites/helicopter.png', 'assets/sprites/helicopter.json');
         this.load.atlas('boom', 'assets/sprites/boom.png', 'assets/sprites/boom.json');
         
@@ -16,6 +17,7 @@ class PreloadScene extends Phaser.Scene {
         this.load.image('flag', 'assets/sprites/flag.png');
         this.load.image('rocket', 'assets/sprites/rocket.png');
         this.load.image('missile', 'assets/sprites/missile.png');
+        this.load.image('missile_2', 'assets/sprites/missile_2.png');
         this.load.image('button_campaign', 'assets/sprites/button_campaign.png');
         this.load.image('button_unlim', 'assets/sprites/button_unlim.png');
         this.load.image('button_upgrade', 'assets/sprites/button_upgrade.png');
@@ -42,6 +44,7 @@ class PreloadScene extends Phaser.Scene {
         this.load.audio('rocket_launch', 'assets/sounds/rocket_launch.mp3');
         this.load.audio('fire_launch', 'assets/sounds/fire_launch.mp3');
         this.load.audio('missile_launch', 'assets/sounds/missile_launch.mp3');
+        this.load.audio('missile_2_launch', 'assets/sounds/missile_2_launch.mp3');
         this.load.audio('explosion_small', 'assets/sounds/explosion_small.mp3');
         this.load.audio('wings', 'assets/sounds/wings.mp3');
         this.load.audio('stamp', 'assets/sounds/stamp.mp3');
