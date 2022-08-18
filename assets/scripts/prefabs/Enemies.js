@@ -25,18 +25,12 @@ class Enemies extends Phaser.Physics.Arcade.Group {
     stopTimer(){
         this.timer.remove();
     }
-
+    
     createEnemy() {
         if (this.countMax > this.createdCount) {
-            let enemy = this.getFirstDead();
-
-            if (!enemy) {
-                enemy = Enemy.generate(this.scene, this.fires);
-                enemy.on('killed', this.onEnemyKilled, this);
-                this.add(enemy);
-            } else {
-                enemy.reset();
-            }
+            let enemy = Enemy.generate(this.scene, this.fires);
+            enemy.on('killed', this.onEnemyKilled, this);
+            this.add(enemy);
             enemy.move();
             this.createdCount++;
         } else {
