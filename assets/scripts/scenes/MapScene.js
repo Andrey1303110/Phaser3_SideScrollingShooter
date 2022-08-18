@@ -53,10 +53,9 @@ class MapScene extends Phaser.Scene {
                 .on('pointerdown', () => { this.sounds.error.play({ volume: .33 }) });
             dot.active = false;
         } else {
-            dot
-                .setAlpha(1)
+            dot.setAlpha(1)
                 .on('pointerdown', () => { this.sounds.select.play({ volume: .33 }) })
-            //.setDepth(Object.keys(config.Levels)[Object.keys(config.Levels).length-1]);
+                //.setDepth(Object.keys(config.Levels)[Object.keys(config.Levels).length-1]);
             dot.active = true;
             if (config.currentLevelScene > object.level) {
                 dot.setTexture('flag').setOrigin(0, 1);
