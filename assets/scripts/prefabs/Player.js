@@ -101,16 +101,16 @@ class Player extends MovableObject {
         }
         */
 
-        if (this.y < screenEndpoints.top + this.displayHeight / 2) {
-            return this.y = screenEndpoints.top + this.displayHeight / 2 + 50;
-        } else if (this.y > screenEndpoints.bottom - this.displayHeight / 2) {
-            return this.y = screenEndpoints.bottom - this.displayHeight / 2 - 50;
+        if (this.y < screenEndpoints.top + this.displayHeight / 1.5) {
+            return this.y += 1.5;
+        } else if (this.y > screenEndpoints.bottom - this.displayHeight / 1.5) {
+            return this.y -= 1.5;
         }
 
-        if (this.x < screenEndpoints.left + this.displayWidth / 2) {
-            return this.x += 2.5;
-        } else if (this.x > screenEndpoints.right - this.displayWidth / 2) {
-            return this.x -= 2.5;
+        if (this.x < screenEndpoints.left + this.displayWidth / 1.5) {
+            return this.x += 1.5;
+        } else if (this.x > screenEndpoints.right - this.displayWidth / 1.5) {
+            return this.x -= 1.5;
         }
 
         if (this.scene.cursors.left.isDown) {
