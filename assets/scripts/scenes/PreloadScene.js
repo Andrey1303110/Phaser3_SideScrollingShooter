@@ -3,15 +3,31 @@ class PreloadScene extends Phaser.Scene {
         super("Preload");
     }
 
-    preload() {
-        for (let i = 1; i <= config.Levels.length; i++) {
-            this.load.image(`bg${i}`, `assets/sprites/bg${i}.png`);
-        }
+    preload(){
+        this.createBG();
+        const loadingBar = new LoadingBar(this);
+        this.preloadAssets();
+    }
+
+    createBG() {
+        this.sceneBG = this.add.sprite(config.width / 2, config.height / 2, 'bg').setAlpha(.925).setOrigin(.5).setInteractive();
+
+        let scaleX = this.cameras.main.width / this.sceneBG.width;
+        let scaleY = this.cameras.main.height / this.sceneBG.height;
+        let scale = Math.max(scaleX, scaleY);
+        this.sceneBG.setScale(scale).setScrollFactor(0);
+    }
+
+    preloadAssets() {
         this.load.atlas('dragon', 'assets/sprites/dragon.png', 'assets/sprites/dragon.json');
         this.load.atlas('jet', 'assets/sprites/jet.png', 'assets/sprites/jet.json');
         this.load.atlas('strategic_jet', 'assets/sprites/strategic_jet.png', 'assets/sprites/strategic_jet.json');
         this.load.atlas('helicopter', 'assets/sprites/helicopter.png', 'assets/sprites/helicopter.json');
         this.load.atlas('boom', 'assets/sprites/boom.png', 'assets/sprites/boom.json');
+
+        for (let i = 1; i <= config.Levels.length; i++) {
+            this.load.image(`bg${i}`, `assets/sprites/bg${i}.png`);
+        }
         
         this.load.image('fire', 'assets/sprites/fire.png');
         this.load.image('flag', 'assets/sprites/flag.png');

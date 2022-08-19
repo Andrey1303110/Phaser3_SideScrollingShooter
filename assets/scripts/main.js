@@ -342,3 +342,7 @@ if (localStorage.getItem('firstTimePlay') !== '0') {
 }
 
 setWeaponConf({ init: true });
+
+function rgbToHex(colors) {
+    return "0x" + ((1 << 24) + (colors.r << 16) + (colors.g << 8) + colors.b).toString(16).slice(1);
+}
