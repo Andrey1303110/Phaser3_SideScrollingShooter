@@ -1,5 +1,3 @@
-var player;
-var test;
 class GameScene extends Phaser.Scene {
     constructor() {
         super("Game");
@@ -29,10 +27,42 @@ class GameScene extends Phaser.Scene {
         if (!this.info?.unlim) {
             this.addProgressBar();
         }
+        this.addJoystick();
+        this.addFireButton();
+    }
+
+    addJoystick(){
+        this.joyStick = this.plugins.get('rexvirtualjoystickplugin').add(this, {
+            x: screenEndpoints.left + config.joystick.radius + config.joystick.gap,
+            y: screenEndpoints.bottom - config.joystick.radius - config.joystick.gap,
+            radius: config.joystick.radius,
+            base: this.add.circle(0, 0, config.joystick.radius).setStrokeStyle(3.5, 0x1a65ac),
+            thumb: this.add.circle(0, 0, config.joystick.radius/2, 0xcccccc).setAlpha(.5),
+            dir: '8dir',
+        });
+    }
+
+    dumpJoyStickState() {
+        this.cursorKeys = this.joyStick.createCursorKeys();
+    }
+
+    addFireButton(){
+        this.fireButton = this.add.sprite(screenEndpoints.right - config.joystick.radius - config.joystick.gap, this.joyStick.y, 'fire')
+        .setAlpha(0.65)
+        .setInteractive()
+        .setActive(false)
+        .on('pointerup', () => {
+            this.fireButton.active = false;
+        }, this)
+        .on('pointerdown', () => {
+            this.fireButton.active = true;
+            this.player.shooting();
+        }, this);
     }
 
     update() {
         this.sceneBG.tilePositionX += this.sceneBG.width / 10000 * this.speed;
+        this.dumpJoyStickState();
         this.player.move();
         this.player.shooting();
     }
@@ -70,7 +100,6 @@ class GameScene extends Phaser.Scene {
 
     createPlayer() {
         this.player = new Player({ scene: this });
-        player = this.player;
     }
 
     createEnemies() {

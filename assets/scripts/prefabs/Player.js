@@ -79,12 +79,17 @@ class Player extends MovableObject {
     }
 
     shooting() {
-        if (this.scene.cursors.space.isDown && !this.fires_activate) {
+        if ((this.scene.cursors.space.isDown || this.scene.fireButton.active) && !this.fires_activate) {
+            this.scene.fireButton.setAlpha(.95);
             this.fires.createFire(this);
             this.fires_activate = true;
+
             this.fireTimer = this.scene.time.addEvent({
                 delay: this.weapon.delay,
-                callback: () => { this.fires_activate = false },
+                callback: () => { 
+                    this.fires_activate = false;
+                    this.scene.fireButton.setAlpha(.65);
+                },
                 callbackScope: this,
             });
         }
@@ -92,14 +97,6 @@ class Player extends MovableObject {
 
     move() {
         this.body.setVelocity(0);
-
-        /*
-        if (this.y < screenEndpoints.top + this.displayHeight || this.y > screenEndpoints.bottom - this.displayHeight) {
-            if (this.tween_fly) {
-                this.tween_fly.paused = true;
-            }
-        }
-        */
 
         if (this.y < screenEndpoints.top + this.displayHeight / 1.5) {
             return this.y += 1.5;
@@ -113,20 +110,44 @@ class Player extends MovableObject {
             return this.x -= 1.5;
         }
 
-        if (this.scene.cursors.left.isDown) {
-            this.body.setVelocityX(-this.velocity);
-        } else if (this.scene.cursors.right.isDown) {
-            this.body.setVelocityX(this.velocity);
+        this.handling(); 
+    }
+
+    handling(){
+        let buttons;
+        let cof = 100;
+        let isJoystick = false;
+
+        for (var name in this.scene.cursorKeys) {
+            if (this.scene.cursorKeys[name].isDown) {
+                isJoystick = true;
+                cof = Math.floor(this.scene.joyStick.force * 100) / 100;
+                if (cof > 100) {
+                    cof = 100;
+                }
+            }
         }
 
-        if (this.scene.cursors.up.isDown || this.scene.cursors.down.isDown) {
+        (!isJoystick) ? buttons = this.scene.cursors : buttons = this.scene.cursorKeys;
+
+        if (!buttons) {
+            return;
+        }
+
+        if (buttons.left.isDown) {
+            this.body.setVelocityX(-this.velocity * (cof / 100));
+        } else if (buttons.right.isDown) {
+            this.body.setVelocityX(this.velocity * (cof / 100));
+        }
+
+        if (buttons.up.isDown || buttons.down.isDown) {
             if (this.tween_fly) {
                 this.tween_fly.paused = true;
             }
-            if (this.scene.cursors.up.isDown) {
-                this.body.setVelocityY(-this.velocity);
-            } else if (this.scene.cursors.down.isDown) {
-                this.body.setVelocityY(this.velocity);
+            if (buttons.up.isDown) {
+                this.body.setVelocityY(-this.velocity * (cof / 100));
+            } else if (buttons.down.isDown) {
+                this.body.setVelocityY(this.velocity * (cof / 100));
             }
         }
     }

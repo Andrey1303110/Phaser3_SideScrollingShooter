@@ -53,6 +53,8 @@ class PreloadScene extends Phaser.Scene {
         this.load.audio('win', 'assets/sounds/win.mp3');
         this.load.audio('upgrade', 'assets/sounds/upgrade.mp3');
         this.load.audio('level_up', 'assets/sounds/level_up.mp3');
+
+        this.load.plugin('rexvirtualjoystickplugin', 'assets/plugins/rexvirtualjoystickplugin.min.js', true);
     }
 
     create() {

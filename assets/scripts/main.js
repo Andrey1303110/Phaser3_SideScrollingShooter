@@ -2,6 +2,9 @@ var config = {
     type: Phaser.AUTO,
     width: 1280,
     height: 720,
+    input: {
+		activePointers: 3,
+	},
     physics: {
         default: 'arcade',
         arcade: {
@@ -23,6 +26,11 @@ var config = {
     currentLevelPlayer: localStorage.getItem('currentLevelPlayer') ?? 1,
     totalScore: localStorage.getItem('totalScore') ?? 0,
     money: localStorage.getItem('money') ?? 0,
+
+    joystick: {
+        radius: 100,
+        gap: 35
+    },
 
     level: {
         scoreCof: 1.2,
