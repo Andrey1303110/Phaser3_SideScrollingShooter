@@ -23,6 +23,7 @@ class LoadingBar {
 
     setEvents(){
         this.scene.load.on('progress', this.showProgressBar, this);
+        this.scene.load.on('complete', ()=>{this.scene.scene.start('Levels')}, this);
     }
 
     showProgressBox(){

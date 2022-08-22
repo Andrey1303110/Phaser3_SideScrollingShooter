@@ -18,17 +18,18 @@ class PreloadScene extends Phaser.Scene {
         this.sceneBG.setScale(scale).setScrollFactor(0);
     }
 
-    preloadAssets() {
+    preloadAtalses(){
         this.load.atlas('dragon', 'assets/sprites/dragon.png', 'assets/sprites/dragon.json');
         this.load.atlas('jet', 'assets/sprites/jet.png', 'assets/sprites/jet.json');
         this.load.atlas('strategic_jet', 'assets/sprites/strategic_jet.png', 'assets/sprites/strategic_jet.json');
         this.load.atlas('helicopter', 'assets/sprites/helicopter.png', 'assets/sprites/helicopter.json');
         this.load.atlas('boom', 'assets/sprites/boom.png', 'assets/sprites/boom.json');
+    }
 
+    preloadImages(){
         for (let i = 1; i <= config.Levels.length; i++) {
             this.load.image(`bg${i}`, `assets/sprites/bg${i}.png`);
         }
-        
         this.load.image('fire', 'assets/sprites/fire.png');
         this.load.image('flag', 'assets/sprites/flag.png');
         this.load.image('rocket', 'assets/sprites/rocket.png');
@@ -54,7 +55,9 @@ class PreloadScene extends Phaser.Scene {
         this.load.image('velocity', 'assets/sprites/velocity.png');
         this.load.image('progressBar', 'assets/sprites/progressBar.png');
         this.load.image('progressBarFill', 'assets/sprites/progressBarFill.png');
-        
+    }
+
+    preloadAudios(){
         this.load.audio('select', 'assets/sounds/select.wav');
         this.load.audio('error', 'assets/sounds/error.mp3');
         this.load.audio('rocket_launch', 'assets/sounds/rocket_launch.mp3');
@@ -69,11 +72,16 @@ class PreloadScene extends Phaser.Scene {
         this.load.audio('win', 'assets/sounds/win.mp3');
         this.load.audio('upgrade', 'assets/sounds/upgrade.mp3');
         this.load.audio('level_up', 'assets/sounds/level_up.mp3');
+    }
 
+    preloadOther(){
         this.load.plugin('rexvirtualjoystickplugin', 'assets/plugins/rexvirtualjoystickplugin.min.js', true);
     }
 
-    create() {
-        this.scene.start('Levels');
+    preloadAssets() {
+        this.preloadAtalses();
+        this.preloadImages();
+        this.preloadAudios();
+        this.preloadOther();
     }
 }

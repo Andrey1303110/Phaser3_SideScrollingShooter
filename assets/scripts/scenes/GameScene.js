@@ -68,7 +68,10 @@ class GameScene extends Phaser.Scene {
     }
 
     createBG(data) {
-        let bg_image = `bg${data.level}`
+        let bg_image = `bg${data.level}`;
+
+        let real_height = this.textures.list[bg_image].source[0].height;
+        let scale = config.height/real_height;
 
         if (data?.unlim) {
             this.speed = this.info.velocity * .06;
@@ -77,7 +80,11 @@ class GameScene extends Phaser.Scene {
             this.speed = config.Levels[this.currentLevelScene-1].velocity * .065;
         }
 
-        this.sceneBG = this.add.tileSprite(0, 0, config.width, config.height, bg_image).setOrigin(0).setAlpha(.65);
+        if (scale !== 1) {
+            this.speed /= scale;
+        }
+
+        this.sceneBG = this.add.tileSprite(0, 0, config.width, config.height, bg_image).setOrigin(0).setScale(scale).setAlpha(.65);
     }
 
     createScoreText() {
