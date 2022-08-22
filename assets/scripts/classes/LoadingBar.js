@@ -8,9 +8,9 @@ class LoadingBar {
         };
         this.style = {
             boxColor: 0xe3e1da,
-            x: config.width/2 - (config.width * .8 / 2),
+            x: config.width/2 - (config.width * .5 / 2),
             y: config.height/2 + config.height * .25,
-            width: config.width * .8,
+            width: config.width * .5,
             height: config.height * .05,
         };
 
