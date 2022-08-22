@@ -24,23 +24,26 @@ class GameScene extends Phaser.Scene {
         this.createScoreText();
         this.createSounds();
         this.addPauseButton();
+        this.addJoystick();
+        this.addFireButton();
         if (!this.info?.unlim) {
             this.addProgressBar();
-        }
-
-        if (document.body.clientWidth < 1280) {
-            this.addJoystick();
-            this.addFireButton();
         }
     }
 
     addJoystick(){
+        let alpha_cof = 1;
+
+        if (document.body.clientWidth > 1280) {
+            alpha_cof = 0;
+        }
+
         this.joyStick = this.plugins.get('rexvirtualjoystickplugin').add(this, {
             x: screenEndpoints.left + config.joystick.radius + config.joystick.gap,
             y: screenEndpoints.bottom - config.joystick.radius - config.joystick.gap,
             radius: config.joystick.radius,
-            base: this.add.circle(0, 0, config.joystick.radius).setStrokeStyle(3.5, 0x1a65ac),
-            thumb: this.add.circle(0, 0, config.joystick.radius/2, 0xcccccc).setAlpha(.5),
+            base: this.add.circle(0, 0, config.joystick.radius).setStrokeStyle(3.5, 0x1a65ac).setAlpha(.75 * alpha_cof),
+            thumb: this.add.circle(0, 0, config.joystick.radius/2, 0xcccccc).setAlpha(.5 * alpha_cof),
             dir: '8dir',
         });
     }
@@ -52,8 +55,14 @@ class GameScene extends Phaser.Scene {
     }
 
     addFireButton(){
+        let alpha_cof = 1;
+
+        if (document.body.clientWidth > 1280) {
+            alpha_cof = 0;
+        }
+
         this.fireButton = this.add.sprite(screenEndpoints.right - config.joystick.radius - config.joystick.gap, this.joyStick.y, 'fire')
-        .setAlpha(0.65)
+        .setAlpha(0.65 * alpha_cof)
         .setInteractive()
         .setActive(false)
         .on('pointerup', () => {
@@ -75,19 +84,14 @@ class GameScene extends Phaser.Scene {
     createBG(data) {
         let bg_image = `bg${data.level}`;
 
+        if (data?.unlim) {
+            bg_image = `bg${Phaser.Math.Between(1, config.Levels.length)}`;
+        }
+
         let real_height = this.textures.list[bg_image].source[0].height;
         let scale = config.height/real_height;
 
-        if (data?.unlim) {
-            this.speed = this.info.velocity * .06;
-            let num = Phaser.Math.Between(1, config.Levels.length);
-            bg_image = `bg${num}`;
-
-            real_height = this.textures.list[bg_image].source[0].height;
-            scale = config.height/real_height;
-        } else {
-            this.speed = config.Levels[this.currentLevelScene-1].velocity * .048;
-        }
+        this.speed = config.Levels[this.currentLevelScene-1].velocity * .048;
 
         if (scale !== 1) {
             this.speed /= scale;
@@ -346,7 +350,7 @@ class GameScene extends Phaser.Scene {
 
         Object.keys(frames).forEach(function (key) {
             if (frames[key].cutHeight > max_frame_height) {
-                max_frame_height = frames[key].cutHeight;
+                max_frame_height = frames[key].height;
             }
         });
         this.maxEnemyFrameHeight = max_frame_height;
