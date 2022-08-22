@@ -74,7 +74,7 @@ class GameScene extends Phaser.Scene {
             this.speed = this.info.velocity * .06;
             bg_image = `bg${Phaser.Math.Between(1, config.Levels.length)}`;
         } else {
-            this.speed = config.Levels[this.currentLevelScene].velocity * .06;
+            this.speed = config.Levels[this.currentLevelScene-1].velocity * .065;
         }
 
         this.sceneBG = this.add.tileSprite(0, 0, config.width, config.height, bg_image).setOrigin(0).setAlpha(.65);
