@@ -27,8 +27,11 @@ class GameScene extends Phaser.Scene {
         if (!this.info?.unlim) {
             this.addProgressBar();
         }
-        this.addJoystick();
-        this.addFireButton();
+
+        if (document.body.clientWidth < 1280) {
+            this.addJoystick();
+            this.addFireButton();
+        }
     }
 
     addJoystick(){
@@ -43,7 +46,9 @@ class GameScene extends Phaser.Scene {
     }
 
     dumpJoyStickState() {
-        this.cursorKeys = this.joyStick.createCursorKeys();
+        if (this.joyStick) {
+            this.cursorKeys = this.joyStick.createCursorKeys();
+        }
     }
 
     addFireButton(){
@@ -75,9 +80,13 @@ class GameScene extends Phaser.Scene {
 
         if (data?.unlim) {
             this.speed = this.info.velocity * .06;
-            bg_image = `bg${Phaser.Math.Between(1, config.Levels.length)}`;
+            let num = Phaser.Math.Between(1, config.Levels.length);
+            bg_image = `bg${num}`;
+
+            real_height = this.textures.list[bg_image].source[0].height;
+            scale = config.height/real_height;
         } else {
-            this.speed = config.Levels[this.currentLevelScene-1].velocity * .065;
+            this.speed = config.Levels[this.currentLevelScene-1].velocity * .048;
         }
 
         if (scale !== 1) {
