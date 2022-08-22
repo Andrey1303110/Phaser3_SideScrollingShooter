@@ -17,6 +17,19 @@ class Fire extends MovableObject {
         this.launch_sound.play({volume: 0.35});
     }
 
+    move(){
+        if (this.texture.key === 'missile' || this.texture.key === 'missile_2') {
+            this.body.setVelocityY(250);
+            this.body.setVelocityX(this.velocity/10);
+            setTimeout(() => {
+                this.body.setVelocityY(this.velocity/50);
+                this.body.setVelocityX(this.velocity);
+            }, 175);
+        } else {
+            this.body.setVelocityX(this.velocity);
+        }
+    }
+
     reset() {
         return false;
     }
