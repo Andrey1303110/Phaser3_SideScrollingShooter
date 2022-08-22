@@ -22,10 +22,11 @@ class BootScene extends Phaser.Scene {
         this.pervious_logo.setScale(scale).setScrollFactor(0);
 
         this.tweens.add({
+            delay: 250,
             targets: this.pervious_logo,
             alpha: 1,
             ease: 'Linear',
-            duration: 1250,
+            duration: 1750,
             yoyo: true,
             onComplete: () => {
                 this.scene.start('Preload');
