@@ -155,7 +155,7 @@ var config = {
             y: 397,
             enemies: 21,
             enemiesDelay: 1600,
-            velocity: 340,
+            velocity: 325,
         },
         {
             level: 6,
@@ -164,7 +164,7 @@ var config = {
             y: 287,
             enemies: 28,
             enemiesDelay: 1450,
-            velocity: 340,
+            velocity: 335,
         },
         {
             level: 7,
@@ -173,7 +173,7 @@ var config = {
             y: 195,
             enemies: 39,
             enemiesDelay: 1300,
-            velocity: 340,
+            velocity: 345,
         },
         {
             level: 8,
@@ -182,7 +182,7 @@ var config = {
             y: 248,
             enemies: 50,
             enemiesDelay: 1150,
-            velocity: 340,
+            velocity: 350,
         },
         {
             level: 9,
@@ -191,7 +191,7 @@ var config = {
             y: 311,
             enemies: 65,
             enemiesDelay: 1075,
-            velocity: 340,
+            velocity: 355,
         },
         {
             level: 10,
@@ -200,7 +200,7 @@ var config = {
             y: 509,
             enemies: 82,
             enemiesDelay: 1000,
-            velocity: 340,
+            velocity: 360,
         },
         {
             level: 11,
@@ -209,7 +209,7 @@ var config = {
             y: 333,
             enemies: 100,
             enemiesDelay: 925,
-            velocity: 340,
+            velocity: 365,
         },
         {
             level: 12,
@@ -218,7 +218,7 @@ var config = {
             y: 366,
             enemies: 120,
             enemiesDelay: 850,
-            velocity: 340,
+            velocity: 370,
         },
         {
             level: 13,
@@ -227,7 +227,7 @@ var config = {
             y: 640,
             enemies: 145,
             enemiesDelay: 775,
-            velocity: 340,
+            velocity: 375,
         },
         {
             level: 14,
@@ -236,7 +236,7 @@ var config = {
             y: 261,
             enemies: 200,
             enemiesDelay: 700,
-            velocity: 340,
+            velocity: 380,
         },
     ],
 
@@ -244,8 +244,8 @@ var config = {
         unlim: true,
         level: 10,
         enemies: 9999,
-        enemiesDelay: 1250,
-        velocity: 350,
+        enemiesDelay: 1000,
+        velocity: 380,
     },
 
     firstTimePlay: localStorage.getItem('firstTimePlay') ?? '1',
