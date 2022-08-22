@@ -302,7 +302,6 @@ function initUpgardeLevels() {
     let weaponStats = Object.keys(config.Weapons.fire);
     for (let i = 0; i < weaponStats.length; i++) {
         const key = weaponStats[i];
-        //localStorage.setItem(`playerWeapon_${key}`, config.Weapons.fire[key]);
         localStorage.setItem(`playerWeapon_${key}`, 1);
     }
 };

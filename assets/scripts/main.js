@@ -302,7 +302,6 @@ function initUpgardeLevels() {
     let weaponStats = Object.keys(config.Weapons.fire);
     for (let i = 0; i < weaponStats.length; i++) {
         const key = weaponStats[i];
-        //localStorage.setItem(`playerWeapon_${key}`, config.Weapons.fire[key]);
         localStorage.setItem(`playerWeapon_${key}`, 1);
     }
 };
@@ -346,3 +345,6 @@ setWeaponConf({ init: true });
 function rgbToHex(colors) {
     return "0x" + ((1 << 24) + (colors.r << 16) + (colors.g << 8) + colors.b).toString(16).slice(1);
 }
+
+window.addEventListener("orientationchange", () => { document.location.reload(); });
+window.addEventListener("resize", () => { document.location.reload(); });
