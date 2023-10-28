@@ -1,4 +1,4 @@
-class Boom extends Phaser.GameObjects.Sprite {
+export class Boom extends Phaser.GameObjects.Sprite {
     static generate(scene, x, y) {
         return new Boom({scene, x, y});
     }

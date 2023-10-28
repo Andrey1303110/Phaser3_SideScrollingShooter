@@ -1,4 +1,6 @@
-class StartScene extends Phaser.Scene {
+import { config, screenEndpoints } from "../main.js";
+
+export class StartScene extends Phaser.Scene {
     constructor() {
         super("Start");
     }
@@ -48,20 +50,21 @@ class StartScene extends Phaser.Scene {
 
         let initScale = this.startText.scale;
 
-        let timeline = this.tweens.createTimeline();
-
-        timeline.add({
-            targets: this.startText,
-            scale: initScale + .18,
-            ease: 'Power2',
-            duration: 550,
-        });
-        timeline.add({
-            targets: this.startText,
-            scale: initScale,
-            ease: 'Power2',
-            duration: 550,
-        });
+        const timeline = this.add.timeline(
+            {
+                at: 0,
+                targets: this.startText,
+                scale: initScale + .18,
+                ease: 'Power2',
+                duration: 550,
+            },
+            {
+                targets: this.startText,
+                scale: initScale,
+                ease: 'Power2',
+                duration: 550,
+            }
+        );
 
         timeline.loop = -1;
 

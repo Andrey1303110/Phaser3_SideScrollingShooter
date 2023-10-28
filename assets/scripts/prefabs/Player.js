@@ -1,4 +1,8 @@
-class Player extends MovableObject {
+import { config, screenEndpoints } from "../main.js";
+import { Fires } from "./Fires.js";
+import { MovableObject } from "./MovableObject.js";
+
+export class Player extends MovableObject {
     constructor(data) {
         super({
             scene: data.scene,

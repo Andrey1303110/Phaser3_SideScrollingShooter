@@ -1,4 +1,9 @@
-class GameScene extends Phaser.Scene {
+import { config, screenEndpoints } from "../main.js";
+import { Player } from "../prefabs/Player.js";
+import { Enemies } from "../prefabs/Enemies.js";
+import { Boom } from "../prefabs/Boom.js";
+
+export class GameScene extends Phaser.Scene {
     constructor() {
         super("Game");
     }

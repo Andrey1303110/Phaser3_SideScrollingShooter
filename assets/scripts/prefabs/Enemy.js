@@ -1,4 +1,7 @@
-class Enemy extends MovableObject {
+import { config, screenEndpoints } from "../main.js";
+import { MovableObject } from "./MovableObject.js";
+
+export class Enemy extends MovableObject {
     static generateAttr(scene) {
         const x = screenEndpoints.right + config.width * .25;
         const y = Phaser.Math.Between(screenEndpoints.top + scene.maxEnemyFrameHeight / 2, screenEndpoints.bottom - scene.maxEnemyFrameHeight / 2);

@@ -1,11 +1,14 @@
-class PreloadScene extends Phaser.Scene {
+import { LoadingBar } from "../classes/LoadingBar.js";
+import { config } from "../main.js";
+
+export class PreloadScene extends Phaser.Scene {
     constructor() {
         super("Preload");
     }
 
     preload(){
         this.createBG();
-        const loadingBar = new LoadingBar(this);
+        new LoadingBar(this);
         this.preloadAssets();
     }
 

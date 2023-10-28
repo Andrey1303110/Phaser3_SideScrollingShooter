@@ -1,4 +1,4 @@
-class MovableObject extends Phaser.GameObjects.Sprite {
+export class MovableObject extends Phaser.GameObjects.Sprite {
     constructor(data){
         super(data.scene, data.x, data.y, data.texture, data.frame);
         this.init(data);

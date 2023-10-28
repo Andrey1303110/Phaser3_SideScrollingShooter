@@ -1,4 +1,6 @@
-class Fires extends Phaser.Physics.Arcade.Group {
+import { Fire } from "./Fire.js"
+
+export class Fires extends Phaser.Physics.Arcade.Group {
     constructor(scene) {
         super(scene.physics.world, scene);
     }

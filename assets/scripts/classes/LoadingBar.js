@@ -1,4 +1,6 @@
-class LoadingBar {
+import { config, rgbToHex } from "../main.js";
+
+export class LoadingBar {
     constructor (scene) {
         this.scene = scene;
         this.colors = {

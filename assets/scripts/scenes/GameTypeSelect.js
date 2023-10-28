@@ -1,4 +1,6 @@
-class GameTypeSelect extends Phaser.Scene {
+import { config } from "../main.js";
+
+export class GameTypeSelect extends Phaser.Scene {
     constructor() {
         super("Levels");
     }

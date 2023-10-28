@@ -1,4 +1,6 @@
-class BootScene extends Phaser.Scene {
+import { config, setEndpoints } from "../main.js";
+
+export class BootScene extends Phaser.Scene {
     constructor() {
         super("Boot");
     }

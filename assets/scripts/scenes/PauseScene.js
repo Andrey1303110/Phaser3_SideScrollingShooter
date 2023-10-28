@@ -1,4 +1,6 @@
-class PauseScene extends Phaser.Scene {
+import { config, screenEndpoints } from "../main.js";
+
+export class PauseScene extends Phaser.Scene {
     constructor() {
         super("Pause");
     }

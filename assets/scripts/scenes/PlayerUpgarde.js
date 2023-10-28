@@ -1,4 +1,7 @@
-class UpgradeScene extends Phaser.Scene {
+import { config, screenEndpoints, setWeaponConf } from "../main.js";
+import { Player } from "../prefabs/Player.js";
+
+export class UpgradeScene extends Phaser.Scene {
     constructor() {
         super("Upgrade");
     }

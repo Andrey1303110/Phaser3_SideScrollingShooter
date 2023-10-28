@@ -1,4 +1,7 @@
-class Enemies extends Phaser.Physics.Arcade.Group {
+import { Fires } from './Fires.js';
+import { Enemy } from './Enemy.js';
+
+export class Enemies extends Phaser.Physics.Arcade.Group {
     constructor(scene) {
         super(scene.physics.world, scene);
         this.scene = scene;
