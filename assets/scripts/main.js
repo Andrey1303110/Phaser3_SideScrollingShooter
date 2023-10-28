@@ -293,10 +293,8 @@ export function setEndpoints() {
 };
 
 function initHiScores() {
-    let arr = [];
-    for (let i = 0; i < Object.keys(config.Levels).length; i++) {
-        arr[i] = 0;
-    }
+    const arr = Array(config.Levels.length).fill(0);
+
     localStorage.setItem('hiScores', arr);
     localStorage.setItem('unlimHiScores', 0);
 };
@@ -308,7 +306,7 @@ function initLosses() {
 };
 
 function initUpgardeLevels() {
-    let weaponStats = Object.keys(config.Weapons.fire);
+    const weaponStats = Object.keys(config.Weapons.fire);
     for (let i = 0; i < weaponStats.length; i++) {
         const key = weaponStats[i];
         localStorage.setItem(`playerWeapon_${key}`, 1);
@@ -316,7 +314,7 @@ function initUpgardeLevels() {
 };
 
 export function setWeaponConf(data) {
-    let weapons = Object.keys(config.Weapons.fire);
+    const weapons = Object.keys(config.Weapons.fire);
 
     if (data.init) {
         for (let i = 0; i < weapons.length; i++) {

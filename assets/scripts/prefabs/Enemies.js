@@ -31,7 +31,7 @@ export class Enemies extends Phaser.Physics.Arcade.Group {
     
     createEnemy() {
         if (this.countMax > this.createdCount) {
-            let enemy = Enemy.generate(this.scene, this.fires);
+            const enemy = Enemy.generate(this.scene, this.fires);
             enemy.on('killed', this.onEnemyKilled, this);
             this.add(enemy);
             enemy.move();

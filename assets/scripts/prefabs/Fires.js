@@ -9,7 +9,7 @@ export class Fires extends Phaser.Physics.Arcade.Group {
         if (!source.active) {
             return;
         }
-        let fire = Fire.generate(this.scene, source);
+        const fire = Fire.generate(this.scene, source);
         fire.setScale(source.weapon.scale);
         this.add(fire);
 

@@ -54,7 +54,7 @@ export class Player extends MovableObject {
         }
 
         if (this.frame.name !== this.last_frame) {
-            let last_y = this.y;
+            const last_y = this.y;
             if (this.frame.name === 'dragon6') {
                 if (this.scene.constructor.name !== 'GameScene') {
                     this.tween_fly = this.scene.tweens.add({

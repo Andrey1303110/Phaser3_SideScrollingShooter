@@ -59,14 +59,8 @@ export class PauseScene extends Phaser.Scene {
     }
 
     toggleMenu(command){
-        let tween_duration = 750;
-        let y;
-
-        if (this.sceneBG.y < 0) {
-            y = screenEndpoints.top + this.sceneBG.displayHeight / 2;
-        } else {
-            y = config.height * -1;
-        }
+        const tween_duration = 750;
+        const y = this.sceneBG.y < 0 ? screenEndpoints.top + this.sceneBG.displayHeight / 2 : config.height * -1;
 
         this.tweens.add({
             targets: this.sceneBG,

@@ -16,9 +16,9 @@ export class StartScene extends Phaser.Scene {
     createBG(data) {
         this.sceneBG = this.add.sprite(config.width / 2, config.height / 2, 'bg').setAlpha(.925).setOrigin(.5).setInteractive();
 
-        let scaleX = this.cameras.main.width / this.sceneBG.width;
-        let scaleY = this.cameras.main.height / this.sceneBG.height;
-        let scale = Math.max(scaleX, scaleY);
+        const scaleX = this.cameras.main.width / this.sceneBG.width;
+        const scaleY = this.cameras.main.height / this.sceneBG.height;
+        const scale = Math.max(scaleX, scaleY);
         this.sceneBG.setScale(scale).setScrollFactor(0);
         
         this.sceneBG.on('pointerdown', () => {
@@ -48,7 +48,7 @@ export class StartScene extends Phaser.Scene {
             fill: '#f0f0f0',
         }).setOrigin(0.5);
 
-        let initScale = this.startText.scale;
+        const initScale = this.startText.scale;
 
         const timeline = this.add.timeline(
             {
