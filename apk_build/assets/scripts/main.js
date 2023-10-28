@@ -1,4 +1,13 @@
-var config = {
+import { BootScene } from "./scenes/BootScene.js";
+import { GameScene } from "./scenes/GameScene.js";
+import { GameTypeSelect } from "./scenes/GameTypeSelect.js";
+import { MapScene } from "./scenes/MapScene.js";
+import { PauseScene } from "./scenes/PauseScene.js";
+import { UpgradeScene } from "./scenes/PlayerUpgarde.js";
+import { PreloadScene } from "./scenes/PreloadScene.js";
+import { StartScene } from "./scenes/StartScene.js";
+
+export const config = {
     type: Phaser.AUTO,
     width: 1280,
     height: 720,
@@ -251,10 +260,10 @@ var config = {
     firstTimePlay: localStorage.getItem('firstTimePlay') ?? '1',
 };
 
-var game = new Phaser.Game(config);
+export const game = new Phaser.Game(config);
 
-var screenEndpoints = {};
-function setEndpoints() {
+export const screenEndpoints = {};
+export function setEndpoints() {
     if ((document.body.clientWidth / document.body.clientHeight) === (16 / 9)) {
         screenEndpoints.left = 0;
         screenEndpoints.right = config.width;
@@ -284,10 +293,8 @@ function setEndpoints() {
 };
 
 function initHiScores() {
-    let arr = [];
-    for (let i = 0; i < Object.keys(config.Levels).length; i++) {
-        arr[i] = 0;
-    }
+    const arr = Array(config.Levels.length).fill(0);
+
     localStorage.setItem('hiScores', arr);
     localStorage.setItem('unlimHiScores', 0);
 };
@@ -299,15 +306,15 @@ function initLosses() {
 };
 
 function initUpgardeLevels() {
-    let weaponStats = Object.keys(config.Weapons.fire);
+    const weaponStats = Object.keys(config.Weapons.fire);
     for (let i = 0; i < weaponStats.length; i++) {
         const key = weaponStats[i];
         localStorage.setItem(`playerWeapon_${key}`, 1);
     }
 };
 
-function setWeaponConf(data) {
-    let weapons = Object.keys(config.Weapons.fire);
+export function setWeaponConf(data) {
+    const weapons = Object.keys(config.Weapons.fire);
 
     if (data.init) {
         for (let i = 0; i < weapons.length; i++) {
@@ -342,6 +349,11 @@ if (localStorage.getItem('firstTimePlay') !== '0') {
 
 setWeaponConf({ init: true });
 
-function rgbToHex(colors) {
+export function rgbToHex(colors) {
     return "0x" + ((1 << 24) + (colors.r << 16) + (colors.g << 8) + colors.b).toString(16).slice(1);
 }
+
+window.addEventListener("orientationchange", () => { document.location.reload(); });
+window.addEventListener("resize", () => { document.location.reload(); });
+
+

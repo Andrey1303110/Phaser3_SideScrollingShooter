@@ -20,6 +20,8 @@ export class Player extends MovableObject {
             }
         });
 
+        this.x += this.width;
+
         const frames = this.scene.anims.generateFrameNames('dragon',{
             prefix: 'dragon',
             start: 1,
@@ -103,15 +105,15 @@ export class Player extends MovableObject {
         this.body.setVelocity(0);
 
         if (this.y < screenEndpoints.top + this.displayHeight / 1.5) {
-            return this.y += 1.5;
+            return screenEndpoints.top + this.displayHeight / 1.5;
         } else if (this.y > screenEndpoints.bottom - this.displayHeight / 1.5) {
-            return this.y -= 1.5;
+            return screenEndpoints.bottom - this.displayHeight / 1.5;
         }
 
         if (this.x < screenEndpoints.left + this.displayWidth / 1.5) {
-            return this.x += 1.5;
+            return screenEndpoints.left + this.displayWidth / 1.5;
         } else if (this.x > screenEndpoints.right - this.displayWidth / 1.5) {
-            return this.x -= 1.5;
+            return screenEndpoints.right - this.displayWidth / 1.5;
         }
 
         this.handling(); 

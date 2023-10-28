@@ -1,4 +1,8 @@
-class Player extends MovableObject {
+import { config, screenEndpoints } from "../main.js";
+import { Fires } from "./Fires.js";
+import { MovableObject } from "./MovableObject.js";
+
+export class Player extends MovableObject {
     constructor(data) {
         super({
             scene: data.scene,
@@ -15,6 +19,8 @@ class Player extends MovableObject {
                 origin: {x: 1, y: 0.5},
             }
         });
+
+        this.x += this.width;
 
         const frames = this.scene.anims.generateFrameNames('dragon',{
             prefix: 'dragon',
@@ -50,7 +56,7 @@ class Player extends MovableObject {
         }
 
         if (this.frame.name !== this.last_frame) {
-            let last_y = this.y;
+            const last_y = this.y;
             if (this.frame.name === 'dragon6') {
                 if (this.scene.constructor.name !== 'GameScene') {
                     this.tween_fly = this.scene.tweens.add({
@@ -99,15 +105,15 @@ class Player extends MovableObject {
         this.body.setVelocity(0);
 
         if (this.y < screenEndpoints.top + this.displayHeight / 1.5) {
-            return this.y += 1.5;
+            return screenEndpoints.top + this.displayHeight / 1.5;
         } else if (this.y > screenEndpoints.bottom - this.displayHeight / 1.5) {
-            return this.y -= 1.5;
+            return screenEndpoints.bottom - this.displayHeight / 1.5;
         }
 
         if (this.x < screenEndpoints.left + this.displayWidth / 1.5) {
-            return this.x += 1.5;
+            return screenEndpoints.left + this.displayWidth / 1.5;
         } else if (this.x > screenEndpoints.right - this.displayWidth / 1.5) {
-            return this.x -= 1.5;
+            return screenEndpoints.right - this.displayWidth / 1.5;
         }
 
         this.handling(); 

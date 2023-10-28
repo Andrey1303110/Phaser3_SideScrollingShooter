@@ -1,4 +1,7 @@
-class Fire extends MovableObject {
+import { config } from "../main.js";
+import { MovableObject } from "./MovableObject.js";
+
+export class Fire extends MovableObject {
     static generate(scene, source) {
         const data = {
             scene: scene,

@@ -1,4 +1,6 @@
-class GameTypeSelect extends Phaser.Scene {
+import { config } from "../main.js";
+
+export class GameTypeSelect extends Phaser.Scene {
     constructor() {
         super("Levels");
     }
@@ -18,9 +20,9 @@ class GameTypeSelect extends Phaser.Scene {
     createBG() {
         this.sceneBG = this.add.sprite(config.width / 2, config.height / 2, 'bg').setAlpha(.925).setOrigin(.5).setInteractive();
 
-        let scaleX = this.cameras.main.width / this.sceneBG.width;
-        let scaleY = this.cameras.main.height / this.sceneBG.height;
-        let scale = Math.max(scaleX, scaleY);
+        const scaleX = this.cameras.main.width / this.sceneBG.width;
+        const scaleY = this.cameras.main.height / this.sceneBG.height;
+        const scale = Math.max(scaleX, scaleY);
         this.sceneBG.setScale(scale).setScrollFactor(0);
     }
 

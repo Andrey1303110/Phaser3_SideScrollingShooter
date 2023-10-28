@@ -1,4 +1,9 @@
-class GameScene extends Phaser.Scene {
+import { config, screenEndpoints } from "../main.js";
+import { Player } from "../prefabs/Player.js";
+import { Enemies } from "../prefabs/Enemies.js";
+import { Boom } from "../prefabs/Boom.js";
+
+export class GameScene extends Phaser.Scene {
     constructor() {
         super("Game");
     }
@@ -32,11 +37,7 @@ class GameScene extends Phaser.Scene {
     }
 
     addJoystick(){
-        let alpha_cof = 1;
-
-        if (document.body.clientWidth > 1280) {
-            alpha_cof = 0;
-        }
+        const alpha_cof = document.body.clientWidth > 1280 ? 0 : 1;
 
         this.joyStick = this.plugins.get('rexvirtualjoystickplugin').add(this, {
             x: screenEndpoints.left + config.joystick.radius + config.joystick.gap,
@@ -55,7 +56,7 @@ class GameScene extends Phaser.Scene {
     }
 
     addFireButton(){
-        let alpha_cof = 1;
+        const alpha_cof = document.body.clientWidth > 1280 ? 0 : 1;
 
         if (document.body.clientWidth > 1280) {
             alpha_cof = 0;
@@ -82,14 +83,10 @@ class GameScene extends Phaser.Scene {
     }
 
     createBG(data) {
-        let bg_image = `bg${data.level}`;
+        const bg_image = data?.unlim ? `bg${Phaser.Math.Between(1, config.Levels.length)}` : `bg${data.level}`;
 
-        if (data?.unlim) {
-            bg_image = `bg${Phaser.Math.Between(1, config.Levels.length)}`;
-        }
-
-        let real_height = this.textures.list[bg_image].source[0].height;
-        let scale = config.height/real_height;
+        const real_height = this.textures.list[bg_image].source[0].height;
+        const scale = config.height/real_height;
 
         this.speed = config.Levels[this.currentLevelScene-1].velocity * .048;
 
@@ -170,7 +167,7 @@ class GameScene extends Phaser.Scene {
             this.currentScore += reward;
 
             if (!this.info?.unlim) {
-                let last_score = Number(config.totalScore);
+                const last_score = Number(config.totalScore);
                 localStorage.setItem('totalScore', last_score + reward);
                 config.totalScore = last_score + reward;
             }
@@ -309,21 +306,21 @@ class GameScene extends Phaser.Scene {
         config.currentLevelPlayer++;
         localStorage.setItem('currentLevelPlayer', config.currentLevelPlayer);
 
-        let text = this.add.text(config.width/2, config.height/2, config.currentLevelPlayer, {
+        const levelTextLabel = this.add.text(config.width/2, config.height/2, config.currentLevelPlayer, {
             font: `${config.width * .25}px DishOut`,
             fill: '#FFFFFF',
         }).setOrigin(0.5).setAlpha(0);
         
         this.tweens.add({
-            targets: text,
+            targets: levelTextLabel,
             alpha: 1,
             x: this.progressBar.levelText.x,
             y: this.progressBar.levelText.y,
-            scale: this.progressBar.levelText.displayWidth/text.displayWidth,
+            scale: this.progressBar.levelText.displayWidth/levelTextLabel.displayWidth,
             ease: 'Linear',
             duration: 500,
             onComplete: () => {
-                text.destroy();
+                levelTextLabel.destroy();
                 this.progressBar.levelText.text = config.currentLevelPlayer;
             }
         });
@@ -346,7 +343,7 @@ class GameScene extends Phaser.Scene {
 
     getMaxEnemyHeightFrame() {
         let max_frame_height = 0;
-        let frames = this.textures.list.helicopter.frames;
+        const frames = this.textures.list.helicopter.frames;
 
         Object.keys(frames).forEach(function (key) {
             if (frames[key].cutHeight > max_frame_height) {

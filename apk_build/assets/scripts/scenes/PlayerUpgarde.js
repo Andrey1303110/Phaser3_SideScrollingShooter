@@ -1,4 +1,7 @@
-class UpgradeScene extends Phaser.Scene {
+import { config, screenEndpoints, setWeaponConf } from "../main.js";
+import { Player } from "../prefabs/Player.js";
+
+export class UpgradeScene extends Phaser.Scene {
     constructor() {
         super("Upgrade");
     }
@@ -18,9 +21,9 @@ class UpgradeScene extends Phaser.Scene {
     createBG() {
         this.sceneBG = this.add.sprite(config.width / 2, config.height / 2, 'bg').setAlpha(.925).setOrigin(.5);
 
-        let scaleX = this.cameras.main.width / this.sceneBG.width;
-        let scaleY = this.cameras.main.height / this.sceneBG.height;
-        let scale = Math.max(scaleX, scaleY);
+        const scaleX = this.cameras.main.width / this.sceneBG.width;
+        const scaleY = this.cameras.main.height / this.sceneBG.height;
+        const scale = Math.max(scaleX, scaleY);
         this.sceneBG.setScale(scale).setScrollFactor(0);
     }
 
@@ -59,8 +62,8 @@ class UpgradeScene extends Phaser.Scene {
 
         const infoText = this.add.text(config.width/2, screenEndpoints.bottom - config.height * .075, 'Every level increse your ability on +5%', style).setOrigin(.5).setAlpha(0);
 
-        let weaponStats = Object.keys(config.Weapons.fire);
-        let height = config.height / 2.5;
+        const weaponStats = Object.keys(config.Weapons.fire);
+        const height = config.height / 2.5;
 
         for (let i = 0; i < weaponStats.length; i++) {
             const key = weaponStats[i];
@@ -210,25 +213,30 @@ class UpgradeScene extends Phaser.Scene {
             }
         })
 
-        this.scene.createUpgradeAnimation(this.name);
+        this.scene.createUpgradeAnimation(this.name, value);
     }
 
-    createUpgradeAnimation(name){
+    createUpgradeAnimation(name, level){
         this.sounds.upgrade.play({volume: .2});
-        let objects_nums = 20;
+        const objects_nums = 10 + level;
+
         for (let i = 0; i < objects_nums; i++) {
-            let data = {
-                x: (this.player.x - this.player.displayWidth * .6) + this.player.displayWidth * 1.2 / objects_nums * i,
-                y: Phaser.Math.Between((this.player.y - this.player.displayHeight * .5) * 100, (this.player.y + this.player.displayHeight * .5) * 100) / 100,
-                scale: config.height * .075 * (Phaser.Math.Between(50, 150) / 100),
+            const x = (this.player.x - this.player.displayWidth * .6) + this.player.displayWidth * 1.2 / objects_nums * i;
+            const y = Phaser.Math.Between((this.player.y - this.player.displayHeight * .5) * 100, (this.player.y + this.player.displayHeight * .5) * 100) / 100;
+            const scale = config.height * .075 * (Phaser.Math.Between(25 + level, 50 + level) / 100);
+
+            const data = {
+                x,
+                y,
+                scale,
                 alpha: Phaser.Math.Between(75, 100) / 100,
                 duration: Phaser.Math.Between(750, 1250),
             }
 
-            let plus_symbol = this.add.text(data.x, data.y, '+', {
+            const plus_symbol = this.add.text(data.x, data.y, '+', {
                 font: `${data.scale}px DishOut`,
                 fill: `#${config.upgradeColors[name]}`,
-            }).setOrigin(0.5).setAlpha(data.alpha);
+            }).setOrigin(0.5).setAlpha(data.alpha).setStroke('#fafafa33', 4);
 
             this.tweens.add({
                 targets: plus_symbol,

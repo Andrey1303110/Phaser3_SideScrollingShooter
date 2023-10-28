@@ -1,5 +1,7 @@
-class LoadingBar {
-    constructor(scene) {
+import { config, rgbToHex } from "../main.js";
+
+export class LoadingBar {
+    constructor (scene) {
         this.scene = scene;
         this.colors = {
             r: 210,
@@ -8,8 +10,8 @@ class LoadingBar {
         };
         this.style = {
             boxColor: 0xe3e1da,
-            x: config.width / 2 - (config.width * .5 / 2),
-            y: config.height / 2 + config.height * .25,
+            x: config.width/2 - (config.width * .5 / 2),
+            y: config.height/2 + config.height * .25,
             width: config.width * .5,
             height: config.height * .05,
         };
@@ -21,18 +23,18 @@ class LoadingBar {
         this.setEvents();
     }
 
-    setEvents() {
+    setEvents(){
         this.scene.load.on('progress', this.showProgressBar, this);
-        this.scene.load.on('complete', () => { this.scene.scene.start('Levels') }, this);
+        this.scene.load.on('complete', ()=>{this.scene.scene.start('Levels')}, this);
     }
 
-    showProgressBox() {
+    showProgressBox(){
         this.progressBox
             .fillStyle(this.style.boxColor)
             .fillRect(this.style.x, this.style.y, this.style.width, this.style.height);
     }
 
-    showProgressBar(value) {
+    showProgressBar(value){
         this.colors.r = 210 - value * 200;
         this.colors.g = value * 225;
 

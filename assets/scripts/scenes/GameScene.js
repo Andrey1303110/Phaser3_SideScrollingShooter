@@ -83,7 +83,7 @@ export class GameScene extends Phaser.Scene {
     }
 
     createBG(data) {
-        let bg_image = data?.unlim ? bg_image = `bg${Phaser.Math.Between(1, config.Levels.length)}` : `bg${data.level}`;
+        const bg_image = data?.unlim ? `bg${Phaser.Math.Between(1, config.Levels.length)}` : `bg${data.level}`;
 
         const real_height = this.textures.list[bg_image].source[0].height;
         const scale = config.height/real_height;
