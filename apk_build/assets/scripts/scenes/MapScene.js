@@ -7,7 +7,6 @@ export class MapScene extends Phaser.Scene {
 
     init() {
         this.mapDots = [];
-        this.texts = [];
     }
 
     create() {
@@ -52,11 +51,11 @@ export class MapScene extends Phaser.Scene {
 
         if (object.level > config.currentLevelScene) {
             dot.setAlpha(0.6).setScale(2 / 3)
-                .on('pointerdown', () => { this.sounds.error.play({ volume: .33 }) });
+                .on('pointerdown', () => { this.sounds['error'].play({ volume: .33 }) });
             dot.active = false;
         } else {
             dot.setAlpha(1)
-                .on('pointerdown', () => { this.sounds.select.play({ volume: .33 }) });
+                .on('pointerdown', () => { this.sounds['select'].play({ volume: .33 }) });
             dot.active = true;
             if (config.currentLevelScene > object.level) {
                 dot.setTexture('flag').setOrigin(0, 1);
@@ -79,12 +78,14 @@ export class MapScene extends Phaser.Scene {
     }
 
     selectLevel() {
-        if (this.active) {
-            this.scene.createLevelCard(this.info);
-        }
+        if (!this.active) return;
+        
+        this.scene.createLevelCard(this.info);
     }
 
     createLevelCard(info) {
+        const bg_rect = this.add.rectangle(config.width / 2, config.height / 2, config.width, config.height, '0x000000', 0).setInteractive();
+        
         const currentLevelHiScore = localStorage.getItem('hiScores').split(',')[info.level - 1];
         info.hiScore = currentLevelHiScore;
 
@@ -93,49 +94,53 @@ export class MapScene extends Phaser.Scene {
         const frame = this.add.sprite(config.width / 2, config.height / 2, 'frame');
         frame.displayHeight = config.height * .795;
 
-        this.texts.push(this.add.text(frame.x, frame.y - frame.displayHeight / 2 + frame.displayHeight * .086, 'MISSION', {
+        let texts = [];
+        texts.push(this.add.text(frame.x, frame.y - frame.displayHeight / 2 + frame.displayHeight * .086, 'MISSION', {
             font: `${frame.displayWidth * .13}px DishOut`,
             fill: '#0a0a0a',
         }).setOrigin(0.5).setAlpha(0.55));
 
-        this.texts.push(this.add.text(frame.x, frame.y - frame.displayHeight / 2 + frame.displayHeight * .25, `Level ${info.level}`, {
+        texts.push(this.add.text(frame.x, frame.y - frame.displayHeight / 2 + frame.displayHeight * .25, `Level ${info.level}`, {
             font: `${frame.displayWidth * .0925}px DishOut`,
             fill: '#0a0a0a',
         }).setOrigin(0.5).setAlpha(0.8));
 
-        this.texts.push(this.add.text(frame.x, frame.y - frame.displayHeight / 2 + frame.displayHeight * .37, 'City', {
+        texts.push(this.add.text(frame.x, frame.y - frame.displayHeight / 2 + frame.displayHeight * .37, 'City', {
             font: `${frame.displayWidth * .055}px DishOut`,
             fill: '#0a0a0a',
         }).setOrigin(0.5).setAlpha(0.8));
 
-        this.texts.push(this.add.text(frame.x, frame.y - frame.displayHeight / 2 + frame.displayHeight * .44, info.name, {
+        texts.push(this.add.text(frame.x, frame.y - frame.displayHeight / 2 + frame.displayHeight * .44, info.name, {
             font: `${frame.displayWidth * .06175}px DishOut`,
             fill: '#0a0a0a',
         }).setOrigin(0.5).setAlpha(0.8));
 
         if (currentLevelHiScore > 0) {
-            this.texts.push(this.add.text(frame.x, frame.y - frame.displayHeight / 2 + frame.displayHeight * .58, `Hi score: ${currentLevelHiScore}`, {
+            texts.push(this.add.text(frame.x, frame.y - frame.displayHeight / 2 + frame.displayHeight * .58, `Hi score: ${currentLevelHiScore}`, {
                 font: `${frame.displayWidth * .049}px DishOut`,
                 fill: '#E2B80D',
             }).setOrigin(0.5).setAlpha(0.8));
         }
 
-        this.texts.push(this.add.text(frame.x, frame.y - frame.displayHeight / 2 + frame.displayHeight * .71, `Enemies - ${info.enemies}`, {
+        texts.push(this.add.text(frame.x, frame.y - frame.displayHeight / 2 + frame.displayHeight * .71, `Enemies - ${info.enemies}`, {
             font: `${frame.displayWidth * .051}px DishOut`,
             fill: '#EA0000',
         }).setOrigin(0.5).setAlpha(0.8));
 
-        this.sounds.stamp.play();
+        this.sounds['stamp'].play();
 
         const stamp = this.add.sprite(frame.x, frame.y, 'stamp').setAlpha(0).setAngle(31).setScale(2.5);
+
+        const randX = frame.x + frame.displayWidth / 2 - frame.displayWidth * Phaser.Math.Between(25, 35) / 100;
+        const randY = frame.y + frame.displayWidth / 2 - frame.displayHeight * Phaser.Math.Between(26, 30) / 100;
 
         const timeline = this.add.timeline([
             {
                 tween: {
                     targets: stamp,
                     scale: .26,
-                    x: frame.x + frame.displayWidth / 2 - frame.displayWidth * .27,
-                    y: frame.y + frame.displayWidth / 2 - frame.displayHeight * .26,
+                    x: randX,
+                    y: randY,
                     alpha: 0.85,
                     ease: 'Power3',
                     duration: first_anim_duration,
@@ -164,7 +169,7 @@ export class MapScene extends Phaser.Scene {
                         .on('pointerdown', () => { this.gameStart(info) })
                         .on('pointerover', () => { start_button.setAlpha(0.9) })
                         .on('pointerout', () => { start_button.setAlpha(0.7) });
-                    this.texts.push(start_button);
+                    texts.push(start_button);
                     
                     const close_button = this.add.sprite(frame.x + frame.displayWidth/2, frame.y - frame.displayHeight/2, 'close')
                         .setOrigin(1.3, -.35)
@@ -191,15 +196,15 @@ export class MapScene extends Phaser.Scene {
     }
 
     gameStart(info) {
-        this.sounds.ready.play();
+        this.sounds['ready'].play();
 
-        let bg_rect = this.add.rectangle(config.width / 2, config.height / 2, config.width, config.height, '0x000000', 0).setInteractive();
+        const bg_rect = this.add.rectangle(config.width / 2, config.height / 2, config.width, config.height, '0x000000', 0).setInteractive();
 
         this.tweens.add({
             targets: bg_rect,
             fillAlpha: 1,
             ease: 'Linear',
-            duration: this.sounds.ready.duration * 1000 * .7,
+            duration: this.sounds['ready'].duration * 1000 * .7,
             onComplete: () => {
                 this.scene.start('Game', info);
             }
