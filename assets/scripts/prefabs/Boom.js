@@ -1,3 +1,5 @@
+const ANIMATION_NAME = 'explosion';
+
 export class Boom extends Phaser.GameObjects.Sprite {
     static generate(scene, x, y) {
         return new Boom({scene, x, y});
@@ -12,10 +14,7 @@ export class Boom extends Phaser.GameObjects.Sprite {
 
         this.createAnimation();
 
-        const a = this.scene.anims.anims.entries['explosion'];
-        debugger
-
-        this.play('explosion');
+        this.play(ANIMATION_NAME);
 
         this.once(Phaser.Animations.Events.ANIMATION_COMPLETE, ()=>{
             this.destroy();
@@ -23,7 +22,7 @@ export class Boom extends Phaser.GameObjects.Sprite {
     }
 
     createAnimation() {
-        if (this.scene.anims.anims.entries?.explosion) return
+        if (this.scene.anims.anims.entries[ANIMATION_NAME]) return;
 
         const frames = this.scene.anims.generateFrameNames('boom',{
             prefix: 'boom',
@@ -32,7 +31,7 @@ export class Boom extends Phaser.GameObjects.Sprite {
         });
 
         this.scene.anims.create({
-            key: 'explosion',
+            key: ANIMATION_NAME,
             frames,
             frameRate: 8,
             repeat: 0,
