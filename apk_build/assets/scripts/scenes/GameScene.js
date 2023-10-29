@@ -58,21 +58,17 @@ export class GameScene extends Phaser.Scene {
     addFireButton(){
         const alpha_cof = document.body.clientWidth > 1280 ? 0 : 1;
 
-        if (document.body.clientWidth > 1280) {
-            alpha_cof = 0;
-        }
-
         this.fireButton = this.add.sprite(screenEndpoints.right - config.joystick.radius - config.joystick.gap, this.joyStick.y, 'fire')
-        .setAlpha(0.65 * alpha_cof)
-        .setInteractive()
-        .setActive(false)
-        .on('pointerup', () => {
-            this.fireButton.active = false;
-        }, this)
-        .on('pointerdown', () => {
-            this.fireButton.active = true;
-            this.player.shooting();
-        }, this);
+                        .setAlpha(0.65 * alpha_cof)
+                        .setInteractive()
+                        .setActive(false)
+                        .on('pointerup', () => {
+                            this.fireButton.active = false;
+                        }, this)
+                        .on('pointerdown', () => {
+                            this.fireButton.active = true;
+                            this.player.shooting();
+                        }, this);
     }
 
     update() {
