@@ -1,5 +1,4 @@
 /node_modules
-/dist
 .prettierrc
 .DS_Store
 
@@ -82,10 +81,6 @@ typings/
 
 # Next.js build output
 .next
-
-# Nuxt.js build / generate output
-.nuxt
-dist
 
 # Gatsby files
 .cache/
