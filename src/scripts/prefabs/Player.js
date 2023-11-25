@@ -105,15 +105,15 @@ export class Player extends MovableObject {
         this.body.setVelocity(0);
 
         if (this.y < screenEndpoints.top + this.displayHeight / 1.5) {
-            return screenEndpoints.top + this.displayHeight / 1.5;
+            this.y = screenEndpoints.top + this.displayHeight / 1.5;
         } else if (this.y > screenEndpoints.bottom - this.displayHeight / 1.5) {
-            return screenEndpoints.bottom - this.displayHeight / 1.5;
+            this.y = screenEndpoints.bottom - this.displayHeight / 1.5;
         }
 
         if (this.x < screenEndpoints.left + this.displayWidth / 1.5) {
-            return screenEndpoints.left + this.displayWidth / 1.5;
+            this.x = screenEndpoints.left + this.displayWidth / 1.5;
         } else if (this.x > screenEndpoints.right - this.displayWidth / 1.5) {
-            return screenEndpoints.right - this.displayWidth / 1.5;
+            this.x = screenEndpoints.right - this.displayWidth / 1.5;
         }
 
         this.handling(); 
@@ -124,7 +124,7 @@ export class Player extends MovableObject {
         let cof = 100;
         let isJoystick = false;
 
-        for (var name in this.scene.cursorKeys) {
+        for (let name in this.scene.cursorKeys) {
             if (this.scene.cursorKeys[name].isDown) {
                 isJoystick = true;
                 cof = Math.floor(this.scene.joyStick.force * 100) / 100;
@@ -141,8 +141,10 @@ export class Player extends MovableObject {
         }
 
         if (buttons.left.isDown) {
+            if (this.x < this.x - this.velocity/config.fps) return;
             this.body.setVelocityX(-this.velocity * (cof / 100));
         } else if (buttons.right.isDown) {
+            if (this.x > this.x + this.velocity/config.fps) return;
             this.body.setVelocityX(this.velocity * (cof / 100));
         }
 
@@ -151,8 +153,10 @@ export class Player extends MovableObject {
                 this.tween_fly.paused = true;
             }
             if (buttons.up.isDown) {
+                if (this.y < this.y - this.velocity/config.fps) return;
                 this.body.setVelocityY(-this.velocity * (cof / 100));
             } else if (buttons.down.isDown) {
+                if (this.y > this.y + this.velocity/config.fps) return;
                 this.body.setVelocityY(this.velocity * (cof / 100));
             }
         }

@@ -30,6 +30,8 @@ export const config = {
         autoCenter: Phaser.Scale.CENTER_BOTH,
     },
 
+    fps: 60,
+
     scene: [BootScene, PreloadScene, GameTypeSelect, MapScene, StartScene, GameScene, PauseScene, UpgradeScene],
 
     currentLevelScene: localStorage.getItem('currentLevelScene') ?? 1,

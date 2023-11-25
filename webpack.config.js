@@ -43,8 +43,8 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, "./dist"),
-    filename: "[name].[chunkhash].js",
-    chunkFilename: "[name].[chunkhash].js",
+    filename: "[name].js",
+    chunkFilename: "[name].js",
     clean: true,
   },
   devServer: {
@@ -60,7 +60,7 @@ module.exports = {
       ],
     }),
     new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, "./src/index.html"),
+      template: path.resolve(__dirname, "./index.html"),
       filename: "index.html",
       title: package.description,
       inject: "body",
