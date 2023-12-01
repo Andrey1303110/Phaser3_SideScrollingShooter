@@ -51,11 +51,11 @@ export class MapScene extends Phaser.Scene {
 
         if (object.level > config.currentLevelScene) {
             dot.setAlpha(0.6).setScale(2 / 3)
-                .on('pointerdown', () => { this.sounds['error'].play({ volume: .33 }) });
+                .on('pointerdown', () => { this.sounds.error.play({ volume: .33 }) });
             dot.active = false;
         } else {
             dot.setAlpha(1)
-                .on('pointerdown', () => { this.sounds['select'].play({ volume: .33 }) });
+                .on('pointerdown', () => { this.sounds.select.play({ volume: .33 }) });
             dot.active = true;
             if (config.currentLevelScene > object.level) {
                 dot.setTexture('flag').setOrigin(0, 1);
@@ -127,7 +127,7 @@ export class MapScene extends Phaser.Scene {
             fill: '#EA0000',
         }).setOrigin(0.5).setAlpha(0.8));
 
-        this.sounds['stamp'].play();
+        this.sounds.stamp.play();
 
         const stamp = this.add.sprite(frame.x, frame.y, 'stamp').setAlpha(0).setAngle(31).setScale(2.5);
 
@@ -186,6 +186,8 @@ export class MapScene extends Phaser.Scene {
     }
 
     cardClose(data) {
+        this.sounds.click.play({ volume: .33 });
+
         data.bg_rect.destroy();
         data.frame.destroy();
         data.stamp.destroy();
@@ -196,7 +198,7 @@ export class MapScene extends Phaser.Scene {
     }
 
     gameStart(info) {
-        this.sounds['ready'].play();
+        this.sounds.ready.play();
 
         const bg_rect = this.add.rectangle(config.width / 2, config.height / 2, config.width, config.height, '0x000000', 0).setInteractive();
 
@@ -204,7 +206,7 @@ export class MapScene extends Phaser.Scene {
             targets: bg_rect,
             fillAlpha: 1,
             ease: 'Linear',
-            duration: this.sounds['ready'].duration * 1000 * .7,
+            duration: this.sounds.ready.duration * 1000 * .7,
             onComplete: () => {
                 this.scene.start('Game', info);
             }
@@ -264,6 +266,7 @@ export class MapScene extends Phaser.Scene {
             return;
         }
         this.sounds = {
+            click: this.sound.add('click'),
             select: this.sound.add('select'),
             error: this.sound.add('error'),
             stamp: this.sound.add('stamp'),
