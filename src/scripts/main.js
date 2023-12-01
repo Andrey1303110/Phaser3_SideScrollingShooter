@@ -316,30 +316,31 @@ function initUpgardeLevels() {
     }
 };
 
-export function setWeaponConf(data) {
+function initWeaponConfig() {
     const weapons = Object.keys(config.Weapons.fire);
 
-    if (data.init) {
-        for (let i = 0; i < weapons.length; i++) {
-            const key = weapons[i];
-            const level = localStorage.getItem(`playerWeapon_${key}`);
+    for (let i = 0; i < weapons.length; i++) {
+        const key = weapons[i];
+        const level = localStorage.getItem(`playerWeapon_${key}`);
 
-            for (let j = 1; j < level; j++) {
-                if (key === 'reload') {
-                    config.Weapons.fire[key] -= config.Weapons.fire[key] * .05;
-                } else {
-                    config.Weapons.fire[key] += config.Weapons.fire[key] * .05;
-                }
+        for (let j = 1; j < level; j++) {
+            if (key === 'reload') {
+                config.Weapons.fire[key] -= config.Weapons.fire[key] * .05;
+            } else {
+                config.Weapons.fire[key] += config.Weapons.fire[key] * .05;
             }
         }
-    } else {
-        if (data.key === 'reload') {
-            config.Weapons.fire[data.key] -= config.Weapons.fire[data.key] * .05;
-        } else {
-            config.Weapons.fire[data.key] += config.Weapons.fire[data.key] * .05;
-        }
-        return config.Weapons.fire[data.key];
     }
+}
+
+export function setWeaponConf(data) {
+    if (data.key === 'reload') {
+        config.Weapons.fire[data.key] -= config.Weapons.fire[data.key] * .05;
+    } else {
+        config.Weapons.fire[data.key] += config.Weapons.fire[data.key] * .05;
+    }
+
+    return config.Weapons.fire[data.key];
 }
 
 if (localStorage.getItem('firstTimePlay') !== '0') {
@@ -350,7 +351,7 @@ if (localStorage.getItem('firstTimePlay') !== '0') {
     localStorage.setItem('money', config.money);
 }
 
-setWeaponConf({ init: true });
+initWeaponConfig();
 
 export function rgbToHex(colors) {
     return "0x" + ((1 << 24) + (colors.r << 16) + (colors.g << 8) + colors.b).toString(16).slice(1);
