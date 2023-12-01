@@ -6,77 +6,117 @@ export class GameTypeSelect extends Phaser.Scene {
     }
 
     init(){
-        this.buttons = [];
-        this.buttons_num = 0;
+        this._buttons = {};
+        this._buttons_num = 0;
     }
 
     create() {
-        this.createBG();
-        this.createButton('campaign', .275);
-        this.createButton('unlim', .5);
-        this.createButton('upgrade', .725);
+        this._createBG();
+        this._createSounds();
+
+        this._createButton('campaign', .275);
+        this._createButton('unlim', .5);
+        this._createButton('upgrade', .725);
     }
 
-    createBG() {
-        this.sceneBG = this.add.sprite(config.width / 2, config.height / 2, 'bg').setAlpha(.925).setOrigin(.5).setInteractive();
+    _createBG() {
+        const bg = this.add.sprite(config.width / 2, config.height / 2, 'bg').setAlpha(.925).setOrigin(.5).setInteractive();
 
-        const scaleX = this.cameras.main.width / this.sceneBG.width;
-        const scaleY = this.cameras.main.height / this.sceneBG.height;
+        const scaleX = this.cameras.main.width / bg.width;
+        const scaleY = this.cameras.main.height / bg.height;
         const scale = Math.max(scaleX, scaleY);
-        this.sceneBG.setScale(scale).setScrollFactor(0);
+        bg.setScale(scale).setScrollFactor(0);
     }
 
-    createButton(name, y_pos){
-        this.buttons[name] = this.add.sprite(config.width / 2, config.height * y_pos, 'button_' + name)
-        .setScale(5)
-        .setAlpha(0)
-        .setOrigin(.5)
-        .setInteractive()
-        .on('pointerdown', this.gameSelect);
-        this.buttons[name].name = name;
+    _addButtonEventListeners(button) {
+        button.on('pointerover', () => button.setAlpha(1));
+        button.on('pointerout', () => button.setAlpha(.75));
+        button.on('pointerdown', () => this._gameSelect(button));
+    }
 
-        this.buttons_num++;
+    _createButton(name, y){
+        this._buttons_num++;
 
-        const textTitle = name.toUpperCase();
+        this._createButtonSprite(name, y)
+        this._createButtonText(this._buttons[name], name);
+        this._createButtonTweens(this._buttons[name]);
+        this._addButtonEventListeners(this._buttons[name]);
+    }
+
+    _createButtonText(button, text) {
+        const textTitle = text.toUpperCase();
         const textStyle = {
             font: `${config.width*.03}px DishOut`,
             fill: '#f0f0f0',
         };
-        this.buttons[name].buttonText = this.add.text(this.buttons[name].x, this.buttons[name].y, textTitle, textStyle).setScale(3).setOrigin(0.5).setAlpha(0);
+        button.buttonText = this.add.text(button.x, button.y, textTitle, textStyle).setScale(3).setOrigin(0.5).setAlpha(0);
+    }
 
-        this.buttons[name].on('pointerover', ()=>{this.buttons[name].setAlpha(1)});
-        this.buttons[name].on('pointerout', ()=>{this.buttons[name].setAlpha(.75)});
+    _createButtonSprite(buttonName, y) {
+        this._buttons[buttonName] = this.add.sprite(config.width / 2, config.height * y, 'button_' + buttonName)
+        .setScale(5)
+        .setAlpha(0)
+        .setOrigin(.5)
+        .setInteractive();
 
+        this._buttons[buttonName].name = buttonName;
+    }
+
+    _createButtonTweens(button) {
         this.tweens.add({
-            targets: this.buttons[name],
-            delay: 250 * this.buttons_num,
+            targets: button,
+            delay: 375 * this._buttons_num,
             alpha: .675,
             scale: .65,
             ease: 'Linear',
-            duration: 333,
+            duration: 225,
+            onStart: () => this.sounds.whoosh.play({ volume: .33 }),
         })
 
         this.tweens.add({
-            targets: this.buttons[name].buttonText,
-            delay: 250 * this.buttons_num,
+            targets: button.buttonText,
+            delay: 375 * this._buttons_num,
             alpha: .9,
             scale: 1,
             ease: 'Linear',
-            duration: 333,
+            duration: 225,
         })
     }
 
-    gameSelect(){
-        switch (this.name) {
+    _gameSelect(button){
+        this.sounds.click.play({ volume: .33 });
+
+        this.tweens.add({
+            targets: [button, button.buttonText],
+            alpha: 0,
+            scale: 7,
+            ease: 'Linear',
+            duration: 750,
+            onComplete: () => this._startNewScene(button.name),
+        });
+    }
+
+    _startNewScene(buttonName) {
+        switch (buttonName) {
             case 'campaign':
-                this.scene.scene.start('Map');
+                this.scene.start('Map');
                 break;
             case 'unlim':
-                this.scene.scene.start('Game', config.unlim);
+                this.scene.start('Game', config.unlim);
                 break;
             case 'upgrade':
-                this.scene.scene.start('Upgrade');
+                this.scene.start('Upgrade');
                 break;
         }
+    }
+
+    _createSounds() {
+        if (this.sounds) {
+            return;
+        }
+        this.sounds = {
+            click: this.sound.add('click'),
+            whoosh: this.sound.add('whoosh'),
+        };
     }
 }
