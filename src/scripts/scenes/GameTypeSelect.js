@@ -1,3 +1,4 @@
+import { SCENE_NAMES } from "../constants";
 import { config } from "/src/scripts/main";
 
 export class GameTypeSelect extends Phaser.Scene {
@@ -99,13 +100,13 @@ export class GameTypeSelect extends Phaser.Scene {
     _startNewScene(buttonName) {
         switch (buttonName) {
             case 'campaign':
-                this.scene.start('Map');
+                this.scene.start(SCENE_NAMES.campain);
                 break;
             case 'unlim':
-                this.scene.start('Game', config.unlim);
+                this.scene.start(SCENE_NAMES.game, config.unlim);
                 break;
             case 'upgrade':
-                this.scene.start('Upgrade');
+                this.scene.start(SCENE_NAMES.upgrade);
                 break;
         }
     }
