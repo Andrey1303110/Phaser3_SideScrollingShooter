@@ -1,3 +1,5 @@
+import { EVENTS } from "../constants";
+
 export class MovableObject extends Phaser.GameObjects.Sprite {
     constructor(data){
         super(data.scene, data.x, data.y, data.texture, data.frame);
@@ -11,7 +13,7 @@ export class MovableObject extends Phaser.GameObjects.Sprite {
         this.velocity = data.velocity;
         this.reward = data.reward;
         this.move();
-        this.scene.events.on('update', this.update, this);
+        this.scene.events.on(EVENTS.update, this.update, this);
     }
 
     reset(x, y){

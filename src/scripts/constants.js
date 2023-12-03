@@ -11,7 +11,8 @@ export const SCENE_NAMES = {
 
 export const EVENTS = {     
     killed: 'killed',
-    allEnemiesKilled: 'enemies-killed'
+    allEnemiesKilled: 'enemies-killed',
+    update: 'update'
 }
 
 // Only .png + .json

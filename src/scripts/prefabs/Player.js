@@ -48,7 +48,7 @@ export class Player extends MovableObject {
         this.fires = new Fires(this.scene);
         this.weapon = data.weapon;
 
-        this.scene.events.on('update', this.updateFrame, this);
+        this.scene.events.on(EVENTS.update, this._updateFrame, this);
         this._lastFrame = 'dragon1';
         this._tweenFly = null;
     }
