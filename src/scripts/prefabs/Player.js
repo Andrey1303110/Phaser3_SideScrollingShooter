@@ -1,7 +1,12 @@
-import { SCENE_NAMES } from "../constants";
+import { EVENTS, SCENE_NAMES } from "../constants";
 import { config, screenEndpoints } from "/src/scripts/main";
 import { Fires } from "/src/scripts/prefabs/Fires";
 import { MovableObject } from "/src/scripts/prefabs/MovableObject";
+
+const PLAYER_TEXTURE_NAME = 'dragon';
+const FIRST_PLAYER_FRAME = 'dragon1';
+const FIRE_TEXTURE_NAME = 'fire';
+const ANIMATION_NAME = 'fly';
 
 export class Player extends MovableObject {
     constructor(data) {
@@ -9,11 +14,11 @@ export class Player extends MovableObject {
             scene: data.scene,
             x: screenEndpoints.left,
             y: config.height / 2,
-            texture: 'dragon',
-            frame: 'dragon1',
+            texture: PLAYER_TEXTURE_NAME,
+            frame: FIRST_PLAYER_FRAME,
             velocity: config.Player.velocity,
             weapon: {
-                texture: 'fire',
+                texture: FIRE_TEXTURE_NAME,
                 delay: config.Weapons.fire.reload,
                 velocity: config.Weapons.fire.velocity,
                 scale: config.Weapons.fire.scale,
@@ -21,22 +26,27 @@ export class Player extends MovableObject {
             }
         });
 
-        this.x += this.width;
+        this._createAnimation();
+        this.play(ANIMATION_NAME);
+    }
 
-        const frames = this.scene.anims.generateFrameNames('dragon',{
-            prefix: 'dragon',
+    _createAnimation() {
+        if (this.scene.anims.anims.entries[ANIMATION_NAME]) return;
+
+        const frames = this.scene.anims.generateFrameNames(PLAYER_TEXTURE_NAME,{
+            prefix: PLAYER_TEXTURE_NAME,
             start: 1,
             end: 6,
         });
 
         this.scene.anims.create({
-            key: 'fly',
+            key: ANIMATION_NAME,
             frames,
             frameRate: 8,
             repeat: -1,
         });
 
-        this.play('fly');
+        this.play(ANIMATION_NAME);
     }
 
     init(data) {
@@ -49,11 +59,11 @@ export class Player extends MovableObject {
         this.weapon = data.weapon;
 
         this.scene.events.on(EVENTS.update, this._updateFrame, this);
-        this._lastFrame = 'dragon1';
+        this._lastFrame = FIRST_PLAYER_FRAME;
         this._tweenFly = null;
     }
 
-    updateFrame() {
+    _updateFrame() {
         if (!this.active) {
             return;
         }
@@ -67,7 +77,7 @@ export class Player extends MovableObject {
                         y: last_y + this.displayHeight / 3,
                         ease: 'Linear',
                         duration: 350,
-                        onComplete: () => { this._tweenFly = null }
+                        onComplete: () => this._tweenFly = null
                     });
                 }
             }
@@ -78,7 +88,7 @@ export class Player extends MovableObject {
                         y: last_y - this.displayHeight / 3,
                         ease: 'Linear',
                         duration: 350,
-                        onComplete: () => { this._tweenFly = null }
+                        onComplete: () => this._tweenFly = null
                     });
                 }
                 this.scene.sounds.wings.play({volume: 0.1});
@@ -88,15 +98,15 @@ export class Player extends MovableObject {
     }
 
     shooting() {
-        if ((this.scene.cursors.space.isDown || this.scene.fireButton.active) && !this.fires_activate) {
+        if ((this.scene.cursors.space.isDown || this.scene.fireButton.active) && !this._firesActivate) {
             this.scene.fireButton.setAlpha(.95);
             this.fires.createFire(this);
-            this.fires_activate = true;
+            this._firesActivate = true;
 
-            this.fireTimer = this.scene.time.addEvent({
+            this.scene.time.addEvent({
                 delay: this.weapon.delay,
                 callback: () => { 
-                    this.fires_activate = false;
+                    this._firesActivate = false;
                     this.scene.fireButton.setAlpha(.65);
                 },
                 callbackScope: this,
