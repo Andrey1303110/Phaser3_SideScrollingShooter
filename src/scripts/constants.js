@@ -1,3 +1,11 @@
+export const SCENE_NAMES = {
+    preload: 'Preload',
+    levels: 'Levels',
+    campain: 'Map',
+    game: 'Game',
+    upgrade: 'Upgrade'
+}
+
 export const EVENTS = {     
     killed: 'killed',
     allEnemiesKilled: 'enemies-killed'
