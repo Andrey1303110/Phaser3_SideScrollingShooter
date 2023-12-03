@@ -1,3 +1,4 @@
+import { SCENE_NAMES } from "../constants";
 import { config, screenEndpoints } from "/src/scripts/main";
 
 export class MapScene extends Phaser.Scene {
@@ -207,9 +208,7 @@ export class MapScene extends Phaser.Scene {
             fillAlpha: 1,
             ease: 'Linear',
             duration: this.sounds.ready.duration * 1000 * .7,
-            onComplete: () => {
-                this.scene.start('Game', info);
-            }
+            onComplete: () => this.scene.start(SCENE_NAMES.game, info),
         });
     }
 
@@ -245,7 +244,7 @@ export class MapScene extends Phaser.Scene {
         this.add.sprite(screenEndpoints.left + config.width * .015, screenEndpoints.top + config.width * .015, 'return')
             .setAlpha(0.65)
             .setInteractive()
-            .on('pointerdown', () => { this.scene.start('Levels') }, this);
+            .on('pointerdown', () => this.scene.start(SCENE_NAMES.levels), this);
     }
 
     addAvailableMoney(){
@@ -257,7 +256,7 @@ export class MapScene extends Phaser.Scene {
         this.moneyIcon = this.add.sprite(screenEndpoints.right - config.height * .075, screenEndpoints.top + config.height * .075, 'ruby')
             .setScale(.25)
             .setInteractive()
-            .on('pointerdown', ()=>{this.scene.start('Upgrade')});
+            .on('pointerdown', ()=> this.scene.start(SCENE_NAMES.upgrade));
         this.moneyText = this.add.text(this.moneyIcon.x - this.moneyIcon.displayWidth, this.moneyIcon.y, config.money, style).setOrigin(.5).setAlpha(1);
     }
 
