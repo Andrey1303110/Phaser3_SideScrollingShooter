@@ -1,3 +1,4 @@
+import { SCENE_NAMES } from "../constants";
 import { config, screenEndpoints } from "/src/scripts/main";
 import { Fires } from "/src/scripts/prefabs/Fires";
 import { MovableObject } from "/src/scripts/prefabs/MovableObject";
@@ -43,11 +44,13 @@ export class Player extends MovableObject {
         this.scene.add.existing(this);
         this.scene.physics.add.existing(this);
         this.body.enable = true;
+
         this.fires = new Fires(this.scene);
-        this.scene.events.on('update', this.updateFrame, this);
-        this.last_frame = 'dragon1';
-        this.tween_fly = null;
         this.weapon = data.weapon;
+
+        this.scene.events.on('update', this.updateFrame, this);
+        this._lastFrame = 'dragon1';
+        this._tweenFly = null;
     }
 
     updateFrame() {
@@ -55,33 +58,34 @@ export class Player extends MovableObject {
             return;
         }
 
-        if (this.frame.name !== this.last_frame) {
+        if (this.frame.name !== this._lastFrame) {
             const last_y = this.y;
             if (this.frame.name === 'dragon6') {
-                if (this.scene.constructor.name !== 'GameScene') {
-                    this.tween_fly = this.scene.tweens.add({
+                debugger
+                if (this.scene.constructor.name !== SCENE_NAMES.game) {
+                    this._tweenFly = this.scene.tweens.add({
                         targets: this,
                         y: last_y + this.displayHeight / 3,
                         ease: 'Linear',
                         duration: 350,
-                        onComplete: () => { this.tween_fly = null }
+                        onComplete: () => { this._tweenFly = null }
                     });
                 }
             }
             else if (this.frame.name === 'dragon3') {
-                if (this.scene.constructor.name !== 'GameScene') {
-                    this.tween_fly = this.scene.tweens.add({
+                if (this.scene.constructor.name !== SCENE_NAMES.game) {
+                    this._tweenFly = this.scene.tweens.add({
                         targets: this,
                         y: last_y - this.displayHeight / 3,
                         ease: 'Linear',
                         duration: 350,
-                        onComplete: () => { this.tween_fly = null }
+                        onComplete: () => { this._tweenFly = null }
                     });
                 }
                 this.scene.sounds.wings.play({volume: 0.1});
             }
         }
-        this.last_frame = this.frame.name;
+        this._lastFrame = this.frame.name;
     }
 
     shooting() {
@@ -149,8 +153,8 @@ export class Player extends MovableObject {
         }
 
         if (buttons.up.isDown || buttons.down.isDown) {
-            if (this.tween_fly) {
-                this.tween_fly.paused = true;
+            if (this._tweenFly) {
+                this._tweenFly.paused = true;
             }
             if (buttons.up.isDown) {
                 if (this.y < this.y - this.velocity/config.fps) return;

@@ -2,10 +2,11 @@ import { config, screenEndpoints } from "/src/scripts/main";
 import { Player } from "/src/scripts/prefabs/Player";
 import { Enemies } from "/src/scripts/prefabs/Enemies";
 import { Boom } from "/src/scripts/prefabs/Boom";
+import { SCENE_NAMES } from "../constants";
 
 export class GameScene extends Phaser.Scene {
     constructor() {
-        super("Game");
+        super(SCENE_NAMES.game);
     }
 
     init(data) {

@@ -1,10 +1,10 @@
-import { ATLASES_FILES, AUDIO_FILES, IMAGE_FILES } from "../constants";
+import { ATLASES_FILES, AUDIO_FILES, IMAGE_FILES, SCENE_NAMES } from "../constants";
 import { LoadingBar } from "/src/scripts/classes/LoadingBar";
 import { config } from "/src/scripts/main";
 
 export class PreloadScene extends Phaser.Scene {
     constructor() {
-        super("Preload");
+        super(SCENE_NAMES.preload);
     }
 
     preload(){

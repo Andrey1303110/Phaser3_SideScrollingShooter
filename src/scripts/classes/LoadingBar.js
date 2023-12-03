@@ -38,7 +38,7 @@ export class LoadingBar {
 
     _setEvents(){
         this.scene.load.on('progress', this._showProgressBar, this);
-        this.scene.load.on('complete', () => this.scene.scene.start(SCENE_NAMES.levels), this);
+        this.scene.load.on('complete', () => this.scene.scene.start(SCENE_NAMES.main), this);
     }
 
     _showProgressBox(){

@@ -1,9 +1,10 @@
+import { SCENE_NAMES } from "../constants";
 import { config, screenEndpoints, setWeaponConf } from "/src/scripts/main";
 import { Player } from "/src/scripts/prefabs/Player";
 
 export class UpgradeScene extends Phaser.Scene {
     constructor() {
-        super("Upgrade");
+        super(SCENE_NAMES.upgrade);
     }
 
     init(){

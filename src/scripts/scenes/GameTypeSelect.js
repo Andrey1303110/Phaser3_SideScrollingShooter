@@ -3,7 +3,7 @@ import { config } from "/src/scripts/main";
 
 export class GameTypeSelect extends Phaser.Scene {
     constructor() {
-        super("Levels");
+        super(SCENE_NAMES.main);
     }
 
     init(){

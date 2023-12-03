@@ -1,9 +1,12 @@
 export const SCENE_NAMES = {
+    boot: 'Boot',
     preload: 'Preload',
-    levels: 'Levels',
+    main: 'Levels',
     campain: 'Map',
-    game: 'Game',
-    upgrade: 'Upgrade'
+    game: 'GameScene',
+    upgrade: 'Upgrade',
+    pause: 'Pause',
+    start: 'Start'
 }
 
 export const EVENTS = {     

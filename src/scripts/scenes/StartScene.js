@@ -1,8 +1,9 @@
+import { SCENE_NAMES } from "../constants";
 import { config, screenEndpoints } from "/src/scripts/main";
 
 export class StartScene extends Phaser.Scene {
     constructor() {
-        super("Start");
+        super(SCENE_NAMES.start);
     }
 
     create(data) {

@@ -3,7 +3,7 @@ import { config, screenEndpoints } from "/src/scripts/main";
 
 export class MapScene extends Phaser.Scene {
     constructor() {
-        super("Map");
+        super(SCENE_NAMES.campain);
     }
 
     init() {
@@ -244,7 +244,7 @@ export class MapScene extends Phaser.Scene {
         this.add.sprite(screenEndpoints.left + config.width * .015, screenEndpoints.top + config.width * .015, 'return')
             .setAlpha(0.65)
             .setInteractive()
-            .on('pointerdown', () => this.scene.start(SCENE_NAMES.levels), this);
+            .on('pointerdown', () => this.scene.start(SCENE_NAMES.main), this);
     }
 
     addAvailableMoney(){

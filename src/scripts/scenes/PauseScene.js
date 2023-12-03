@@ -1,8 +1,9 @@
+import { SCENE_NAMES } from "../constants";
 import { config, screenEndpoints } from "/src/scripts/main";
 
 export class PauseScene extends Phaser.Scene {
     constructor() {
-        super("Pause");
+        super(SCENE_NAMES.pause);
     }
 
     init(){
