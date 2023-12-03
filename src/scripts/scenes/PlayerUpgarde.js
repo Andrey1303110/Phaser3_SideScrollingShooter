@@ -12,46 +12,80 @@ export class UpgradeScene extends Phaser.Scene {
     }
 
     create() {
-        this.createBG();
-        this.createPlayer();
-        this.addReturnButton();
-        this.createSounds();
-        this.addAvailableMoney();
+        this._createBG();
+        this._createPlayer();
+        this._addReturnButton();
+        this._createSounds();
+        this._addAvailableMoney();
     }
 
-    createBG() {
-        this.sceneBG = this.add.sprite(config.width / 2, config.height / 2, 'bg').setAlpha(.925).setOrigin(.5);
+    _createBG() {
+        const bg = this.add.sprite(config.width / 2, config.height / 2, 'bg').setAlpha(.925).setOrigin(.5);
 
-        const scaleX = this.cameras.main.width / this.sceneBG.width;
-        const scaleY = this.cameras.main.height / this.sceneBG.height;
+        const scaleX = this.cameras.main.width / bg.width;
+        const scaleY = this.cameras.main.height / bg.height;
         const scale = Math.max(scaleX, scaleY);
-        this.sceneBG.setScale(scale).setScrollFactor(0);
+        bg.setScale(scale).setScrollFactor(0);
     }
 
-    addAvailableMoney(){
+    createUpgradeAnimation(name, level){
+        this.sounds.upgrade.play({volume: .2});
+        const objects_nums = 10 + level;
+
+        for (let i = 0; i < objects_nums; i++) {
+            const x = (this._player.x - this._player.displayWidth * .6) + this._player.displayWidth * 1.2 / objects_nums * i;
+            const y = Phaser.Math.Between((this._player.y - this._player.displayHeight * .5) * 100, (this._player.y + this._player.displayHeight * .5) * 100) / 100;
+            const scale = config.height * .075 * (Phaser.Math.Between(25 + level, 50 + level) / 100);
+
+            const data = {
+                x,
+                y,
+                scale,
+                alpha: Phaser.Math.Between(75, 100) / 100,
+                duration: Phaser.Math.Between(750, 1250),
+            }
+
+            const plus_symbol = this.add.text(data.x, data.y, '+', {
+                font: `${data.scale}px DishOut`,
+                fill: `#${config.upgradeColors[name]}`,
+            }).setOrigin(0.5).setAlpha(data.alpha).setStroke('#fafafa33', 4);
+
+            this.tweens.add({
+                targets: plus_symbol,
+                y: screenEndpoints.top,
+                alpha: 0,
+                ease: 'Linear',
+                duration: data.duration,
+                onComplete: () => { plus_symbol.destroy() }
+            });
+        }
+    }
+
+    // TODO add this to common scene class
+    _addAvailableMoney(){
         const style = {
             font: `${config.width * .031}px DishOut`,
             fill: '#FFFFFF',
         };
 
-        this.moneyIcon = this.add.sprite(screenEndpoints.right - config.height * .075, screenEndpoints.top + config.height * .075, 'ruby').setScale(.25);
-        this.moneyText = this.add.text(this.moneyIcon.x - this.moneyIcon.displayWidth, this.moneyIcon.y, config.money, style).setOrigin(.5).setAlpha(1);
+        const moneyIcon = this.add.sprite(screenEndpoints.right - config.height * .075, screenEndpoints.top + config.height * .075, 'ruby').setScale(.25);
+        this._moneyText = this.add.text(moneyIcon.x - moneyIcon.displayWidth, moneyIcon.y, config.money, style).setOrigin(.5).setAlpha(1);
     }
 
-    createPlayer(){
-        this.player = new Player({ scene: this });
+    _createPlayer(){
+        this._player = new Player({ scene: this });
 
         this.tweens.add({
-            targets: this.player,
+            targets: this._player,
             x: config.width * .125,
             ease: 'Linear',
             duration: 1250,
-            onComplete: this.createStats,
+            onComplete: this._createStats,
             callbackScope: this,
         });
     }
 
-    createStats(){
+    _createStats(){
         this.statsText = {};
         this.statsIcon = {};
         this.statsLevel = {};
@@ -107,12 +141,12 @@ export class UpgradeScene extends Phaser.Scene {
                 callbackScope: this
             });
 
-            this.createUpgredeButton({x, y, key, level});
+            this._createUpgredeButton({x, y, key, level});
         }
     }
 
-    checkAvailable(button){
-        this.checkPrice(button);
+    _checkAvailability(button){
+        this._checkPrice(button);
 
         let alpha = .9;
         if (config.money < button.cost) {
@@ -124,17 +158,17 @@ export class UpgradeScene extends Phaser.Scene {
         button.crystal.setAlpha(alpha);
     }
 
-    checkPrice(button){
+    _checkPrice(button){
         button.cost = Math.floor(button.level/10) + 1;
         button.textCost.text = button.cost;
     }
 
-    createUpgredeButton(data){
+    _createUpgredeButton(data){
         this.buttons[data.key] = this.add.sprite(data.x + config.width * .3, data.y, 'button_campaign')
             .setOrigin(0.5, 0.125)
             .setScale(.33)
             .setInteractive()
-            .on('pointerdown', this.upgarde);
+            .on('pointerdown', this._upgarde);
 
         this.buttons[data.key].name = data.key;
         this.buttons[data.key].level = data.level;
@@ -156,22 +190,22 @@ export class UpgradeScene extends Phaser.Scene {
 
         this.buttons[data.key].clicked = false;
 
-        this.checkAvailable(this.buttons[data.key]);
+        this._checkAvailability(this.buttons[data.key]);
     }
 
-    decreaseMoney(value){
+    _decreaseMoney(value){
         if (config.money) {
             config.money -= value;
             localStorage.setItem('money', config.money);
-            this.moneyText.text = config.money;
+            this._moneyText.text = config.money;
         }
         else {
             return false;
         }
     }
 
-    upgarde(){
-        if (this.clicked || !this.active) {
+    _upgarde(){
+        if (this._clicked || !this.active) {
             if (!this.active) {
                 this.scene.sounds.error.play({volume: .3});
             }
@@ -180,25 +214,25 @@ export class UpgradeScene extends Phaser.Scene {
 
         let value = localStorage.getItem(`playerWeapon_${this.name}`);
 
-        if (this.scene.decreaseMoney(this.cost) === false) {
+        if (this.scene._decreaseMoney(this.cost) === false) {
             return;
         }
 
         localStorage.setItem(`playerWeapon_${this.name}`, ++value);
         this.level = value;
 
-        let returned_value = setWeaponConf({init: false, key: this.name});
+        let returnedValue = setWeaponConf({init: false, key: this.name});
 
         let multiplier = 1;
         if (this.name === 'scale') {
             multiplier = 100;
         }
-        returned_value = (Math.round(config.Weapons.fire[this.name] * multiplier) / multiplier * multiplier).toFixed(0);
+        returnedValue = (Math.round(config.Weapons.fire[this.name] * multiplier) / multiplier * multiplier).toFixed(0);
 
-        this.scene.statsText[this.name].text = `${this.name.toUpperCase()} (${config.weapons_units[this.name]}): ${returned_value}`;
+        this.scene.statsText[this.name].text = `${this.name.toUpperCase()} (${config.weapons_units[this.name]}): ${returnedValue}`;
         this.scene.statsLevel[this.name].text = 'Lvl. ' + localStorage.getItem(`playerWeapon_${this.name}`);
 
-        this.clicked = true;
+        this._clicked = true;
         this.setAlpha(1);
         this.scene.tweens.add({
             targets: this,
@@ -206,10 +240,10 @@ export class UpgradeScene extends Phaser.Scene {
             alpha: .5,
             duration: 1000,
             onComplete: ()=>{ 
-                this.clicked = false;
+                this._clicked = false;
                 for (let i = 0; i < Object.keys(config.Weapons.fire).length; i++) {
                     const name = Object.keys(config.Weapons.fire)[i];
-                    this.scene.checkAvailable(this.scene.buttons[name]);
+                    this.scene._checkAvailability(this.scene.buttons[name]);
                 }
             }
         })
@@ -217,47 +251,15 @@ export class UpgradeScene extends Phaser.Scene {
         this.scene.createUpgradeAnimation(this.name, value);
     }
 
-    createUpgradeAnimation(name, level){
-        this.sounds.upgrade.play({volume: .2});
-        const objects_nums = 10 + level;
-
-        for (let i = 0; i < objects_nums; i++) {
-            const x = (this.player.x - this.player.displayWidth * .6) + this.player.displayWidth * 1.2 / objects_nums * i;
-            const y = Phaser.Math.Between((this.player.y - this.player.displayHeight * .5) * 100, (this.player.y + this.player.displayHeight * .5) * 100) / 100;
-            const scale = config.height * .075 * (Phaser.Math.Between(25 + level, 50 + level) / 100);
-
-            const data = {
-                x,
-                y,
-                scale,
-                alpha: Phaser.Math.Between(75, 100) / 100,
-                duration: Phaser.Math.Between(750, 1250),
-            }
-
-            const plus_symbol = this.add.text(data.x, data.y, '+', {
-                font: `${data.scale}px DishOut`,
-                fill: `#${config.upgradeColors[name]}`,
-            }).setOrigin(0.5).setAlpha(data.alpha).setStroke('#fafafa33', 4);
-
-            this.tweens.add({
-                targets: plus_symbol,
-                y: screenEndpoints.top,
-                alpha: 0,
-                ease: 'Linear',
-                duration: data.duration,
-                onComplete: () => { plus_symbol.destroy() }
-            });
-        }
-    }
-
-    addReturnButton(){
+    // TODO add to common class
+    _addReturnButton(){
         this.add.sprite(screenEndpoints.left + config.width * .015, screenEndpoints.top + config.width * .015, 'return')
             .setAlpha(0.65)
             .setInteractive()
             .on('pointerdown', ()=>{this.scene.start('Levels')}, this);
     }
 
-    createSounds() {
+    _createSounds() {
         if (this.sounds) {
             return;
         }
