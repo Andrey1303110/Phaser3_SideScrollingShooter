@@ -61,7 +61,6 @@ export class Player extends MovableObject {
         if (this.frame.name !== this._lastFrame) {
             const last_y = this.y;
             if (this.frame.name === 'dragon6') {
-                debugger
                 if (this.scene.constructor.name !== SCENE_NAMES.game) {
                     this._tweenFly = this.scene.tweens.add({
                         targets: this,
