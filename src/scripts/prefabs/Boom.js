@@ -1,4 +1,5 @@
 const ANIMATION_NAME = 'explosion';
+const FRAME_NAME = 'boom';
 
 export class Boom extends Phaser.GameObjects.Sprite {
     static generate(scene, x, y) {
@@ -12,7 +13,7 @@ export class Boom extends Phaser.GameObjects.Sprite {
         this.scene.physics.add.existing(this);
         this.body.enable = true;
 
-        this.createAnimation();
+        this._createAnimation();
 
         this.play(ANIMATION_NAME);
 
@@ -21,11 +22,11 @@ export class Boom extends Phaser.GameObjects.Sprite {
         });
     }
 
-    createAnimation() {
+    _createAnimation() {
         if (this.scene.anims.anims.entries[ANIMATION_NAME]) return;
 
-        const frames = this.scene.anims.generateFrameNames('boom',{
-            prefix: 'boom',
+        const frames = this.scene.anims.generateFrameNames(FRAME_NAME,{
+            prefix: FRAME_NAME,
             start: 1,
             end: 7,
         });
