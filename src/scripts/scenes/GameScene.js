@@ -85,7 +85,7 @@ export class GameScene extends Phaser.Scene {
         const real_height = this.textures.list[bg_image].source[0].height;
         const scale = config.height/real_height;
 
-        this.speed = config.Levels[this.currentLevelScene-1].velocity * .048;
+        this.speed = config.Levels[this.currentLevelScene-1].velocity;
 
         if (scale !== 1) {
             this.speed /= scale;

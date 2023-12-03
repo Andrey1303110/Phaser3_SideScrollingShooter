@@ -131,7 +131,7 @@ export const config = {
             y: 175,
             enemies: 5,
             enemiesDelay: 2500,
-            velocity: 250,
+            velocity: 4,
         },
         {
             level: 2,
@@ -140,7 +140,7 @@ export const config = {
             y: 490,
             enemies: 8,
             enemiesDelay: 2250,
-            velocity: 265,
+            velocity: 4,
         },
         {
             level: 3,
@@ -149,7 +149,7 @@ export const config = {
             y: 179,
             enemies: 11,
             enemiesDelay: 2000,
-            velocity: 285,
+            velocity: 4,
         },
         {
             level: 4,
@@ -158,7 +158,7 @@ export const config = {
             y: 135,
             enemies: 15,
             enemiesDelay: 1750,
-            velocity: 315,
+            velocity: 4,
         },
         {
             level: 5,
@@ -167,7 +167,7 @@ export const config = {
             y: 397,
             enemies: 21,
             enemiesDelay: 1600,
-            velocity: 325,
+            velocity: 4,
         },
         {
             level: 6,
@@ -176,7 +176,7 @@ export const config = {
             y: 287,
             enemies: 28,
             enemiesDelay: 1450,
-            velocity: 335,
+            velocity: 4,
         },
         {
             level: 7,
@@ -185,7 +185,7 @@ export const config = {
             y: 195,
             enemies: 39,
             enemiesDelay: 1300,
-            velocity: 345,
+            velocity: 4,
         },
         {
             level: 8,
@@ -194,7 +194,7 @@ export const config = {
             y: 248,
             enemies: 50,
             enemiesDelay: 1150,
-            velocity: 350,
+            velocity: 4,
         },
         {
             level: 9,
@@ -203,7 +203,7 @@ export const config = {
             y: 311,
             enemies: 65,
             enemiesDelay: 1075,
-            velocity: 355,
+            velocity: 4,
         },
         {
             level: 10,
@@ -212,7 +212,7 @@ export const config = {
             y: 509,
             enemies: 82,
             enemiesDelay: 1000,
-            velocity: 360,
+            velocity: 4,
         },
         {
             level: 11,
@@ -221,7 +221,7 @@ export const config = {
             y: 333,
             enemies: 100,
             enemiesDelay: 925,
-            velocity: 365,
+            velocity: 4,
         },
         {
             level: 12,
@@ -230,7 +230,7 @@ export const config = {
             y: 366,
             enemies: 120,
             enemiesDelay: 850,
-            velocity: 370,
+            velocity: 4,
         },
         {
             level: 13,
@@ -239,7 +239,7 @@ export const config = {
             y: 640,
             enemies: 145,
             enemiesDelay: 775,
-            velocity: 375,
+            velocity: 4,
         },
         {
             level: 14,
@@ -248,7 +248,7 @@ export const config = {
             y: 261,
             enemies: 200,
             enemiesDelay: 700,
-            velocity: 380,
+            velocity: 4,
         },
     ],
 
@@ -359,5 +359,3 @@ export function rgbToHex(colors) {
 
 window.addEventListener("orientationchange", () => { document.location.reload(); });
 window.addEventListener("resize", () => { document.location.reload(); });
-
-
