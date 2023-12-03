@@ -6,19 +6,19 @@ export class Enemy extends MovableObject {
         const x = screenEndpoints.right + config.width * .25;
         const y = Phaser.Math.Between(screenEndpoints.top + scene.maxEnemyFrameHeight / 2, screenEndpoints.bottom - scene.maxEnemyFrameHeight / 2);
 
-        let enemy_nums = 0;
+        let typeNums = 0;
 
         if (scene.info.level > 4) {
-            enemy_nums = 1;
+            typeNums = 1;
             if (scene.info.level > 8) {
-                enemy_nums = 2;
+                typeNums = 2;
             }
         }
 
-        const enemy_type = Object.keys(config.Enemies)[Phaser.Math.Between(0, enemy_nums)];
-        const enemy_frame = `enemy${Phaser.Math.Between(1, 4)}`;
+        const enemyType = Object.keys(config.Enemies)[Phaser.Math.Between(0, typeNums)];
+        const enemyTexture = `enemy${Phaser.Math.Between(1, config.Enemies[enemyType].textureNums)}`;
 
-        return { x, y, enemy_frame, enemy_type };
+        return { x, y, enemyTexture, enemyType };
     }
 
     static generate(scene, fires) {
@@ -29,46 +29,25 @@ export class Enemy extends MovableObject {
             fires,
             x: data.x,
             y: data.y,
-            enemy_type: data.enemy_type,
-            texture: data.enemy_type,
-            frame: data.enemy_frame,
-            velocity: config.Enemies[data.enemy_type].velocity * -1,
+            enemyType: data.enemyType,
+            texture: data.enemyType,
+            frame: data.enemyTexture,
+            velocity: config.Enemies[data.enemyType].velocity * -1,
         });
     }
 
     init(data) {
         super.init(data);
-        this.enemy_type = data.enemy_type;
-        this.fires_activate = true;
-        this.setWeapon();
-        this.reward = config.reward[data.texture];
-        this.fires = data.fires;
-        this.timer = this.scene.time.addEvent({
-            delay: config.Weapons[this.weapon.texture].reload * (Phaser.Math.Between(75, 125) * .01),
-            loop: true,
-            callback: this.shooting,
-            callbackScope: this,
-        });
+
+        this._setInitialData(data);
+        this._setWeapon();
+        this._addTimer();
     }
 
-    setWeapon(){
-        this.weapon = {
-            texture: config.Enemies[this.enemy_type].weapon,
-            delay: config.Weapons[config.Enemies[this.enemy_type].weapon].reload,
-            velocity: config.Weapons[config.Enemies[this.enemy_type].weapon].velocity,
-            scale: config.Weapons[config.Enemies[this.enemy_type].weapon].scale,
-            origin: {x: -1, y: 0.5},
-        }
-    }
+
 
     stopTimer(){
-        this.fires_activate = false;
-    }
-
-    shooting() {
-        if (this.fires_activate) {
-            this.fires.createFire(this);
-        }
+        this._firesActivate = false;
     }
 
     reset() {
@@ -80,5 +59,39 @@ export class Enemy extends MovableObject {
 
     isDead() {
         return (this.x < -this.displayWidth);
+    }
+
+    _addTimer() {
+        this.timer = this.scene.time.addEvent({
+            delay: config.Weapons[this.weapon.texture].reload * (Phaser.Math.Between(70, 130) * .01),
+            loop: true,
+            callback: this._shooting,
+            callbackScope: this,
+        });
+    }
+
+    _setInitialData(data) {
+        const { enemyType, texture, fires } = data;
+
+        this._enemyType = enemyType;
+        this._firesActivate = true;
+        this.reward = config.reward[texture];
+        this.fires = fires;
+    }
+
+    _setWeapon(){
+        this.weapon = {
+            texture: config.Enemies[this._enemyType].weapon,
+            delay: config.Weapons[config.Enemies[this._enemyType].weapon].reload,
+            velocity: config.Weapons[config.Enemies[this._enemyType].weapon].velocity,
+            scale: config.Weapons[config.Enemies[this._enemyType].weapon].scale,
+            origin: {x: -1, y: 0.5},
+        }
+    }
+
+    _shooting() {
+        if (this._firesActivate) {
+            this.fires.createFire(this);
+        }
     }
 }

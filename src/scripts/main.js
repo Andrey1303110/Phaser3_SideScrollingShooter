@@ -63,19 +63,19 @@ export const config = {
 
     Enemies: {
         helicopter: {
-            velocity: 175,
+            velocity: 150,
             weapon: 'rocket',
-            nums: 4,
+            typeNums: 4,
         },
         jet: {
-            velocity: 325,
+            velocity: 300,
             weapon: 'missile',
-            nums: 4,
+            typeNums: 4,
         },
         strategic_jet: {
             velocity: 400,
             weapon: 'missile_2',
-            nums: 4,
+            typeNums: 4,
         },
     },
 
@@ -86,17 +86,17 @@ export const config = {
             scale: 0.5,
         },
         rocket: {
-            reload: 1500,
+            reload: 1750,
             velocity: 415 * -1,
             scale: 0.35,
         },
         missile: {
-            reload: 1750,
+            reload: 2000,
             velocity: 575 * -1,
             scale: 0.45,
         },
         missile_2: {
-            reload: 2000,
+            reload: 2500,
             velocity: 1000 * -1,
             scale: 0.5,
         }
