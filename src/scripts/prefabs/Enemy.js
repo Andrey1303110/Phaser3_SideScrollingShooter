@@ -44,8 +44,6 @@ export class Enemy extends MovableObject {
         this._addTimer();
     }
 
-
-
     stopTimer(){
         this._firesActivate = false;
     }
@@ -77,6 +75,7 @@ export class Enemy extends MovableObject {
         this._firesActivate = true;
         this.reward = config.reward[texture];
         this.fires = fires;
+        this.scale = config.Enemies[enemyType].scale;
     }
 
     _setWeapon(){

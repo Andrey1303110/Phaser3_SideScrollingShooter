@@ -58,47 +58,51 @@ export const config = {
     },
 
     Player: {
+        velocity: 350,
         scale: 0.75
     },
 
     Enemies: {
         helicopter: {
-            velocity: 150,
+            velocity: 110,
             weapon: 'rocket',
             textureNums: 4,
+            scale: 0.75,
         },
         jet: {
-            velocity: 300,
+            velocity: 250,
             weapon: 'missile',
             textureNums: 4,
+            scale: 0.8,
         },
         strategic_jet: {
-            velocity: 400,
+            velocity: 200,
             weapon: 'missile_2',
             textureNums: 4,
+            scale: 0.95,
         },
     },
 
     Weapons: {
         fire: {
             reload: 500,
-            velocity: 750,
-            scale: 0.5,
+            velocity: 500,
+            scale: 0.4,
         },
         rocket: {
             reload: 1750,
-            velocity: 415 * -1,
-            scale: 0.35,
+            velocity: 350 * -1,
+            scale: 0.3,
         },
         missile: {
             reload: 2000,
-            velocity: 575 * -1,
-            scale: 0.45,
+            velocity: 475 * -1,
+            scale: 0.375,
         },
         missile_2: {
             reload: 2500,
-            velocity: 1000 * -1,
-            scale: 0.5,
+            velocity: 800 * -1,
+            scale: 0.4,
         }
     },
 
