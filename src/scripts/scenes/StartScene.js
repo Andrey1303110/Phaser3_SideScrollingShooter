@@ -7,27 +7,27 @@ export class StartScene extends Phaser.Scene {
     }
 
     create(data) {
-        this.createBG(data);
-        this.createStartText();
+        this._createBG(data);
+        this._createStartText();
         if (data.score !== undefined) {
-            this.createStats(data);
+            this._createStats(data);
         }
     }
 
-    createBG(data) {
-        this.sceneBG = this.add.sprite(config.width / 2, config.height / 2, 'bg').setAlpha(.925).setOrigin(.5).setInteractive();
+    _createBG(data) {
+        this._sceneBG = this.add.sprite(config.width / 2, config.height / 2, 'bg').setAlpha(.925).setOrigin(.5).setInteractive();
 
-        const scaleX = this.cameras.main.width / this.sceneBG.width;
-        const scaleY = this.cameras.main.height / this.sceneBG.height;
+        const scaleX = this.cameras.main.width / this._sceneBG.width;
+        const scaleY = this.cameras.main.height / this._sceneBG.height;
         const scale = Math.max(scaleX, scaleY);
-        this.sceneBG.setScale(scale).setScrollFactor(0);
+        this._sceneBG.setScale(scale).setScrollFactor(0);
         
-        this.sceneBG.on('pointerdown', () => {
+        this._sceneBG.on('pointerdown', () => {
             this.scene.start(SCENE_NAMES.game, data);
         }, this);
     }
 
-    createStats(data) {
+    _createStats(data) {
         this.add.graphics()
             .fillStyle('#000', 0.5)
             .fillRoundedRect(config.width / 2 - config.width * .15, config.height / 2 - config.height * .25, config.width * .3, config.height * .5, config.width*.03);
@@ -43,24 +43,24 @@ export class StartScene extends Phaser.Scene {
         this.add.text(config.width / 2, config.height / 2 + config.height * .125, textScore, textStyle).setOrigin(0.5);
     }
 
-    createStartText() {
-        this.startText = this.add.text(config.width / 2, screenEndpoints.bottom - config.height * .05, 'Tap to start', {
+    _createStartText() {
+        this._startText = this.add.text(config.width / 2, screenEndpoints.bottom - config.height * .05, 'Tap to start', {
             font: `${config.width*.04}px DishOut`,
             fill: '#f0f0f0',
         }).setOrigin(0.5);
 
-        const initScale = this.startText.scale;
+        const initScale = this._startText.scale;
 
         const timeline = this.add.timeline(
             {
                 at: 0,
-                targets: this.startText,
+                targets: this._startText,
                 scale: initScale + .18,
                 ease: 'Power2',
                 duration: 550,
             },
             {
-                targets: this.startText,
+                targets: this._startText,
                 scale: initScale,
                 ease: 'Power2',
                 duration: 550,
