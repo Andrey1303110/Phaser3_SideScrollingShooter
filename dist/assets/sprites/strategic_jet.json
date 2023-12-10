@@ -1,0 +1,6 @@
+{"frames":[
+    {"filename":"enemy2","frame":{"x":0,"y":0,"w":285,"h":68},"rotated":false,"trimmed":false,"spriteSourceSize":{"x":0,"y":0,"w":285,"h":68},"sourceSize":{"w":285,"h":68}},
+    {"filename":"enemy3","frame":{"x":0,"y":69,"w":295,"h":62},"rotated":false,"trimmed":false,"spriteSourceSize":{"x":0,"y":0,"w":295,"h":62},"sourceSize":{"w":295,"h":62}},
+    {"filename":"enemy4","frame":{"x":0,"y":132,"w":275,"h":63},"rotated":false,"trimmed":false,"spriteSourceSize":{"x":0,"y":0,"w":275,"h":63},"sourceSize":{"w":275,"h":63}},
+    {"filename":"enemy1","frame":{"x":0,"y":196,"w":235,"h":57},"rotated":false,"trimmed":false,"spriteSourceSize":{"x":0,"y":0,"w":235,"h":57},"sourceSize":{"w":235,"h":57}}],
+    "meta":{"app":"https://www.leshylabs.com/apps/sstool/","version":"Leshy SpriteSheet Tool v0.8.4","image":"strategic_jet.png","size":{"w":295,"h":253},"scale":1}}
