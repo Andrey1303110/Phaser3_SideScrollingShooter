@@ -16,33 +16,34 @@ export class BootScene extends Phaser.Scene {
     }
 
     create() {
-        this.createBG();
+        this._createBG();
 
-        this.pervious_logo = this.add.sprite(config.width / 2, config.height / 2, 'pervious_logo').setAlpha(0);
-        const scaleX = this.cameras.main.width / this.pervious_logo.width;
-        const scaleY = this.cameras.main.height / this.pervious_logo.height;
+        this._pervious_logo = this.add.sprite(config.width / 2, config.height / 2, 'pervious_logo').setAlpha(0);
+        const scaleX = this.cameras.main.width / this._pervious_logo.width;
+        const scaleY = this.cameras.main.height / this._pervious_logo.height;
         const scale = Math.max(scaleX, scaleY);
-        this.pervious_logo.setScale(scale).setScrollFactor(0);
+        this._pervious_logo.setScale(scale).setScrollFactor(0);
 
         this.tweens.add({
             delay: 250,
-            targets: this.pervious_logo,
+            targets: this._pervious_logo,
             alpha: 1,
             ease: 'Linear',
             duration: 1750,
             yoyo: true,
             onComplete: () => {
-                this.scene.start('Preload');
+                this.scene.start(SCENE_NAMES.preload);
             }
         })
     }
 
-    createBG() {
-        this.sceneBG = this.add.sprite(config.width / 2, config.height / 2, 'bg').setAlpha(.925).setOrigin(.5).setInteractive();
+    // TODO move to common class
+    _createBG() {
+        this._sceneBG = this.add.sprite(config.width / 2, config.height / 2, 'bg').setAlpha(.925).setOrigin(.5).setInteractive();
 
-        const scaleX = this.cameras.main.width / this.sceneBG.width;
-        const scaleY = this.cameras.main.height / this.sceneBG.height;
+        const scaleX = this.cameras.main.width / this._sceneBG.width;
+        const scaleY = this.cameras.main.height / this._sceneBG.height;
         const scale = Math.max(scaleX, scaleY);
-        this.sceneBG.setScale(scale).setScrollFactor(0);
+        this._sceneBG.setScale(scale).setScrollFactor(0);
     }
 }
