@@ -256,7 +256,7 @@ export class UpgradeScene extends Phaser.Scene {
         this.add.sprite(screenEndpoints.left + config.width * .015, screenEndpoints.top + config.width * .015, 'return')
             .setAlpha(0.65)
             .setInteractive()
-            .on('pointerdown', ()=>{this.scene.start('Levels')}, this);
+            .on('pointerdown', ()=>{this.scene.start(SCENE_NAMES.main)}, this);
     }
 
     _createSounds() {
