@@ -85,7 +85,7 @@ export class GameTypeSelect extends Phaser.Scene {
     }
 
     _gameSelect(button){
-        this.sounds.click.play({ volume: .33 });
+        this.sounds.click.play({ volume: .2 });
 
         this.tweens.add({
             targets: [button, button.buttonText],
