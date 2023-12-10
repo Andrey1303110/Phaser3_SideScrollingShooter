@@ -7,43 +7,41 @@ export class MapScene extends Phaser.Scene {
     }
 
     init() {
-        this.mapDots = [];
+        this._mapDots = [];
     }
 
     create() {
-        this.createSounds();
-        this.createBG();
-        this.createMap();
-        this.createMissions();
-        this.createLosses();
-        this.addReturnButton();
-        this.addAvailableMoney();
+        this._createSounds();
+        this._createBG();
+        this._createMap();
+        this._createMissions();
+        this._createLosses();
+        this._createReturnButton();
+        this._addAvailableMoney();
     }
 
-    createBG() {
-        this.sceneBG = this.add.sprite(config.width / 2, config.height / 2, 'bg').setAlpha(.925).setOrigin(.5).setInteractive();
+    _createBG() {
+        this._sceneBG = this.add.sprite(config.width / 2, config.height / 2, 'bg').setAlpha(.925).setOrigin(.5).setInteractive();
 
-        const scaleX = this.cameras.main.width / this.sceneBG.width;
-        const scaleY = this.cameras.main.height / this.sceneBG.height;
+        const scaleX = this.cameras.main.width / this._sceneBG.width;
+        const scaleY = this.cameras.main.height / this._sceneBG.height;
         const scale = Math.max(scaleX, scaleY);
-        this.sceneBG.setScale(scale).setScrollFactor(0);
+        this._sceneBG.setScale(scale).setScrollFactor(0);
     }
 
-    createMap() {
-        this.map = this.add.sprite(config.width / 2, config.height / 2, 'map').setAlpha(.65).setOrigin(.5).setScale(1.25);
+    _createMap() {
+        this._map = this.add.sprite(config.width / 2, config.height / 2, 'map').setAlpha(.65).setOrigin(.5).setScale(1.25);
     }
 
-    createMissions() {
-        let i = 0;
+    _createMissions() {
         config.Levels.forEach(element => {
-            this.createDot(element);
-            i++;
+            this._createDot(element);
         });
     }
 
-    createDot(object) {
-        const x = (config.width - this.map.displayWidth) / 2 + (object.x / 1000 * this.map.displayWidth);
-        const y = (config.height - this.map.displayHeight) / 2 + (object.y / 1000 * this.map.displayWidth);
+    _createDot(object) {
+        const x = (config.width - this._map.displayWidth) / 2 + (object.x / 1000 * this._map.displayWidth);
+        const y = (config.height - this._map.displayHeight) / 2 + (object.y / 1000 * this._map.displayWidth);
         const dot = this.add.sprite(x, y, 'battle')
             .setOrigin(0.5)
             .setInteractive()
@@ -61,14 +59,14 @@ export class MapScene extends Phaser.Scene {
             if (config.currentLevelScene > object.level) {
                 dot.setTexture('flag').setOrigin(0, 1);
             } else {
-                this.addDotAnim(dot);
+                this._addDotAnim(dot);
             }
         }
 
-        this.mapDots.push(dot);
+        this._mapDots.push(dot);
     }
 
-    addDotAnim(object) {
+    _addDotAnim(object) {
         this.tweens.add({
             targets: object,
             scale: object.scale * 1.5,
@@ -167,7 +165,7 @@ export class MapScene extends Phaser.Scene {
                         .setOrigin(0.5)
                         .setAlpha(0.7)
                         .setInteractive()
-                        .on('pointerdown', () => { this.gameStart(info) })
+                        .on('pointerdown', () => { this._gameStart(info) })
                         .on('pointerover', () => { start_button.setAlpha(0.9) })
                         .on('pointerout', () => { start_button.setAlpha(0.7) });
                     texts.push(start_button);
@@ -176,7 +174,7 @@ export class MapScene extends Phaser.Scene {
                         .setOrigin(1.3, -.35)
                         .setAlpha(0.7)
                         .setInteractive()
-                        .on('pointerdown', () => { this.cardClose({ bg_rect, frame, texts, stamp, close_button }) })
+                        .on('pointerdown', () => { this._cardClose({ bg_rect, frame, texts, stamp, close_button }) })
                         .on('pointerover', () => { close_button.setAlpha(0.9) })
                         .on('pointerout', () => { close_button.setAlpha(0.7) });
                 }
@@ -186,7 +184,7 @@ export class MapScene extends Phaser.Scene {
         timeline.play();
     }
 
-    cardClose(data) {
+    _cardClose(data) {
         this.sounds.click.play({ volume: .33 });
 
         data.bg_rect.destroy();
@@ -198,7 +196,7 @@ export class MapScene extends Phaser.Scene {
         });
     }
 
-    gameStart(info) {
+    _gameStart(info) {
         this.sounds.ready.play();
 
         const bg_rect = this.add.rectangle(config.width / 2, config.height / 2, config.width, config.height, '0x000000', 0).setInteractive();
@@ -212,7 +210,7 @@ export class MapScene extends Phaser.Scene {
         });
     }
 
-    createLosses() {
+    _createLosses() {
         if (this.losses_text) {
             this.losses_text.forEach(element => {
                 element.destroy();
@@ -240,14 +238,14 @@ export class MapScene extends Phaser.Scene {
         });
     }
 
-    addReturnButton() {
+    _createReturnButton() {
         this.add.sprite(screenEndpoints.left + config.width * .015, screenEndpoints.top + config.width * .015, 'return')
             .setAlpha(0.65)
             .setInteractive()
             .on('pointerdown', () => this.scene.start(SCENE_NAMES.main), this);
     }
 
-    addAvailableMoney(){
+    _addAvailableMoney(){
         const style = {
             font: `${config.width * .031}px DishOut`,
             fill: '#FFFFFF',
@@ -260,7 +258,7 @@ export class MapScene extends Phaser.Scene {
         this.moneyText = this.add.text(this.moneyIcon.x - this.moneyIcon.displayWidth, this.moneyIcon.y, config.money, style).setOrigin(.5).setAlpha(1);
     }
 
-    createSounds() {
+    _createSounds() {
         if (this.sounds) {
             return;
         }
