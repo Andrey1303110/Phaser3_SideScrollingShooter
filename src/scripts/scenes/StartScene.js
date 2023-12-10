@@ -23,7 +23,7 @@ export class StartScene extends Phaser.Scene {
         this.sceneBG.setScale(scale).setScrollFactor(0);
         
         this.sceneBG.on('pointerdown', () => {
-            this.scene.start('Game', data);
+            this.scene.start(SCENE_NAMES.game, data);
         }, this);
     }
 
