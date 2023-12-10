@@ -34,46 +34,82 @@ export class MapScene extends Phaser.Scene {
     }
 
     _createMissions() {
-        config.Levels.forEach(element => {
-            this._createDot(element);
+        const timelineEvents = [];
+        config.Levels.forEach((element, i) => {
+            timelineEvents.push({
+                at: i * 100,
+                run: () => this._createDot(element)
+            })
         });
+
+        const timeline = this.add.timeline(timelineEvents);
+        timeline.play(); 
     }
 
-    _createDot(object) {
+    async _createDot(object) {
         const x = (config.width - this._map.displayWidth) / 2 + (object.x / 1000 * this._map.displayWidth);
         const y = (config.height - this._map.displayHeight) / 2 + (object.y / 1000 * this._map.displayWidth);
         const dot = this.add.sprite(x, y, 'battle')
+            .setAlpha(0)
+            .setScale(6)
             .setOrigin(0.5)
             .setInteractive()
             .on('pointerdown', this.selectLevel);
         dot.info = object;
+        dot.isCurrent = false;
+
+        let params = {
+            alpha: 1,
+            scale: 1
+        };
 
         if (object.level > config.currentLevelScene) {
-            dot.setAlpha(0.6).setScale(2 / 3)
-                .on('pointerdown', () => { this.sounds.error.play({ volume: .33 }) });
+            dot.on('pointerdown', () => { this.sounds.error.play({ volume: .33 }) });
             dot.active = false;
+
+            params.alpha = 2/3;
+            params.scale = 2/3;
         } else {
             dot.setAlpha(1)
                 .on('pointerdown', () => { this.sounds.select.play({ volume: .33 }) });
             dot.active = true;
+
             if (config.currentLevelScene > object.level) {
                 dot.setTexture('flag').setOrigin(0, 1);
             } else {
-                this._addDotAnim(dot);
+                dot.isCurrent = true;
             }
         }
+
+        this._createDotTween(dot, params);
 
         this._mapDots.push(dot);
     }
 
+    _createDotTween(dot, params) {
+        this.tweens.add({
+            targets: dot,
+            alpha: params.alpha,
+            scale: params.scale,
+            ease: 'easeInCirc',
+            duration: 250,
+            onStart: () => this.sounds.whoosh_map.play({ volume: .2 }),
+            onComplete: () => { 
+                if (dot.isCurrent) this._addDotAnim(dot);
+            }
+        })
+    }
+
     _addDotAnim(object) {
+        object.setScale(1);
         this.tweens.add({
             targets: object,
-            scale: object.scale * 1.5,
+            scale: 1.5,
             duration: 425,
             yoyo: true,
             repeat: -1,
         });
+        this.sounds.fire_effect.play({ volume: .1 })
     }
 
     selectLevel() {
@@ -165,7 +201,10 @@ export class MapScene extends Phaser.Scene {
                         .setOrigin(0.5)
                         .setAlpha(0.7)
                         .setInteractive()
-                        .on('pointerdown', () => { this._gameStart(info) })
+                        .on('pointerdown', () => { 
+                            this._gameStart(info);
+                            this.sounds.fire_effect.stop();
+                        })
                         .on('pointerover', () => { start_button.setAlpha(0.9) })
                         .on('pointerout', () => { start_button.setAlpha(0.7) });
                     texts.push(start_button);
@@ -185,7 +224,7 @@ export class MapScene extends Phaser.Scene {
     }
 
     _cardClose(data) {
-        this.sounds.click.play({ volume: .33 });
+        this.sounds.click.play({ volume: .2 });
 
         data.bg_rect.destroy();
         data.frame.destroy();
@@ -242,7 +281,10 @@ export class MapScene extends Phaser.Scene {
         this.add.sprite(screenEndpoints.left + config.width * .015, screenEndpoints.top + config.width * .015, 'return')
             .setAlpha(0.65)
             .setInteractive()
-            .on('pointerdown', () => this.scene.start(SCENE_NAMES.main), this);
+            .on('pointerdown', () => {
+                this.scene.start(SCENE_NAMES.main);
+                this.sounds.click.play({ volume: .2 });
+            });
     }
 
     _addAvailableMoney(){
@@ -268,6 +310,8 @@ export class MapScene extends Phaser.Scene {
             error: this.sound.add('error'),
             stamp: this.sound.add('stamp'),
             ready: this.sound.add('ready'),
+            whoosh_map: this.sound.add('whoosh_map'),
+            fire_effect: this.sound.add('fire_effect'),
         };
     }
 }
