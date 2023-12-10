@@ -157,7 +157,7 @@ export const config = {
             x: 430,
             y: 135,
             enemies: 15,
-            enemiesDelay: 1750,
+            enemiesDelay: 1850,
             velocity: 4,
         },
         {
@@ -166,7 +166,7 @@ export const config = {
             x: 890,
             y: 397,
             enemies: 21,
-            enemiesDelay: 1600,
+            enemiesDelay: 1700,
             velocity: 4,
         },
         {
@@ -175,7 +175,7 @@ export const config = {
             x: 353,
             y: 287,
             enemies: 28,
-            enemiesDelay: 1450,
+            enemiesDelay: 1550,
             velocity: 4,
         },
         {
@@ -184,7 +184,7 @@ export const config = {
             x: 435,
             y: 195,
             enemies: 39,
-            enemiesDelay: 1300,
+            enemiesDelay: 1400,
             velocity: 4,
         },
         {
@@ -193,7 +193,7 @@ export const config = {
             x: 105,
             y: 248,
             enemies: 50,
-            enemiesDelay: 1150,
+            enemiesDelay: 1300,
             velocity: 4,
         },
         {
@@ -202,7 +202,7 @@ export const config = {
             x: 720,
             y: 311,
             enemies: 65,
-            enemiesDelay: 1075,
+            enemiesDelay: 1200,
             velocity: 4,
         },
         {
@@ -211,7 +211,7 @@ export const config = {
             x: 732,
             y: 509,
             enemies: 82,
-            enemiesDelay: 1000,
+            enemiesDelay: 1100,
             velocity: 4,
         },
         {
@@ -220,7 +220,7 @@ export const config = {
             x: 874,
             y: 333,
             enemies: 100,
-            enemiesDelay: 925,
+            enemiesDelay: 1050,
             velocity: 4,
         },
         {
@@ -229,7 +229,7 @@ export const config = {
             x: 735,
             y: 366,
             enemies: 120,
-            enemiesDelay: 850,
+            enemiesDelay: 1000,
             velocity: 4,
         },
         {
@@ -238,26 +238,25 @@ export const config = {
             x: 676,
             y: 640,
             enemies: 145,
-            enemiesDelay: 775,
+            enemiesDelay: 975,
             velocity: 4,
         },
         {
             level: 14,
-            name: 'Lugansk',
+            name: 'Luhansk',
             x: 956,
             y: 261,
             enemies: 200,
-            enemiesDelay: 700,
+            enemiesDelay: 950,
             velocity: 4,
         },
     ],
 
     unlim: {
         unlim: true,
-        level: 10,
+        level: 14,
         enemies: 9999,
-        enemiesDelay: 1000,
-        velocity: 380,
+        enemiesDelay: 1500
     },
 
     firstTimePlay: localStorage.getItem('firstTimePlay') ?? '1',
