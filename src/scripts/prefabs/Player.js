@@ -57,6 +57,7 @@ export class Player extends MovableObject {
 
         this.fires = new Fires(this.scene);
         this.weapon = data.weapon;
+        this.scale = config.Player.scale;
 
         this.scene.events.on(EVENTS.update, this._updateFrame, this);
         this._lastFrame = FIRST_PLAYER_FRAME;

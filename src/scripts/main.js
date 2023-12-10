@@ -58,7 +58,7 @@ export const config = {
     },
 
     Player: {
-        velocity: 500,
+        scale: 0.75
     },
 
     Enemies: {
