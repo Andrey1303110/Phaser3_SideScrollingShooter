@@ -25,7 +25,7 @@ export class PreloadScene extends Phaser.Scene {
 
     _preloadOther(){
         this.load.plugin('rexvirtualjoystickplugin', './assets/plugins/rexvirtualjoystickplugin.min.js', true);
-        this.load.json('dialogues1', `./assets/dialogues/1.json`);
+        this.load.json('dialogues0', `./assets/dialogues/0.json`);
     }
 
     _preloadResources() {
