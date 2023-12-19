@@ -1,5 +1,9 @@
+import { DialogBoxController } from "../classes/DialogBoxController";
 import { SCENE_NAMES } from "../constants";
+import { delay } from "../main";
 import { config, screenEndpoints } from "/src/scripts/main";
+
+const INIT_DELAY = 5000;
 
 export class MapScene extends Phaser.Scene {
     constructor() {
@@ -10,14 +14,18 @@ export class MapScene extends Phaser.Scene {
         this._mapDots = [];
     }
 
-    create() {
+    async create() {
         this._createSounds();
         this._createBG();
         this._createMap();
         this._createMissions();
         this._createLosses();
         this._createReturnButton();
+        this._createControllers();
         this._addAvailableMoney();
+
+        await delay(INIT_DELAY);
+        await this._dialogBoxConroller.flowShow(config.currentLevelScene - 1);
     }
 
     _createBG() {
@@ -285,6 +293,10 @@ export class MapScene extends Phaser.Scene {
                 this.scene.start(SCENE_NAMES.main);
                 this.sounds.click.play({ volume: .2 });
             });
+    }
+
+    _createControllers() {
+        this._dialogBoxConroller = new DialogBoxController(this.scene);
     }
 
     _addAvailableMoney(){
