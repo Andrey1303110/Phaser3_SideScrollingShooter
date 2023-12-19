@@ -118,6 +118,7 @@ export class MapScene extends Phaser.Scene {
             repeat: -1,
         });
         this.sounds.fire_effect.play({ volume: .1 })
+        this.sounds.fire_effect.loop = true;
     }
 
     selectLevel() {
