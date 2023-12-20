@@ -7,7 +7,7 @@ export class CommonScene extends Phaser.Scene {
 
     init() {
         if(!this.scale.isFullscreen) this.scale.startFullscreen();
-        debugger
+
         this.game.sound.stopAll();
         setEndpoints();
     }
