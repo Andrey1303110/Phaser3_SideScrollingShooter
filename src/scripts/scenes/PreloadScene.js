@@ -10,14 +10,18 @@ export class PreloadScene extends CommonScene {
 
     preload(){
         this._createBG();
-        new LoadingBar(this);
         this._preloadResources();
-        this._preloadOther()
+        this._preloadOther();
+        this._preloadDialogues();
+        new LoadingBar(this);
     }
 
     _preloadOther(){
         this.load.plugin('rexvirtualjoystickplugin', './assets/plugins/rexvirtualjoystickplugin.min.js', true);
-        this.load.json('dialogues0', `./assets/dialogues/0.json`);
+    }
+
+    _preloadDialogues() {
+        this.load.json('dialogues0', `./assets/dialogues/${config.lang}/0.json`);
     }
 
     _preloadResources() {
