@@ -1,13 +1,10 @@
 import { SCENE_NAMES } from "../constants";
+import { CommonScene } from "./CommonScene";
 import { config, screenEndpoints } from "/src/scripts/main";
 
-export class PauseScene extends Phaser.Scene {
+export class PauseScene extends CommonScene {
     constructor() {
         super(SCENE_NAMES.pause);
-    }
-
-    init(){
-        this.game.sound.stopAll();
     }
 
     create() {

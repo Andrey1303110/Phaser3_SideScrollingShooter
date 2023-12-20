@@ -1,16 +1,19 @@
 import { DialogBoxController } from "../classes/DialogBoxController";
 import { SCENE_NAMES } from "../constants";
 import { delay } from "../main";
+import { CommonScene } from "./CommonScene";
 import { config, screenEndpoints } from "/src/scripts/main";
 
 const INIT_DELAY = 5000;
 
-export class MapScene extends Phaser.Scene {
+export class MapScene extends CommonScene {
     constructor() {
         super(SCENE_NAMES.campain);
     }
 
     init() {
+        super.init();
+
         this._mapDots = [];
     }
 
@@ -26,15 +29,6 @@ export class MapScene extends Phaser.Scene {
 
         await delay(INIT_DELAY);
         await this._dialogBoxConroller.flowShow(config.currentLevelScene - 1);
-    }
-
-    _createBG() {
-        this._sceneBG = this.add.sprite(config.width / 2, config.height / 2, 'bg').setAlpha(.925).setOrigin(.5).setInteractive();
-
-        const scaleX = this.cameras.main.width / this._sceneBG.width;
-        const scaleY = this.cameras.main.height / this._sceneBG.height;
-        const scale = Math.max(scaleX, scaleY);
-        this._sceneBG.setScale(scale).setScrollFactor(0);
     }
 
     _createMap() {

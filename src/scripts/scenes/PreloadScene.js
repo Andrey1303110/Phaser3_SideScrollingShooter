@@ -1,8 +1,9 @@
 import { ATLASES_FILES, AUDIO_FILES, IMAGE_FILES, SCENE_NAMES } from "../constants";
+import { CommonScene } from "./CommonScene";
 import { LoadingBar } from "/src/scripts/classes/LoadingBar";
 import { config } from "/src/scripts/main";
 
-export class PreloadScene extends Phaser.Scene {
+export class PreloadScene extends CommonScene {
     constructor() {
         super(SCENE_NAMES.preload);
     }
@@ -12,15 +13,6 @@ export class PreloadScene extends Phaser.Scene {
         new LoadingBar(this);
         this._preloadResources();
         this._preloadOther()
-    }
-
-    _createBG() {
-        this.sceneBG = this.add.sprite(config.width / 2, config.height / 2, 'bg').setAlpha(.925).setOrigin(.5).setInteractive();
-
-        const scaleX = this.cameras.main.width / this.sceneBG.width;
-        const scaleY = this.cameras.main.height / this.sceneBG.height;
-        const scale = Math.max(scaleX, scaleY);
-        this.sceneBG.setScale(scale).setScrollFactor(0);
     }
 
     _preloadOther(){

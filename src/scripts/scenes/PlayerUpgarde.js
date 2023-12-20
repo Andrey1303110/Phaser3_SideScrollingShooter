@@ -1,13 +1,16 @@
 import { SCENE_NAMES } from "../constants";
+import { CommonScene } from "./CommonScene";
 import { config, screenEndpoints, setWeaponConf } from "/src/scripts/main";
 import { Player } from "/src/scripts/prefabs/Player";
 
-export class UpgradeScene extends Phaser.Scene {
+export class UpgradeScene extends CommonScene {
     constructor() {
         super(SCENE_NAMES.upgrade);
     }
 
     init(){
+        super.init();
+
         this.buttons = {};
     }
 
@@ -17,15 +20,6 @@ export class UpgradeScene extends Phaser.Scene {
         this._addReturnButton();
         this._createSounds();
         this._addAvailableMoney();
-    }
-
-    _createBG() {
-        const bg = this.add.sprite(config.width / 2, config.height / 2, 'bg').setAlpha(.925).setOrigin(.5);
-
-        const scaleX = this.cameras.main.width / bg.width;
-        const scaleY = this.cameras.main.height / bg.height;
-        const scale = Math.max(scaleX, scaleY);
-        bg.setScale(scale).setScrollFactor(0);
     }
 
     createUpgradeAnimation(name, level){

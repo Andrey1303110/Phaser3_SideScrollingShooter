@@ -1,12 +1,15 @@
 import { SCENE_NAMES } from "../constants";
+import { CommonScene } from "./CommonScene";
 import { config } from "/src/scripts/main";
 
-export class GameTypeSelect extends Phaser.Scene {
+export class GameTypeSelect extends CommonScene {
     constructor() {
         super(SCENE_NAMES.main);
     }
 
     init(){
+        super.init();
+
         this._buttons = {};
         this._buttons_num = 0;
     }
@@ -18,15 +21,6 @@ export class GameTypeSelect extends Phaser.Scene {
         this._createButton('campaign', .275);
         this._createButton('unlim', .5);
         this._createButton('upgrade', .725);
-    }
-
-    _createBG() {
-        const bg = this.add.sprite(config.width / 2, config.height / 2, 'bg').setAlpha(.925).setOrigin(.5).setInteractive();
-
-        const scaleX = this.cameras.main.width / bg.width;
-        const scaleY = this.cameras.main.height / bg.height;
-        const scale = Math.max(scaleX, scaleY);
-        bg.setScale(scale).setScrollFactor(0);
     }
 
     _addButtonEventListeners(button) {

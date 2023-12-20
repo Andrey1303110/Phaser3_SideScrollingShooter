@@ -1,7 +1,8 @@
 import { SCENE_NAMES } from "../constants";
+import { CommonScene } from "./CommonScene";
 import { config, screenEndpoints } from "/src/scripts/main";
 
-export class StartScene extends Phaser.Scene {
+export class StartScene extends CommonScene {
     constructor() {
         super(SCENE_NAMES.start);
     }
@@ -15,12 +16,7 @@ export class StartScene extends Phaser.Scene {
     }
 
     _createBG(data) {
-        this._sceneBG = this.add.sprite(config.width / 2, config.height / 2, 'bg').setAlpha(.925).setOrigin(.5).setInteractive();
-
-        const scaleX = this.cameras.main.width / this._sceneBG.width;
-        const scaleY = this.cameras.main.height / this._sceneBG.height;
-        const scale = Math.max(scaleX, scaleY);
-        this._sceneBG.setScale(scale).setScrollFactor(0);
+        super._createBG();
         
         this._sceneBG.on('pointerdown', () => {
             this.scene.start(SCENE_NAMES.game, data);
