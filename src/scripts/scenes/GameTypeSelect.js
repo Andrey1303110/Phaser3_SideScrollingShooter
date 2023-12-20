@@ -29,12 +29,12 @@ export class GameTypeSelect extends CommonScene {
         button.on('pointerdown', () => this._gameSelect(button));
     }
 
-    _createButton(name, y){
+    async _createButton(name, y){
         this._buttons_num++;
 
         this._createButtonSprite(name, y)
         this._createButtonText(this._buttons[name], name);
-        this._createButtonTweens(this._buttons[name]);
+        await this._createButtonTweens(this._buttons[name]);
         this._addButtonEventListeners(this._buttons[name]);
     }
 
@@ -57,25 +57,32 @@ export class GameTypeSelect extends CommonScene {
         this._buttons[buttonName].name = buttonName;
     }
 
-    _createButtonTweens(button) {
-        this.tweens.add({
-            targets: button,
-            delay: 375 * this._buttons_num,
-            alpha: .675,
-            scale: .65,
-            ease: 'Linear',
-            duration: 225,
-            onStart: () => this.sounds.whoosh.play({ volume: .33 }),
-        })
-
-        this.tweens.add({
-            targets: button.buttonText,
-            delay: 375 * this._buttons_num,
-            alpha: .9,
-            scale: 1,
-            ease: 'Linear',
-            duration: 225,
-        })
+    async _createButtonTweens(button) {
+        Promise.race([
+            new Promise(resolve => {
+                this.tweens.add({
+                    targets: [ button, button.buttonText ],
+                    delay: 375 * this._buttons_num,
+                    alpha: .675,
+                    scale: .65,
+                    ease: 'Linear',
+                    duration: 225,
+                    onStart: () => this.sounds.whoosh.play({ volume: .33 }),
+                    onComplete: () => resolve()
+                })
+            }),
+            new Promise(resolve => {
+                this.tweens.add({
+                    targets: button.buttonText,
+                    delay: 375 * this._buttons_num,
+                    alpha: .9,
+                    scale: 1,
+                    ease: 'Linear',
+                    duration: 225,
+                    onComplete: () => resolve()
+                })
+            })
+        ]);
     }
 
     _gameSelect(button){
