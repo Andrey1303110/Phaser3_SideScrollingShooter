@@ -1,3 +1,4 @@
+import { SCENE_NAMES } from "../constants";
 import { config, setEndpoints } from "/src/scripts/main";
 
 export class CommonScene extends Phaser.Scene {
@@ -6,7 +7,11 @@ export class CommonScene extends Phaser.Scene {
     }
 
     init() {
-        if(!this.scale.isFullscreen) this.scale.startFullscreen();
+        if(!this.scale.isFullscreen) {
+            if (this.scene.key === SCENE_NAMES.boot) return;
+            
+            this.scale.startFullscreen();
+        }
 
         this.game.sound.stopAll();
         setEndpoints();
