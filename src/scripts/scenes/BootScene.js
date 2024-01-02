@@ -138,13 +138,25 @@ export class BootScene extends CommonScene {
         });
     }
 
-    _createPressLabel() {
+    async _createPressLabel() {
         const textStyle = {
             font: `${config.width*.035}px ${config.fonts[config.lang]}`,
             fill: '#f0f0f0',
         };
         
-        const label = this.add.text(config.width / 2, screenEndpoints.bottom, 'PRESS ANYWHERE TO CONTINUE', textStyle).setOrigin(0.5, 1.5).setAlpha(0.5);
+        const label = this.add.text(config.width / 2, screenEndpoints.bottom, 'PRESS ANYWHERE TO CONTINUE', textStyle).setOrigin(0.5, 1.5).setAlpha(0);
+        const cliackArea = this.add.rectangle(0, 0, config.width, config.height).setOrigin(0);
+
+        await new Promise((resolve) => {
+            this.tweens.add({
+                targets: label,
+                alpha: 0.75,
+                ease: 'Linear',
+                duration: 350,
+                onComplete: () => resolve()
+            });
+        });
+
         this.tweens.add({
             targets: label,
             scale: 1.15,
@@ -154,11 +166,18 @@ export class BootScene extends CommonScene {
             repeat: -1,
             yoyo: true,
         });
+
+        cliackArea.setInteractive();
+        cliackArea.on('pointerdown', () => this._click());
     }
 
     _langSelect(button) {
-        setLang(button.name);
+        this._click();
 
+        setLang(button.name);
+    }
+
+    _click() {
         this.sounds.click.play({ volume: .2 });
         this.scene.start(SCENE_NAMES.preload);
     }
