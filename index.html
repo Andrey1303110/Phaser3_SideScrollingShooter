@@ -25,15 +25,9 @@
     <title>Game</title>
     <style>
         body {
-            margin: 0 !important;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        canvas {
-            box-sizing: border-box;
+            background: #000000;
+            padding: 0px;
+            margin: 0px;
         }
 
         @font-face {
@@ -42,18 +36,32 @@
                 url("./assets/fonts/DishOut/DishOut.ttf") format("opentype");
         }
 
+        @font-face {
+            font-family: 'Comfortaa-Regular';
+            src: url("./assets/fonts/Comfortaa/Comfortaa-Regular.otf") format("opentype"),
+                url("./assets/fonts/Comfortaa/Comfortaa-Regular.ttf") format("opentype");
+        }
+
         .font {
-            font-family: 'DishOut';
             position: absolute;
             left: -100vw;
             top: -100vw;
             visibility: hidden;
         }
+
+        .font1 {
+            font-family: 'DishOut';
+        }
+
+        .font2 {
+            font-family: 'Comfortaa-Regular';
+        }
     </style>
 </head>
 
 <body>
-    <div class="font">.</div>
+    <div class="font font1">.</div>
+    <div class="font font2">.</div>
     <div id="gameDiv"></div>
 </body>
 
