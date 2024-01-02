@@ -134,34 +134,34 @@ export class MapScene extends CommonScene {
 
         let texts = [];
         texts.push(this.add.text(frame.x, frame.y - frame.displayHeight / 2 + frame.displayHeight * .086, 'MISSION', {
-            font: `${frame.displayWidth * .13}px DishOut`,
+            font: `${frame.displayWidth * .13}px ${config.fonts[config.lang]}`,
             fill: '#0a0a0a',
         }).setOrigin(0.5).setAlpha(0.55));
 
         texts.push(this.add.text(frame.x, frame.y - frame.displayHeight / 2 + frame.displayHeight * .25, `Level ${info.level}`, {
-            font: `${frame.displayWidth * .0925}px DishOut`,
+            font: `${frame.displayWidth * .0925}px ${config.fonts[config.lang]}`,
             fill: '#0a0a0a',
         }).setOrigin(0.5).setAlpha(0.8));
 
         texts.push(this.add.text(frame.x, frame.y - frame.displayHeight / 2 + frame.displayHeight * .37, 'City', {
-            font: `${frame.displayWidth * .055}px DishOut`,
+            font: `${frame.displayWidth * .055}px ${config.fonts[config.lang]}`,
             fill: '#0a0a0a',
         }).setOrigin(0.5).setAlpha(0.8));
 
         texts.push(this.add.text(frame.x, frame.y - frame.displayHeight / 2 + frame.displayHeight * .44, info.name, {
-            font: `${frame.displayWidth * .06175}px DishOut`,
+            font: `${frame.displayWidth * .06175}px ${config.fonts[config.lang]}`,
             fill: '#0a0a0a',
         }).setOrigin(0.5).setAlpha(0.8));
 
         if (currentLevelHiScore > 0) {
             texts.push(this.add.text(frame.x, frame.y - frame.displayHeight / 2 + frame.displayHeight * .58, `Hi score: ${currentLevelHiScore}`, {
-                font: `${frame.displayWidth * .049}px DishOut`,
+                font: `${frame.displayWidth * .049}px ${config.fonts[config.lang]}`,
                 fill: '#E2B80D',
             }).setOrigin(0.5).setAlpha(0.8));
         }
 
         texts.push(this.add.text(frame.x, frame.y - frame.displayHeight / 2 + frame.displayHeight * .71, `Enemies - ${info.enemies}`, {
-            font: `${frame.displayWidth * .051}px DishOut`,
+            font: `${frame.displayWidth * .051}px ${config.fonts[config.lang]}`,
             fill: '#EA0000',
         }).setOrigin(0.5).setAlpha(0.8));
 
@@ -198,7 +198,7 @@ export class MapScene extends CommonScene {
                 at: first_anim_duration + first_anim_duration * .75,
                 run: () => {
                     const start_button = this.add.text(frame.x, frame.y + frame.displayHeight / 2 - frame.displayHeight * .09, 'START', {
-                        font: `${frame.displayWidth * .105}px DishOut`,
+                        font: `${frame.displayWidth * .105}px ${config.fonts[config.lang]}`,
                         fill: '#51E04A',
                     })
                         .setOrigin(0.5)
@@ -267,14 +267,14 @@ export class MapScene extends CommonScene {
         this.losses_text = [];
 
         this.losses_text.push(this.add.text(points.x, points.y, 'Total russian losses:', {
-            font: `${config.width * .025}px DishOut`,
+            font: `${config.width * .025}px ${config.fonts[config.lang]}`,
             fill: '#EA0000',
         }).setOrigin(0, 0.5).setAlpha(0.75));
 
         Object.keys(config.Losses).forEach(name => {
             points.y += config.width * .0285;
             this.losses_text.push(this.add.text(points.x, points.y, `${name}s: ${localStorage.getItem(`losses_${name}`)}`, {
-                font: `${config.width * .0215}px DishOut`,
+                font: `${config.width * .0215}px ${config.fonts[config.lang]}`,
                 fill: '#000000',
             }).setOrigin(0, 0.5).setAlpha(0.75));
         });
@@ -296,7 +296,7 @@ export class MapScene extends CommonScene {
 
     _addAvailableMoney(){
         const style = {
-            font: `${config.width * .031}px DishOut`,
+            font: `${config.width * .031}px ${config.fonts[config.lang]}`,
             fill: '#FFFFFF',
         };
 

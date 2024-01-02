@@ -31,7 +31,7 @@ export class StartScene extends CommonScene {
         const textTitle = data.completed ? 'Level completed!' : 'Game over';
         const textScore = `Score: ${data.score}`;
         const textStyle = {
-            font: `${config.width*.03}px DishOut`,
+            font: `${config.width*.03}px ${config.fonts[config.lang]}`,
             fill: '#f0f0f0',
         };
 
@@ -41,7 +41,7 @@ export class StartScene extends CommonScene {
 
     _createStartText() {
         this._startText = this.add.text(config.width / 2, screenEndpoints.bottom - config.height * .05, 'Tap to start', {
-            font: `${config.width*.04}px DishOut`,
+            font: `${config.width*.04}px ${config.fonts[config.lang]}`,
             fill: '#f0f0f0',
         }).setOrigin(0.5);
 

@@ -108,13 +108,13 @@ export class GameScene extends CommonScene {
         }
 
         this.scoreText = this.add.text(screenEndpoints.right - config.width * .01, screenEndpoints.top + config.width * .01, this._currentScore, {
-            font: `${config.width * .03}px DishOut`,
+            font: `${config.width * .03}px ${config.fonts[config.lang]}`,
             fill: '#EA0000',
         }).setOrigin(1, 0).setAlpha(.75);
 
         if (this.info?.unlim) {
             this.hiScoreText = this.add.text(config.width / 2, screenEndpoints.top + config.width * .01, 'High score: ' + localStorage.getItem('unlimHiScores'), {
-                font: `${config.width * .03}px DishOut`,
+                font: `${config.width * .03}px ${config.fonts[config.lang]}`,
                 fill: '#EA0000',
             }).setOrigin(0.5, 0).setAlpha(.75);
         }
@@ -200,7 +200,7 @@ export class GameScene extends CommonScene {
 
         this._black_bg = this.add.rectangle(config.width / 2, config.height / 2, config.width, config.height, '0x000000', 0).setInteractive().setDepth(9999999);
         let final_text = this.add.text(this._black_bg.x, this._black_bg.y, '', {
-            font: `${config.width * .03}px DishOut`,
+            font: `${config.width * .03}px ${config.fonts[config.lang]}`,
             fill: '#EA0000',
         }).setOrigin(0.5).setAlpha(0).setDepth(this._black_bg.depth);
         this.game.sound.stopAll();
@@ -270,7 +270,7 @@ export class GameScene extends CommonScene {
             .setAlpha(0.95);
         
         this._progressBar.levelText = this.add.text(this._progressBar.x - this._progressBar.displayWidth * .38, this._progressBar.y - this._progressBar.displayHeight * .035, config.currentLevelPlayer, {
-            font: `${this._progressBar.displayHeight * .545}px DishOut`,
+            font: `${this._progressBar.displayHeight * .545}px ${config.fonts[config.lang]}`,
             fill: '#FFFFFF',
         }).setOrigin(0.5).setAlpha(0.75);
 
@@ -312,7 +312,7 @@ export class GameScene extends CommonScene {
         localStorage.setItem('currentLevelPlayer', config.currentLevelPlayer);
 
         const levelTextLabel = this.add.text(config.width/2, config.height/2, config.currentLevelPlayer, {
-            font: `${config.width * .25}px DishOut`,
+            font: `${config.width * .25}px ${config.fonts[config.lang]}`,
             fill: '#FFFFFF',
         }).setOrigin(0.5).setAlpha(0);
         

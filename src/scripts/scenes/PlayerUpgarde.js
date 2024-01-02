@@ -40,7 +40,7 @@ export class UpgradeScene extends CommonScene {
             }
 
             const plus_symbol = this.add.text(data.x, data.y, '+', {
-                font: `${data.scale}px DishOut`,
+                font: `${data.scale}px ${config.fonts[config.lang]}`,
                 fill: `#${config.upgradeColors[name]}`,
             }).setOrigin(0.5).setAlpha(data.alpha).setStroke('#fafafa33', 4);
 
@@ -58,7 +58,7 @@ export class UpgradeScene extends CommonScene {
     // TODO add this to common scene class
     _addAvailableMoney(){
         const style = {
-            font: `${config.width * .031}px DishOut`,
+            font: `${config.width * .031}px ${config.fonts[config.lang]}`,
             fill: '#FFFFFF',
         };
 
@@ -85,7 +85,7 @@ export class UpgradeScene extends CommonScene {
         this.statsLevel = {};
 
         const style = {
-            font: `${config.width * .031}px DishOut`,
+            font: `${config.width * .031}px ${config.fonts[config.lang]}`,
             fill: '#000000',
         };
 
@@ -170,7 +170,7 @@ export class UpgradeScene extends CommonScene {
         this.buttons[data.key].cost = Math.floor(this.buttons[data.key].level/10) + 1;
 
         const style = {
-            font: `${config.width * .023}px DishOut`,
+            font: `${config.width * .023}px ${config.fonts[config.lang]}`,
             fill: '#FFFFFF',
         };
         this.buttons[data.key].textCost = this.add.text(this.buttons[data.key].x, this.buttons[data.key].y, '1', style).setOrigin(0.5, -0.125);

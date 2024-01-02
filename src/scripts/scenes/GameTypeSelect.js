@@ -41,7 +41,7 @@ export class GameTypeSelect extends CommonScene {
     _createButtonText(button, text) {
         const textTitle = text.toUpperCase();
         const textStyle = {
-            font: `${config.width*.03}px DishOut`,
+            font: `${config.width*.03}px ${config.fonts[config.lang]}`,
             fill: '#f0f0f0',
         };
         button.buttonText = this.add.text(button.x, button.y, textTitle, textStyle).setScale(3).setOrigin(0.5).setAlpha(0);
