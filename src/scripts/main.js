@@ -80,13 +80,13 @@ export const config = {
             velocity: 250,
             weapon: 'missile',
             textureNums: 4,
-            scale: 0.8,
+            scale: 0.76,
         },
         strategic_jet: {
             velocity: 200,
             weapon: 'missile_2',
             textureNums: 4,
-            scale: 0.95,
+            scale: 0.83,
         },
     },
 
