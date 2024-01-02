@@ -52,15 +52,16 @@ export class DialogBox {
         const height = config.height * 0.4;
         const x = config.width * 0.5;
         const y = config.height * 0.72;
-        this._bg = this._scene.scene.add.rectangle(x, y, width, height, '0x000000', 0.675);
+
+        this._bg = this._scene.scene.add.sprite(x, y, 'speechBg');
     }
 
     _createPerson(data) {
         const { image } = data;
 
-        this._person = this._scene.scene.add.sprite(this._bg.x, this._bg.y, image).setAlpha(1).setOrigin(.5);
-        this._person.y = this._bg.y - (this._person.height - this._bg.height)/2;
-        this._person.x = this._bg.x - this._bg.width/2 + this._person.width/5;
+        this._person = this._scene.scene.add.sprite(this._bg.x, this._bg.y, image);
+        this._person.y = this._bg.y - (this._person.height - this._bg.height) * 0.5;
+        this._person.x = this._bg.x - this._bg.width/2 + this._person.width * 0.2;
     }
 
     _createText(data) {
