@@ -1,5 +1,5 @@
-import { SCENE_NAMES } from "../constants";
-import { config, setEndpoints } from "/src/scripts/main";
+import { SCENE_NAMES } from '../constants';
+import { config, setEndpoints } from '/src/scripts/main';
 
 export class CommonScene extends Phaser.Scene {
     constructor(name) {

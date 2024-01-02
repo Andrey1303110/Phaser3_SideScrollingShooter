@@ -1,7 +1,7 @@
-import { SCENE_NAMES } from "../constants";
-import { screenEndpoints, setEndpoints, setLang } from "../main";
-import { CommonScene } from "./CommonScene";
-import { config } from "/src/scripts/main";
+import { SCENE_NAMES } from '../constants';
+import { screenEndpoints, setEndpoints, setLang } from '../main';
+import { CommonScene } from './CommonScene';
+import { config } from '/src/scripts/main';
 
 export class BootScene extends CommonScene {
     constructor() {

@@ -1,4 +1,4 @@
-import { EVENTS } from "../constants";
+import { EVENTS } from '../constants';
 
 export class MovableObject extends Phaser.GameObjects.Sprite {
     constructor(data){

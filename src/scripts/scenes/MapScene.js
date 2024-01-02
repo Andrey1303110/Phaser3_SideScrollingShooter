@@ -1,8 +1,8 @@
-import { DialogBoxController } from "../classes/DialogBoxController";
-import { SCENE_NAMES } from "../constants";
-import { delay } from "../main";
-import { CommonScene } from "./CommonScene";
-import { config, screenEndpoints } from "/src/scripts/main";
+import { DialogBoxController } from '../classes/DialogBoxController';
+import { SCENE_NAMES } from '../constants';
+import { delay } from '../main';
+import { CommonScene } from './CommonScene';
+import { config, screenEndpoints } from '/src/scripts/main';
 
 const INIT_DELAY = 5000;
 

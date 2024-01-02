@@ -1,7 +1,7 @@
-import { SCENE_NAMES } from "../constants";
-import { CommonScene } from "./CommonScene";
-import { config, screenEndpoints, setWeaponConf } from "/src/scripts/main";
-import { Player } from "/src/scripts/prefabs/Player";
+import { SCENE_NAMES } from '../constants';
+import { CommonScene } from './CommonScene';
+import { config, screenEndpoints, setWeaponConf } from '/src/scripts/main';
+import { Player } from '/src/scripts/prefabs/Player';
 
 export class UpgradeScene extends CommonScene {
     constructor() {

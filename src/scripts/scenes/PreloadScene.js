@@ -1,7 +1,7 @@
-import { ATLASES_FILES, AUDIO_FILES, IMAGE_FILES, SCENE_NAMES } from "../constants";
-import { CommonScene } from "./CommonScene";
-import { LoadingBar } from "/src/scripts/classes/LoadingBar";
-import { config } from "/src/scripts/main";
+import { ATLASES_FILES, AUDIO_FILES, IMAGE_FILES, SCENE_NAMES } from '../constants';
+import { CommonScene } from './CommonScene';
+import { LoadingBar } from '/src/scripts/classes/LoadingBar';
+import { config } from '/src/scripts/main';
 
 export class PreloadScene extends CommonScene {
     constructor() {

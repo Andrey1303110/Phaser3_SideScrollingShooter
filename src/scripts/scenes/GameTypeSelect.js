@@ -1,6 +1,6 @@
-import { SCENE_NAMES } from "../constants";
-import { CommonScene } from "./CommonScene";
-import { config } from "/src/scripts/main";
+import { SCENE_NAMES } from '../constants';
+import { CommonScene } from './CommonScene';
+import { config } from '/src/scripts/main';
 
 export class GameTypeSelect extends CommonScene {
     constructor() {

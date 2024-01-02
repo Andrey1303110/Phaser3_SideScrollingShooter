@@ -1,5 +1,5 @@
-import { SCENE_NAMES } from "../constants";
-import { config, rgbToHex } from "/src/scripts/main";
+import { SCENE_NAMES } from '../constants';
+import { config, rgbToHex } from '/src/scripts/main';
 
 const INITIAL_COLORS = {
     r: 210,

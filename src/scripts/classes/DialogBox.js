@@ -1,4 +1,4 @@
-import { config } from "/src/scripts/main";
+import { config } from '/src/scripts/main';
 
 export class DialogBox {
     constructor (scene, dialogueData) {

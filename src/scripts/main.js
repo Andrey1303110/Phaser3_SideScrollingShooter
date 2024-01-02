@@ -1,12 +1,12 @@
 import * as Phaser from 'phaser';
-import { BootScene } from "./scenes/BootScene";
-import { GameScene } from "./scenes/GameScene";
-import { GameTypeSelect } from "./scenes/GameTypeSelect";
-import { MapScene } from "./scenes/MapScene";
-import { PauseScene } from "./scenes/PauseScene";
-import { UpgradeScene } from "./scenes/PlayerUpgarde";
-import { PreloadScene } from "./scenes/PreloadScene";
-import { StartScene } from "./scenes/StartScene";
+import { BootScene } from './scenes/BootScene';
+import { GameScene } from './scenes/GameScene';
+import { GameTypeSelect } from './scenes/GameTypeSelect';
+import { MapScene } from './scenes/MapScene';
+import { PauseScene } from './scenes/PauseScene';
+import { UpgradeScene } from './scenes/PlayerUpgarde';
+import { PreloadScene } from './scenes/PreloadScene';
+import { StartScene } from './scenes/StartScene';
 
 export const config = {
     type: Phaser.AUTO,
@@ -23,14 +23,14 @@ export const config = {
     },
 
     backgroundColor: '#F3F3F3',
-    parent: 'gameDiv',
     orientation: Phaser.Scale.LANDSCAPE,
     scale: {
         mode: Phaser.Scale.ENVELOP,
         autoCenter: Phaser.Scale.CENTER_BOTH,
+        parent: 'gameDiv',
+        width: 1280,
+        height: 720,
     },
-
-    fps: 60,
 
     scene: [BootScene, PreloadScene, GameTypeSelect, MapScene, StartScene, GameScene, PauseScene, UpgradeScene],
 
@@ -369,9 +369,9 @@ if (localStorage.getItem('firstTimePlay') !== '0') {
 initWeaponConfig();
 
 export function rgbToHex(colors) {
-    return "0x" + ((1 << 24) + (colors.r << 16) + (colors.g << 8) + colors.b).toString(16).slice(1);
+    return '0x' + ((1 << 24) + (colors.r << 16) + (colors.g << 8) + colors.b).toString(16).slice(1);
 }
 
 export const delay = (ms) => {
-    return new Promise(resolve => setTimeout(resolve, ms))
+    return new Promise(resolve => setTimeout(resolve, ms));
 }

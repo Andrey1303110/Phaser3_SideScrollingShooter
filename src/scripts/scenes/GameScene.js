@@ -1,9 +1,9 @@
-import { config, screenEndpoints } from "/src/scripts/main";
-import { Player } from "/src/scripts/prefabs/Player";
-import { Enemies } from "/src/scripts/prefabs/Enemies";
-import { Boom } from "/src/scripts/prefabs/Boom";
-import { SCENE_NAMES } from "../constants";
-import { CommonScene } from "./CommonScene";
+import { config, screenEndpoints } from '/src/scripts/main';
+import { Player } from '/src/scripts/prefabs/Player';
+import { Enemies } from '/src/scripts/prefabs/Enemies';
+import { Boom } from '/src/scripts/prefabs/Boom';
+import { SCENE_NAMES } from '../constants';
+import { CommonScene } from './CommonScene';
 
 export class GameScene extends CommonScene {
     constructor() {

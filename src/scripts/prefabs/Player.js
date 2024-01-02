@@ -1,7 +1,7 @@
-import { EVENTS, SCENE_NAMES } from "../constants";
-import { config, screenEndpoints } from "/src/scripts/main";
-import { Fires } from "/src/scripts/prefabs/Fires";
-import { MovableObject } from "/src/scripts/prefabs/MovableObject";
+import { EVENTS, SCENE_NAMES } from '../constants';
+import { config, screenEndpoints } from '/src/scripts/main';
+import { Fires } from '/src/scripts/prefabs/Fires';
+import { MovableObject } from '/src/scripts/prefabs/MovableObject';
 
 const PLAYER_TEXTURE_NAME = 'dragon';
 const FIRST_PLAYER_FRAME = 'dragon1';

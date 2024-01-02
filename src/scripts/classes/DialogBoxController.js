@@ -1,5 +1,5 @@
-import { DialogBox } from "./DialogBox";
-import { delay } from "../main";
+import { DialogBox } from './DialogBox';
+import { delay } from '../main';
 
 const SHOW_DUARTION = 7500;
 
