@@ -8,13 +8,16 @@ export class CommonScene extends Phaser.Scene {
 
     init() {
         if(!this.scale.isFullscreen) {
-            if (this.scene.key === SCENE_NAMES.boot) return;
-            
+            switch (this.scene.key) {
+                case SCENE_NAMES.boot:
+                case SCENE_NAMES.preload:
+                    return;
+            }
             this.scale.startFullscreen();
         }
 
-        this.game.sound.stopAll();
         setEndpoints();
+        this.game.sound.stopAll();
     }
 
     preload() {

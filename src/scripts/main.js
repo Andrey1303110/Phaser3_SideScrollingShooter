@@ -34,6 +34,13 @@ export const config = {
 
     scene: [BootScene, PreloadScene, GameTypeSelect, MapScene, StartScene, GameScene, PauseScene, UpgradeScene],
 
+    lang: '',
+
+    fonts: {
+        eng: 'DishOut',
+        ukr: 'Comfortaa-Regular',
+    },
+
     currentLevelScene: localStorage.getItem('currentLevelScene') ?? 1,
     currentLevelPlayer: localStorage.getItem('currentLevelPlayer') ?? 1,
     totalScore: localStorage.getItem('totalScore') ?? 0,
@@ -344,6 +351,11 @@ export function setWeaponConf(data) {
     }
 
     return config.Weapons.fire[data.key];
+}
+
+export function setLang(lang) {
+    config.lang = lang;
+    localStorage.setItem('lang', lang);
 }
 
 if (localStorage.getItem('firstTimePlay') !== '0') {

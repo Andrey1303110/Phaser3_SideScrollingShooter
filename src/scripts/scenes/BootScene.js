@@ -1,4 +1,5 @@
 import { SCENE_NAMES } from "../constants";
+import { screenEndpoints, setEndpoints, setLang } from "../main";
 import { CommonScene } from "./CommonScene";
 import { config } from "/src/scripts/main";
 
@@ -9,6 +10,7 @@ export class BootScene extends CommonScene {
 
     init(){
         super.init();
+        setEndpoints();
 
         this._buttons = {};
         this._buttons_num = 0;
@@ -18,26 +20,10 @@ export class BootScene extends CommonScene {
         this._createBG();
         this._createSounds();
 
-        const logo = this.add.sprite(config.width / 2, config.height / 2, 'pervious_logo').setAlpha(0);
-        const scaleX = this.cameras.main.width / logo.width;
-        const scaleY = this.cameras.main.height / logo.height;
-        const scale = Math.max(scaleX, scaleY);
-        logo.setScale(scale).setScrollFactor(0);
+        await this._createLogoAnimation();
 
-        await new Promise((resolve) => {
-            this.tweens.add({
-                delay: 250,
-                targets: logo,
-                alpha: 1,
-                ease: 'Linear',
-                duration: 1750,
-                yoyo: true,
-                onComplete: () => resolve()
-            });
-        });
-
-        this._createButton('ukr', .35);
-        this._createButton('eng', .65);
+        if (localStorage.getItem('lang')) this._createPressLabel();
+        else this._createButtons();
     }
 
     preload() {
@@ -56,6 +42,11 @@ export class BootScene extends CommonScene {
         button.on('pointerover', () => button.setAlpha(1));
         button.on('pointerout', () => button.setAlpha(.75));
         button.on('pointerdown', () => this._langSelect(button));
+    }
+
+    _createButtons() {
+        this._createButton('ukr', .35);
+        this._createButton('eng', .65);
     }
 
     async _createButton(name, y){
@@ -126,8 +117,47 @@ export class BootScene extends CommonScene {
         })
     }
 
+    async _createLogoAnimation() {
+        const logo = this.add.sprite(config.width / 2, config.height / 2, 'pervious_logo').setAlpha(0);
+        const scaleX = this.cameras.main.width / logo.width;
+        const scaleY = this.cameras.main.height / logo.height;
+        const scale = Math.max(scaleX, scaleY);
+        logo.setScale(scale).setScrollFactor(0);
+
+        const yoyo = localStorage.getItem('lang') ? false : true;
+
+        await new Promise((resolve) => {
+            this.tweens.add({
+                targets: logo,
+                alpha: 1,
+                ease: 'Linear',
+                duration: 1750,
+                yoyo,
+                onComplete: () => resolve()
+            });
+        });
+    }
+
+    _createPressLabel() {
+        const textStyle = {
+            font: `${config.width*.035}px ${config.fonts[config.lang]}`,
+            fill: '#f0f0f0',
+        };
+        
+        const label = this.add.text(config.width / 2, screenEndpoints.bottom, 'PRESS ANYWHERE TO CONTINUE', textStyle).setOrigin(0.5, 1.5).setAlpha(0.5);
+        this.tweens.add({
+            targets: label,
+            scale: 1.15,
+            alpha: 1,
+            ease: 'Linear',
+            duration: 500,
+            repeat: -1,
+            yoyo: true,
+        });
+    }
+
     _langSelect(button) {
-        config.lang = button.name;
+        setLang(button.name);
 
         this.sounds.click.play({ volume: .2 });
         this.scene.start(SCENE_NAMES.preload);
