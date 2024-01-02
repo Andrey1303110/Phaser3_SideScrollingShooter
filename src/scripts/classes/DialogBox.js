@@ -48,7 +48,11 @@ export class DialogBox {
     }
 
     _createBg() {
-        this._bg = this._scene.scene.add.rectangle(config.width * 0.5, config.height * 0.7, config.width * 0.85, config.height * 0.35, '0x000000', 0.55);
+        const width = config.width * 0.85;
+        const height = config.height * 0.4;
+        const x = config.width * 0.5;
+        const y = config.height * 0.72;
+        this._bg = this._scene.scene.add.rectangle(x, y, width, height, '0x000000', 0.675);
     }
 
     _createPerson(data) {
@@ -56,30 +60,36 @@ export class DialogBox {
 
         this._person = this._scene.scene.add.sprite(this._bg.x, this._bg.y, image).setAlpha(1).setOrigin(.5);
         this._person.y = this._bg.y - (this._person.height - this._bg.height)/2;
-        this._person.x = this._bg.x - this._bg.width/2 + this._person.width/4;
+        this._person.x = this._bg.x - this._bg.width/2 + this._person.width/5;
     }
 
     _createText(data) {
         const { text } = data;
 
-        const fontSize = config.width * .022;
-        const speechPadding = fontSize * 1.35;
+        const fontSize = config.width * .025;
+        const vPadding = config.width * .01;
+        const gPadding = config.width * .03;
 
         const personEndPointX = this._person.x + this._person.width/2;
         const bgEndPointX = this._bg.x + this._bg.width/2;
 
         const content = this._scene.scene.add.text(0, 0, text, { 
-            fontFamily: 'DishOut',
+            fontFamily: 'Comfortaa-Regular',
             fontSize,
-            lineSpacing: fontSize * 0.45,
+            lineSpacing: fontSize * 0.4,
             color: '#A0A0A0',
             align: 'left',
-            wordWrap: { width: (bgEndPointX - personEndPointX) - speechPadding * 2 } 
+            wordWrap: { width: (bgEndPointX - personEndPointX) - gPadding } 
         });
 
-        while (content.height + speechPadding > this._bg.height) content.setFontSize(content.style.metrics.fontSize * 0.95);
+        if (content.height + vPadding > this._bg.height) {
+            const modifier = (content.height + vPadding) / this._bg.height;
+            const oldFontSize = parseFloat(content.style.fontSize);
+            const decreasedFontSize = oldFontSize / modifier;
+            content.setFontSize(decreasedFontSize);
+        }
 
-        content.setPosition(this._bg.x + speechPadding + this._person.width * 1/4, this._bg.y);
+        content.setPosition(this._bg.x + gPadding + this._person.width * 1/4, this._bg.y);
         content.setOrigin(0.5);
 
         this._text = content;
