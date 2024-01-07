@@ -5,8 +5,7 @@ export const SCENE_NAMES = {
     campaign: 'Campaign',
     game: 'GameScene',
     upgrade: 'Upgrade',
-    pause: 'Pause',
-    start: 'Start'
+    pause: 'Pause'
 }
 
 export const EVENTS = {     
