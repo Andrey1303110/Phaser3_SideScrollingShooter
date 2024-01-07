@@ -1,0 +1,47 @@
+{
+    "Levels": {
+        "CAMPAIGN": "CAMPAIGN",
+        "UNLIM": "UNLIM",
+        "UPGRADE": "UPGRADE"
+    },
+    "Campaign": {
+        "TOTAL_LOSSES": "Total russian losses:",
+        "TOTAL_LOSSES_JEST": "JETS:",
+        "TOTAL_LOSSES_HELICOPTERS": "HELICOPTERS:",
+        "TOTAL_LOSSES_ROCKETS": "ROCKETS:",
+        "TOTAL_LOSSES_MISSILES": "MISSILES:",
+        "MISSION_CARD_MAIN_TITLE": "MISSION",
+        "MISSION_CARD_LEVEL": "LEVEL",
+        "MISSION_CARD_CITY": "CITY",
+        "MISSION_CARD_SCORE": "High score:",
+        "MISSION_CARD_ENEMIES": "Enemies:",
+        "MISSION_CARD_START": "START",
+        "LEVEL_1_NAME": "Kyiv Pechersk",
+        "LEVEL_2_NAME": "Odesa",
+        "LEVEL_3_NAME": "Kharkiv",
+        "LEVEL_4_NAME": "Kyiv Podil",
+        "LEVEL_5_NAME": "Mariupol Azovstal",
+        "LEVEL_6_NAME": "Vinnitsia Tower",
+        "LEVEL_7_NAME": "Kyiv Voskresenka",
+        "LEVEL_8_NAME": "Lviv Plocha Runok",
+        "LEVEL_9_NAME": "DniproDnipro",
+        "LEVEL_10_NAME": "Genichesk",
+        "LEVEL_11_NAME": "Donetsk",
+        "LEVEL_12_NAME": "Zaporizha",
+        "LEVEL_13_NAME": "Kahovska HPP",
+        "LEVEL_14_NAME": "Sevastopol Balaklava",
+        "LEVEL_15_NAME": "Luhansk"
+    },
+    "GameScene": {
+        "TOP_HIGH_SCORE": "High score:",
+        "FINAL_TEXT_WIN": "GLORY TO UKRAINE!",
+        "FINAL_TEXT_LOSE": "HEROES DON'T DIE!"
+    },
+    "Upgrade": {
+        "RELOAD_TITLE": "RELOAD (ms):",
+        "VELOCITY_TITLE": "VELOCITY (m/s):",
+        "SCALE_TITLE": "SCALE (%):",
+        "LEVEL_TEXT": "Lvl. ",
+        "BOTTOM_DESCRIPTION": "Every level increse your ability on +5%"
+    }
+}

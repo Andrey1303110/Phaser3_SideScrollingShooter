@@ -140,7 +140,7 @@ export class BootScene extends CommonScene {
 
     async _createPressLabel() {
         const textStyle = {
-            font: `${config.width*.035}px ${config.fonts[config.lang]}`,
+            font: `${config.width*.035}px ${config.fonts['eng']}`,
             fill: '#f0f0f0',
         };
         
@@ -150,7 +150,7 @@ export class BootScene extends CommonScene {
         await new Promise((resolve) => {
             this.tweens.add({
                 targets: label,
-                alpha: 0.75,
+                alpha: 0.5,
                 ease: 'Linear',
                 duration: 350,
                 onComplete: () => resolve()

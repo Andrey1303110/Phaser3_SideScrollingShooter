@@ -17,7 +17,7 @@ export class GameScene extends CommonScene {
             localStorage.setItem('firstTimePlay', '0');
         }
         this.info = data;
-        this._currentLevelScene = this.info.level;
+        this._currentLevelScene = this.info.index;
         this._currentScore = 0;
         this._black_bg = null;
     }
@@ -88,7 +88,7 @@ export class GameScene extends CommonScene {
     }
 
     _createBG(data) {
-        const bg_image = data?.unlim ? `bg${Phaser.Math.Between(1, config.Levels.length)}` : `bg${data.level}`;
+        const bg_image = data?.unlim ? `bg${Phaser.Math.Between(1, config.Levels.length)}` : `bg${data.index}`;
 
         const real_height = this.textures.list[bg_image].source[0].height;
         const scale = config.height/real_height;
@@ -113,7 +113,7 @@ export class GameScene extends CommonScene {
         }).setOrigin(1, 0).setAlpha(.75);
 
         if (this.info?.unlim) {
-            this.hiScoreText = this.add.text(config.width / 2, screenEndpoints.top + config.width * .01, 'High score: ' + localStorage.getItem('unlimHiScores'), {
+            this.hiScoreText = this.add.text(config.width / 2, screenEndpoints.top + config.width * .01, `${this._getText('TOP_HIGH_SCORE')} ${localStorage.getItem('unlimHiScores')}`, {
                 font: `${config.width * .03}px ${config.fonts[config.lang]}`,
                 fill: '#EA0000',
             }).setOrigin(0.5, 0).setAlpha(.75);
@@ -167,7 +167,6 @@ export class GameScene extends CommonScene {
                 let old_value = Number(localStorage.getItem(`losses_${losses_name}`));
                 localStorage.setItem(`losses_${losses_name}`, ++old_value);
             }
-
             let reward = Number((target.reward * Math.pow(config.level.scoreCof, this._currentLevelScene - 1)).toFixed(0));
             this._currentScore += reward;
 
@@ -207,7 +206,7 @@ export class GameScene extends CommonScene {
 
         if (this._player.active) {
             this.sounds.win.play();
-            final_text.text = "GLORY TO UKRAINE!";
+            final_text.text = this._getText('FINAL_TEXT_WIN');
 
             if (this.info.hiScore < this._currentScore) {
                 let hiScores = localStorage.getItem('hiScores').split(',');
@@ -220,7 +219,7 @@ export class GameScene extends CommonScene {
                 localStorage.setItem('currentLevelScene', config.currentLevelScene);
             }
         } else {
-            final_text.text = "HEROES DON'T DIE!";
+            final_text.text = this._getText('FINAL_TEXT_LOSE');
             this.sounds.died.play();
 
             if (this.info.unlim) {

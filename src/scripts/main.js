@@ -4,9 +4,8 @@ import { GameScene } from './scenes/GameScene';
 import { GameTypeSelect } from './scenes/GameTypeSelect';
 import { CampaignScene } from './scenes/CampaignScene';
 import { PauseScene } from './scenes/PauseScene';
-import { UpgradeScene } from './scenes/PlayerUpgarde';
+import { UpgradeScene } from './scenes/UpgradeScene';
 import { PreloadScene } from './scenes/PreloadScene';
-import { StartScene } from './scenes/StartScene';
 
 export const config = {
     type: Phaser.AUTO,
@@ -32,7 +31,7 @@ export const config = {
         height: 720,
     },
 
-    scene: [BootScene, PreloadScene, GameTypeSelect, CampaignScene, StartScene, GameScene, PauseScene, UpgradeScene],
+    scene: [BootScene, PreloadScene, GameTypeSelect, CampaignScene, GameScene, PauseScene, UpgradeScene],
 
     lang: '',
 
@@ -113,12 +112,6 @@ export const config = {
         }
     },
 
-    weapons_units: {
-        reload: 'ms',
-        velocity: 'm/s',
-        scale: '%',
-    },
-
     upgradeColors: {
         reload: '66E210',
         velocity: 'FF2407',
@@ -136,8 +129,7 @@ export const config = {
 
     Levels: [
         {
-            level: 1,
-            name: 'Kyiv Pechersk',
+            index: 1,
             x: 485,
             y: 175,
             enemies: 5,
@@ -145,8 +137,7 @@ export const config = {
             velocity: 4,
         },
         {
-            level: 2,
-            name: 'Odesa',
+            index: 2,
             x: 506,
             y: 490,
             enemies: 8,
@@ -154,8 +145,7 @@ export const config = {
             velocity: 4,
         },
         {
-            level: 3,
-            name: 'Kharkiv',
+            index: 3,
             x: 758,
             y: 179,
             enemies: 11,
@@ -163,8 +153,7 @@ export const config = {
             velocity: 4,
         },
         {
-            level: 4,
-            name: 'Kyiv Podil',
+            index: 4,
             x: 430,
             y: 135,
             enemies: 15,
@@ -172,8 +161,7 @@ export const config = {
             velocity: 4,
         },
         {
-            level: 5,
-            name: 'Mariupol Azovstal',
+            index: 5,
             x: 890,
             y: 397,
             enemies: 21,
@@ -181,8 +169,7 @@ export const config = {
             velocity: 4,
         },
         {
-            level: 6,
-            name: 'Vinnitsia Tower',
+            index: 6,
             x: 353,
             y: 287,
             enemies: 28,
@@ -190,8 +177,7 @@ export const config = {
             velocity: 4,
         },
         {
-            level: 7,
-            name: 'Kyiv Voskresenka',
+            index: 7,
             x: 435,
             y: 195,
             enemies: 39,
@@ -199,8 +185,7 @@ export const config = {
             velocity: 4,
         },
         {
-            level: 8,
-            name: 'Lviv Plocha Runok',
+            index: 8,
             x: 105,
             y: 248,
             enemies: 50,
@@ -208,8 +193,7 @@ export const config = {
             velocity: 4,
         },
         {
-            level: 9,
-            name: 'Dnipro',
+            index: 9,
             x: 720,
             y: 311,
             enemies: 65,
@@ -217,8 +201,7 @@ export const config = {
             velocity: 4,
         },
         {
-            level: 10,
-            name: 'Genichesk',
+            index: 10,
             x: 732,
             y: 509,
             enemies: 82,
@@ -226,8 +209,7 @@ export const config = {
             velocity: 4,
         },
         {
-            level: 11,
-            name: 'Donetsk',
+            index: 11,
             x: 874,
             y: 333,
             enemies: 100,
@@ -235,8 +217,7 @@ export const config = {
             velocity: 4,
         },
         {
-            level: 12,
-            name: 'Zaporizha',
+            index: 12,
             x: 735,
             y: 366,
             enemies: 120,
@@ -244,8 +225,7 @@ export const config = {
             velocity: 4,
         },
         {
-            level: 13,
-            name: 'Kahovska HPP',
+            index: 13,
             x: 665,
             y: 435,
             enemies: 145,
@@ -253,8 +233,7 @@ export const config = {
             velocity: 4,
         },
         {
-            level: 14,
-            name: 'Sevastopol Balaklava',
+            index: 14,
             x: 676,
             y: 640,
             enemies: 200,
@@ -262,8 +241,7 @@ export const config = {
             velocity: 4,
         },
         {
-            level: 15,
-            name: 'Luhansk',
+            index: 15,
             x: 956,
             y: 261,
             enemies: 250,
@@ -274,7 +252,7 @@ export const config = {
 
     unlim: {
         unlim: true,
-        level: 14,
+        index: 15,
         enemies: 9999,
         enemiesDelay: 1500
     },
@@ -362,6 +340,10 @@ export function setWeaponConf(data) {
     return config.Weapons.fire[data.key];
 }
 
+function initLang() {
+    config.lang = localStorage.getItem('lang');
+}
+
 export function setLang(lang) {
     config.lang = lang;
     localStorage.setItem('lang', lang);
@@ -375,7 +357,12 @@ if (localStorage.getItem('firstTimePlay') !== '0') {
     localStorage.setItem('money', config.money);
 }
 
+initLang();
 initWeaponConfig();
+
+export function getSceneTexts(scene) {
+    return scene.cache.json.get('texts')[scene.name];
+}
 
 export function rgbToHex(colors) {
     return '0x' + ((1 << 24) + (colors.r << 16) + (colors.g << 8) + colors.b).toString(16).slice(1);

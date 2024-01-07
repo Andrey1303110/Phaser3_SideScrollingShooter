@@ -1,9 +1,12 @@
 import { SCENE_NAMES } from '../constants';
-import { config, setEndpoints } from '/src/scripts/main';
+import { getSceneTexts } from '../main';
+import { config, setEndpoints, screenEndpoints } from '/src/scripts/main';
 
 export class CommonScene extends Phaser.Scene {
     constructor(name) {
         super(name);
+
+        this.name = name;
     }
 
     init() {
@@ -18,10 +21,25 @@ export class CommonScene extends Phaser.Scene {
 
         setEndpoints();
         this.game.sound.stopAll();
+
+        this._createTranslations();
     }
 
     preload() {
         this.load.image('bg', './assets/sprites/bg.png');
+    }
+
+    _createAvailableMoney(){
+        const style = {
+            font: `${config.width * .031}px ${config.fonts[config.lang]}`,
+            fill: '#FFFFFF',
+        };
+
+        this.moneyIcon = this.add.sprite(screenEndpoints.right - config.height * .075, screenEndpoints.top + config.height * .075, 'ruby')
+            .setScale(.25)
+            .setInteractive()
+            .on('pointerdown', ()=> this.scene.start(SCENE_NAMES.upgrade));
+        this.moneyText = this.add.text(this.moneyIcon.x - this.moneyIcon.displayWidth, this.moneyIcon.y, config.money, style).setOrigin(.5).setAlpha(1);
     }
 
     _createBG() {
@@ -31,5 +49,13 @@ export class CommonScene extends Phaser.Scene {
         const scaleY = this.cameras.main.height / bg.height;
         const scale = Math.max(scaleX, scaleY);
         bg.setScale(scale).setScrollFactor(0);
+    }
+
+    _createTranslations() {
+        this._translationTexts = getSceneTexts(this);
+    }
+
+    _getText(key) {
+        return this._translationTexts[key];
     }
 }

@@ -10,22 +10,28 @@ export class PreloadScene extends CommonScene {
 
     preload(){
         this._createBG();
+        this._preloadTexts();
         this._preloadResources();
-        this._preloadOther();
+        this._preloadPlugins();
         this._preloadDialogues();
+
         new LoadingBar(this);
     }
 
-    _preloadOther(){
+    _preloadTexts() {
+        this.load.json('texts', `./assets/texts/${config.lang}.json`);
+    }
+
+    _preloadPlugins(){
         this.load.plugin('rexvirtualjoystickplugin', './assets/plugins/rexvirtualjoystickplugin.min.js', true);
     }
 
     _preloadDialogues() {
-        this.load.json('dialogues0', `./assets/dialogues/${config.lang}/0.json`);
+        config.Levels.forEach(level => this.load.json(`dialogues${level.index}`, `./assets/dialogues/${config.lang}/${level.index}.json`));
     }
 
     _preloadResources() {
-        config.Levels.forEach(level => this.load.image(`bg${level.level}`, `./assets/sprites/bg${level.level}.png`));
+        config.Levels.forEach(level => this.load.image(`bg${level.index}`, `./assets/sprites/bg${level.index}.png`));
 
         ATLASES_FILES.forEach(name => this.load.atlas(name, `./assets/sprites/${name}.png`, `./assets/sprites/${name}.json`));
         IMAGE_FILES.forEach(name => this.load.image(name, `./assets/sprites/${name}.png`));

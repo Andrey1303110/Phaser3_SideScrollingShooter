@@ -6,6 +6,21 @@ import { config, screenEndpoints } from '/src/scripts/main';
 
 const INIT_DELAY = 5000;
 
+const LOSSES_MAP = {
+    jet: {
+        text: 'TOTAL_LOSSES_JEST',
+    },
+    helicopter: {
+        text: 'TOTAL_LOSSES_HELICOPTERS',
+    },
+    rocket: {
+        text: 'TOTAL_LOSSES_ROCKETS',
+    },
+    missile: {
+        text: 'TOTAL_LOSSES_MISSILES'
+    }
+}
+
 export class CampaignScene extends CommonScene {
     constructor() {
         super(SCENE_NAMES.campaign);
@@ -25,7 +40,7 @@ export class CampaignScene extends CommonScene {
         this._createLosses();
         this._createReturnButton();
         this._createControllers();
-        this._addAvailableMoney();
+        this._createAvailableMoney();
 
         await delay(INIT_DELAY);
         await this._dialogBoxConroller.flowShow(config.currentLevelScene - 1);
@@ -48,16 +63,16 @@ export class CampaignScene extends CommonScene {
         timeline.play(); 
     }
 
-    async _createDot(object) {
-        const x = (config.width - this._map.displayWidth) / 2 + (object.x / 1000 * this._map.displayWidth);
-        const y = (config.height - this._map.displayHeight) / 2 + (object.y / 1000 * this._map.displayWidth);
+    async _createDot(level) {
+        const x = (config.width - this._map.displayWidth) / 2 + (level.x / 1000 * this._map.displayWidth);
+        const y = (config.height - this._map.displayHeight) / 2 + (level.y / 1000 * this._map.displayWidth);
         const dot = this.add.sprite(x, y, 'battle')
             .setAlpha(0)
             .setScale(6)
             .setOrigin(0.5)
             .setInteractive()
             .on('pointerdown', this.selectLevel);
-        dot.info = object;
+        dot.info = level;
         dot.isCurrent = false;
 
         let params = {
@@ -65,7 +80,7 @@ export class CampaignScene extends CommonScene {
             scale: 1
         };
 
-        if (object.level > config.currentLevelScene) {
+        if (level.index > config.currentLevelScene) {
             dot.on('pointerdown', () => { this.sounds.error.play({ volume: .33 }) });
             dot.active = false;
 
@@ -76,7 +91,7 @@ export class CampaignScene extends CommonScene {
                 .on('pointerdown', () => { this.sounds.select.play({ volume: .33 }) });
             dot.active = true;
 
-            if (config.currentLevelScene > object.level) {
+            if (config.currentLevelScene > level.index) {
                 dot.setTexture('flag').setOrigin(0, 1);
             } else {
                 dot.isCurrent = true;
@@ -124,7 +139,7 @@ export class CampaignScene extends CommonScene {
     createLevelCard(info) {
         const bg_rect = this.add.rectangle(config.width / 2, config.height / 2, config.width, config.height, '0x000000', 0).setInteractive();
         
-        const currentLevelHiScore = localStorage.getItem('hiScores').split(',')[info.level - 1];
+        const currentLevelHiScore = localStorage.getItem('hiScores').split(',')[info.index - 1];
         info.hiScore = currentLevelHiScore;
 
         const first_anim_duration = 365;
@@ -132,35 +147,35 @@ export class CampaignScene extends CommonScene {
         const frame = this.add.sprite(config.width / 2, config.height / 2, 'frame');
         frame.displayHeight = config.height * .795;
 
-        let texts = [];
-        texts.push(this.add.text(frame.x, frame.y - frame.displayHeight / 2 + frame.displayHeight * .086, 'MISSION', {
+        let texts = []
+        texts.push(this.add.text(frame.x, frame.y - frame.displayHeight / 2 + frame.displayHeight * .086, this._getText('MISSION_CARD_MAIN_TITLE'), {
             font: `${frame.displayWidth * .13}px ${config.fonts[config.lang]}`,
             fill: '#0a0a0a',
         }).setOrigin(0.5).setAlpha(0.55));
 
-        texts.push(this.add.text(frame.x, frame.y - frame.displayHeight / 2 + frame.displayHeight * .25, `Level ${info.level}`, {
+        texts.push(this.add.text(frame.x, frame.y - frame.displayHeight / 2 + frame.displayHeight * .25, `${this._getText('MISSION_CARD_LEVEL')} ${info.index}`, {
             font: `${frame.displayWidth * .0925}px ${config.fonts[config.lang]}`,
             fill: '#0a0a0a',
         }).setOrigin(0.5).setAlpha(0.8));
 
-        texts.push(this.add.text(frame.x, frame.y - frame.displayHeight / 2 + frame.displayHeight * .37, 'City', {
+        texts.push(this.add.text(frame.x, frame.y - frame.displayHeight / 2 + frame.displayHeight * .37, this._getText('MISSION_CARD_CITY'), {
             font: `${frame.displayWidth * .055}px ${config.fonts[config.lang]}`,
             fill: '#0a0a0a',
         }).setOrigin(0.5).setAlpha(0.8));
 
-        texts.push(this.add.text(frame.x, frame.y - frame.displayHeight / 2 + frame.displayHeight * .44, info.name, {
+        texts.push(this.add.text(frame.x, frame.y - frame.displayHeight / 2 + frame.displayHeight * .44, this._getText(`LEVEL_${info.index}_NAME`), {
             font: `${frame.displayWidth * .06175}px ${config.fonts[config.lang]}`,
             fill: '#0a0a0a',
         }).setOrigin(0.5).setAlpha(0.8));
 
         if (currentLevelHiScore > 0) {
-            texts.push(this.add.text(frame.x, frame.y - frame.displayHeight / 2 + frame.displayHeight * .58, `Hi score: ${currentLevelHiScore}`, {
+            texts.push(this.add.text(frame.x, frame.y - frame.displayHeight / 2 + frame.displayHeight * .58, `${this._getText('MISSION_CARD_SCORE')} ${currentLevelHiScore}`, {
                 font: `${frame.displayWidth * .049}px ${config.fonts[config.lang]}`,
                 fill: '#E2B80D',
             }).setOrigin(0.5).setAlpha(0.8));
         }
 
-        texts.push(this.add.text(frame.x, frame.y - frame.displayHeight / 2 + frame.displayHeight * .71, `Enemies - ${info.enemies}`, {
+        texts.push(this.add.text(frame.x, frame.y - frame.displayHeight / 2 + frame.displayHeight * .71, `${this._getText('MISSION_CARD_ENEMIES')} ${info.enemies}`, {
             font: `${frame.displayWidth * .051}px ${config.fonts[config.lang]}`,
             fill: '#EA0000',
         }).setOrigin(0.5).setAlpha(0.8));
@@ -197,7 +212,7 @@ export class CampaignScene extends CommonScene {
             {
                 at: first_anim_duration + first_anim_duration * .75,
                 run: () => {
-                    const start_button = this.add.text(frame.x, frame.y + frame.displayHeight / 2 - frame.displayHeight * .09, 'START', {
+                    const start_button = this.add.text(frame.x, frame.y + frame.displayHeight / 2 - frame.displayHeight * .09, this._getText('MISSION_CARD_START'), {
                         font: `${frame.displayWidth * .105}px ${config.fonts[config.lang]}`,
                         fill: '#51E04A',
                     })
@@ -266,14 +281,14 @@ export class CampaignScene extends CommonScene {
 
         this.losses_text = [];
 
-        this.losses_text.push(this.add.text(points.x, points.y, 'Total russian losses:', {
+        this.losses_text.push(this.add.text(points.x, points.y, this._getText('TOTAL_LOSSES'), {
             font: `${config.width * .025}px ${config.fonts[config.lang]}`,
             fill: '#EA0000',
         }).setOrigin(0, 0.5).setAlpha(0.75));
 
         Object.keys(config.Losses).forEach(name => {
             points.y += config.width * .0285;
-            this.losses_text.push(this.add.text(points.x, points.y, `${name}s: ${localStorage.getItem(`losses_${name}`)}`, {
+            this.losses_text.push(this.add.text(points.x, points.y, `${this._getText(LOSSES_MAP[name].text)} ${localStorage.getItem(`losses_${name}`)}`, {
                 font: `${config.width * .0215}px ${config.fonts[config.lang]}`,
                 fill: '#000000',
             }).setOrigin(0, 0.5).setAlpha(0.75));
@@ -292,19 +307,6 @@ export class CampaignScene extends CommonScene {
 
     _createControllers() {
         this._dialogBoxConroller = new DialogBoxController(this.scene);
-    }
-
-    _addAvailableMoney(){
-        const style = {
-            font: `${config.width * .031}px ${config.fonts[config.lang]}`,
-            fill: '#FFFFFF',
-        };
-
-        this.moneyIcon = this.add.sprite(screenEndpoints.right - config.height * .075, screenEndpoints.top + config.height * .075, 'ruby')
-            .setScale(.25)
-            .setInteractive()
-            .on('pointerdown', ()=> this.scene.start(SCENE_NAMES.upgrade));
-        this.moneyText = this.add.text(this.moneyIcon.x - this.moneyIcon.displayWidth, this.moneyIcon.y, config.money, style).setOrigin(.5).setAlpha(1);
     }
 
     _createSounds() {

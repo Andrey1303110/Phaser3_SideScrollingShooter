@@ -3,6 +3,18 @@ import { CommonScene } from './CommonScene';
 import { config, screenEndpoints, setWeaponConf } from '/src/scripts/main';
 import { Player } from '/src/scripts/prefabs/Player';
 
+const STATS_MAP = {
+    reload: {
+        text: 'RELOAD_TITLE'
+    },
+    velocity: {
+        text: 'VELOCITY_TITLE'
+    },
+    scale: {
+        text: 'SCALE_TITLE'
+    }
+};
+
 export class UpgradeScene extends CommonScene {
     constructor() {
         super(SCENE_NAMES.upgrade);
@@ -19,7 +31,7 @@ export class UpgradeScene extends CommonScene {
         this._createPlayer();
         this._addReturnButton();
         this._createSounds();
-        this._addAvailableMoney();
+        this._createAvailableMoney();
     }
 
     createUpgradeAnimation(name, level){
@@ -55,17 +67,6 @@ export class UpgradeScene extends CommonScene {
         }
     }
 
-    // TODO add this to common scene class
-    _addAvailableMoney(){
-        const style = {
-            font: `${config.width * .031}px ${config.fonts[config.lang]}`,
-            fill: '#FFFFFF',
-        };
-
-        const moneyIcon = this.add.sprite(screenEndpoints.right - config.height * .075, screenEndpoints.top + config.height * .075, 'ruby').setScale(.25);
-        this._moneyText = this.add.text(moneyIcon.x - moneyIcon.displayWidth, moneyIcon.y, config.money, style).setOrigin(.5).setAlpha(1);
-    }
-
     _createPlayer(){
         this._player = new Player({ scene: this });
 
@@ -74,7 +75,7 @@ export class UpgradeScene extends CommonScene {
             x: config.width * .125,
             ease: 'Linear',
             duration: 1250,
-            onComplete: this._createStats,
+            onComplete: () => this._createStats(),
             callbackScope: this,
         });
     }
@@ -89,7 +90,7 @@ export class UpgradeScene extends CommonScene {
             fill: '#000000',
         };
 
-        const infoText = this.add.text(config.width/2, screenEndpoints.bottom - config.height * .075, 'Every level increse your ability on +5%', style).setOrigin(.5).setAlpha(0);
+        const infoText = this.add.text(config.width/2, screenEndpoints.bottom - config.height * .075, this._getText('BOTTOM_DESCRIPTION'), style).setOrigin(.5).setAlpha(0);
 
         const weaponStats = Object.keys(config.Weapons.fire);
         const height = config.height / 2.5;
@@ -108,10 +109,10 @@ export class UpgradeScene extends CommonScene {
             const y = (config.height/2 - height/2) + (height / weaponStats.length) * i;
 
             const level = localStorage.getItem(`playerWeapon_${key}`);
-            const text = `${key.toUpperCase()} (${config.weapons_units[key]}): ${value}`;
-            const levelText = 'Lvl. ' + level;
+            const statText = `${this._getText(STATS_MAP[key]['text'])} ${value}`;
+            const levelText = `${this._getText('LEVEL_TEXT')} ${level}`;
 
-            this.statsText[key] = this.add.text(x, y, text, style).setOrigin(1, 0).setAlpha(0);
+            this.statsText[key] = this.add.text(x, y, statText, style).setOrigin(1, 0).setAlpha(0);
             this.statsIcon[key] = this.add.sprite(x + config.width * .06, y, key).setOrigin(0.5, 0.15).setAlpha(0).setDisplaySize(config.width * .045, config.width * .045);
             this.statsLevel[key] = this.add.text(x + config.width * .12, y, levelText, style).setOrigin(0, 0).setAlpha(0);
 
@@ -223,8 +224,8 @@ export class UpgradeScene extends CommonScene {
         }
         returnedValue = (Math.round(config.Weapons.fire[this.name] * multiplier) / multiplier * multiplier).toFixed(0);
 
-        this.scene.statsText[this.name].text = `${this.name.toUpperCase()} (${config.weapons_units[this.name]}): ${returnedValue}`;
-        this.scene.statsLevel[this.name].text = 'Lvl. ' + localStorage.getItem(`playerWeapon_${this.name}`);
+        this.scene.statsText[this.name].text = `${this._getText(STATS_MAP[key]['text'])} ${returnedValue}`;
+        this.scene.statsLevel[this.name].text = `${this._getText('LEVEL_TEXT')} ${localStorage.getItem(`playerWeapon_${this.name}`)}`;
 
         this._clicked = true;
         this.setAlpha(1);

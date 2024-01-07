@@ -2,6 +2,27 @@ import { SCENE_NAMES } from '../constants';
 import { CommonScene } from './CommonScene';
 import { config } from '/src/scripts/main';
 
+const BUTTONS_MAP = [
+    {
+        sprite: 'button_campaign',
+        y: 0.275,
+        text: 'CAMPAIGN',
+        startScene: SCENE_NAMES.campaign,
+    },
+    {
+        sprite: 'button_unlim',
+        y: 0.5,
+        text: 'UNLIM',
+        startScene: SCENE_NAMES.game,
+    },
+    {
+        sprite: 'button_upgrade',
+        y: 0.725,
+        text: 'UPGRADE',
+        startScene: SCENE_NAMES.upgrade,
+    },
+];
+
 export class GameTypeSelect extends CommonScene {
     constructor() {
         super(SCENE_NAMES.main);
@@ -10,51 +31,52 @@ export class GameTypeSelect extends CommonScene {
     init(){
         super.init();
 
-        this._buttons = {};
+        this._buttons = [];
         this._buttons_num = 0;
     }
 
     create() {
         this._createBG();
         this._createSounds();
-
-        this._createButton('campaign', .275);
-        this._createButton('unlim', .5);
-        this._createButton('upgrade', .725);
+        this._createButtons();
     }
 
-    _addButtonEventListeners(button) {
+    _addButtonEventListeners(button, startScene) {
         button.on('pointerover', () => button.setAlpha(1));
         button.on('pointerout', () => button.setAlpha(.75));
-        button.on('pointerdown', () => this._gameSelect(button));
+        button.on('pointerdown', () => this._gameSelect(button, startScene));
     }
 
-    async _createButton(name, y){
+    _createButtons() {
+        BUTTONS_MAP.forEach(data => this._createButton(data));
+    }
+
+    async _createButton(data){
         this._buttons_num++;
 
-        this._createButtonSprite(name, y)
-        this._createButtonText(this._buttons[name], name);
-        await this._createButtonTweens(this._buttons[name]);
-        this._addButtonEventListeners(this._buttons[name]);
+        const button = this._createButtonSprite(data.sprite, data.y);
+        this._createButtonText(button, data.text);
+        await this._createButtonTweens(button);
+        this._addButtonEventListeners(button, data.startScene);
     }
 
-    _createButtonText(button, text) {
-        const textTitle = text.toUpperCase();
+    _createButtonText(button, textKey) {
         const textStyle = {
             font: `${config.width*.03}px ${config.fonts[config.lang]}`,
             fill: '#f0f0f0',
         };
-        button.buttonText = this.add.text(button.x, button.y, textTitle, textStyle).setScale(3).setOrigin(0.5).setAlpha(0);
+        button.buttonText = this.add.text(button.x, button.y, this._getText(textKey), textStyle).setScale(3).setOrigin(0.5).setAlpha(0);
     }
 
-    _createButtonSprite(buttonName, y) {
-        this._buttons[buttonName] = this.add.sprite(config.width / 2, config.height * y, 'button_' + buttonName)
+    _createButtonSprite(spriteKey, y) {
+        const button = this.add.sprite(config.width / 2, config.height * y, spriteKey)
         .setScale(5)
         .setAlpha(0)
         .setOrigin(.5)
         .setInteractive();
 
-        this._buttons[buttonName].name = buttonName;
+        this._buttons.push(button);
+        return button;
     }
 
     async _createButtonTweens(button) {
@@ -85,7 +107,7 @@ export class GameTypeSelect extends CommonScene {
         ]);
     }
 
-    _gameSelect(button){
+    _gameSelect(button, startScene){
         this.sounds.click.play({ volume: .2 });
 
         this.tweens.add({
@@ -94,21 +116,15 @@ export class GameTypeSelect extends CommonScene {
             scale: 7,
             ease: 'Linear',
             duration: 750,
-            onComplete: () => this._startNewScene(button.name),
+            onComplete: () => this._startNewScene(startScene),
         });
     }
 
-    _startNewScene(buttonName) {
-        switch (buttonName) {
-            case 'campaign':
-                this.scene.start(SCENE_NAMES.campaign);
-                break;
-            case 'unlim':
-                this.scene.start(SCENE_NAMES.game, config.unlim);
-                break;
-            case 'upgrade':
-                this.scene.start(SCENE_NAMES.upgrade);
-                break;
+    _startNewScene(sceneName) {
+        if (sceneName === SCENE_NAMES.game) {
+            this.scene.start(SCENE_NAMES.game, config.unlim);
+        } else {
+            this.scene.start(sceneName);
         }
     }
 

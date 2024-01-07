@@ -8,9 +8,9 @@ export class Enemy extends MovableObject {
 
         let typeNums = 0;
 
-        if (scene.info.level > 4) {
+        if (scene.info.index > 4) {
             typeNums = 1;
-            if (scene.info.level > 8) {
+            if (scene.info.index > 8) {
                 typeNums = 2;
             }
         }
