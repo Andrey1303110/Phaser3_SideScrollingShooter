@@ -2,7 +2,7 @@ import * as Phaser from 'phaser';
 import { BootScene } from './scenes/BootScene';
 import { GameScene } from './scenes/GameScene';
 import { GameTypeSelect } from './scenes/GameTypeSelect';
-import { MapScene } from './scenes/MapScene';
+import { CampaignScene } from './scenes/CampaignScene';
 import { PauseScene } from './scenes/PauseScene';
 import { UpgradeScene } from './scenes/PlayerUpgarde';
 import { PreloadScene } from './scenes/PreloadScene';
@@ -32,7 +32,7 @@ export const config = {
         height: 720,
     },
 
-    scene: [BootScene, PreloadScene, GameTypeSelect, MapScene, StartScene, GameScene, PauseScene, UpgradeScene],
+    scene: [BootScene, PreloadScene, GameTypeSelect, CampaignScene, StartScene, GameScene, PauseScene, UpgradeScene],
 
     lang: '',
 

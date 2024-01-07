@@ -6,7 +6,7 @@ import { config, screenEndpoints } from '/src/scripts/main';
 
 const INIT_DELAY = 5000;
 
-export class MapScene extends CommonScene {
+export class CampaignScene extends CommonScene {
     constructor() {
         super(SCENE_NAMES.campaign);
     }
