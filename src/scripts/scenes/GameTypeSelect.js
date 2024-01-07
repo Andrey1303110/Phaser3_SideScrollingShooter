@@ -101,7 +101,7 @@ export class GameTypeSelect extends CommonScene {
     _startNewScene(buttonName) {
         switch (buttonName) {
             case 'campaign':
-                this.scene.start(SCENE_NAMES.campain);
+                this.scene.start(SCENE_NAMES.campaign);
                 break;
             case 'unlim':
                 this.scene.start(SCENE_NAMES.game, config.unlim);

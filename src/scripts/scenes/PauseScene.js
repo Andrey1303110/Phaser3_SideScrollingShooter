@@ -73,7 +73,7 @@ export class PauseScene extends CommonScene {
                     break;
                     case 'return':
                         this.scene.stop(SCENE_NAMES.game);
-                        this.scene.launch(SCENE_NAMES.campain);
+                        this.scene.launch(SCENE_NAMES.campaign);
                     break;
                 }
             }

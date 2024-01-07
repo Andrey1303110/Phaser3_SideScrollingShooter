@@ -8,7 +8,7 @@ const INIT_DELAY = 5000;
 
 export class MapScene extends CommonScene {
     constructor() {
-        super(SCENE_NAMES.campain);
+        super(SCENE_NAMES.campaign);
     }
 
     init() {

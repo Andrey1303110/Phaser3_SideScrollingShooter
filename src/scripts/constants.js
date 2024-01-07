@@ -2,7 +2,7 @@ export const SCENE_NAMES = {
     boot: 'Boot',
     preload: 'Preload',
     main: 'Levels',
-    campain: 'Map',
+    campaign: 'Campaign',
     game: 'GameScene',
     upgrade: 'Upgrade',
     pause: 'Pause',

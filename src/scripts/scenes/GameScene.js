@@ -241,7 +241,7 @@ export class GameScene extends CommonScene {
                 if (this.info.unlim) {
                     this.scene.start(SCENE_NAMES.main);
                 } else {
-                    this.scene.start(SCENE_NAMES.campain);
+                    this.scene.start(SCENE_NAMES.campaign);
                 }
                 this.scene.stop();
             }
