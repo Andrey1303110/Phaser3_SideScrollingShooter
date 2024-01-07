@@ -1,0 +1,47 @@
+{
+    "Levels": {
+        "CAMPAIGN": "Кампанія",
+        "UNLIM": "Виживання",
+        "UPGRADE": "Апгрейд"
+    },
+    "Campaign": {
+        "TOTAL_LOSSES": "Загальні втрати:",
+        "TOTAL_LOSSES_JEST": "Літаки:",
+        "TOTAL_LOSSES_HELICOPTERS": "Гвинтокрили:",
+        "TOTAL_LOSSES_ROCKETS": "Ракети (некеровані):",
+        "TOTAL_LOSSES_MISSILES": "Крилаті ракети:",
+        "MISSION_CARD_MAIN_TITLE": "МІСІЯ",
+        "MISSION_CARD_LEVEL": "Рівень",
+        "MISSION_CARD_CITY": "Локація:",
+        "MISSION_CARD_SCORE": "Рекорд:",
+        "MISSION_CARD_ENEMIES": "Ворогів:",
+        "MISSION_CARD_START": "СТАРТ",
+        "LEVEL_1_NAME": "Київ Печерськ",
+        "LEVEL_2_NAME": "Одеса",
+        "LEVEL_3_NAME": "Харків",
+        "LEVEL_4_NAME": "Київ Поділ",
+        "LEVEL_5_NAME": "Маріуполь Азовсталь",
+        "LEVEL_6_NAME": "Вінниця Вежа",
+        "LEVEL_7_NAME": "Київ Воскресенка",
+        "LEVEL_8_NAME": "Львів Площа Ринок",
+        "LEVEL_9_NAME": "Дніпро",
+        "LEVEL_10_NAME": "Генічеськ",
+        "LEVEL_11_NAME": "Донецьк",
+        "LEVEL_12_NAME": "Запооріжжя",
+        "LEVEL_13_NAME": "Каховська ГЕС",
+        "LEVEL_14_NAME": "Севастополь Балаклава",
+        "LEVEL_15_NAME": "Луганськ"
+    },
+    "GameScene": {
+        "TOP_HIGH_SCORE": "Найкращий результат:",
+        "FINAL_TEXT_WIN": "СЛАВА УКРАЇНІ!",
+        "FINAL_TEXT_LOSE": "ГЕРОЇ НЕ ВМИРАЮТЬ"
+    },
+    "Upgrade": {
+        "RELOAD_TITLE": "Перезарядка (мс):",
+        "VELOCITY_TITLE": "Швидкість (м/с):",
+        "SCALE_TITLE": "Розмір (%):",
+        "LEVEL_TEXT": "Рів.",
+        "BOTTOM_DESCRIPTION": "Кожен рівень покращує ваші здібності на +5%"
+    }
+}
