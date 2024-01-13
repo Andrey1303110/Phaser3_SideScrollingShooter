@@ -1,6 +1,5 @@
 import { SCENE_NAMES } from '../constants';
-import { getSceneTexts } from '../main';
-import { config, setEndpoints, screenEndpoints } from '/src/scripts/main';
+import { getFont, getSceneTexts, config, setEndpoints, screenEndpoints } from '../main';
 
 export class CommonScene extends Phaser.Scene {
     constructor(name) {
@@ -31,7 +30,7 @@ export class CommonScene extends Phaser.Scene {
 
     _createAvailableMoney(){
         const style = {
-            font: `${config.width * .031}px ${config.fonts[config.lang]}`,
+            font: `${config.width * .031}px ${getFont()}`,
             fill: '#FFFFFF',
         };
 

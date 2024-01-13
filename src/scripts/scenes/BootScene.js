@@ -71,7 +71,7 @@ export class BootScene extends CommonScene {
         }
 
         const textStyle = {
-            font: `${config.width*.04}px DishOut`,
+            font: `${config.width*.04}px ${config.fonts['eng']}`,
             fill: '#f0f0f0',
         };
         button.buttonText = this.add.text(button.x - config.width * 0.06, button.y, textTitle, textStyle).setScale(3).setOrigin(0.5).setAlpha(0);

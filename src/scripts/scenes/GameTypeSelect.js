@@ -1,6 +1,6 @@
 import { SCENE_NAMES } from '../constants';
+import { getFont, config } from '../main';
 import { CommonScene } from './CommonScene';
-import { config } from '/src/scripts/main';
 
 const BUTTONS_MAP = [
     {
@@ -62,7 +62,7 @@ export class GameTypeSelect extends CommonScene {
 
     _createButtonText(button, textKey) {
         const textStyle = {
-            font: `${config.width*.03}px ${config.fonts[config.lang]}`,
+            font: `${config.width*.03}px ${getFont()}`,
             fill: '#f0f0f0',
         };
         button.buttonText = this.add.text(button.x, button.y, this._getText(textKey), textStyle).setScale(3).setOrigin(0.5).setAlpha(0);

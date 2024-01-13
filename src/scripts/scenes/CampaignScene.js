@@ -1,8 +1,7 @@
 import { DialogBoxController } from '../classes/DialogBoxController';
 import { SCENE_NAMES } from '../constants';
-import { delay } from '../main';
+import { getFont, delay, config, screenEndpoints } from '../main';
 import { CommonScene } from './CommonScene';
-import { config, screenEndpoints } from '/src/scripts/main';
 
 const INIT_DELAY = 5000;
 
@@ -149,34 +148,34 @@ export class CampaignScene extends CommonScene {
 
         let texts = []
         texts.push(this.add.text(frame.x, frame.y - frame.displayHeight / 2 + frame.displayHeight * .086, this._getText('MISSION_CARD_MAIN_TITLE'), {
-            font: `${frame.displayWidth * .13}px ${config.fonts[config.lang]}`,
+            font: `${frame.displayWidth * .13}px ${getFont()}`,
             fill: '#0a0a0a',
         }).setOrigin(0.5).setAlpha(0.55));
 
         texts.push(this.add.text(frame.x, frame.y - frame.displayHeight / 2 + frame.displayHeight * .25, `${this._getText('MISSION_CARD_LEVEL')} ${info.index}`, {
-            font: `${frame.displayWidth * .0925}px ${config.fonts[config.lang]}`,
+            font: `${frame.displayWidth * .0925}px ${getFont()}`,
             fill: '#0a0a0a',
         }).setOrigin(0.5).setAlpha(0.8));
 
         texts.push(this.add.text(frame.x, frame.y - frame.displayHeight / 2 + frame.displayHeight * .37, this._getText('MISSION_CARD_CITY'), {
-            font: `${frame.displayWidth * .055}px ${config.fonts[config.lang]}`,
+            font: `${frame.displayWidth * .055}px ${getFont()}`,
             fill: '#0a0a0a',
         }).setOrigin(0.5).setAlpha(0.8));
 
         texts.push(this.add.text(frame.x, frame.y - frame.displayHeight / 2 + frame.displayHeight * .44, this._getText(`LEVEL_${info.index}_NAME`), {
-            font: `${frame.displayWidth * .06175}px ${config.fonts[config.lang]}`,
+            font: `${frame.displayWidth * .06175}px ${getFont()}`,
             fill: '#0a0a0a',
         }).setOrigin(0.5).setAlpha(0.8));
 
         if (currentLevelHiScore > 0) {
             texts.push(this.add.text(frame.x, frame.y - frame.displayHeight / 2 + frame.displayHeight * .58, `${this._getText('MISSION_CARD_SCORE')} ${currentLevelHiScore}`, {
-                font: `${frame.displayWidth * .049}px ${config.fonts[config.lang]}`,
+                font: `${frame.displayWidth * .049}px ${getFont()}`,
                 fill: '#E2B80D',
             }).setOrigin(0.5).setAlpha(0.8));
         }
 
         texts.push(this.add.text(frame.x, frame.y - frame.displayHeight / 2 + frame.displayHeight * .71, `${this._getText('MISSION_CARD_ENEMIES')} ${info.enemies}`, {
-            font: `${frame.displayWidth * .051}px ${config.fonts[config.lang]}`,
+            font: `${frame.displayWidth * .051}px ${getFont()}`,
             fill: '#EA0000',
         }).setOrigin(0.5).setAlpha(0.8));
 
@@ -213,7 +212,7 @@ export class CampaignScene extends CommonScene {
                 at: first_anim_duration + first_anim_duration * .75,
                 run: () => {
                     const start_button = this.add.text(frame.x, frame.y + frame.displayHeight / 2 - frame.displayHeight * .09, this._getText('MISSION_CARD_START'), {
-                        font: `${frame.displayWidth * .105}px ${config.fonts[config.lang]}`,
+                        font: `${frame.displayWidth * .105}px ${getFont()}`,
                         fill: '#51E04A',
                     })
                         .setOrigin(0.5)
@@ -282,14 +281,14 @@ export class CampaignScene extends CommonScene {
         this.losses_text = [];
 
         this.losses_text.push(this.add.text(points.x, points.y, this._getText('TOTAL_LOSSES'), {
-            font: `${config.width * .025}px ${config.fonts[config.lang]}`,
+            font: `${config.width * .025}px ${getFont()}`,
             fill: '#EA0000',
         }).setOrigin(0, 0.5).setAlpha(0.75));
 
         Object.keys(config.Losses).forEach(name => {
             points.y += config.width * .0285;
             this.losses_text.push(this.add.text(points.x, points.y, `${this._getText(LOSSES_MAP[name].text)} ${localStorage.getItem(`losses_${name}`)}`, {
-                font: `${config.width * .0215}px ${config.fonts[config.lang]}`,
+                font: `${config.width * .0215}px ${getFont()}`,
                 fill: '#000000',
             }).setOrigin(0, 0.5).setAlpha(0.75));
         });

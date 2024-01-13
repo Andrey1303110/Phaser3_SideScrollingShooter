@@ -371,3 +371,7 @@ export function rgbToHex(colors) {
 export const delay = (ms) => {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
+
+export function getFont() {
+    return config.fonts[config.lang];
+}

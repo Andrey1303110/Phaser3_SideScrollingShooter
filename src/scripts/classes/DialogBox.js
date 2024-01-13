@@ -1,4 +1,4 @@
-import { config } from '/src/scripts/main';
+import { config, getFont } from '../main';
 
 export class DialogBox {
     constructor (scene, dialogueData) {
@@ -48,8 +48,6 @@ export class DialogBox {
     }
 
     _createBg() {
-        const width = config.width * 0.85;
-        const height = config.height * 0.4;
         const x = config.width * 0.5;
         const y = config.height * 0.72;
 
@@ -75,8 +73,7 @@ export class DialogBox {
         const bgEndPointX = this._bg.x + this._bg.width/2;
 
         const content = this._scene.scene.add.text(0, 0, text, { 
-            fontFamily: 'Comfortaa-Regular',
-            fontSize,
+            font: `${fontSize}px ${getFont()}`,
             lineSpacing: fontSize * 0.4,
             color: '#A0A0A0',
             align: 'left',

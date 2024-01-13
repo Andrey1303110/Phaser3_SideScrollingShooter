@@ -1,6 +1,6 @@
 import { SCENE_NAMES } from '../constants';
+import { getFont, config, screenEndpoints, setWeaponConf } from '../main';
 import { CommonScene } from './CommonScene';
-import { config, screenEndpoints, setWeaponConf } from '/src/scripts/main';
 import { Player } from '/src/scripts/prefabs/Player';
 
 const STATS_MAP = {
@@ -52,7 +52,7 @@ export class UpgradeScene extends CommonScene {
             }
 
             const plus_symbol = this.add.text(data.x, data.y, '+', {
-                font: `${data.scale}px ${config.fonts[config.lang]}`,
+                font: `${data.scale}px ${getFont()}`,
                 fill: `#${config.upgradeColors[name]}`,
             }).setOrigin(0.5).setAlpha(data.alpha).setStroke('#fafafa33', 4);
 
@@ -86,7 +86,7 @@ export class UpgradeScene extends CommonScene {
         this.statsLevel = {};
 
         const style = {
-            font: `${config.width * .031}px ${config.fonts[config.lang]}`,
+            font: `${config.width * .031}px ${getFont()}`,
             fill: '#000000',
         };
 
@@ -171,7 +171,7 @@ export class UpgradeScene extends CommonScene {
         this.buttons[data.key].cost = Math.floor(this.buttons[data.key].level/10) + 1;
 
         const style = {
-            font: `${config.width * .023}px ${config.fonts[config.lang]}`,
+            font: `${config.width * .023}px ${getFont()}`,
             fill: '#FFFFFF',
         };
         this.buttons[data.key].textCost = this.add.text(this.buttons[data.key].x, this.buttons[data.key].y, '1', style).setOrigin(0.5, -0.125);
