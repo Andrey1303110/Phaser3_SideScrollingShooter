@@ -42,7 +42,7 @@ export class CampaignScene extends CommonScene {
         this._createAvailableMoney();
 
         await delay(INIT_DELAY);
-        await this._dialogBoxConroller.flowShow(config.currentLevelScene - 1);
+        await this._dialogBoxConroller.flowShow(config.currentLevelScene);
     }
 
     _createMap() {

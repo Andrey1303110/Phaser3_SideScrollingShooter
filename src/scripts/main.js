@@ -27,8 +27,6 @@ export const config = {
         mode: Phaser.Scale.ENVELOP,
         autoCenter: Phaser.Scale.CENTER_BOTH,
         parent: 'gameDiv',
-        width: 1280,
-        height: 720,
     },
 
     scene: [BootScene, PreloadScene, GameTypeSelect, CampaignScene, GameScene, PauseScene, UpgradeScene],
@@ -262,7 +260,13 @@ export const config = {
 
 export const game = new Phaser.Game(config);
 
-export const screenEndpoints = {};
+export const screenEndpoints = {
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+};
+
 export function setEndpoints() {
     if ((document.body.clientWidth / document.body.clientHeight) === (16 / 9)) {
         screenEndpoints.left = 0;
