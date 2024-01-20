@@ -19,6 +19,7 @@ export class CommonScene extends Phaser.Scene {
         }
 
         setEndpoints();
+        //TODO
         this.game.sound.stopAll();
 
         this._createTranslations();

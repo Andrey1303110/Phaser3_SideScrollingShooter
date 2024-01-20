@@ -246,7 +246,6 @@ export class UpgradeScene extends CommonScene {
         this.scene.createUpgradeAnimation(this.name, value);
     }
 
-    // TODO add to common class
     _addReturnButton(){
         this.add.sprite(screenEndpoints.left + config.width * .015, screenEndpoints.top + config.width * .015, 'return')
             .setAlpha(0.65)

@@ -42,7 +42,7 @@ export class CampaignScene extends CommonScene {
         this._createAvailableMoney();
 
         await delay(INIT_DELAY);
-        await this._dialogBoxConroller.flowShow(config.currentLevelScene);
+        await this._dialogBoxController.flowShow(config.currentLevelScene);
     }
 
     _createMap() {
@@ -83,8 +83,8 @@ export class CampaignScene extends CommonScene {
             dot.on('pointerdown', () => { this.sounds.error.play({ volume: .33 }) });
             dot.active = false;
 
-            params.alpha = 2/3;
-            params.scale = 2/3;
+            params.alpha = 0.7;
+            params.scale = 0.75;
         } else {
             dot.setAlpha(1)
                 .on('pointerdown', () => { this.sounds.select.play({ volume: .33 }) });
@@ -305,7 +305,7 @@ export class CampaignScene extends CommonScene {
     }
 
     _createControllers() {
-        this._dialogBoxConroller = new DialogBoxController(this.scene);
+        this._dialogBoxController = new DialogBoxController(this);
     }
 
     _createSounds() {

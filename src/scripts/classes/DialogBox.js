@@ -1,9 +1,12 @@
+import { Resolver } from '../Resolver';
+import { DEPTH_LAYERS } from '../constants';
 import { config, getFont, screenEndpoints } from '../main';
 
 export class DialogBox {
     constructor (scene, dialogueData) {
         this._scene = scene;
-        this._isSkiped = false;
+
+        this._resolver = new Resolver();
 
         this._createDialog(dialogueData);
         this._setInitPosition();
@@ -12,35 +15,39 @@ export class DialogBox {
     async showEnter() {
         await new Promise(resolve => {
             this._elements.forEach(element => {
-                this._scene.scene.tweens.add({
+                this._scene.tweens.add({
                     targets: element,
                     x: element.x + config.width,
-                    ease: 'Power1',
-                    duration: 750,
+                    ease: 'Cubic.easeOut',
+                    duration: 625,
                     onStart: () => this._showSkipButton(),
                     onComplete: () => resolve()
                 });
-            })
+            });
         });
     }
 
     async showExit() {
         await new Promise(resolve => {
             this._elements.forEach(element => {
-                this._scene.scene.tweens.add({
+                this._scene.tweens.add({
                     targets: element,
                     x: element.x - config.width,
-                    ease: 'Power2',
-                    duration: 450,
+                    ease: 'Cubic.easeIn',
+                    duration: 425,
                     onStart: () => this._hideSkipButton(),
                     onComplete: () => resolve()
                 });
-            })
+            });
         });
     }
 
+    get resolver() {
+        return this._resolver;
+    }
+
     _setInitPosition() {
-        this._elements = [ this._bg, this._person, this._text ];
+        this._elements = [this._bg, this._person, this._text];
         this._elements.forEach(object => object.x -= config.width);
     }
 
@@ -55,20 +62,21 @@ export class DialogBox {
         const x = config.width * 0.5;
         const y = config.height * 0.72;
 
-        this._bg = this._scene.scene.add.sprite(x, y, 'speechBg');
+        this._bg = this._scene.add.sprite(x, y, 'speechBg').setDepth(DEPTH_LAYERS.DIALOGUES);
     }
 
     _createSkipButton() {
-        this._skipButton = this._scene.scene.add.sprite(screenEndpoints.right, this._bg.y, 'next')
+        this._skipButton = this._scene.add.sprite(screenEndpoints.right, this._bg.y, 'next')
             .setAlpha(0)
             .setOrigin(1, 0.5)
-            .on('pointerdown', () => console.log('click'));
+            .setDepth(DEPTH_LAYERS.DIALOGUES)
+            .on('pointerdown', () => this._skipDialog());
     }
 
     _createPerson(data) {
         const { image } = data;
 
-        this._person = this._scene.scene.add.sprite(this._bg.x, this._bg.y, image);
+        this._person = this._scene.add.sprite(this._bg.x, this._bg.y, image).setDepth(DEPTH_LAYERS.DIALOGUES);
         this._person.y = this._bg.y - (this._person.height - this._bg.height) * 0.5;
         this._person.x = this._bg.x - this._bg.width/2 + this._person.width * 0.2;
     }
@@ -83,13 +91,13 @@ export class DialogBox {
         const personEndPointX = this._person.x + this._person.width/2;
         const bgEndPointX = this._bg.x + this._bg.width/2;
 
-        let content = this._scene.scene.add.text(0, 0, text, { 
+        let content = this._scene.add.text(0, 0, text, { 
             font: `${fontSize}px ${getFont()}`,
             lineSpacing: fontSize * 0.4,
             color: '#A0A0A0',
             align: 'left',
             wordWrap: { width: (bgEndPointX - personEndPointX) - gPadding } 
-        });
+        }).setDepth(DEPTH_LAYERS.DIALOGUES);
         
         content = this._resizeContent(content, vPadding);
 
@@ -100,7 +108,7 @@ export class DialogBox {
     }
 
     _showSkipButton() {
-        this._scene.scene.tweens.add({
+        this._scene.tweens.add({
             targets: this._skipButton,
             alpha: 1,
             ease: 'Power1',
@@ -110,7 +118,7 @@ export class DialogBox {
     }
 
     _hideSkipButton() {
-        this._scene.scene.tweens.add({
+        this._scene.tweens.add({
             targets: this._skipButton,
             alpha: 0,
             ease: 'Power1',
@@ -118,6 +126,11 @@ export class DialogBox {
             onStart: () => this._skipButton.removeInteractive(),
             onComplete: () => this._skipButton.destroy()
         });
+    }
+
+    _skipDialog() {
+        this._resolver.resolve();
+        this._scene.sounds.click.play({ volume: .2 });
     }
 
     _resizeContent(content, vPadding) {

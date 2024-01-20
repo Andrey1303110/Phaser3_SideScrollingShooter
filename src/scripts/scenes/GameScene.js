@@ -2,7 +2,7 @@ import { getFont, config, screenEndpoints } from '../main';
 import { Player } from '/src/scripts/prefabs/Player';
 import { Enemies } from '/src/scripts/prefabs/Enemies';
 import { Boom } from '/src/scripts/prefabs/Boom';
-import { SCENE_NAMES } from '../constants';
+import { DEPTH_LAYERS, SCENE_NAMES } from '../constants';
 import { CommonScene } from './CommonScene';
 
 export class GameScene extends CommonScene {
@@ -197,11 +197,11 @@ export class GameScene extends CommonScene {
             return;
         }
 
-        this._black_bg = this.add.rectangle(config.width / 2, config.height / 2, config.width, config.height, '0x000000', 0).setInteractive().setDepth(9999999);
+        this._black_bg = this.add.rectangle(config.width / 2, config.height / 2, config.width, config.height, '0x000000', 0).setInteractive().setDepth(DEPTH_LAYERS.COVER_SCREEN);
         let final_text = this.add.text(this._black_bg.x, this._black_bg.y, '', {
             font: `${config.width * .03}px ${getFont()}`,
             fill: '#EA0000',
-        }).setOrigin(0.5).setAlpha(0).setDepth(this._black_bg.depth);
+        }).setOrigin(0.5).setAlpha(0).setDepth(DEPTH_LAYERS.MAX);
         this.game.sound.stopAll();
 
         if (this._player.active) {

@@ -22,3 +22,12 @@ export const IMAGE_FILES = ['fire', 'flag', 'rocket', 'missile', 'missile_2', 'b
 
 // Only .mp3
 export const AUDIO_FILES = ['select', 'error', 'rocket_launch', 'fire_launch', 'missile_launch', 'missile_2_launch', 'explosion_small', 'wings', 'stamp', 'ready', 'died', 'win', 'upgrade', 'level_up', 'whoosh', 'whoosh_map', 'click', 'fire_effect'];
+
+export const DEPTH_LAYERS = {
+    NONE: 0,
+    DEFAULT: 1,
+    UI: 2,
+    COVER_SCREEN: 3,
+    DIALOGUES: 4,
+    MAX: 5
+}
