@@ -93,7 +93,7 @@ export class UpgradeScene extends CommonScene {
         const infoText = this.add.text(config.width * 0.5, screenEndpoints.bottom - config.height * .075, this._getText('BOTTOM_DESCRIPTION'), style).setOrigin(.5).setAlpha(0);
 
         const weaponStats = Object.keys(config.Weapons.fire);
-        const height = config.height / 2.5;
+        const height = config.height * 0.4;
 
         for (let i = 0; i < weaponStats.length; i++) {
             const key = weaponStats[i];

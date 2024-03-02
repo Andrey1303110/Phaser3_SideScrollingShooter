@@ -14,7 +14,7 @@ export class Player extends MovableObject {
         super({
             scene: data.scene,
             x: screenEndpoints.left,
-            y: config.height / 2,
+            y: config.height * 0.5,
             texture: PLAYER_TEXTURE_NAME,
             frame: FIRST_PLAYER_FRAME,
             velocity: config.Player.velocity,

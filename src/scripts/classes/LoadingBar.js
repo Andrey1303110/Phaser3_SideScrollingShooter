@@ -23,7 +23,7 @@ export class LoadingBar {
 
         this._style = {
             boxColor: BOX_COLOR,
-            x: config.width * 0.5 - (config.width * .5 / 2),
+            x: config.width * 0.5 - (config.width * .25),
             y: config.height * 0.5 + config.height * .25,
             width: config.width * .5,
             height: config.height * .05,

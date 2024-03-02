@@ -83,7 +83,7 @@ export class BootScene extends CommonScene {
     }
 
     _createButtonSprite(buttonName, y) {
-        this._buttons[buttonName] = this.add.sprite(config.width / 2, config.height * y, 'button')
+        this._buttons[buttonName] = this.add.sprite(config.width * 0.5, config.height * y, 'button')
         .setScale(5)
         .setAlpha(0)
         .setOrigin(.5)
@@ -118,7 +118,7 @@ export class BootScene extends CommonScene {
     }
 
     async _createLogoAnimation() {
-        const logo = this.add.sprite(config.width / 2, config.height / 2, 'pervious_logo').setAlpha(0);
+        const logo = this.add.sprite(config.width * 0.5, config.height * 0.5, 'pervious_logo').setAlpha(0);
         const scaleX = this.cameras.main.width / logo.width;
         const scaleY = this.cameras.main.height / logo.height;
         const scale = Math.max(scaleX, scaleY);
@@ -144,7 +144,7 @@ export class BootScene extends CommonScene {
             fill: '#f0f0f0',
         };
         
-        const label = this.add.text(config.width / 2, screenEndpoints.bottom, 'PRESS ANYWHERE TO CONTINUE', textStyle).setOrigin(0.5, 1.5).setAlpha(0);
+        const label = this.add.text(config.width * 0.5, screenEndpoints.bottom, 'PRESS ANYWHERE TO CONTINUE', textStyle).setOrigin(0.5, 1.5).setAlpha(0);
         const cliackArea = this.add.rectangle(0, 0, config.width, config.height).setOrigin(0);
 
         await new Promise((resolve) => {

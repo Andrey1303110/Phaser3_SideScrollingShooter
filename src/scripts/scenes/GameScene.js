@@ -113,7 +113,7 @@ export class GameScene extends CommonScene {
         }).setOrigin(1, 0).setAlpha(.75);
 
         if (this.info?.unlim) {
-            this.hiScoreText = this.add.text(config.width / 2, screenEndpoints.top + config.width * .01, `${this._getText('TOP_HIGH_SCORE')} ${localStorage.getItem('unlimHiScores')}`, {
+            this.hiScoreText = this.add.text(config.width * 0.5, screenEndpoints.top + config.width * .01, `${this._getText('TOP_HIGH_SCORE')} ${localStorage.getItem('unlimHiScores')}`, {
                 font: `${config.width * .03}px ${getFont()}`,
                 fill: '#EA0000',
             }).setOrigin(0.5, 0).setAlpha(.75);
@@ -152,7 +152,7 @@ export class GameScene extends CommonScene {
     }
 
     _onOverlap(source, target) {
-        if (target.x > config.width + target.displayWidth / 2) {
+        if (target.x > config.width + target.displayWidth * 0.5) {
             return;
         }
 
@@ -197,7 +197,7 @@ export class GameScene extends CommonScene {
             return;
         }
 
-        this._black_bg = this.add.rectangle(config.width / 2, config.height / 2, config.width, config.height, '0x000000', 0).setInteractive().setDepth(DEPTH_LAYERS.COVER_SCREEN);
+        this._black_bg = this.add.rectangle(config.width * 0.5, config.height * 0.5, config.width, config.height, '0x000000', 0).setInteractive().setDepth(DEPTH_LAYERS.COVER_SCREEN);
         let final_text = this.add.text(this._black_bg.x, this._black_bg.y, '', {
             font: `${config.width * .03}px ${getFont()}`,
             fill: '#EA0000',

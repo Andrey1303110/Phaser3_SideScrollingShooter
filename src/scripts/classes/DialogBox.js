@@ -2,6 +2,7 @@ import { Resolver } from '../Resolver';
 import { DEPTH_LAYERS } from '../constants';
 import { config, getFont, screenEndpoints } from '../main';
 
+// TODO extends from container
 export class DialogBox {
     constructor (scene, dialogueData) {
         this._scene = scene;

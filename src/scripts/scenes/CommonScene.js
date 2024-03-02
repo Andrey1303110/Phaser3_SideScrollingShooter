@@ -43,7 +43,7 @@ export class CommonScene extends Phaser.Scene {
     }
 
     _createBG() {
-        const bg = this.add.sprite(config.width / 2, config.height / 2, 'bg').setAlpha(.925).setOrigin(.5).setInteractive();
+        const bg = this.add.sprite(config.width * 0.5, config.height * 0.5, 'bg').setAlpha(.925).setOrigin(.5).setInteractive();
 
         const scaleX = this.cameras.main.width / bg.width;
         const scaleY = this.cameras.main.height / bg.height;

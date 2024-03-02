@@ -46,7 +46,7 @@ export class CampaignScene extends CommonScene {
     }
 
     _createMap() {
-        this._map = this.add.sprite(config.width / 2, config.height / 2, 'map').setAlpha(.65).setOrigin(.5).setScale(1.25);
+        this._map = this.add.sprite(config.width * 0.5, config.height * 0.5, 'map').setAlpha(.65).setOrigin(.5).setScale(1.25);
     }
 
     _createMissions() {
@@ -63,8 +63,8 @@ export class CampaignScene extends CommonScene {
     }
 
     async _createDot(level) {
-        const x = (config.width - this._map.displayWidth) / 2 + (level.x / 1000 * this._map.displayWidth);
-        const y = (config.height - this._map.displayHeight) / 2 + (level.y / 1000 * this._map.displayWidth);
+        const x = (config.width - this._map.displayWidth) * 0.5 + (level.x / 1000 * this._map.displayWidth);
+        const y = (config.height - this._map.displayHeight) * 0.5 + (level.y / 1000 * this._map.displayWidth);
         const dot = this.add.sprite(x, y, 'battle')
             .setAlpha(0)
             .setScale(6)
@@ -136,45 +136,45 @@ export class CampaignScene extends CommonScene {
     }
 
     createLevelCard(info) {
-        const bg_rect = this.add.rectangle(config.width / 2, config.height / 2, config.width, config.height, '0x000000', 0).setInteractive();
+        const bg_rect = this.add.rectangle(config.width * 0.5, config.height * 0.5, config.width, config.height, '0x000000', 0).setInteractive();
         
         const currentLevelHiScore = localStorage.getItem('hiScores').split(',')[info.index - 1];
         info.hiScore = currentLevelHiScore;
 
         const first_anim_duration = 365;
 
-        const frame = this.add.sprite(config.width / 2, config.height / 2, 'frame');
+        const frame = this.add.sprite(config.width * 0.5, config.height * 0.5, 'frame');
         frame.displayHeight = config.height * .795;
 
         let texts = []
-        texts.push(this.add.text(frame.x, frame.y - frame.displayHeight / 2 + frame.displayHeight * .086, this._getText('MISSION_CARD_MAIN_TITLE'), {
+        texts.push(this.add.text(frame.x, frame.y - frame.displayHeight * 0.5 + frame.displayHeight * .086, this._getText('MISSION_CARD_MAIN_TITLE'), {
             font: `${frame.displayWidth * .13}px ${getFont()}`,
             fill: '#0a0a0a',
         }).setOrigin(0.5).setAlpha(0.55));
 
-        texts.push(this.add.text(frame.x, frame.y - frame.displayHeight / 2 + frame.displayHeight * .25, `${this._getText('MISSION_CARD_LEVEL')} ${info.index}`, {
+        texts.push(this.add.text(frame.x, frame.y - frame.displayHeight * 0.5 + frame.displayHeight * .25, `${this._getText('MISSION_CARD_LEVEL')} ${info.index}`, {
             font: `${frame.displayWidth * .0925}px ${getFont()}`,
             fill: '#0a0a0a',
         }).setOrigin(0.5).setAlpha(0.8));
 
-        texts.push(this.add.text(frame.x, frame.y - frame.displayHeight / 2 + frame.displayHeight * .37, this._getText('MISSION_CARD_CITY'), {
+        texts.push(this.add.text(frame.x, frame.y - frame.displayHeight * 0.5 + frame.displayHeight * .37, this._getText('MISSION_CARD_CITY'), {
             font: `${frame.displayWidth * .055}px ${getFont()}`,
             fill: '#0a0a0a',
         }).setOrigin(0.5).setAlpha(0.8));
 
-        texts.push(this.add.text(frame.x, frame.y - frame.displayHeight / 2 + frame.displayHeight * .44, this._getText(`LEVEL_${info.index}_NAME`), {
+        texts.push(this.add.text(frame.x, frame.y - frame.displayHeight * 0.5 + frame.displayHeight * .44, this._getText(`LEVEL_${info.index}_NAME`), {
             font: `${frame.displayWidth * .06175}px ${getFont()}`,
             fill: '#0a0a0a',
         }).setOrigin(0.5).setAlpha(0.8));
 
         if (currentLevelHiScore > 0) {
-            texts.push(this.add.text(frame.x, frame.y - frame.displayHeight / 2 + frame.displayHeight * .58, `${this._getText('MISSION_CARD_SCORE')} ${currentLevelHiScore}`, {
+            texts.push(this.add.text(frame.x, frame.y - frame.displayHeight * 0.5 + frame.displayHeight * .58, `${this._getText('MISSION_CARD_SCORE')} ${currentLevelHiScore}`, {
                 font: `${frame.displayWidth * .049}px ${getFont()}`,
                 fill: '#E2B80D',
             }).setOrigin(0.5).setAlpha(0.8));
         }
 
-        texts.push(this.add.text(frame.x, frame.y - frame.displayHeight / 2 + frame.displayHeight * .71, `${this._getText('MISSION_CARD_ENEMIES')} ${info.enemies}`, {
+        texts.push(this.add.text(frame.x, frame.y - frame.displayHeight * 0.5 + frame.displayHeight * .71, `${this._getText('MISSION_CARD_ENEMIES')} ${info.enemies}`, {
             font: `${frame.displayWidth * .051}px ${getFont()}`,
             fill: '#EA0000',
         }).setOrigin(0.5).setAlpha(0.8));
@@ -183,8 +183,8 @@ export class CampaignScene extends CommonScene {
 
         const stamp = this.add.sprite(frame.x, frame.y, 'stamp').setAlpha(0).setAngle(31).setScale(2.5);
 
-        const randX = frame.x + frame.displayWidth / 2 - frame.displayWidth * Phaser.Math.Between(25, 35) / 100;
-        const randY = frame.y + frame.displayWidth / 2 - frame.displayHeight * Phaser.Math.Between(26, 30) / 100;
+        const randX = frame.x + frame.displayWidth * 0.5 - frame.displayWidth * Phaser.Math.Between(25, 35) / 100;
+        const randY = frame.y + frame.displayWidth * 0.5 - frame.displayHeight * Phaser.Math.Between(26, 30) / 100;
 
         const timeline = this.add.timeline([
             {
@@ -211,7 +211,7 @@ export class CampaignScene extends CommonScene {
             {
                 at: first_anim_duration + first_anim_duration * .75,
                 run: () => {
-                    const start_button = this.add.text(frame.x, frame.y + frame.displayHeight / 2 - frame.displayHeight * .09, this._getText('MISSION_CARD_START'), {
+                    const start_button = this.add.text(frame.x, frame.y + frame.displayHeight * 0.5 - frame.displayHeight * .09, this._getText('MISSION_CARD_START'), {
                         font: `${frame.displayWidth * .105}px ${getFont()}`,
                         fill: '#51E04A',
                     })
@@ -255,7 +255,7 @@ export class CampaignScene extends CommonScene {
     _gameStart(info) {
         this.sounds.ready.play();
 
-        const bg_rect = this.add.rectangle(config.width / 2, config.height / 2, config.width, config.height, '0x000000', 0).setInteractive();
+        const bg_rect = this.add.rectangle(config.width * 0.5, config.height * 0.5, config.width, config.height, '0x000000', 0).setInteractive();
 
         this.tweens.add({
             targets: bg_rect,
