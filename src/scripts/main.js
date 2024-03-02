@@ -38,6 +38,7 @@ export const config = {
         ukr: 'Comfortaa-Regular',
     },
 
+    // TODO replace to separate property
     currentLevelScene: localStorage.getItem('currentLevelScene') ?? 1,
     currentLevelPlayer: localStorage.getItem('currentLevelPlayer') ?? 1,
     totalScore: localStorage.getItem('totalScore') ?? 0,
@@ -276,20 +277,20 @@ export function setEndpoints() {
     } else {
         if (document.body.clientWidth >= document.body.clientHeight) {
             if ((document.body.clientWidth / document.body.clientHeight) < (16 / 9)) {
-                screenEndpoints.left = (config.width / 2) - (((config.height / document.body.clientHeight) * document.body.clientWidth) / 2);
-                screenEndpoints.right = (config.width / 2) + (((config.height / document.body.clientHeight) * document.body.clientWidth) / 2);
+                screenEndpoints.left = (config.width * 0.5) - (((config.height / document.body.clientHeight) * document.body.clientWidth) * 0.5);
+                screenEndpoints.right = (config.width * 0.5) + (((config.height / document.body.clientHeight) * document.body.clientWidth) * 0.5);
                 screenEndpoints.top = 0;
                 screenEndpoints.bottom = config.height;
             } else {
                 screenEndpoints.left = 0;
                 screenEndpoints.right = config.width;
-                screenEndpoints.top = (config.height - ((config.width / config.height) / (document.body.clientWidth / document.body.clientHeight) * config.height)) / 2;
-                screenEndpoints.bottom = config.height - (config.height - ((config.width / config.height) / (document.body.clientWidth / document.body.clientHeight) * config.height)) / 2;
+                screenEndpoints.top = (config.height - ((config.width / config.height) / (document.body.clientWidth / document.body.clientHeight) * config.height)) * 0.5;
+                screenEndpoints.bottom = config.height - (config.height - ((config.width / config.height) / (document.body.clientWidth / document.body.clientHeight) * config.height)) * 0.5;
             }
 
         } else {
-            screenEndpoints.left = (config.width / 2) - (((config.height / document.body.clientHeight) * document.body.clientWidth) / 2);
-            screenEndpoints.right = (config.width / 2) + (((config.height / document.body.clientHeight) * document.body.clientWidth) / 2);
+            screenEndpoints.left = (config.width * 0.5) - (((config.height / document.body.clientHeight) * document.body.clientWidth) * 0.5);
+            screenEndpoints.right = (config.width * 0.5) + (((config.height / document.body.clientHeight) * document.body.clientWidth) * 0.5);
             screenEndpoints.top = 0;
             screenEndpoints.bottom = config.height;
         }
