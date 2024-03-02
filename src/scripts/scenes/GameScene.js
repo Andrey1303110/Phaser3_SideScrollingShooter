@@ -263,9 +263,9 @@ export class GameScene extends CommonScene {
     }
 
     _addProgressBar(){
-        this._progressBar = this.add.sprite(config.width/2, screenEndpoints.top + config.width * .0225, 'progressBar')
+        this._progressBar = this.add.sprite(config.width/2, screenEndpoints.top + config.width * .0225, 'progress_bar')
             .setAlpha(0.95);
-        this._progressBar.fillProgress = this.add.sprite(this._progressBar.x + this._progressBar.displayWidth * .1, this._progressBar.y + this._progressBar.displayHeight * .04, 'progressBarFill')
+        this._progressBar.fillProgress = this.add.sprite(this._progressBar.x + this._progressBar.displayWidth * .1, this._progressBar.y + this._progressBar.displayHeight * .04, 'progress_bar_fill')
             .setAlpha(0.95);
         
         this._progressBar.levelText = this.add.text(this._progressBar.x - this._progressBar.displayWidth * .38, this._progressBar.y - this._progressBar.displayHeight * .035, config.currentLevelPlayer, {
