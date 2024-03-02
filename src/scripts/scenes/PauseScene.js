@@ -19,7 +19,7 @@ export class PauseScene extends CommonScene {
 
         this.tweens.add({
             targets: this.sceneBG,
-            y: config.height/2,
+            y: config.height * 0.5,
             ease: 'Linear',
             duration: 750,
         })

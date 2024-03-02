@@ -226,7 +226,7 @@ export class CampaignScene extends CommonScene {
                         .on('pointerout', () => { start_button.setAlpha(0.7) });
                     texts.push(start_button);
                     
-                    const close_button = this.add.sprite(frame.x + frame.displayWidth/2, frame.y - frame.displayHeight/2, 'close')
+                    const close_button = this.add.sprite(frame.x + frame.displayWidth * 0.5, frame.y - frame.displayHeight * 0.5, 'close')
                         .setOrigin(1.3, -.35)
                         .setAlpha(0.7)
                         .setInteractive()

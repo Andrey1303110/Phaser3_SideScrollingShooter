@@ -62,7 +62,7 @@ export class GameScene extends CommonScene {
             y: screenEndpoints.bottom - config.joystick.radius - config.joystick.gap,
             radius: config.joystick.radius,
             base: this.add.circle(0, 0, config.joystick.radius).setStrokeStyle(3.5, 0x1a65ac).setAlpha(.75),
-            thumb: this.add.circle(0, 0, config.joystick.radius/2, 0xcccccc).setAlpha(0.5),
+            thumb: this.add.circle(0, 0, config.joystick.radius * 0.5, 0xcccccc).setAlpha(0.5),
             dir: '8dir',
         });
     }
@@ -310,7 +310,7 @@ export class GameScene extends CommonScene {
         config.currentLevelPlayer++;
         localStorage.setItem('currentLevelPlayer', config.currentLevelPlayer);
 
-        const levelTextLabel = this.add.text(config.width/2, config.height/2, config.currentLevelPlayer, {
+        const levelTextLabel = this.add.text(config.width * 0.5, config.height * 0.5, config.currentLevelPlayer, {
             font: `${config.width * .25}px ${getFont()}`,
             fill: '#FFFFFF',
         }).setOrigin(0.5).setAlpha(0);
