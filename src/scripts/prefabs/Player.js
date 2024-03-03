@@ -23,6 +23,7 @@ export class Player extends MovableObject {
                 delay: config.Weapons.fire.reload,
                 velocity: config.Weapons.fire.velocity,
                 scale: config.Weapons.fire.scale,
+                damage: config.Weapons.fire.damage,
                 origin: {x: 1, y: 0.5},
             }
         });

@@ -63,7 +63,7 @@ export class PauseScene extends CommonScene {
             y: y,
             ease: 'Linear',
             duration: tween_duration,
-            onComplete: ()=>{
+            onComplete: () => {
                 switch (command) {
                     case 'resume':
                         this.scene.resume(SCENE_NAMES.game);

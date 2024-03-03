@@ -17,7 +17,7 @@ export class Boom extends Phaser.GameObjects.Sprite {
 
         this.play(ANIMATION_NAME);
 
-        this.once(Phaser.Animations.Events.ANIMATION_COMPLETE, ()=>{
+        this.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
             this.destroy();
         });
     }

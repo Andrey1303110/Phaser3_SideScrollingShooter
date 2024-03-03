@@ -12,6 +12,7 @@ export class MovableObject extends Phaser.GameObjects.Sprite {
         this.body.enable = true;
         this.velocity = data.velocity;
         this.reward = data.reward;
+        this.damage = data.damage;
         this.move();
         this.scene.events.on(EVENTS.update, this.update, this);
     }
