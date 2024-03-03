@@ -69,7 +69,7 @@ export class GameTypeSelect extends CommonScene {
     }
 
     _createButtonSprite(spriteKey, y) {
-        const button = this.add.sprite(config.width / 2, config.height * y, spriteKey)
+        const button = this.add.sprite(config.width * 0.5, config.height * y, spriteKey)
         .setScale(5)
         .setAlpha(0)
         .setOrigin(.5)

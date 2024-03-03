@@ -9,7 +9,7 @@ export class DialogBoxController {
     constructor(scene) {
         this._scene = scene;
         
-        this._sceneBG = this._scene.add.rectangle(config.width / 2, config.height / 2, config.width, config.height, '0x000000', 0.6).setAlpha(0);
+        this._sceneBG = this._scene.add.rectangle(config.width * 0.5, config.height * 0.5, config.width, config.height, '0x000000', 0.6).setAlpha(0);
     }
 
     /**

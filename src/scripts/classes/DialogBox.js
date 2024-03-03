@@ -2,6 +2,7 @@ import { Resolver } from '../Resolver';
 import { DEPTH_LAYERS } from '../constants';
 import { config, getFont, screenEndpoints } from '../main';
 
+// TODO extends from container
 export class DialogBox {
     constructor (scene, dialogueData) {
         this._scene = scene;
@@ -78,7 +79,7 @@ export class DialogBox {
 
         this._person = this._scene.add.sprite(this._bg.x, this._bg.y, image).setDepth(DEPTH_LAYERS.DIALOGUES);
         this._person.y = this._bg.y - (this._person.height - this._bg.height) * 0.5;
-        this._person.x = this._bg.x - this._bg.width/2 + this._person.width * 0.2;
+        this._person.x = this._bg.x - this._bg.width * 0.5 + this._person.width * 0.2;
     }
 
     _createText(data) {
@@ -88,8 +89,8 @@ export class DialogBox {
         const vPadding = config.width * .03;
         const gPadding = config.width * .03;
 
-        const personEndPointX = this._person.x + this._person.width/2;
-        const bgEndPointX = this._bg.x + this._bg.width/2;
+        const personEndPointX = this._person.x + this._person.width * 0.5;
+        const bgEndPointX = this._bg.x + this._bg.width * 0.5;
 
         let content = this._scene.add.text(0, 0, text, { 
             font: `${fontSize}px ${getFont()}`,

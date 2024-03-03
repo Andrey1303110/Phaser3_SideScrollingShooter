@@ -38,6 +38,7 @@
         "FINAL_TEXT_LOSE": "ГЕРОЇ НЕ ВМИРАЮТЬ"
     },
     "Upgrade": {
+        "HEALTH_TITLE": "Живучість (очок):",
         "RELOAD_TITLE": "Перезарядка (мс):",
         "VELOCITY_TITLE": "Швидкість (м/с):",
         "SCALE_TITLE": "Розмір (%):",

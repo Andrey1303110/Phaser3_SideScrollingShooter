@@ -14,12 +14,12 @@ export class PauseScene extends CommonScene {
     }
 
     _createBG() {
-        this.black_bg = this.add.rectangle(config.width / 2, config.height / 2, config.width, config.height, '0x000000', 0);
-        this.sceneBG = this.add.sprite(config.width / 2, config.height * -1, 'pause_bg').setOrigin(.5);
+        this.black_bg = this.add.rectangle(config.width * 0.5, config.height * 0.5, config.width, config.height, '0x000000', 0);
+        this.sceneBG = this.add.sprite(config.width * 0.5, config.height * -1, 'pause_bg').setOrigin(.5);
 
         this.tweens.add({
             targets: this.sceneBG,
-            y: config.height/2,
+            y: config.height * 0.5,
             ease: 'Linear',
             duration: 750,
         })
@@ -56,14 +56,14 @@ export class PauseScene extends CommonScene {
 
     _toggleMenu(command){
         const tween_duration = 750;
-        const y = this.sceneBG.y < 0 ? screenEndpoints.top + this.sceneBG.displayHeight / 2 : config.height * -1;
+        const y = this.sceneBG.y < 0 ? screenEndpoints.top + this.sceneBG.displayHeight * 0.5 : config.height * -1;
 
         this.tweens.add({
             targets: this.sceneBG,
             y: y,
             ease: 'Linear',
             duration: tween_duration,
-            onComplete: ()=>{
+            onComplete: () => {
                 switch (command) {
                     case 'resume':
                         this.scene.resume(SCENE_NAMES.game);

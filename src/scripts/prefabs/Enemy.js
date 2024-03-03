@@ -4,7 +4,7 @@ import { MovableObject } from '/src/scripts/prefabs/MovableObject';
 export class Enemy extends MovableObject {
     static generateAttr(scene) {
         const x = screenEndpoints.right + config.width * .25;
-        const y = Phaser.Math.Between(screenEndpoints.top + scene.maxEnemyFrameHeight / 2, screenEndpoints.bottom - scene.maxEnemyFrameHeight / 2);
+        const y = Phaser.Math.Between(screenEndpoints.top + scene.maxEnemyFrameHeight * 0.5, screenEndpoints.bottom - scene.maxEnemyFrameHeight * 0.5);
 
         let typeNums = 0;
 
@@ -79,11 +79,15 @@ export class Enemy extends MovableObject {
     }
 
     _setWeapon(){
+        const type = this._enemyType;
+        const enemyWeapon = config.Enemies[type].weapon
+
         this.weapon = {
-            texture: config.Enemies[this._enemyType].weapon,
-            delay: config.Weapons[config.Enemies[this._enemyType].weapon].reload,
-            velocity: config.Weapons[config.Enemies[this._enemyType].weapon].velocity,
-            scale: config.Weapons[config.Enemies[this._enemyType].weapon].scale,
+            texture: config.Enemies[type].weapon,
+            delay: config.Weapons[enemyWeapon].reload,
+            velocity: config.Weapons[enemyWeapon].velocity,
+            scale: config.Weapons[enemyWeapon].scale,
+            damage: config.Weapons[enemyWeapon].damage ?? 100,
             origin: {x: -1, y: 0.5},
         }
     }
