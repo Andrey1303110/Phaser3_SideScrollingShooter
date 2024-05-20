@@ -17,13 +17,15 @@ export class Boom extends Phaser.GameObjects.Sprite {
 
         this.play(ANIMATION_NAME);
 
-        this.once(Phaser.Animations.Events.ANIMATION_COMPLETE, ()=>{
+        this.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
             this.destroy();
         });
     }
 
     _createAnimation() {
-        if (this.scene.anims.anims.entries[ANIMATION_NAME]) return;
+        if (this.scene.anims.anims.entries[ANIMATION_NAME]) {
+            return;
+        }
 
         const frames = this.scene.anims.generateFrameNames(FRAME_NAME,{
             prefix: FRAME_NAME,

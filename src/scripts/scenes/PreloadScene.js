@@ -27,6 +27,7 @@ export class PreloadScene extends CommonScene {
     }
 
     _preloadDialogues() {
+        this.load.json(`dialogues0`, `./assets/dialogues/${config.lang}/0.json`)
         config.Levels.forEach(level => this.load.json(`dialogues${level.index}`, `./assets/dialogues/${config.lang}/${level.index}.json`));
     }
 

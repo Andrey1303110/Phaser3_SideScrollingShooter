@@ -1,9 +1,10 @@
 import { DialogBoxController } from '../classes/DialogBoxController';
 import { SCENE_NAMES } from '../constants';
-import { getFont, delay, config, screenData } from '../main';
+import { getFont, delay, config, screenData, delayInMSec } from '../main';
 import { CommonScene } from './CommonScene';
 
-const INIT_DELAY = 5000;
+const INIT_DIALOG_DELAY = 1000;
+const BRIEF_DIALOG_DELAY = 2500;
 
 const LOSSES_MAP = {
     jet: {
@@ -25,12 +26,6 @@ export class CampaignScene extends CommonScene {
         super(SCENE_NAMES.campaign);
     }
 
-    init() {
-        super.init();
-
-        this._mapDots = [];
-    }
-
     preload() {
         this._createBg(); // needs to smooth transition between scenes
         this._preloadDictateTextAudio();
@@ -44,13 +39,10 @@ export class CampaignScene extends CommonScene {
         this._createReturnButton();
         this._createControllers();
         this._createAvailableMoney();
-
-        await delay(INIT_DELAY);
-        await this._dialogBoxController.flowShow(config.currentLevelScene);
+        this._createInitialDialogs(); // todo as initial dialogs
     }
 
     _createMap() {
-        // TODO подумать над тем как скейлить карту в зависимости от height/width ratio
         this._map = this.add.image(this._center.x, this._center.y, 'map')
             .setAlpha(.65)
             .setOrigin(.5)
@@ -95,7 +87,10 @@ export class CampaignScene extends CommonScene {
             params.scale = 0.75;
         } else {
             dot.setAlpha(1)
-                .on('pointerdown', () => { this.sounds.select.play({ volume: .33 }) });
+                .on('pointerdown', () => { 
+                    this.sounds.select.play({ volume: .33 });
+                    this._startDialogs(level.index, BRIEF_DIALOG_DELAY);
+                });
             dot.active = true;
 
             if (config.currentLevelScene > level.index) {
@@ -106,8 +101,6 @@ export class CampaignScene extends CommonScene {
         }
 
         this._createDotTween(dot, params);
-
-        this._mapDots.push(dot);
     }
 
     _createDotTween(dot, params) {
@@ -135,12 +128,6 @@ export class CampaignScene extends CommonScene {
         });
         this.sounds.fire_effect.play({ volume: .1 })
         this.sounds.fire_effect.loop = true;
-    }
-
-    _selectLevel({active, info}) {
-        if (!active) return;
-        
-        this._createLevelCard(info);
     }
 
     _createLevelCard(info) {
@@ -234,8 +221,8 @@ export class CampaignScene extends CommonScene {
                         .on('pointerout', () => { start_button.setAlpha(0.7) });
                     texts.push(start_button);
                     
-                    const close_button = this.add.image(frame.x + frame.displayWidth * 0.5, frame.y - frame.displayheight * 0.5, 'close')
-                        .setOrigin(1.3, -.35)
+                    const close_button = this.add.image(frame.x + frame.displayWidth * 0.5 - config.width * 0.033, frame.y - frame.displayHeight * 0.5 + config.width * 0.037, 'close')
+                        .setOrigin(0.5)
                         .setAlpha(0.7)
                         .setInteractive()
                         .on('pointerdown', () => { this._cardClose({ bg_rect, frame, texts, stamp, close_button }) })
@@ -246,32 +233,6 @@ export class CampaignScene extends CommonScene {
         ]);
 
         timeline.play();
-    }
-
-    _cardClose(data) {
-        this.sounds.click.play({ volume: .2 });
-
-        data.bg_rect.destroy();
-        data.frame.destroy();
-        data.stamp.destroy();
-        data.close_button.destroy();
-        data.texts.forEach(element => {
-            element.destroy();
-        });
-    }
-
-    _gameStart(info) {
-        this.sounds.ready.play();
-
-        const bg_rect = this.add.rectangle(this._center.x, this._center.y, config.width, config.height, '0x000000', 0).setInteractive();
-
-        this.tweens.add({
-            targets: bg_rect,
-            fillAlpha: 1,
-            ease: 'Linear',
-            duration: this.sounds.ready.duration * 1000 * .7,
-            onComplete: () => this.scene.start(SCENE_NAMES.game, info),
-        });
     }
 
     _createLosses() {
@@ -306,20 +267,13 @@ export class CampaignScene extends CommonScene {
         this._dialogBoxController = new DialogBoxController(this);
     }
 
-    _preloadDictateTextAudio() {
-        for (let index = 0; index < config.Levels.length; index++) {
-            const level = config.Levels[index];
-            const texts = this.scene.scene.cache.json.get(`dialogues${level.index}`);
 
-            if (!texts) {
-                return;
-            }
-
-            for (let j = 0; j < texts.length; j++) {
-                const name = `level${level.index}_text${j}_${config.lang}`;
-                this.load.audio(name, `./assets/voices/${config.lang}/${level.index}/${j}.mp3`);
-            }
+    _createInitialDialogs() {
+        const isInitial = config.currentLevelScene === 1 && !localStorage.getItem('isFirstTimePlay');
+        if (!isInitial) {
+            return;
         }
+        this._startDialogs(0); 
     }
 
     _createSounds() {
@@ -335,5 +289,59 @@ export class CampaignScene extends CommonScene {
             whoosh_map: this.sound.add('whoosh_map'),
             fire_effect: this.sound.add('fire_effect'),
         };
+    }
+
+    _cardClose(data) {
+        this.sounds.click.play({ volume: .2 });
+
+        data.bg_rect.destroy();
+        data.frame.destroy();
+        data.stamp.destroy();
+        data.close_button.destroy();
+        data.texts.forEach(element => {
+            element.destroy();
+        });
+    }
+
+    _gameStart(info) {
+        this.sounds.ready.play();
+
+        const bg_rect = this.add.rectangle(this._center.x, this._center.y, config.width, config.height, '0x000000', 0).setInteractive();
+
+        this.tweens.add({
+            targets: bg_rect,
+            fillAlpha: 1,
+            ease: 'Linear',
+            duration: this.sounds.ready.duration * 1000 * .7,
+            onComplete: () => this.scene.start(SCENE_NAMES.game, info),
+        });
+    }
+
+    _preloadDictateTextAudio() {
+        for (let i = 0; i < config.Levels.length; i++) {
+            const texts = this.scene.scene.cache.json.get(`dialogues${i}`)
+
+            if (!texts) {
+                return;
+            }
+
+            for (let j = 0; j < texts.length; j++) {
+                const name = `level${i}_text${j}_${config.lang}`;
+                this.load.audio(name, `./assets/voices/${config.lang}/${i}/${j}.mp3`);
+            }
+        }
+    }
+
+    _selectLevel({active, info}) {
+        if (!active) {
+            return;
+        }
+        
+        this._createLevelCard(info);
+    }
+
+    async _startDialogs(levelIndex, delay = INIT_DIALOG_DELAY) {
+        await delayInMSec(delay);
+        await this._dialogBoxController.flowShow(levelIndex);
     }
 }

@@ -1,5 +1,5 @@
 import { DialogBox } from './DialogBox';
-import { config, delay } from '../main';
+import { config, delayInMSec } from '../main';
 import { DEPTH_LAYERS } from '../constants';
 
 const MIN_SHOW_DURATION = 2500;
@@ -18,8 +18,10 @@ export class DialogBoxController {
     async flowShow(level) {
         this._setData(level);
 
-        if (!this._data) return;
-
+        if (!this._data) {
+            return;
+        }
+        
         await this._toggleShowingBg(true);
 
         const dialogsCount = this._data.length;
@@ -32,7 +34,7 @@ export class DialogBoxController {
 
             const isLast = dialogData === this._data[dialogsCount-1];
             if (isLast) {
-                await delay(SHOW_DELAY);
+                await delayInMSec(SHOW_DELAY);
             }
         }
 
@@ -80,7 +82,7 @@ export class DialogBoxController {
         sound.play();
         await Promise.race([
             dialogBox.resolver.wait(),
-            delay(duration),
+            delayInMSec(duration),
         ]);
         sound.stop();
         

@@ -13,8 +13,8 @@ export class GameScene extends CommonScene {
     init(data) {
         super.init();
 
-        if (localStorage.getItem('firstTimePlay') !== '0') {
-            localStorage.setItem('firstTimePlay', '0');
+        if (localStorage.getItem('isFirstTimePlay') !== 0) {
+            localStorage.setItem('isFirstTimePlay', 0);
         }
         this.info = data;
         this._currentLevelScene = this.info.index;
@@ -37,7 +37,7 @@ export class GameScene extends CommonScene {
         this._addMobileButtons();
         this._addJoystick();
         this._addFireButton();
-        if (!this.info?.unlim) {
+        if (!this.info?.isUnlim) {
             this._addProgressBar();
         }
     }
@@ -88,7 +88,7 @@ export class GameScene extends CommonScene {
     }
 
     _createBg(data) {
-        const bg_image = data?.unlim ? `bg${Phaser.Math.Between(1, config.Levels.length)}` : `bg${data.index}`;
+        const bg_image = data?.isUnlim ? `bg${Phaser.Math.Between(1, config.Levels.length)}` : `bg${data.index}`;
 
         const real_height = this.textures.list[bg_image].source[0].height;
         const scale = config.height/real_height;
@@ -112,7 +112,7 @@ export class GameScene extends CommonScene {
             fill: '#EA0000',
         }).setOrigin(1, 0).setAlpha(.75);
 
-        if (this.info?.unlim) {
+        if (this.info?.isUnlim) {
             this.hiScoreText = this.add.text(this._center.x, screenData.top + config.width * .01, `${this._getText('TOP_HIGH_SCORE')} ${localStorage.getItem('unlimHiScores')}`, {
                 font: `${config.width * .03}px ${getFont()}`,
                 fill: '#EA0000',
@@ -157,7 +157,7 @@ export class GameScene extends CommonScene {
         }
 
         if (source !== this._player && target !== this._player) {
-            if (!this.info?.unlim) {
+            if (!this.info?.isUnlim) {
                 let losses_name = target.texture.key;
                 if (target.texture.key === 'strategic_jet') {
                     losses_name = 'jet';
@@ -170,7 +170,7 @@ export class GameScene extends CommonScene {
             let reward = Number((target.reward * Math.pow(config.level.scoreCof, this._currentLevelScene - 1)).toFixed(0));
             this._currentScore += reward;
 
-            if (!this.info?.unlim) {
+            if (!this.info?.isUnlim) {
                 const last_score = Number(config.totalScore);
                 localStorage.setItem('totalScore', last_score + reward);
                 config.totalScore = last_score + reward;
@@ -204,7 +204,8 @@ export class GameScene extends CommonScene {
         }).setOrigin(0.5).setAlpha(0).setDepth(DEPTH_LAYERS.MAX);
         this.game.sound.stopAll();
 
-        if (this._player.active) {
+        const isWin = this._player.active;
+        if (isWin) {
             this.sounds.win.play();
             final_text.text = this._getText('FINAL_TEXT_WIN');
 
@@ -222,7 +223,7 @@ export class GameScene extends CommonScene {
             final_text.text = this._getText('FINAL_TEXT_LOSE');
             this.sounds.died.play();
 
-            if (this.info.unlim) {
+            if (this.info.isUnlim) {
                 if (localStorage.getItem('unlimHiScores') < this._currentScore) {
                     localStorage.setItem('unlimHiScores', this._currentScore);
                 }
@@ -237,11 +238,7 @@ export class GameScene extends CommonScene {
             ease: 'Linear',
             duration: this.sounds.died.duration * 1000 * .75,
             onComplete: () => {
-                if (this.info.unlim) {
-                    this.scene.start(SCENE_NAMES.main);
-                } else {
-                    this.scene.start(SCENE_NAMES.campaign);
-                }
+                this.scene.start(this.info.isUnlim ? SCENE_NAMES.main : SCENE_NAMES.campaign);
                 this.scene.stop();
             }
         })
@@ -277,7 +274,7 @@ export class GameScene extends CommonScene {
     }
 
     _updateProgressBar(){
-        if (this.info?.unlim) {
+        if (this.info?.isUnlim) {
             return;
         }
         let score = {

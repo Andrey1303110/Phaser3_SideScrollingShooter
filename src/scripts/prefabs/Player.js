@@ -155,10 +155,14 @@ export class Player extends MovableObject {
         }
 
         if (buttons.left.isDown) {
-            if (this.x < this.x - this.velocity/config.fps) return;
+            if (this.x < this.x - this.velocity) { 
+                return;
+            }
             this.body.setVelocityX(-this.velocity * (cof / 100));
         } else if (buttons.right.isDown) {
-            if (this.x > this.x + this.velocity/config.fps) return;
+            if (this.x > this.x + this.velocity) { 
+                return;
+            }
             this.body.setVelocityX(this.velocity * (cof / 100));
         }
 
@@ -167,10 +171,14 @@ export class Player extends MovableObject {
                 this._tweenFly.paused = true;
             }
             if (buttons.up.isDown) {
-                if (this.y < this.y - this.velocity/config.fps) return;
+                if (this.y < this.y - this.velocity) { 
+                    return;
+                }
                 this.body.setVelocityY(-this.velocity * (cof / 100));
             } else if (buttons.down.isDown) {
-                if (this.y > this.y + this.velocity/config.fps) return;
+                if (this.y > this.y + this.velocity) { 
+                    return;
+                }
                 this.body.setVelocityY(this.velocity * (cof / 100));
             }
         }

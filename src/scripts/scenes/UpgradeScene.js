@@ -124,7 +124,7 @@ export class UpgradeScene extends CommonScene {
                 ease: 'Linear',
                 alpha: .75,
                 duration: 450,
-                onComplete: ()=>{
+                onComplete: () => {
                     if (i >= weaponStats.length - 1) {
                         this.tweens.add({
                             targets: infoText,
@@ -236,7 +236,7 @@ export class UpgradeScene extends CommonScene {
             ease: 'Linear',
             alpha: .5,
             duration: 1000,
-            onComplete: ()=>{ 
+            onComplete: () => { 
                 this._clicked = false;
                 for (let i = 0; i < Object.keys(config.Weapons.fire).length; i++) {
                     const name = Object.keys(config.Weapons.fire)[i];

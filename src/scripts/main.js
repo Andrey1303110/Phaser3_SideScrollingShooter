@@ -255,7 +255,7 @@ export const config = {
         enemiesDelay: 1500
     },
 
-    firstTimePlay: localStorage.getItem('firstTimePlay') ?? '1',
+    isFirstTimePlay: localStorage.getItem('isFirstTimePlay') ?? 1,
 };
 
 export const game = new Phaser.Game(config);
@@ -353,7 +353,7 @@ export function setLang(lang) {
     localStorage.setItem('lang', lang);
 }
 
-if (localStorage.getItem('firstTimePlay') !== '0') {
+if (localStorage.getItem('isFirstTimePlay') !== 0) {
     initHiScores();
     initLosses();
     initUpgardeLevels();
@@ -372,7 +372,7 @@ export function rgbToHex(colors) {
     return '0x' + ((1 << 24) + (colors.r << 16) + (colors.g << 8) + colors.b).toString(16).slice(1);
 }
 
-export const delay = (ms) => {
+export const delayInMSec = (ms) => {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
