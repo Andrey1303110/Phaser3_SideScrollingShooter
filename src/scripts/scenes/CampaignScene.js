@@ -306,6 +306,22 @@ export class CampaignScene extends CommonScene {
         this._dialogBoxController = new DialogBoxController(this);
     }
 
+    _preloadDictateTextAudio() {
+        for (let index = 0; index < config.Levels.length; index++) {
+            const level = config.Levels[index];
+            const texts = this.scene.scene.cache.json.get(`dialogues${level.index}`);
+
+            if (!texts) {
+                return;
+            }
+
+            for (let j = 0; j < texts.length; j++) {
+                const name = `level${level.index}_text${j}_${config.lang}`;
+                this.load.audio(name, `./assets/voices/${config.lang}/${level.index}/${j}.mp3`);
+            }
+        }
+    }
+
     _createSounds() {
         if (this.sounds) {
             return;

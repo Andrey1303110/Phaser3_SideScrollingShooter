@@ -22,11 +22,28 @@ export class DialogBoxController {
 
         await this._toggleShowingBg(true);
 
-            const lastElement = this._data[this._data.length-1];
-            if (data !== lastElement) await delay(SHOW_DELAY);
-        };
+        const dialogsCount = this._data.length;
+        this._addSoundsToScene(level, dialogsCount);
+
+        for (let i = 0; i < dialogsCount; i++) {
+            const dialogData = this._data[i];
+            const dialogBox = new DialogBox(this._scene, dialogData);
+            await this._playShowingDialog(dialogBox, level, i);
+
+            const isLast = dialogData === this._data[dialogsCount-1];
+            if (isLast) {
+                await delay(SHOW_DELAY);
+            }
+        }
 
         await this._toggleShowingBg(false);
+    }
+
+    _addSoundsToScene(levelIndex, dialogsCount) {
+        for (let i = 0; i < dialogsCount; i++) {
+            const name = `level${levelIndex}_text${i}_${config.lang}`;
+            this._scene.sounds[name] = this._scene.sound.add(name);
+        }
     }
 
     async _toggleShowingBg(value) {
@@ -53,13 +70,19 @@ export class DialogBoxController {
         }
     }
 
-    async _playShowingDialog(dialogBox) {
+    async _playShowingDialog(dialogBox, levelIndex, i) {
         await dialogBox.showEnter();
         
+        const soundName = `level${levelIndex}_text${i}_${config.lang}`;
+        const sound = this._scene.sounds[soundName];
+        const duration = Math.max(sound.duration * 1000, MIN_SHOW_DURATION);
+    
+        sound.play();
         await Promise.race([
             dialogBox.resolver.wait(),
-            delay(SHOW_DUARTION),
+            delay(duration),
         ]);
+        sound.stop();
         
         await dialogBox.showExit();
     }
