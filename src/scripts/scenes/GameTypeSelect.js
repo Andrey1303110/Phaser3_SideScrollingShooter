@@ -32,11 +32,10 @@ export class GameTypeSelect extends CommonScene {
         super.init();
 
         this._buttons = [];
-        this._buttons_num = 0;
     }
 
     create() {
-        this._createBG();
+        this._createBg();
         this._createSounds();
         this._createButtons();
     }
@@ -52,8 +51,6 @@ export class GameTypeSelect extends CommonScene {
     }
 
     async _createButton(data){
-        this._buttons_num++;
-
         const button = this._createButtonSprite(data.sprite, data.y);
         this._createButtonText(button, data.text);
         await this._createButtonTweens(button);
@@ -62,29 +59,30 @@ export class GameTypeSelect extends CommonScene {
 
     _createButtonText(button, textKey) {
         const textStyle = {
-            font: `${config.width*.03}px ${getFont()}`,
+            font: `${config.width * .03}px ${getFont()}`,
             fill: '#f0f0f0',
         };
         button.buttonText = this.add.text(button.x, button.y, this._getText(textKey), textStyle).setScale(3).setOrigin(0.5).setAlpha(0);
     }
 
     _createButtonSprite(spriteKey, y) {
-        const button = this.add.sprite(config.width / 2, config.height * y, spriteKey)
-        .setScale(5)
-        .setAlpha(0)
-        .setOrigin(.5)
-        .setInteractive();
+        const button = this.add.image(this._center.x, config.height * y, spriteKey)
+            .setOrigin(.5)
+            .setScale(5)
+            .setAlpha(0)
+            .setInteractive();
 
         this._buttons.push(button);
         return button;
     }
 
     async _createButtonTweens(button) {
-        Promise.race([
+        const delay = 375 * this._buttons.length;
+        Promise.all([
             new Promise(resolve => {
                 this.tweens.add({
                     targets: [ button, button.buttonText ],
-                    delay: 375 * this._buttons_num,
+                    delay,
                     alpha: .675,
                     scale: .65,
                     ease: 'Linear',
@@ -96,7 +94,7 @@ export class GameTypeSelect extends CommonScene {
             new Promise(resolve => {
                 this.tweens.add({
                     targets: button.buttonText,
-                    delay: 375 * this._buttons_num,
+                    delay,
                     alpha: .9,
                     scale: 1,
                     ease: 'Linear',

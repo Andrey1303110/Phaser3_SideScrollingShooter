@@ -62,11 +62,13 @@ export class DialogBox {
         const x = config.width * 0.5;
         const y = config.height * 0.72;
 
-        this._bg = this._scene.add.sprite(x, y, 'speechBg').setDepth(DEPTH_LAYERS.DIALOGUES);
+        this._bg = this._scene.add.image(x, y, 'speechBg').setDepth(DEPTH_LAYERS.DIALOGUES);
     }
 
     _createSkipButton() {
-        this._skipButton = this._scene.add.sprite(screenEndpoints.right, this._bg.y, 'next')
+        const y = this._bg.y + this._bg.height * 0.5;
+
+        this._skipButton = this._scene.add.image(screenData.right, y, 'next')
             .setAlpha(0)
             .setOrigin(1, 0.5)
             .setDepth(DEPTH_LAYERS.DIALOGUES)

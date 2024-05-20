@@ -1,5 +1,5 @@
 import { EVENTS, SCENE_NAMES } from '../constants';
-import { config, screenEndpoints } from '/src/scripts/main';
+import { config, screenData } from '/src/scripts/main';
 import { Fires } from '/src/scripts/prefabs/Fires';
 import { MovableObject } from '/src/scripts/prefabs/MovableObject';
 
@@ -12,8 +12,8 @@ export class Player extends MovableObject {
     constructor(data) {
         super({
             scene: data.scene,
-            x: screenEndpoints.left,
-            y: config.height / 2,
+            x: screenData.left,
+            y: config.height * 0.5,
             texture: PLAYER_TEXTURE_NAME,
             frame: FIRST_PLAYER_FRAME,
             velocity: config.Player.velocity,
@@ -118,16 +118,16 @@ export class Player extends MovableObject {
     move() {
         this.body.setVelocity(0);
 
-        if (this.y < screenEndpoints.top + this.displayHeight / 1.5) {
-            this.y = screenEndpoints.top + this.displayHeight / 1.5;
-        } else if (this.y > screenEndpoints.bottom - this.displayHeight / 1.5) {
-            this.y = screenEndpoints.bottom - this.displayHeight / 1.5;
+        if (this.y < screenData.top + this.displayHeight / 1.5) {
+            this.y = screenData.top + this.displayHeight / 1.5;
+        } else if (this.y > screenData.bottom - this.displayHeight / 1.5) {
+            this.y = screenData.bottom - this.displayHeight / 1.5;
         }
 
-        if (this.x < screenEndpoints.left + this.displayWidth / 1.5) {
-            this.x = screenEndpoints.left + this.displayWidth / 1.5;
-        } else if (this.x > screenEndpoints.right - this.displayWidth / 1.5) {
-            this.x = screenEndpoints.right - this.displayWidth / 1.5;
+        if (this.x < screenData.left + this.displayWidth / 1.5) {
+            this.x = screenData.left + this.displayWidth / 1.5;
+        } else if (this.x > screenData.right - this.displayWidth / 1.5) {
+            this.x = screenData.right - this.displayWidth / 1.5;
         }
 
         this.handling(); 

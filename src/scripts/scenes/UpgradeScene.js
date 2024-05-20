@@ -1,5 +1,5 @@
 import { SCENE_NAMES } from '../constants';
-import { getFont, config, screenEndpoints, setWeaponConf } from '../main';
+import { getFont, config, screenData, setWeaponConf } from '../main';
 import { CommonScene } from './CommonScene';
 import { Player } from '/src/scripts/prefabs/Player';
 
@@ -27,9 +27,9 @@ export class UpgradeScene extends CommonScene {
     }
 
     create() {
-        this._createBG();
+        this._createBg();
         this._createPlayer();
-        this._addReturnButton();
+        this._createReturnButton();
         this._createSounds();
         this._createAvailableMoney();
     }
@@ -58,7 +58,7 @@ export class UpgradeScene extends CommonScene {
 
             this.tweens.add({
                 targets: plus_symbol,
-                y: screenEndpoints.top,
+                y: screenData.top,
                 alpha: 0,
                 ease: 'Linear',
                 duration: data.duration,
@@ -90,10 +90,12 @@ export class UpgradeScene extends CommonScene {
             fill: '#000000',
         };
 
-        const infoText = this.add.text(config.width/2, screenEndpoints.bottom - config.height * .075, this._getText('BOTTOM_DESCRIPTION'), style).setOrigin(.5).setAlpha(0);
+        const infoText = this.add.text(this.game.scale.width * 0.5, this.game.scale.height * 0.75, this._getText('BOTTOM_DESCRIPTION'), style)
+            .setAlpha(0)
+            .setOrigin(.5);
 
         const weaponStats = Object.keys(config.Weapons.fire);
-        const height = config.height / 2.5;
+        const height = this._center.y;
 
         for (let i = 0; i < weaponStats.length; i++) {
             const key = weaponStats[i];
@@ -106,14 +108,14 @@ export class UpgradeScene extends CommonScene {
             const value = (Math.round(config.Weapons.fire[key] * multiplier) / multiplier * multiplier).toFixed(0);
 
             const x = config.width * .57;
-            const y = (config.height/2 - height/2) + (height / weaponStats.length) * i;
+            const y = (this._center.y - height * 0.5) + (height / weaponStats.length) * i;
 
             const level = localStorage.getItem(`playerWeapon_${key}`);
             const statText = `${this._getText(STATS_MAP[key]['text'])} ${value}`;
             const levelText = `${this._getText('LEVEL_TEXT')} ${level}`;
 
             this.statsText[key] = this.add.text(x, y, statText, style).setOrigin(1, 0).setAlpha(0);
-            this.statsIcon[key] = this.add.sprite(x + config.width * .06, y, key).setOrigin(0.5, 0.15).setAlpha(0).setDisplaySize(config.width * .045, config.width * .045);
+            this.statsIcon[key] = this.add.image(x + config.width * .06, y, key).setOrigin(0.5, 0.15).setAlpha(0).setDisplaySize(config.width * .045, config.width * .045);
             this.statsLevel[key] = this.add.text(x + config.width * .12, y, levelText, style).setOrigin(0, 0).setAlpha(0);
 
             this.tweens.add({
@@ -159,7 +161,7 @@ export class UpgradeScene extends CommonScene {
     }
 
     _createUpgredeButton(data){
-        this.buttons[data.key] = this.add.sprite(data.x + config.width * .3, data.y, 'button_campaign')
+        this.buttons[data.key] = this.add.image(data.x + config.width * .3, data.y, 'button_campaign')
             .setOrigin(0.5, 0.125)
             .setScale(.33)
             .setInteractive()
@@ -176,12 +178,12 @@ export class UpgradeScene extends CommonScene {
         };
         this.buttons[data.key].textCost = this.add.text(this.buttons[data.key].x, this.buttons[data.key].y, '1', style).setOrigin(0.5, -0.125);
 
-        this.buttons[data.key].crystal = this.add.sprite(this.buttons[data.key].x, this.buttons[data.key].y, 'ruby')
+        this.buttons[data.key].crystal = this.add.image(this.buttons[data.key].x, this.buttons[data.key].y, 'ruby')
             .setOrigin(0.5, .05)
             .setScale(.15);
 
-        this.buttons[data.key].textCost.x -= this.buttons[data.key].crystal.displayWidth/2;
-        this.buttons[data.key].crystal.x += this.buttons[data.key].crystal.displayWidth/2;
+        this.buttons[data.key].textCost.x -= this.buttons[data.key].crystal.displayWidth * 0.5;
+        this.buttons[data.key].crystal.x += this.buttons[data.key].crystal.displayWidth * 0.5;
 
         this.buttons[data.key].clicked = false;
 
@@ -246,18 +248,13 @@ export class UpgradeScene extends CommonScene {
         this.scene.createUpgradeAnimation(this.name, value);
     }
 
-    _addReturnButton(){
-        this.add.sprite(screenEndpoints.left + config.width * .015, screenEndpoints.top + config.width * .015, 'return')
-            .setAlpha(0.65)
-            .setInteractive()
-            .on('pointerdown', ()=>{this.scene.start(SCENE_NAMES.main)}, this);
-    }
 
     _createSounds() {
         if (this.sounds) {
             return;
         }
         this.sounds = {
+            click: this.sound.add('click'),
             wings: this.sound.add('wings'),
             upgrade: this.sound.add('upgrade'),
             error: this.sound.add('error'),

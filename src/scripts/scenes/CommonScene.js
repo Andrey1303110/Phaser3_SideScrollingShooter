@@ -1,5 +1,5 @@
 import { SCENE_NAMES } from '../constants';
-import { getFont, getSceneTexts, config, setEndpoints, screenEndpoints } from '../main';
+import { getFont, getSceneTexts, config, screenData } from '../main';
 
 export class CommonScene extends Phaser.Scene {
     constructor(name) {
@@ -9,7 +9,9 @@ export class CommonScene extends Phaser.Scene {
     }
 
     init() {
-        if(!this.scale.isFullscreen) {
+        this._createCenter();
+
+        if (!this.scale.isFullscreen) {
             switch (this.scene.key) {
                 case SCENE_NAMES.boot:
                 case SCENE_NAMES.preload:
@@ -18,11 +20,16 @@ export class CommonScene extends Phaser.Scene {
             this.scale.startFullscreen();
         }
 
-        setEndpoints();
-        //TODO
-        this.game.sound.stopAll();
-
+        // setEndpoints();
+        //TODO remove endpoints
         this._createTranslations();
+    }
+
+    _createCenter() {
+        this._center = {
+            x: this.scale.width * 0.5,
+            y: this.scale.height * 0.5,
+        }
     }
 
     preload() {
@@ -35,20 +42,37 @@ export class CommonScene extends Phaser.Scene {
             fill: '#FFFFFF',
         };
 
-        this.moneyIcon = this.add.sprite(screenEndpoints.right - config.height * .075, screenEndpoints.top + config.height * .075, 'ruby')
+        this._moneyIcon = this.add.image(screenData.right - config.height * .075, screenData.top + config.height * .075, 'ruby')
             .setScale(.25)
             .setInteractive()
             .on('pointerdown', ()=> this.scene.start(SCENE_NAMES.upgrade));
-        this.moneyText = this.add.text(this.moneyIcon.x - this.moneyIcon.displayWidth, this.moneyIcon.y, config.money, style).setOrigin(.5).setAlpha(1);
+        this._moneyValueText = this.add.text(this._moneyIcon.x - this._moneyIcon.displayWidth, this._moneyIcon.y, config.money, style)
+            .setOrigin(.5)
+            .setAlpha(1);
     }
 
-    _createBG() {
-        const bg = this.add.sprite(config.width / 2, config.height / 2, 'bg').setAlpha(.925).setOrigin(.5).setInteractive();
+    _createBg() {
+        const bg = this.add.image(this._center.x, this._center.y, 'bg')
+            .setAlpha(.925)
+            .setOrigin(.5)
+            .setInteractive();
 
         const scaleX = this.cameras.main.width / bg.width;
         const scaleY = this.cameras.main.height / bg.height;
         const scale = Math.max(scaleX, scaleY);
         bg.setScale(scale).setScrollFactor(0);
+    }
+
+    _createReturnButton() {
+        const button = this.add.image(screenData.left + config.width * 0.03, screenData.top + config.height * 0.05, 'return')
+            .setAlpha(0.65)
+            .setInteractive()
+            .on('pointerdown', () => {
+                this.scene.start(SCENE_NAMES.main);
+                this.sounds.click.play({ volume: .2 });
+            });
+
+        window.button = button
     }
 
     _createTranslations() {

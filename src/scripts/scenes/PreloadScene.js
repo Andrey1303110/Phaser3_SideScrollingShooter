@@ -8,8 +8,8 @@ export class PreloadScene extends CommonScene {
         super(SCENE_NAMES.preload);
     }
 
-    preload(){
-        this._createBG();
+    async preload(){
+        this._createBg();
         this._preloadTexts();
         this._preloadResources();
         this._preloadPlugins();

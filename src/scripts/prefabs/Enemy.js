@@ -1,10 +1,10 @@
-import { config, screenEndpoints } from '/src/scripts/main';
+import { config, screenData } from '/src/scripts/main';
 import { MovableObject } from '/src/scripts/prefabs/MovableObject';
 
 export class Enemy extends MovableObject {
     static generateAttr(scene) {
-        const x = screenEndpoints.right + config.width * .25;
-        const y = Phaser.Math.Between(screenEndpoints.top + scene.maxEnemyFrameHeight / 2, screenEndpoints.bottom - scene.maxEnemyFrameHeight / 2);
+        const x = screenData.right + config.width * .25;
+        const y = Phaser.Math.Between(screenData.top + scene.maxEnemyFrameHeight * 0.5, screenData.bottom - scene.maxEnemyFrameHeight * 0.5);
 
         let typeNums = 0;
 

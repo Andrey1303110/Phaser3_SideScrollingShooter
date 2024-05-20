@@ -1,4 +1,4 @@
-import { getFont, config, screenEndpoints } from '../main';
+import { getFont, config, screenData } from '../main';
 import { Player } from '/src/scripts/prefabs/Player';
 import { Enemies } from '/src/scripts/prefabs/Enemies';
 import { Boom } from '/src/scripts/prefabs/Boom';
@@ -25,7 +25,7 @@ export class GameScene extends CommonScene {
     create(data) {
         this.cursors = this.input.keyboard.createCursorKeys();
 
-        this._createBG(data);
+        this._createBg(data);
         this._getMaxEnemyHeightFrame();
         this._createPlayer();
         this._createEnemies();
@@ -58,8 +58,8 @@ export class GameScene extends CommonScene {
 
     _addJoystick(){
         this.joyStick = this.plugins.get('rexvirtualjoystickplugin').add(this, {
-            x: screenEndpoints.left + config.joystick.radius + config.joystick.gap,
-            y: screenEndpoints.bottom - config.joystick.radius - config.joystick.gap,
+            x: screenData.left + config.joystick.radius + config.joystick.gap,
+            y: screenData.bottom - config.joystick.radius - config.joystick.gap,
             radius: config.joystick.radius,
             base: this.add.circle(0, 0, config.joystick.radius).setStrokeStyle(3.5, 0x1a65ac).setAlpha(.75),
             thumb: this.add.circle(0, 0, config.joystick.radius/2, 0xcccccc).setAlpha(0.5),
@@ -74,20 +74,20 @@ export class GameScene extends CommonScene {
     }
 
     _addFireButton(){
-        this.fireButton = this.add.sprite(screenEndpoints.right - config.joystick.radius - config.joystick.gap, this.joyStick.y, 'fire')
-                        .setAlpha(0.65)
-                        .setInteractive()
-                        .setActive(false)
-                        .on('pointerup', () => {
-                            this.fireButton.active = false;
-                        }, this)
-                        .on('pointerdown', () => {
-                            this.fireButton.active = true;
-                            this._player.shooting();
-                        }, this);
+        this.fireButton = this.add.image(screenData.right - config.joystick.radius - config.joystick.gap, this.joyStick.y, 'fire')
+            .setAlpha(0.65)
+            .setInteractive()
+            .setActive(false)
+            .on('pointerup', () => {
+                this.fireButton.active = false;
+            }, this)
+            .on('pointerdown', () => {
+                this.fireButton.active = true;
+                this._player.shooting();
+            }, this);
     }
 
-    _createBG(data) {
+    _createBg(data) {
         const bg_image = data?.unlim ? `bg${Phaser.Math.Between(1, config.Levels.length)}` : `bg${data.index}`;
 
         const real_height = this.textures.list[bg_image].source[0].height;
@@ -107,13 +107,13 @@ export class GameScene extends CommonScene {
             this.hiScoreText.destroy();
         }
 
-        this.scoreText = this.add.text(screenEndpoints.right - config.width * .01, screenEndpoints.top + config.width * .01, this._currentScore, {
+        this.scoreText = this.add.text(screenData.right - config.width * .01, screenData.top + config.width * .01, this._currentScore, {
             font: `${config.width * .03}px ${getFont()}`,
             fill: '#EA0000',
         }).setOrigin(1, 0).setAlpha(.75);
 
         if (this.info?.unlim) {
-            this.hiScoreText = this.add.text(config.width / 2, screenEndpoints.top + config.width * .01, `${this._getText('TOP_HIGH_SCORE')} ${localStorage.getItem('unlimHiScores')}`, {
+            this.hiScoreText = this.add.text(this._center.x, screenData.top + config.width * .01, `${this._getText('TOP_HIGH_SCORE')} ${localStorage.getItem('unlimHiScores')}`, {
                 font: `${config.width * .03}px ${getFont()}`,
                 fill: '#EA0000',
             }).setOrigin(0.5, 0).setAlpha(.75);
@@ -152,7 +152,7 @@ export class GameScene extends CommonScene {
     }
 
     _onOverlap(source, target) {
-        if (target.x > config.width + target.displayWidth / 2) {
+        if (target.x > config.width + target.displayWidth * 0.5) {
             return;
         }
 
@@ -197,7 +197,7 @@ export class GameScene extends CommonScene {
             return;
         }
 
-        this._black_bg = this.add.rectangle(config.width / 2, config.height / 2, config.width, config.height, '0x000000', 0).setInteractive().setDepth(DEPTH_LAYERS.COVER_SCREEN);
+        this._black_bg = this.add.rectangle(this._center.x, this._center.y, config.width, config.height, '0x000000', 0).setInteractive().setDepth(DEPTH_LAYERS.COVER_SCREEN);
         let final_text = this.add.text(this._black_bg.x, this._black_bg.y, '', {
             font: `${config.width * .03}px ${getFont()}`,
             fill: '#EA0000',
@@ -253,7 +253,7 @@ export class GameScene extends CommonScene {
     }
 
     _addPauseButton() {
-        this.add.sprite(screenEndpoints.left + config.width * .015, screenEndpoints.top + config.width * .015, 'pause')
+        this.add.image(screenData.left + config.width * .015, screenData.top + config.width * .015, 'pause')
             .setAlpha(0.65)
             .setInteractive()
             .on('pointerdown', () => {
@@ -263,9 +263,9 @@ export class GameScene extends CommonScene {
     }
 
     _addProgressBar(){
-        this._progressBar = this.add.sprite(config.width/2, screenEndpoints.top + config.width * .0225, 'progressBar')
+        this._progressBar = this.add.image(this._center.x, screenData.top + config.width * .0225, 'progressBar')
             .setAlpha(0.95);
-        this._progressBar.fillProgress = this.add.sprite(this._progressBar.x + this._progressBar.displayWidth * .1, this._progressBar.y + this._progressBar.displayHeight * .04, 'progressBarFill')
+        this._progressBar.fillProgress = this.add.image(this._progressBar.x + this._progressBar.displayWidth * .1, this._progressBar.y + this._progressBar.displayHeight * .04, 'progressBarFill')
             .setAlpha(0.95);
         
         this._progressBar.levelText = this.add.text(this._progressBar.x - this._progressBar.displayWidth * .38, this._progressBar.y - this._progressBar.displayHeight * .035, config.currentLevelPlayer, {
@@ -310,7 +310,7 @@ export class GameScene extends CommonScene {
         config.currentLevelPlayer++;
         localStorage.setItem('currentLevelPlayer', config.currentLevelPlayer);
 
-        const levelTextLabel = this.add.text(config.width/2, config.height/2, config.currentLevelPlayer, {
+        const levelTextLabel = this.add.text(this._center.x, this._center.y, config.currentLevelPlayer, {
             font: `${config.width * .25}px ${getFont()}`,
             fill: '#FFFFFF',
         }).setOrigin(0.5).setAlpha(0);
