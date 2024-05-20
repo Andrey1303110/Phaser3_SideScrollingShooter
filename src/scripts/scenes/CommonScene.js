@@ -71,8 +71,6 @@ export class CommonScene extends Phaser.Scene {
                 this.scene.start(SCENE_NAMES.main);
                 this.sounds.click.play({ volume: .2 });
             });
-
-        window.button = button
     }
 
     _createTranslations() {

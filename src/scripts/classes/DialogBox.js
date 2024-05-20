@@ -62,7 +62,7 @@ export class DialogBox {
     _createSpeechBg() {
         const padding = config.width * 0.08;
         const width = screenData.width - padding * 2;
-        const height = config.height * 0.45;
+        const height = config.height * 0.55;
         const x = screenData.left + padding;
         const y = screenData.bottom - height;
         const radius = width * 0.025;
@@ -71,8 +71,6 @@ export class DialogBox {
 
         this._bg = new RoundedRectContainer(this._scene, { width, height, radius, fillColor, fillAlpha });
         this._bg.setPosition(x, y);
-        
-        window.bg = this._bg;
     }
 
     _createSkipButton() {
@@ -97,9 +95,9 @@ export class DialogBox {
     _createText(data) {
         const { text } = data;
 
-        const fontSize = config.width * .033;
-        const vertPadding = config.width * .03;
-        const horizPadding = config.width * .035;
+        const fontSize = config.width * .037;
+        const vertPadding = config.width * .025;
+        const horizPadding = config.width * .02;
 
         const personEndPointX = this._person.x + this._person.width * 0.5;
         const bgEndPointX = this._bg.x + this._bg.width;
