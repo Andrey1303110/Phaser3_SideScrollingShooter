@@ -7,6 +7,7 @@ const PLAYER_TEXTURE_NAME = 'dragon';
 const FIRST_PLAYER_FRAME = 'dragon1';
 const FIRE_TEXTURE_NAME = 'fire';
 const ANIMATION_NAME = 'fly';
+const FRAME_DUARTION = 350;
 
 export class Player extends MovableObject {
     constructor(data) {
@@ -22,12 +23,63 @@ export class Player extends MovableObject {
                 delay: config.Weapons.fire.reload,
                 velocity: config.Weapons.fire.velocity,
                 scale: config.Weapons.fire.scale,
+                damage: config.Weapons.fire.damage,
                 origin: {x: 1, y: 0.5},
             }
         });
 
         this._createAnimation();
         this.play(ANIMATION_NAME);
+    }
+
+    init(data) {
+        super.init(data);
+        this.scene.add.existing(this);
+        this.scene.physics.add.existing(this);
+        this.body.enable = true;
+
+        this.fires = new Fires(this.scene);
+        this.weapon = data.weapon;
+        this.scale = config.Player.scale;
+
+        this.scene.events.on(EVENTS.update, this._updateFrame, this);
+        this._lastFrame = FIRST_PLAYER_FRAME;
+        this._tweenFly = null;
+    }
+
+    move() {
+        this.body.setVelocity(0);
+
+        if (this.y < screenEndpoints.top + this.displayHeight / 1.5) {
+            this.y = screenEndpoints.top + this.displayHeight / 1.5;
+        } else if (this.y > screenEndpoints.bottom - this.displayHeight / 1.5) {
+            this.y = screenEndpoints.bottom - this.displayHeight / 1.5;
+        }
+
+        if (this.x < screenEndpoints.left + this.displayWidth / 1.5) {
+            this.x = screenEndpoints.left + this.displayWidth / 1.5;
+        } else if (this.x > screenEndpoints.right - this.displayWidth / 1.5) {
+            this.x = screenEndpoints.right - this.displayWidth / 1.5;
+        }
+
+        this._handling(); 
+    }
+
+    shooting() {
+        if ((this.scene.cursors.space.isDown || this.scene.fireButton.active) && !this._firesActivate) {
+            this.scene.fireButton.setAlpha(.95);
+            this.fires.createFire(this);
+            this._firesActivate = true;
+
+            this.scene.time.addEvent({
+                delay: this.weapon.delay,
+                callback: () => { 
+                    this._firesActivate = false;
+                    this.scene.fireButton.setAlpha(.65);
+                },
+                callbackScope: this,
+            });
+        }
     }
 
     _createAnimation() {
@@ -49,21 +101,6 @@ export class Player extends MovableObject {
         this.play(ANIMATION_NAME);
     }
 
-    init(data) {
-        super.init(data);
-        this.scene.add.existing(this);
-        this.scene.physics.add.existing(this);
-        this.body.enable = true;
-
-        this.fires = new Fires(this.scene);
-        this.weapon = data.weapon;
-        this.scale = config.Player.scale;
-
-        this.scene.events.on(EVENTS.update, this._updateFrame, this);
-        this._lastFrame = FIRST_PLAYER_FRAME;
-        this._tweenFly = null;
-    }
-
     _updateFrame() {
         if (!this.active) {
             return;
@@ -77,7 +114,7 @@ export class Player extends MovableObject {
                         targets: this,
                         y: last_y + this.displayHeight / 3,
                         ease: 'Linear',
-                        duration: 350,
+                        duration: FRAME_DUARTION,
                         onComplete: () => this._tweenFly = null
                     });
                 }
@@ -88,7 +125,7 @@ export class Player extends MovableObject {
                         targets: this,
                         y: last_y - this.displayHeight / 3,
                         ease: 'Linear',
-                        duration: 350,
+                        duration: FRAME_DUARTION,
                         onComplete: () => this._tweenFly = null
                     });
                 }

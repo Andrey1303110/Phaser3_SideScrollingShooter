@@ -79,11 +79,16 @@ export class Enemy extends MovableObject {
     }
 
     _setWeapon(){
+        const type = this._enemyType;
+        const enemyWeapon = config.Enemies[type].weapon
+        const { reload, velocity, scale, damage } = config.Weapons[enemyWeapon];
+
         this.weapon = {
-            texture: config.Enemies[this._enemyType].weapon,
-            delay: config.Weapons[config.Enemies[this._enemyType].weapon].reload,
-            velocity: config.Weapons[config.Enemies[this._enemyType].weapon].velocity,
-            scale: config.Weapons[config.Enemies[this._enemyType].weapon].scale,
+            texture: config.Enemies[type].weapon,
+            delay: reload,
+            velocity,
+            scale,
+            damage: damage ?? 100,
             origin: {x: -1, y: 0.5},
         }
     }

@@ -1,5 +1,5 @@
 import { SCENE_NAMES } from '../constants';
-import { getFont, getSceneTexts, config, screenData } from '../main';
+import { getFont, getSceneTexts, config, screenData, setEndpoints } from '../main';
 
 export class CommonScene extends Phaser.Scene {
     constructor(name) {
@@ -20,8 +20,7 @@ export class CommonScene extends Phaser.Scene {
             this.scale.startFullscreen();
         }
 
-        // setEndpoints();
-        //TODO remove endpoints
+        setEndpoints();
         this._createTranslations();
     }
 

@@ -3,6 +3,7 @@ import { DEPTH_LAYERS } from '../constants';
 import { config, getFont, screenData } from '../main';
 import { RoundedRectContainer } from './RoundedRectContaier';
 
+// TODO extends from container
 export class DialogBox {
     constructor (scene, dialogueData) {
         this._scene = scene;

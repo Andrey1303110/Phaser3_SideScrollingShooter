@@ -38,6 +38,7 @@
         "FINAL_TEXT_LOSE": "HEROES DON'T DIE!"
     },
     "Upgrade": {
+        "HEALTH_TITLE": "HP (point):",
         "RELOAD_TITLE": "RELOAD (ms):",
         "VELOCITY_TITLE": "VELOCITY (m/s):",
         "SCALE_TITLE": "SCALE (%):",

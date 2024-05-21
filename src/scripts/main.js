@@ -38,6 +38,7 @@ export const config = {
         ukr: 'Comfortaa-Regular',
     },
 
+    // TODO replace to separate property
     currentLevelScene: localStorage.getItem('currentLevelScene') ?? 1,
     currentLevelPlayer: localStorage.getItem('currentLevelPlayer') ?? 1,
     totalScore: localStorage.getItem('totalScore') ?? 0,
@@ -62,8 +63,18 @@ export const config = {
     },
 
     Player: {
+        maxHealth: 100,
+        currentHealth: 100,
         velocity: 350,
-        scale: 0.75
+        scale: 0.75,
+        currentWeapon: localStorage.getItem('currentPlayerWeapon'),
+    },
+
+    CurrentUpgradableStats: {
+        health: 1,
+        reload: 1,
+        velocity: 1,
+        scale: 1,
     },
 
     Enemies: {
@@ -97,23 +108,20 @@ export const config = {
             reload: 1750,
             velocity: 350 * -1,
             scale: 0.3,
+            damage: 30,
         },
         missile: {
             reload: 2000,
             velocity: 475 * -1,
             scale: 0.375,
+            damage: 45,
         },
         missile_2: {
             reload: 2500,
             velocity: 800 * -1,
             scale: 0.4,
+            damage: 70,
         }
-    },
-
-    upgradeColors: {
-        reload: '66E210',
-        velocity: 'FF2407',
-        scale: '0291F7',
     },
 
     reward: {
@@ -310,38 +318,45 @@ function initLosses() {
 };
 
 function initUpgardeLevels() {
-    const weaponStats = Object.keys(config.Weapons.fire);
-    for (let i = 0; i < weaponStats.length; i++) {
-        const key = weaponStats[i];
-        localStorage.setItem(`playerWeapon_${key}`, 1);
+    const stats = Object.keys(config.CurrentUpgradableStats);
+
+    for (let i = 0; i < stats.length; i++) {
+        const key = stats[i];
+        localStorage.setItem(`playerAbilityLevel_${key}`, 1);
     }
 };
 
-function initWeaponConfig() {
-    const weapons = Object.keys(config.Weapons.fire);
+function initAbilitiesByLevel() {
+    const stats = Object.keys(config.CurrentUpgradableStats);
 
-    for (let i = 0; i < weapons.length; i++) {
-        const key = weapons[i];
-        const level = localStorage.getItem(`playerWeapon_${key}`);
+    for (let i = 0; i < stats.length; i++) {
+        const key = stats[i];
+        const level = localStorage.getItem(`playerAbilityLevel_${key}`);
 
         for (let j = 1; j < level; j++) {
-            if (key === 'reload') {
-                config.Weapons.fire[key] -= config.Weapons.fire[key] * .05;
-            } else {
-                config.Weapons.fire[key] += config.Weapons.fire[key] * .05;
-            }
+            getPlayerAbilities(key);
         }
     }
 }
 
-export function setWeaponConf(data) {
-    if (data.key === 'reload') {
-        config.Weapons.fire[data.key] -= config.Weapons.fire[data.key] * .05;
-    } else {
-        config.Weapons.fire[data.key] += config.Weapons.fire[data.key] * .05;
-    }
+export function getPlayerAbilities(key) {
+    // TODO set by player weapon
+    const MULTIPLIER = 0.05;
 
-    return config.Weapons.fire[data.key];
+    switch (key) {
+        case 'health':
+            config.Player.maxHealth += config.Player.maxHealth * MULTIPLIER;
+            return config.Player.maxHealth;
+        case 'reload':
+            config.Weapons.fire[key] -= config.Weapons.fire[key] * MULTIPLIER;
+            return config.Weapons.fire[key];
+        case 'scale':
+        case 'velocity':
+            config.Weapons.fire[key] += config.Weapons.fire[key] * MULTIPLIER;
+            return config.Weapons.fire[key];
+        default:
+            throw new Error('Unknown ability upgrade');
+    }
 }
 
 function initLang() {
@@ -358,11 +373,12 @@ if (localStorage.getItem('isFirstTimePlay') !== 0) {
     initLosses();
     initUpgardeLevels();
     localStorage.setItem('currentLevelPlayer', config.currentLevelPlayer);
+    localStorage.setItem('currentPlayerWeapon', 'fire');
     localStorage.setItem('money', config.money);
 }
 
 initLang();
-initWeaponConfig();
+initAbilitiesByLevel();
 
 export function getSceneTexts(scene) {
     return scene.cache.json.get('texts')[scene.name];

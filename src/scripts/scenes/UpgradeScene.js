@@ -1,17 +1,24 @@
 import { SCENE_NAMES } from '../constants';
-import { getFont, config, screenData, setWeaponConf } from '../main';
+import { getFont, config, screenData, getPlayerAbilities } from '../main';
 import { CommonScene } from './CommonScene';
 import { Player } from '/src/scripts/prefabs/Player';
 
 const STATS_MAP = {
+    health: {
+        text: 'HEALTH_TITLE',
+        color: 'FF2407',
+    },
     reload: {
-        text: 'RELOAD_TITLE'
+        text: 'RELOAD_TITLE',
+        color: '66E210',
     },
     velocity: {
-        text: 'VELOCITY_TITLE'
+        text: 'VELOCITY_TITLE',
+        color: 'FFDC45',
     },
     scale: {
-        text: 'SCALE_TITLE'
+        text: 'SCALE_TITLE',
+        color: '0291F7',
     }
 };
 
@@ -34,35 +41,29 @@ export class UpgradeScene extends CommonScene {
         this._createAvailableMoney();
     }
 
-    createUpgradeAnimation(name, level){
-        this.sounds.upgrade.play({volume: .2});
+    createUpgradeAnimation(name, level) {
+        this.sounds.upgrade.play({ volume: 0.2 });
+
         const objects_nums = 10 + level;
+        const duration = Phaser.Math.Between(750, 1250);
 
         for (let i = 0; i < objects_nums; i++) {
-            const x = (this._player.x - this._player.displayWidth * .6) + this._player.displayWidth * 1.2 / objects_nums * i;
-            const y = Phaser.Math.Between((this._player.y - this._player.displayHeight * .5) * 100, (this._player.y + this._player.displayHeight * .5) * 100) / 100;
-            const scale = config.height * .075 * (Phaser.Math.Between(25 + level, 50 + level) / 100);
+            const x = Phaser.Math.Between(this._player.x - this._player.displayWidth * 0.6, this._player.x + this._player.displayWidth * 0.6);
+            const y = Phaser.Math.Between(this._player.y - this._player.displayHeight * 0.5, this._player.y + this._player.displayHeight * 0.5);
+            const scale = Phaser.Math.Between(25 + level, 50 + level) / 100;
 
-            const data = {
-                x,
-                y,
-                scale,
-                alpha: Phaser.Math.Between(75, 100) / 100,
-                duration: Phaser.Math.Between(750, 1250),
-            }
-
-            const plus_symbol = this.add.text(data.x, data.y, '+', {
-                font: `${data.scale}px ${getFont()}`,
-                fill: `#${config.upgradeColors[name]}`,
-            }).setOrigin(0.5).setAlpha(data.alpha).setStroke('#fafafa33', 4);
+            const plus_symbol = this.add.text(x, y, '+', {
+                font: `${config.height * 0.075 * scale}px ${getFont()}`,
+                fill: `#${STATS_MAP[name].color}`,
+            }).setOrigin(0.5).setAlpha(1).setStroke('#fafafa33', 4);
 
             this.tweens.add({
                 targets: plus_symbol,
                 y: screenData.top,
                 alpha: 0,
                 ease: 'Linear',
-                duration: data.duration,
-                onComplete: () => { plus_symbol.destroy() }
+                duration: duration,
+                onComplete: () => plus_symbol.destroy(),
             });
         }
     }
@@ -90,27 +91,36 @@ export class UpgradeScene extends CommonScene {
             fill: '#000000',
         };
 
-        const infoText = this.add.text(this.game.scale.width * 0.5, this.game.scale.height * 0.75, this._getText('BOTTOM_DESCRIPTION'), style)
-            .setAlpha(0)
-            .setOrigin(.5);
+        const infoText = this.add.text(this._center.x, screenEndpoints.bottom - config.height * .075, this._getText('BOTTOM_DESCRIPTION'), style).setOrigin(.5).setAlpha(0);
 
-        const weaponStats = Object.keys(config.Weapons.fire);
-        const height = this._center.y;
+        const upgradableStats = Object.keys(config.CurrentUpgradableStats);
+        const height = config.height * 0.4;
 
-        for (let i = 0; i < weaponStats.length; i++) {
-            const key = weaponStats[i];
+        for (let i = 0; i < upgradableStats.length; i++) {
+            const key = upgradableStats[i];
 
             let multiplier = 1;
-            if (key === 'scale') {
-                multiplier = 100;
+            let value = 1;
+
+            switch (key) {
+                case 'health':
+                    value = (Math.round(config.Player.maxHealth * multiplier) / multiplier * multiplier).toFixed(0);
+                    break;
+                case 'reload':
+                    value = (Math.round(config.Weapons.fire[key] * multiplier) / multiplier * multiplier).toFixed(0);
+                    break;
+                case 'scale':
+                    multiplier = 100;
+                    value = (Math.round(config.Weapons.fire[key] * multiplier) / multiplier * multiplier).toFixed(0);
+                case 'velocity':
+                    value = (Math.round(config.Weapons.fire[key] * multiplier) / multiplier * multiplier).toFixed(0);
+                    break;
             }
 
-            const value = (Math.round(config.Weapons.fire[key] * multiplier) / multiplier * multiplier).toFixed(0);
-
             const x = config.width * .57;
-            const y = (this._center.y - height * 0.5) + (height / weaponStats.length) * i;
+            const y = (this._center.y - height * 0.5) + (height / upgradableStats.length) * i;
 
-            const level = localStorage.getItem(`playerWeapon_${key}`);
+            const level = localStorage.getItem(`playerAbilityLevel_${key}`);
             const statText = `${this._getText(STATS_MAP[key]['text'])} ${value}`;
             const levelText = `${this._getText('LEVEL_TEXT')} ${level}`;
 
@@ -125,7 +135,9 @@ export class UpgradeScene extends CommonScene {
                 alpha: .75,
                 duration: 450,
                 onComplete: () => {
-                    if (i >= weaponStats.length - 1) {
+                    this._createUpgredeButton({x, y, key, level});
+
+                    if (i >= upgradableStats.length - 1) {
                         this.tweens.add({
                             targets: infoText,
                             delay: 275,
@@ -137,35 +149,38 @@ export class UpgradeScene extends CommonScene {
                 },
                 callbackScope: this
             });
-
-            this._createUpgredeButton({x, y, key, level});
         }
     }
 
     _checkAvailability(button){
-        this._checkPrice(button);
+        this._setPrice(button);
 
-        let alpha = .9;
-        if (config.money < button.cost) {
+        let alpha = 0.9;
+        button.active = true;
+
+        if (config.money < button.cost || config.money <= 0) {
             button.active = false;
-            alpha = .5;
-        }
+            alpha = 0.5;
+        } 
+
         button.setAlpha(alpha);
         button.textCost.setAlpha(alpha)
         button.crystal.setAlpha(alpha);
     }
 
-    _checkPrice(button){
-        button.cost = Math.floor(button.level/10) + 1;
+    _setPrice(button){
+        button.cost = Math.floor(button.level / 10) + 1;
         button.textCost.text = button.cost;
     }
 
     _createUpgredeButton(data){
-        this.buttons[data.key] = this.add.image(data.x + config.width * .3, data.y, 'button_campaign')
+        this.buttons[data.key] = this.add.image(data.x + config.width * .323, data.y, 'button_campaign')
             .setOrigin(0.5, 0.125)
             .setScale(.33)
+            .setAlpha(0)
             .setInteractive()
-            .on('pointerdown', this._upgarde);
+            .setVisible(false)
+            .on('pointerdown', () => this._upgrade(this.buttons[data.key]));
 
         this.buttons[data.key].name = data.key;
         this.buttons[data.key].level = data.level;
@@ -176,11 +191,12 @@ export class UpgradeScene extends CommonScene {
             font: `${config.width * .023}px ${getFont()}`,
             fill: '#FFFFFF',
         };
-        this.buttons[data.key].textCost = this.add.text(this.buttons[data.key].x, this.buttons[data.key].y, '1', style).setOrigin(0.5, -0.125);
+        this.buttons[data.key].textCost = this.add.text(this.buttons[data.key].x, this.buttons[data.key].y, '1', style).setOrigin(0.5, -0.125).setVisible(false);
 
         this.buttons[data.key].crystal = this.add.image(this.buttons[data.key].x, this.buttons[data.key].y, 'ruby')
             .setOrigin(0.5, .05)
-            .setScale(.15);
+            .setScale(.15)
+            .setVisible(false);
 
         this.buttons[data.key].textCost.x -= this.buttons[data.key].crystal.displayWidth * 0.5;
         this.buttons[data.key].crystal.x += this.buttons[data.key].crystal.displayWidth * 0.5;
@@ -188,66 +204,104 @@ export class UpgradeScene extends CommonScene {
         this.buttons[data.key].clicked = false;
 
         this._checkAvailability(this.buttons[data.key]);
+        const currentAlpha = this.buttons[data.key].alpha;
+        this.buttons[data.key].alpha = 0;
+        this.buttons[data.key].textCost.alpha = 0;
+        this.buttons[data.key].crystal.alpha = 0;
+
+        this.tweens.add({
+            targets: [
+                this.buttons[data.key],
+                this.buttons[data.key].textCost,
+                this.buttons[data.key].crystal,
+            ],
+            ease: 'Linear',
+            alpha: currentAlpha,
+            duration: 500,
+            onStart: () => {
+                this.buttons[data.key].setVisible(true);
+                this.buttons[data.key].textCost.setVisible(true);
+                this.buttons[data.key].crystal.setVisible(true);
+            }
+        })
     }
 
     _decreaseMoney(value){
         if (config.money) {
             config.money -= value;
             localStorage.setItem('money', config.money);
-            this._moneyText.text = config.money;
+            this.moneyText.text = config.money;
         }
         else {
             return false;
         }
     }
 
-    _upgarde(){
-        if (this._clicked || !this.active) {
-            if (!this.active) {
-                this.scene.sounds.error.play({volume: .3});
+    _upgrade(button){
+        if (button.clicked || !button.active) {
+            if (!button.active) {
+                this.sounds.error.play({volume: .3});
             }
             return
         }
 
-        let value = localStorage.getItem(`playerWeapon_${this.name}`);
+        let value = localStorage.getItem(`playerAbilityLevel_${button.name}`);
 
-        if (this.scene._decreaseMoney(this.cost) === false) {
+        if (this._decreaseMoney(button.cost) === false) {
             return;
         }
 
-        localStorage.setItem(`playerWeapon_${this.name}`, ++value);
-        this.level = value;
-
-        let returnedValue = setWeaponConf({init: false, key: this.name});
+        localStorage.setItem(`playerAbilityLevel_${button.name}`, ++value);
+        button.level = value;
 
         let multiplier = 1;
-        if (this.name === 'scale') {
-            multiplier = 100;
+        let returnedValue = getPlayerAbilities(button.name);
+
+        switch (button.name) {
+            case 'health':
+                returnedValue = (Math.round(config.Player.maxHealth * multiplier) / multiplier * multiplier).toFixed(0);
+                break;
+            case 'reload':
+                returnedValue = (Math.round(config.Weapons.fire[button.name] * multiplier) / multiplier * multiplier).toFixed(0);
+                break;
+            case 'scale':
+                multiplier = 100;
+                returnedValue = (Math.round(config.Weapons.fire[button.name] * multiplier) / multiplier * multiplier).toFixed(0);
+                break;
+            case 'velocity':
+                returnedValue = (Math.round(config.Weapons.fire[button.name] * multiplier) / multiplier * multiplier).toFixed(0);
+                break;
         }
-        returnedValue = (Math.round(config.Weapons.fire[this.name] * multiplier) / multiplier * multiplier).toFixed(0);
 
-        this.scene.statsText[this.name].text = `${this._getText(STATS_MAP[key]['text'])} ${returnedValue}`;
-        this.scene.statsLevel[this.name].text = `${this._getText('LEVEL_TEXT')} ${localStorage.getItem(`playerWeapon_${this.name}`)}`;
+        this.statsText[button.name].text = `${this._getText(STATS_MAP[button.name]['text'])} ${returnedValue}`;
+        this.statsLevel[button.name].text = `${this._getText('LEVEL_TEXT')} ${localStorage.getItem(`playerAbilityLevel_${button.name}`)}`;
 
-        this._clicked = true;
-        this.setAlpha(1);
-        this.scene.tweens.add({
+        button.clicked = true;
+        button.setAlpha(1);
+
+        this.tweens.add({
             targets: this,
             ease: 'Linear',
             alpha: .5,
             duration: 1000,
-            onComplete: () => { 
-                this._clicked = false;
-                for (let i = 0; i < Object.keys(config.Weapons.fire).length; i++) {
-                    const name = Object.keys(config.Weapons.fire)[i];
-                    this.scene._checkAvailability(this.scene.buttons[name]);
-                }
+            onStart: () => { 
+                button.clicked = false;
+                button.active = false;
+                Object.keys(config.CurrentUpgradableStats).forEach(key => {
+                    this._checkAvailability(this.buttons[key]);
+                })
             }
         })
 
-        this.scene.createUpgradeAnimation(this.name, value);
+        this.createUpgradeAnimation(button.name, value);
     }
 
+    _addReturnButton(){
+        this.add.sprite(screenEndpoints.left + config.width * .015, screenEndpoints.top + config.width * .015, 'return')
+            .setAlpha(0.65)
+            .setInteractive()
+            .on('pointerdown', () => this.scene.start(SCENE_NAMES.main), this);
+    }
 
     _createSounds() {
         if (this.sounds) {
