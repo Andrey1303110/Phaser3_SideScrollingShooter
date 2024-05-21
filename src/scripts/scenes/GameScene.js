@@ -1,4 +1,4 @@
-import { getFont, config, screenEndpoints } from '../main';
+import { getFont, config, screenData } from '../main';
 import { Player } from '/src/scripts/prefabs/Player';
 import { Enemies } from '/src/scripts/prefabs/Enemies';
 import { Boom } from '/src/scripts/prefabs/Boom';
@@ -14,8 +14,8 @@ export class GameScene extends CommonScene {
     init(data) {
         super.init();
 
-        if (localStorage.getItem('firstTimePlay') !== '0') {
-            localStorage.setItem('firstTimePlay', '0');
+        if (localStorage.getItem('isFirstTimePlay') !== 0) {
+            localStorage.setItem('isFirstTimePlay', 0);
         }
         this.info = data;
         this._currentLevelScene = this.info.index;
@@ -28,7 +28,7 @@ export class GameScene extends CommonScene {
 
         this.cursors = this.input.keyboard.createCursorKeys();
 
-        this._createBG(data);
+        this._createBg(data);
         this._getMaxEnemyHeightFrame();
         this._createPlayer();
         this._createEnemies();
@@ -41,8 +41,7 @@ export class GameScene extends CommonScene {
         this._addJoystick();
         this._addFireButton();
         this._addHealthBar();
-        
-        if (!this.info?.unlim) {
+        if (!this.info?.isUnlim) {
             this._addExpProgressBar();
         }
     }
@@ -64,8 +63,8 @@ export class GameScene extends CommonScene {
 
     _addJoystick(){
         this.joyStick = this.plugins.get('rexvirtualjoystickplugin').add(this, {
-            x: screenEndpoints.left + config.joystick.radius + config.joystick.gap,
-            y: screenEndpoints.bottom - config.joystick.radius - config.joystick.gap,
+            x: screenData.left + config.joystick.radius + config.joystick.gap,
+            y: screenData.bottom - config.joystick.radius - config.joystick.gap,
             radius: config.joystick.radius,
             base: this.add.circle(0, 0, config.joystick.radius).setStrokeStyle(3.5, 0x1a65ac).setAlpha(.75),
             thumb: this.add.circle(0, 0, config.joystick.radius * 0.5, 0xcccccc).setAlpha(0.5),
@@ -80,21 +79,21 @@ export class GameScene extends CommonScene {
     }
 
     _addFireButton(){
-        this.fireButton = this.add.sprite(screenEndpoints.right - config.joystick.radius - config.joystick.gap, this.joyStick.y, 'fire')
-                        .setAlpha(0.65)
-                        .setInteractive()
-                        .setActive(false)
-                        .on('pointerup', () => {
-                            this.fireButton.active = false;
-                        }, this)
-                        .on('pointerdown', () => {
-                            this.fireButton.active = true;
-                            this._player.shooting();
-                        }, this);
+        this.fireButton = this.add.image(screenData.right - config.joystick.radius - config.joystick.gap, this.joyStick.y, 'fire')
+            .setAlpha(0.65)
+            .setInteractive()
+            .setActive(false)
+            .on('pointerup', () => {
+                this.fireButton.active = false;
+            }, this)
+            .on('pointerdown', () => {
+                this.fireButton.active = true;
+                this._player.shooting();
+            }, this);
     }
 
-    _createBG(data) {
-        const bg_image = data?.unlim ? `bg${Phaser.Math.Between(1, config.Levels.length)}` : `bg${data.index}`;
+    _createBg(data) {
+        const bg_image = data?.isUnlim ? `bg${Phaser.Math.Between(1, config.Levels.length)}` : `bg${data.index}`;
 
         const real_height = this.textures.list[bg_image].source[0].height;
         const scale = config.height/real_height;
@@ -113,13 +112,13 @@ export class GameScene extends CommonScene {
             this.hiScoreText.destroy();
         }
 
-        this.scoreText = this.add.text(screenEndpoints.right - config.width * .01, screenEndpoints.top + config.width * .01, this._currentScore, {
+        this.scoreText = this.add.text(screenData.right - config.width * .01, screenData.top + config.width * .01, this._currentScore, {
             font: `${config.width * .03}px ${getFont()}`,
             fill: '#EA0000',
         }).setOrigin(1, 0).setAlpha(.75);
 
-        if (this.info?.unlim) {
-            this.hiScoreText = this.add.text(config.width * 0.5, screenEndpoints.top + config.width * .01, `${this._getText('TOP_HIGH_SCORE')} ${localStorage.getItem('unlimHiScores')}`, {
+        if (this.info?.isUnlim) {
+            this.hiScoreText = this.add.text(this._center.x, screenData.top + config.width * .01, `${this._getText('TOP_HIGH_SCORE')} ${localStorage.getItem('unlimHiScores')}`, {
                 font: `${config.width * .03}px ${getFont()}`,
                 fill: '#EA0000',
             }).setOrigin(0.5, 0).setAlpha(.75);
@@ -163,7 +162,7 @@ export class GameScene extends CommonScene {
         }
 
         if (source !== this._player && target !== this._player) {
-            if (!this.info?.unlim) {
+            if (!this.info?.isUnlim) {
                 let losses_name = target.texture.key;
                 if (target.texture.key === 'strategic_jet') {
                     losses_name = 'jet';
@@ -177,7 +176,7 @@ export class GameScene extends CommonScene {
             const reward = Number((target.reward * Math.pow(config.level.scoreCof, this._currentLevelScene - 1)).toFixed(0));
             this._currentScore += reward;
 
-            if (!this.info?.unlim) {
+            if (!this.info?.isUnlim) {
                 const last_score = Number(config.totalScore);
                 localStorage.setItem('totalScore', last_score + reward);
                 config.totalScore = last_score + reward;
@@ -226,7 +225,8 @@ export class GameScene extends CommonScene {
         }).setOrigin(0.5).setAlpha(0).setDepth(DEPTH_LAYERS.MAX);
         this.game.sound.stopAll();
 
-        if (this._player.active) {
+        const isWin = this._player.active;
+        if (isWin) {
             this.sounds.win.play();
             final_text.text = this._getText('FINAL_TEXT_WIN');
 
@@ -244,7 +244,7 @@ export class GameScene extends CommonScene {
             final_text.text = this._getText('FINAL_TEXT_LOSE');
             this.sounds.died.play();
 
-            if (this.info.unlim) {
+            if (this.info.isUnlim) {
                 if (localStorage.getItem('unlimHiScores') < this._currentScore) {
                     localStorage.setItem('unlimHiScores', this._currentScore);
                 }
@@ -259,11 +259,7 @@ export class GameScene extends CommonScene {
             ease: 'Linear',
             duration: this.sounds.died.duration * 1000 * .75,
             onComplete: () => {
-                if (this.info.unlim) {
-                    this.scene.start(SCENE_NAMES.main);
-                } else {
-                    this.scene.start(SCENE_NAMES.campaign);
-                }
+                this.scene.start(this.info.isUnlim ? SCENE_NAMES.main : SCENE_NAMES.campaign);
                 this.scene.stop();
             }
         })
@@ -275,7 +271,7 @@ export class GameScene extends CommonScene {
     }
 
     _addPauseButton() {
-        this.add.sprite(screenEndpoints.left + config.width * .015, screenEndpoints.top + config.width * .015, 'pause')
+        this.add.image(screenData.left + config.width * .015, screenData.top + config.width * .015, 'pause')
             .setAlpha(0.65)
             .setInteractive()
             .on('pointerdown', () => {
@@ -290,9 +286,9 @@ export class GameScene extends CommonScene {
     }
 
     _addExpProgressBar(){
-        this._progressExpBar = this.add.sprite(config.width * 0.5, screenEndpoints.top + config.width * .0225, 'progress_bar')
+        this._progressExpBar = this.add.image(this._center.x, screenData.top + config.width * .0225, 'progress_bar')
             .setAlpha(0.95);
-        this._progressExpBar.fillProgress = this.add.sprite(this._progressExpBar.x + this._progressExpBar.displayWidth * .1, this._progressExpBar.y + this._progressExpBar.displayHeight * .04, 'progress_bar_fill')
+        this._progressExpBar.fillProgress = this.add.image(this._progressExpBar.x + this._progressExpBar.displayWidth * .1, this._progressExpBar.y + this._progressExpBar.displayHeight * .04, 'progress_bar_fill')
             .setAlpha(0.95);
         
         this._progressExpBar.levelText = this.add.text(this._progressExpBar.x - this._progressExpBar.displayWidth * .38, this._progressExpBar.y - this._progressExpBar.displayHeight * .035, config.currentLevelPlayer, {
@@ -303,8 +299,8 @@ export class GameScene extends CommonScene {
         this._updateExpProgressBar();
     }
 
-    _updateExpProgressBar(){
-        if (this.info?.unlim) {
+    _updateProgressBar(){
+        if (this.info?.isUnlim) {
             return;
         }
         let score = {
@@ -337,7 +333,7 @@ export class GameScene extends CommonScene {
         config.currentLevelPlayer++;
         localStorage.setItem('currentLevelPlayer', config.currentLevelPlayer);
 
-        const levelTextLabel = this.add.text(config.width * 0.5, config.height * 0.5, config.currentLevelPlayer, {
+        const levelTextLabel = this.add.text(this._center.x, this._center.y, config.currentLevelPlayer, {
             font: `${config.width * .25}px ${getFont()}`,
             fill: '#FFFFFF',
         }).setOrigin(0.5).setAlpha(0);

@@ -1,5 +1,5 @@
 import { SCENE_NAMES } from '../constants';
-import { getFont, config, screenEndpoints, getPlayerAbilities } from '../main';
+import { getFont, config, screenData, getPlayerAbilities } from '../main';
 import { CommonScene } from './CommonScene';
 import { Player } from '/src/scripts/prefabs/Player';
 
@@ -34,9 +34,9 @@ export class UpgradeScene extends CommonScene {
     }
 
     create() {
-        this._createBG();
+        this._createBg();
         this._createPlayer();
-        this._addReturnButton();
+        this._createReturnButton();
         this._createSounds();
         this._createAvailableMoney();
     }
@@ -59,7 +59,7 @@ export class UpgradeScene extends CommonScene {
 
             this.tweens.add({
                 targets: plus_symbol,
-                y: screenEndpoints.top,
+                y: screenData.top,
                 alpha: 0,
                 ease: 'Linear',
                 duration: duration,
@@ -91,11 +91,10 @@ export class UpgradeScene extends CommonScene {
             fill: '#000000',
         };
 
-        const infoText = this.add.text(config.width * 0.5, screenEndpoints.bottom - config.height * .075, this._getText('BOTTOM_DESCRIPTION'), style).setOrigin(.5).setAlpha(0);
+        const infoText = this.add.text(this._center.x, screenEndpoints.bottom - config.height * .075, this._getText('BOTTOM_DESCRIPTION'), style).setOrigin(.5).setAlpha(0);
 
-        // TODO set by current user wepon
         const upgradableStats = Object.keys(config.CurrentUpgradableStats);
-        const height = config.height * 0.5;
+        const height = config.height * 0.4;
 
         for (let i = 0; i < upgradableStats.length; i++) {
             const key = upgradableStats[i];
@@ -119,14 +118,14 @@ export class UpgradeScene extends CommonScene {
             }
 
             const x = config.width * .57;
-            const y = (config.height * 0.5 - height * 0.5) + (height / upgradableStats.length) * i;
+            const y = (this._center.y - height * 0.5) + (height / upgradableStats.length) * i;
 
             const level = localStorage.getItem(`playerAbilityLevel_${key}`);
             const statText = `${this._getText(STATS_MAP[key]['text'])} ${value}`;
             const levelText = `${this._getText('LEVEL_TEXT')} ${level}`;
 
             this.statsText[key] = this.add.text(x, y, statText, style).setOrigin(1, 0).setAlpha(0);
-            this.statsIcon[key] = this.add.sprite(x + config.width * .06, y, key).setOrigin(0.5, 0.15).setAlpha(0).setDisplaySize(config.width * .045, config.width * .045);
+            this.statsIcon[key] = this.add.image(x + config.width * .06, y, key).setOrigin(0.5, 0.15).setAlpha(0).setDisplaySize(config.width * .045, config.width * .045);
             this.statsLevel[key] = this.add.text(x + config.width * .12, y, levelText, style).setOrigin(0, 0).setAlpha(0);
 
             this.tweens.add({
@@ -175,7 +174,7 @@ export class UpgradeScene extends CommonScene {
     }
 
     _createUpgredeButton(data){
-        this.buttons[data.key] = this.add.sprite(data.x + config.width * .323, data.y, 'button_campaign')
+        this.buttons[data.key] = this.add.image(data.x + config.width * .323, data.y, 'button_campaign')
             .setOrigin(0.5, 0.125)
             .setScale(.33)
             .setAlpha(0)
@@ -194,7 +193,7 @@ export class UpgradeScene extends CommonScene {
         };
         this.buttons[data.key].textCost = this.add.text(this.buttons[data.key].x, this.buttons[data.key].y, '1', style).setOrigin(0.5, -0.125).setVisible(false);
 
-        this.buttons[data.key].crystal = this.add.sprite(this.buttons[data.key].x, this.buttons[data.key].y, 'ruby')
+        this.buttons[data.key].crystal = this.add.image(this.buttons[data.key].x, this.buttons[data.key].y, 'ruby')
             .setOrigin(0.5, .05)
             .setScale(.15)
             .setVisible(false);
@@ -309,6 +308,7 @@ export class UpgradeScene extends CommonScene {
             return;
         }
         this.sounds = {
+            click: this.sound.add('click'),
             wings: this.sound.add('wings'),
             upgrade: this.sound.add('upgrade'),
             error: this.sound.add('error'),

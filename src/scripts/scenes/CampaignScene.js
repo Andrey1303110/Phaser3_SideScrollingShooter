@@ -1,9 +1,10 @@
 import { DialogBoxController } from '../classes/DialogBoxController';
 import { SCENE_NAMES } from '../constants';
-import { getFont, delay, config, screenEndpoints } from '../main';
+import { getFont, delay, config, screenData, delayInMSec } from '../main';
 import { CommonScene } from './CommonScene';
 
-const INIT_DELAY = 5000;
+const INIT_DIALOG_DELAY = 1000;
+const BRIEF_DIALOG_DELAY = 2500;
 
 const LOSSES_MAP = {
     jet: {
@@ -25,28 +26,27 @@ export class CampaignScene extends CommonScene {
         super(SCENE_NAMES.campaign);
     }
 
-    init() {
-        super.init();
-
-        this._mapDots = [];
+    preload() {
+        this._createBg(); // needs to smooth transition between scenes
+        this._preloadDictateTextAudio();
     }
 
     async create() {
         this._createSounds();
-        this._createBG();
         this._createMap();
         this._createMissions();
         this._createLosses();
         this._createReturnButton();
         this._createControllers();
         this._createAvailableMoney();
-
-        await delay(INIT_DELAY);
-        await this._dialogBoxController.flowShow(config.currentLevelScene);
+        this._createInitialDialogs(); // todo as initial dialogs
     }
 
     _createMap() {
-        this._map = this.add.sprite(config.width * 0.5, config.height * 0.5, 'map').setAlpha(.65).setOrigin(.5).setScale(1.25);
+        this._map = this.add.image(this._center.x, this._center.y, 'map')
+            .setAlpha(.65)
+            .setOrigin(.5)
+            .setScale(1.25);
     }
 
     _createMissions() {
@@ -65,12 +65,12 @@ export class CampaignScene extends CommonScene {
     async _createDot(level) {
         const x = (config.width - this._map.displayWidth) * 0.5 + (level.x / 1000 * this._map.displayWidth);
         const y = (config.height - this._map.displayHeight) * 0.5 + (level.y / 1000 * this._map.displayWidth);
-        const dot = this.add.sprite(x, y, 'battle')
+        const dot = this.add.image(x, y, 'battle')
             .setAlpha(0)
             .setScale(6)
             .setOrigin(0.5)
             .setInteractive()
-            .on('pointerdown', this.selectLevel);
+            .on('pointerdown', () => this._selectLevel(dot));
         dot.info = level;
         dot.isCurrent = false;
 
@@ -87,7 +87,10 @@ export class CampaignScene extends CommonScene {
             params.scale = 0.75;
         } else {
             dot.setAlpha(1)
-                .on('pointerdown', () => { this.sounds.select.play({ volume: .33 }) });
+                .on('pointerdown', () => { 
+                    this.sounds.select.play({ volume: .33 });
+                    this._startDialogs(level.index, BRIEF_DIALOG_DELAY);
+                });
             dot.active = true;
 
             if (config.currentLevelScene > level.index) {
@@ -98,8 +101,6 @@ export class CampaignScene extends CommonScene {
         }
 
         this._createDotTween(dot, params);
-
-        this._mapDots.push(dot);
     }
 
     _createDotTween(dot, params) {
@@ -109,7 +110,7 @@ export class CampaignScene extends CommonScene {
             scale: params.scale,
             ease: 'easeInCirc',
             duration: 250,
-            onStart: () => this.sounds.whoosh_map.play({ volume: .2 }),
+            onStart: () => this.sounds.whoosh_map.play({ volume: .15 }),
             onComplete: () => { 
                 if (dot.isCurrent) this._addDotAnim(dot);
             }
@@ -129,21 +130,15 @@ export class CampaignScene extends CommonScene {
         this.sounds.fire_effect.loop = true;
     }
 
-    selectLevel() {
-        if (!this.active) return;
-        
-        this.scene.createLevelCard(this.info);
-    }
-
-    createLevelCard(info) {
-        const bg_rect = this.add.rectangle(config.width * 0.5, config.height * 0.5, config.width, config.height, '0x000000', 0).setInteractive();
+    _createLevelCard(info) {
+        const bg_rect = this.add.rectangle(this._center.x, this._center.y, config.width, config.height, '0x000000', 0).setInteractive();
         
         const currentLevelHiScore = localStorage.getItem('hiScores').split(',')[info.index - 1];
         info.hiScore = currentLevelHiScore;
 
         const first_anim_duration = 365;
 
-        const frame = this.add.sprite(config.width * 0.5, config.height * 0.5, 'frame');
+        const frame = this.add.image(this._center.x, this._center.y, 'frame');
         frame.displayHeight = config.height * .795;
 
         let texts = []
@@ -181,7 +176,7 @@ export class CampaignScene extends CommonScene {
 
         this.sounds.stamp.play();
 
-        const stamp = this.add.sprite(frame.x, frame.y, 'stamp').setAlpha(0).setAngle(31).setScale(2.5);
+        const stamp = this.add.image(frame.x, frame.y, 'stamp').setAlpha(0).setAngle(31).setScale(2.5);
 
         const randX = frame.x + frame.displayWidth * 0.5 - frame.displayWidth * Phaser.Math.Between(25, 35) / 100;
         const randY = frame.y + frame.displayWidth * 0.5 - frame.displayHeight * Phaser.Math.Between(26, 30) / 100;
@@ -226,8 +221,8 @@ export class CampaignScene extends CommonScene {
                         .on('pointerout', () => { start_button.setAlpha(0.7) });
                     texts.push(start_button);
                     
-                    const close_button = this.add.sprite(frame.x + frame.displayWidth * 0.5, frame.y - frame.displayHeight * 0.5, 'close')
-                        .setOrigin(1.3, -.35)
+                    const close_button = this.add.image(frame.x + frame.displayWidth * 0.5 - config.width * 0.033, frame.y - frame.displayHeight * 0.5 + config.width * 0.037, 'close')
+                        .setOrigin(0.5)
                         .setAlpha(0.7)
                         .setInteractive()
                         .on('pointerdown', () => { this._cardClose({ bg_rect, frame, texts, stamp, close_button }) })
@@ -240,32 +235,6 @@ export class CampaignScene extends CommonScene {
         timeline.play();
     }
 
-    _cardClose(data) {
-        this.sounds.click.play({ volume: .2 });
-
-        data.bg_rect.destroy();
-        data.frame.destroy();
-        data.stamp.destroy();
-        data.close_button.destroy();
-        data.texts.forEach(element => {
-            element.destroy();
-        });
-    }
-
-    _gameStart(info) {
-        this.sounds.ready.play();
-
-        const bg_rect = this.add.rectangle(config.width * 0.5, config.height * 0.5, config.width, config.height, '0x000000', 0).setInteractive();
-
-        this.tweens.add({
-            targets: bg_rect,
-            fillAlpha: 1,
-            ease: 'Linear',
-            duration: this.sounds.ready.duration * 1000 * .7,
-            onComplete: () => this.scene.start(SCENE_NAMES.game, info),
-        });
-    }
-
     _createLosses() {
         if (this.losses_text) {
             this.losses_text.forEach(element => {
@@ -274,7 +243,7 @@ export class CampaignScene extends CommonScene {
         }
 
         let points = {
-            x: screenEndpoints.left + config.width * .033,
+            x: screenData.left + config.width * .033,
             y: config.height * .635,
         }
 
@@ -294,18 +263,17 @@ export class CampaignScene extends CommonScene {
         });
     }
 
-    _createReturnButton() {
-        this.add.sprite(screenEndpoints.left + config.width * .015, screenEndpoints.top + config.width * .015, 'return')
-            .setAlpha(0.65)
-            .setInteractive()
-            .on('pointerdown', () => {
-                this.scene.start(SCENE_NAMES.main);
-                this.sounds.click.play({ volume: .2 });
-            });
-    }
-
     _createControllers() {
         this._dialogBoxController = new DialogBoxController(this);
+    }
+
+
+    _createInitialDialogs() {
+        const isInitial = config.currentLevelScene === 1 && !localStorage.getItem('isFirstTimePlay');
+        if (!isInitial) {
+            return;
+        }
+        this._startDialogs(0); 
     }
 
     _createSounds() {
@@ -321,5 +289,59 @@ export class CampaignScene extends CommonScene {
             whoosh_map: this.sound.add('whoosh_map'),
             fire_effect: this.sound.add('fire_effect'),
         };
+    }
+
+    _cardClose(data) {
+        this.sounds.click.play({ volume: .2 });
+
+        data.bg_rect.destroy();
+        data.frame.destroy();
+        data.stamp.destroy();
+        data.close_button.destroy();
+        data.texts.forEach(element => {
+            element.destroy();
+        });
+    }
+
+    _gameStart(info) {
+        this.sounds.ready.play();
+
+        const bg_rect = this.add.rectangle(this._center.x, this._center.y, config.width, config.height, '0x000000', 0).setInteractive();
+
+        this.tweens.add({
+            targets: bg_rect,
+            fillAlpha: 1,
+            ease: 'Linear',
+            duration: this.sounds.ready.duration * 1000 * .7,
+            onComplete: () => this.scene.start(SCENE_NAMES.game, info),
+        });
+    }
+
+    _preloadDictateTextAudio() {
+        for (let i = 0; i < config.Levels.length; i++) {
+            const texts = this.scene.scene.cache.json.get(`dialogues${i}`)
+
+            if (!texts) {
+                return;
+            }
+
+            for (let j = 0; j < texts.length; j++) {
+                const name = `level${i}_text${j}_${config.lang}`;
+                this.load.audio(name, `./assets/voices/${config.lang}/${i}/${j}.mp3`);
+            }
+        }
+    }
+
+    _selectLevel({active, info}) {
+        if (!active) {
+            return;
+        }
+        
+        this._createLevelCard(info);
+    }
+
+    async _startDialogs(levelIndex, delay = INIT_DIALOG_DELAY) {
+        await delayInMSec(delay);
+        await this._dialogBoxController.flowShow(levelIndex);
     }
 }

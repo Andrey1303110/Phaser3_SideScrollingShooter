@@ -263,46 +263,46 @@ export const config = {
         enemiesDelay: 1500
     },
 
-    firstTimePlay: localStorage.getItem('firstTimePlay') ?? '1',
+    isFirstTimePlay: localStorage.getItem('isFirstTimePlay') ?? 1,
 };
 
 export const game = new Phaser.Game(config);
 
-export const screenEndpoints = {
+export const screenData = {
     left: 0,
     right: 0,
     top: 0,
     bottom: 0,
+    width: 0,
+    height: 0,
 };
 
 export function setEndpoints() {
-    if ((document.body.clientWidth / document.body.clientHeight) === (16 / 9)) {
-        screenEndpoints.left = 0;
-        screenEndpoints.right = config.width;
-        screenEndpoints.top = 0;
-        screenEndpoints.bottom = config.height;
-    } else {
-        if (document.body.clientWidth >= document.body.clientHeight) {
-            if ((document.body.clientWidth / document.body.clientHeight) < (16 / 9)) {
-                screenEndpoints.left = (config.width * 0.5) - (((config.height / document.body.clientHeight) * document.body.clientWidth) * 0.5);
-                screenEndpoints.right = (config.width * 0.5) + (((config.height / document.body.clientHeight) * document.body.clientWidth) * 0.5);
-                screenEndpoints.top = 0;
-                screenEndpoints.bottom = config.height;
-            } else {
-                screenEndpoints.left = 0;
-                screenEndpoints.right = config.width;
-                screenEndpoints.top = (config.height - ((config.width / config.height) / (document.body.clientWidth / document.body.clientHeight) * config.height)) * 0.5;
-                screenEndpoints.bottom = config.height - (config.height - ((config.width / config.height) / (document.body.clientWidth / document.body.clientHeight) * config.height)) * 0.5;
-            }
+    const aspectRatio = document.body.clientWidth / document.body.clientHeight;
+    const targetAspectRatio = 16 / 9;
 
-        } else {
-            screenEndpoints.left = (config.width * 0.5) - (((config.height / document.body.clientHeight) * document.body.clientWidth) * 0.5);
-            screenEndpoints.right = (config.width * 0.5) + (((config.height / document.body.clientHeight) * document.body.clientWidth) * 0.5);
-            screenEndpoints.top = 0;
-            screenEndpoints.bottom = config.height;
-        }
+    if (aspectRatio === targetAspectRatio) {
+        screenData.left = 0;
+        screenData.right = config.width;
+        screenData.top = 0;
+        screenData.bottom = config.height;
+    } else if (aspectRatio < targetAspectRatio) {
+        const newWidth = config.height * aspectRatio;
+        screenData.left = (config.width - newWidth) * 0.5;
+        screenData.right = screenData.left + newWidth;
+        screenData.top = 0;
+        screenData.bottom = config.height;
+    } else {
+        const newHeight = config.width / aspectRatio;
+        screenData.left = 0;
+        screenData.right = config.width;
+        screenData.top = (config.height - newHeight) * 0.5;
+        screenData.bottom = screenData.top + newHeight;
     }
-};
+
+    screenData.width = screenData.right - screenData.left;
+    screenData.height = screenData.bottom - screenData.top;
+}
 
 function initHiScores() {
     const arr = Array(config.Levels.length).fill(0);
@@ -368,7 +368,7 @@ export function setLang(lang) {
     localStorage.setItem('lang', lang);
 }
 
-if (localStorage.getItem('firstTimePlay') !== '0') {
+if (localStorage.getItem('isFirstTimePlay') !== 0) {
     initHiScores();
     initLosses();
     initUpgardeLevels();
@@ -388,7 +388,7 @@ export function rgbToHex(colors) {
     return '0x' + ((1 << 24) + (colors.r << 16) + (colors.g << 8) + colors.b).toString(16).slice(1);
 }
 
-export const delay = (ms) => {
+export const delayInMSec = (ms) => {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 

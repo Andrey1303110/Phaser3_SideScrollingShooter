@@ -1,6 +1,6 @@
 import { SCENE_NAMES } from '../constants';
 import { CommonScene } from './CommonScene';
-import { config, screenEndpoints } from '/src/scripts/main';
+import { config, screenData } from '/src/scripts/main';
 
 export class PauseScene extends CommonScene {
     constructor() {
@@ -8,58 +8,58 @@ export class PauseScene extends CommonScene {
     }
 
     create() {
-        this._createBG();
+        this._createBg();
         this._createButtons();
         this._toggleMenu();
     }
 
-    _createBG() {
-        this.black_bg = this.add.rectangle(config.width * 0.5, config.height * 0.5, config.width, config.height, '0x000000', 0);
-        this.sceneBG = this.add.sprite(config.width * 0.5, config.height * -1, 'pause_bg').setOrigin(.5);
+    _createBg() {
+        this._black_bg = this.add.rectangle(this._center.x, this._center.y, config.width, config.height, '0x000000', 0);
+        this._sceneBG = this.add.image(this._center.x, config.height * -1, 'pause_bg').setOrigin(.5);
 
         this.tweens.add({
-            targets: this.sceneBG,
-            y: config.height * 0.5,
+            targets: this._sceneBG,
+            y: this._center.x,
             ease: 'Linear',
             duration: 750,
         })
     }
 
-    _createButtons(){
-        this.play_button = this.add.sprite(this.sceneBG.x, this.sceneBG.y, 'play')
+    _createButtons() {
+        this._play_button = this.add.image(this._sceneBG.x, this._sceneBG.y, 'play')
+            .setOrigin(.5)
             .setScale(.8)
             .setAlpha(.85)
-            .setOrigin(.5)
             .setInteractive()
             .on('pointerdown', () => this._toggleMenu('resume'), this)
-            .on('pointerover', () => this.play_button.setAlpha(1))
-            .on('pointerout', () => this.play_button.setAlpha(.85));
+            .on('pointerover', () => this._play_button.setAlpha(1))
+            .on('pointerout', () => this._play_button.setAlpha(.85));
 
-        this.restart_button = this.add.sprite(this.sceneBG.x + this.sceneBG.displayWidth * .25, this.sceneBG.y, 'restart')
+        this._restart_button = this.add.image(this._sceneBG.x + this._sceneBG.displayWidth * .25, this._sceneBG.y, 'restart')
+            .setOrigin(.5)
             .setScale(1.25)
             .setAlpha(.65)
-            .setOrigin(.5)
             .setInteractive()
             .on('pointerdown', () => this._toggleMenu('restart'), this)
-            .on('pointerover', () => this.restart_button.setAlpha(1))
-            .on('pointerout', () => this.restart_button.setAlpha(.65));
+            .on('pointerover', () => this._restart_button.setAlpha(1))
+            .on('pointerout', () => this._restart_button.setAlpha(.65));
 
-        this.return_button = this.add.sprite(this.sceneBG.x - this.sceneBG.displayWidth * .25, this.sceneBG.y, 'return')
+        this._return_button = this.add.image(this._sceneBG.x - this._sceneBG.displayWidth * .25, this._sceneBG.y, 'return')
+            .setOrigin(.5)
             .setScale(1.25)
             .setAlpha(.65)
-            .setOrigin(.5)
             .setInteractive()
             .on('pointerdown', () => this._toggleMenu('return'), this)
-            .on('pointerover', () => this.return_button.setAlpha(1))
-            .on('pointerout', () => this.return_button.setAlpha(.65));
+            .on('pointerover', () => this._return_button.setAlpha(1))
+            .on('pointerout', () => this._return_button.setAlpha(.65));
     }
 
-    _toggleMenu(command){
+    _toggleMenu(command) {
         const tween_duration = 750;
-        const y = this.sceneBG.y < 0 ? screenEndpoints.top + this.sceneBG.displayHeight * 0.5 : config.height * -1;
+        const y = this._sceneBG.y < 0 ? screenData.top + this._sceneBG.displayHeight * 0.5 : config.height * -1;
 
         this.tweens.add({
-            targets: this.sceneBG,
+            targets: this._sceneBG,
             y: y,
             ease: 'Linear',
             duration: tween_duration,
@@ -79,8 +79,8 @@ export class PauseScene extends CommonScene {
             }
         })
         this.tweens.add({
-            targets: [this.play_button, this.restart_button, this.return_button],
-            y: y + this.sceneBG.displayHeight * .06085,
+            targets: [this._play_button, this._restart_button, this._return_button],
+            y: y + this._sceneBG.displayHeight * .06085,
             ease: 'Linear',
             duration: tween_duration,
         })

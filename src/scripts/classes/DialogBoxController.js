@@ -1,15 +1,15 @@
 import { DialogBox } from './DialogBox';
-import { config, delay } from '../main';
+import { config, delayInMSec } from '../main';
 import { DEPTH_LAYERS } from '../constants';
 
-const SHOW_DUARTION = 7500;
+const MIN_SHOW_DURATION = 2500;
 const SHOW_DELAY = 200;
 
 export class DialogBoxController {
     constructor(scene) {
         this._scene = scene;
         
-        this._sceneBG = this._scene.add.rectangle(config.width * 0.5, config.height * 0.5, config.width, config.height, '0x000000', 0.6).setAlpha(0);
+        this._darkBg = this._scene.add.rectangle(config.width * 0.5, config.height * 0.5, config.width, config.height, '0x000000', 0.6).setAlpha(0);
     }
 
     /**
@@ -18,32 +18,47 @@ export class DialogBoxController {
     async flowShow(level) {
         this._setData(level);
 
-        if (!this._data) return;
+        if (!this._data) {
+            return;
+        }
+        
+        await this._toggleShowingBg(true);
 
-        await this._toggleShowingBG(true);
+        const dialogsCount = this._data.length;
+        this._addSoundsToScene(level, dialogsCount);
 
-        for (const data of this._data) {
-            const dialogBox = new DialogBox(this._scene, data);
-            await this._playShowingDialog(dialogBox);
+        for (let i = 0; i < dialogsCount; i++) {
+            const dialogData = this._data[i];
+            const dialogBox = new DialogBox(this._scene, dialogData);
+            await this._playShowingDialog(dialogBox, level, i);
 
-            const lastElement = this._data[this._data.length-1];
-            if (data !== lastElement) await delay(SHOW_DELAY);
-        };
+            const isLast = dialogData === this._data[dialogsCount-1];
+            if (isLast) {
+                await delayInMSec(SHOW_DELAY);
+            }
+        }
 
-        await this._toggleShowingBG(false);
+        await this._toggleShowingBg(false);
     }
 
-    async _toggleShowingBG(value) {
+    _addSoundsToScene(levelIndex, dialogsCount) {
+        for (let i = 0; i < dialogsCount; i++) {
+            const name = `level${levelIndex}_text${i}_${config.lang}`;
+            this._scene.sounds[name] = this._scene.sound.add(name);
+        }
+    }
+
+    async _toggleShowingBg(value) {
         const alpha = value ? 1 : 0;
 
         if (value) {
-            this._sceneBG.setDepth(DEPTH_LAYERS.COVER_SCREEN);
-            this._sceneBG.setInteractive();
+            this._darkBg.setDepth(DEPTH_LAYERS.COVER_SCREEN);
+            this._darkBg.setInteractive();
         }
 
         await new Promise(resolve => {
             this._scene.tweens.add({
-                targets: this._sceneBG,
+                targets: this._darkBg,
                 alpha,
                 ease: 'Power1',
                 duration: 250,
@@ -52,18 +67,24 @@ export class DialogBoxController {
         });
 
         if (!value) { 
-            this._sceneBG.setDepth(DEPTH_LAYERS.NONE);
-            this._sceneBG.removeInteractive();
+            this._darkBg.setDepth(DEPTH_LAYERS.NONE);
+            this._darkBg.removeInteractive();
         }
     }
 
-    async _playShowingDialog(dialogBox) {
+    async _playShowingDialog(dialogBox, levelIndex, i) {
         await dialogBox.showEnter();
         
+        const soundName = `level${levelIndex}_text${i}_${config.lang}`;
+        const sound = this._scene.sounds[soundName];
+        const duration = Math.max(sound.duration * 1000, MIN_SHOW_DURATION);
+    
+        sound.play();
         await Promise.race([
             dialogBox.resolver.wait(),
-            delay(SHOW_DUARTION),
+            delayInMSec(duration),
         ]);
+        sound.stop();
         
         await dialogBox.showExit();
     }

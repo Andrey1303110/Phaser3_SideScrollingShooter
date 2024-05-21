@@ -1,5 +1,5 @@
 import { SCENE_NAMES } from '../constants';
-import { screenEndpoints, setEndpoints, setLang } from '../main';
+import { screenData, setEndpoints, setLang } from '../main';
 import { CommonScene } from './CommonScene';
 import { config } from '/src/scripts/main';
 
@@ -17,7 +17,7 @@ export class BootScene extends CommonScene {
     }
 
     async create() {
-        this._createBG();
+        this._createBg();
         this._createSounds();
 
         await this._createLogoAnimation();
@@ -78,16 +78,15 @@ export class BootScene extends CommonScene {
     }
 
     _createButtonFlagSprite(button, name) {
-        button.buttonFlag = this.add.sprite(button.x + config.width * 0.095, button.y, name)
-        .setAlpha(0);
+        button.buttonFlag = this.add.image(button.x + config.width * 0.095, button.y, name).setAlpha(0);
     }
 
     _createButtonSprite(buttonName, y) {
-        this._buttons[buttonName] = this.add.sprite(config.width * 0.5, config.height * y, 'button')
-        .setScale(5)
-        .setAlpha(0)
-        .setOrigin(.5)
-        .setInteractive();
+        this._buttons[buttonName] = this.add.image(config.width * 0.5, config.height * y, 'button')
+            .setOrigin(.5)
+            .setScale(5)
+            .setAlpha(0)
+            .setInteractive();
 
         this._buttons[buttonName].name = buttonName;
     }
@@ -118,7 +117,7 @@ export class BootScene extends CommonScene {
     }
 
     async _createLogoAnimation() {
-        const logo = this.add.sprite(config.width * 0.5, config.height * 0.5, 'pervious_logo').setAlpha(0);
+        const logo = this.add.image(this._center.x, this._center.y, 'pervious_logo').setAlpha(0);
         const scaleX = this.cameras.main.width / logo.width;
         const scaleY = this.cameras.main.height / logo.height;
         const scale = Math.max(scaleX, scaleY);
@@ -144,7 +143,7 @@ export class BootScene extends CommonScene {
             fill: '#f0f0f0',
         };
         
-        const label = this.add.text(config.width * 0.5, screenEndpoints.bottom, 'PRESS ANYWHERE TO CONTINUE', textStyle).setOrigin(0.5, 1.5).setAlpha(0);
+        const label = this.add.text(config.width * 0.5, screenData.bottom, 'PRESS ANYWHERE TO CONTINUE', textStyle).setOrigin(0.5, 1.5).setAlpha(0);
         const cliackArea = this.add.rectangle(0, 0, config.width, config.height).setOrigin(0);
 
         await new Promise((resolve) => {

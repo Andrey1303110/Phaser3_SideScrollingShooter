@@ -1,10 +1,10 @@
-import { config, screenEndpoints } from '/src/scripts/main';
+import { config, screenData } from '/src/scripts/main';
 import { MovableObject } from '/src/scripts/prefabs/MovableObject';
 
 export class Enemy extends MovableObject {
     static generateAttr(scene) {
-        const x = screenEndpoints.right + config.width * .25;
-        const y = Phaser.Math.Between(screenEndpoints.top + scene.maxEnemyFrameHeight * 0.5, screenEndpoints.bottom - scene.maxEnemyFrameHeight * 0.5);
+        const x = screenData.right + config.width * .25;
+        const y = Phaser.Math.Between(screenData.top + scene.maxEnemyFrameHeight * 0.5, screenData.bottom - scene.maxEnemyFrameHeight * 0.5);
 
         let typeNums = 0;
 
@@ -81,13 +81,14 @@ export class Enemy extends MovableObject {
     _setWeapon(){
         const type = this._enemyType;
         const enemyWeapon = config.Enemies[type].weapon
+        const { reload, velocity, scale, damage } = config.Weapons[enemyWeapon];
 
         this.weapon = {
             texture: config.Enemies[type].weapon,
-            delay: config.Weapons[enemyWeapon].reload,
-            velocity: config.Weapons[enemyWeapon].velocity,
-            scale: config.Weapons[enemyWeapon].scale,
-            damage: config.Weapons[enemyWeapon].damage ?? 100,
+            delay: reload,
+            velocity,
+            scale,
+            damage: damage ?? 100,
             origin: {x: -1, y: 0.5},
         }
     }

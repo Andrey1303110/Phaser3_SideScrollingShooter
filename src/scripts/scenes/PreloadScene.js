@@ -8,8 +8,8 @@ export class PreloadScene extends CommonScene {
         super(SCENE_NAMES.preload);
     }
 
-    preload(){
-        this._createBG();
+    async preload(){
+        this._createBg();
         this._preloadTexts();
         this._preloadResources();
         this._preloadPlugins();
@@ -27,6 +27,7 @@ export class PreloadScene extends CommonScene {
     }
 
     _preloadDialogues() {
+        this.load.json(`dialogues0`, `./assets/dialogues/${config.lang}/0.json`)
         config.Levels.forEach(level => this.load.json(`dialogues${level.index}`, `./assets/dialogues/${config.lang}/${level.index}.json`));
     }
 
