@@ -41,7 +41,7 @@ export class GameScene extends CommonScene {
         this._addJoystick();
         this._addFireButton();
         this._addHealthBar();
-        if (!this.info?.isUnlim) {
+        if (!this.info?.unlim) {
             this._addExpProgressBar();
         }
     }
@@ -93,7 +93,7 @@ export class GameScene extends CommonScene {
     }
 
     _createBg(data) {
-        const bg_image = data?.isUnlim ? `bg${Phaser.Math.Between(1, config.Levels.length)}` : `bg${data.index}`;
+        const bg_image = data?.unlim ? `bg${Phaser.Math.Between(1, config.Levels.length)}` : `bg${data.index}`;
 
         const real_height = this.textures.list[bg_image].source[0].height;
         const scale = config.height/real_height;
@@ -117,7 +117,7 @@ export class GameScene extends CommonScene {
             fill: '#EA0000',
         }).setOrigin(1, 0).setAlpha(.75);
 
-        if (this.info?.isUnlim) {
+        if (this.info?.unlim) {
             this.hiScoreText = this.add.text(this._center.x, screenData.top + config.width * .01, `${this._getText('TOP_HIGH_SCORE')} ${localStorage.getItem('unlimHiScores')}`, {
                 font: `${config.width * .03}px ${getFont()}`,
                 fill: '#EA0000',
@@ -162,7 +162,7 @@ export class GameScene extends CommonScene {
         }
 
         if (source !== this._player && target !== this._player) {
-            if (!this.info?.isUnlim) {
+            if (!this.info?.unlim) {
                 let losses_name = target.texture.key;
                 if (target.texture.key === 'strategic_jet') {
                     losses_name = 'jet';
@@ -176,13 +176,13 @@ export class GameScene extends CommonScene {
             const reward = Number((target.reward * Math.pow(config.level.scoreCof, this._currentLevelScene - 1)).toFixed(0));
             this._currentScore += reward;
 
-            if (!this.info?.isUnlim) {
+            if (!this.info?.unlim) {
                 const last_score = Number(config.totalScore);
                 localStorage.setItem('totalScore', last_score + reward);
                 config.totalScore = last_score + reward;
             }
             this.scoreText.text = this._currentScore;
-            this._updateExpProgressBar();
+            this._updateProgressBar();
         }
 
         if (source === this._player) {
@@ -199,7 +199,6 @@ export class GameScene extends CommonScene {
     _onPlayerHit(source, target) {
         const damage = this._enemies.children.contains(target) ? config.Player.maxHealth : target.damage;
         config.Player.currentHealth -= damage;
-        console.log('config.Player.currentHealth', config.Player.currentHealth);
         this._healthBar.updateHealthBar();
 
         if (config.Player.currentHealth <= 0) {
@@ -244,7 +243,7 @@ export class GameScene extends CommonScene {
             final_text.text = this._getText('FINAL_TEXT_LOSE');
             this.sounds.died.play();
 
-            if (this.info.isUnlim) {
+            if (this.info.unlim) {
                 if (localStorage.getItem('unlimHiScores') < this._currentScore) {
                     localStorage.setItem('unlimHiScores', this._currentScore);
                 }
@@ -259,7 +258,7 @@ export class GameScene extends CommonScene {
             ease: 'Linear',
             duration: this.sounds.died.duration * 1000 * .75,
             onComplete: () => {
-                this.scene.start(this.info.isUnlim ? SCENE_NAMES.main : SCENE_NAMES.campaign);
+                this.scene.start(this.info.unlim ? SCENE_NAMES.main : SCENE_NAMES.campaign);
                 this.scene.stop();
             }
         })
@@ -296,11 +295,11 @@ export class GameScene extends CommonScene {
             fill: '#FFFFFF',
         }).setOrigin(0.5).setAlpha(0.75);
 
-        this._updateExpProgressBar();
+        this._updateProgressBar();
     }
 
     _updateProgressBar(){
-        if (this.info?.isUnlim) {
+        if (this.info?.unlim) {
             return;
         }
         let score = {
