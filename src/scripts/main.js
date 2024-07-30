@@ -35,7 +35,7 @@ export const config = {
 
     fonts: {
         eng: 'DishOut',
-        ukr: 'Comfortaa-Regular',
+        ukr: 'Pangolin',
     },
 
     // TODO replace to separate property
