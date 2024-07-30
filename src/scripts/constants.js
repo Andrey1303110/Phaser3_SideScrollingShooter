@@ -5,13 +5,13 @@ export const SCENE_NAMES = {
     campaign: 'Campaign',
     game: 'GameScene',
     upgrade: 'Upgrade',
-    pause: 'Pause'
+    pause: 'Pause',
 }
 
 export const EVENTS = {     
     killed: 'killed',
     allEnemiesKilled: 'enemies-killed',
-    update: 'update'
+    update: 'update',
 }
 
 // Only .png + .json
@@ -29,5 +29,5 @@ export const DEPTH_LAYERS = {
     UI: 2,
     COVER_SCREEN: 3,
     DIALOGUES: 4,
-    MAX: 5
+    MAX: 5,
 }

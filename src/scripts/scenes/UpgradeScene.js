@@ -91,7 +91,7 @@ export class UpgradeScene extends CommonScene {
             fill: '#000000',
         };
 
-        const infoText = this.add.text(this._center.x, screenEndpoints.bottom - config.height * .075, this._getText('BOTTOM_DESCRIPTION'), style).setOrigin(.5).setAlpha(0);
+        const infoText = this.add.text(this._center.x, screenData.bottom - config.height * .075, this._getText('BOTTOM_DESCRIPTION'), style).setOrigin(.5).setAlpha(0);
 
         const upgradableStats = Object.keys(config.CurrentUpgradableStats);
         const height = config.height * 0.4;
@@ -230,7 +230,7 @@ export class UpgradeScene extends CommonScene {
         if (config.money) {
             config.money -= value;
             localStorage.setItem('money', config.money);
-            this.moneyText.text = config.money;
+            this._moneyValueText.text = config.money;
         }
         else {
             return false;
@@ -297,7 +297,7 @@ export class UpgradeScene extends CommonScene {
     }
 
     _addReturnButton(){
-        this.add.sprite(screenEndpoints.left + config.width * .015, screenEndpoints.top + config.width * .015, 'return')
+        this.add.sprite(screenData.left + config.width * .015, screenData.top + config.width * .015, 'return')
             .setAlpha(0.65)
             .setInteractive()
             .on('pointerdown', () => this.scene.start(SCENE_NAMES.main), this);
