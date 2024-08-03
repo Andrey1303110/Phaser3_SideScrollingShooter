@@ -261,9 +261,7 @@ export const config = {
         index: 15,
         enemies: 9999,
         enemiesDelay: 1500
-    },
-
-    isFirstTimePlay: localStorage.getItem('isFirstTimePlay') ?? 1,
+    }
 };
 
 export const game = new Phaser.Game(config);
@@ -368,13 +366,18 @@ export function setLang(lang) {
     localStorage.setItem('lang', lang);
 }
 
-if (Number(localStorage.getItem('isFirstTimePlay')) !== 0) {
+if (!localStorage.getItem('isFirstTimePlay') || localStorage.getItem('isFirstTimePlay') !== 0) {
     initHiScores();
     initCasualties();
     initUpgardeLevels();
+    initLocalStorageItems();
+}
+
+function initLocalStorageItems() {
     localStorage.setItem('currentLevelPlayer', config.currentLevelPlayer);
     localStorage.setItem('currentPlayerWeapon', 'fire');
     localStorage.setItem('money', config.money);
+    localStorage.setItem('isFirstTimePlay', 1);
 }
 
 initLang();

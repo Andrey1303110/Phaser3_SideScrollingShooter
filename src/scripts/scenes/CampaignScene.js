@@ -135,7 +135,7 @@ export class CampaignScene extends CommonScene {
     _createLevelCard(info) {
         const bg_rect = this.add.rectangle(this._center.x, this._center.y, config.width, config.height, '0x000000', 0).setInteractive();
         
-        const currentLevelHiScore = localStorage.getItem('hiScores').split(',')[info.index - 1];
+        const currentLevelHiScore = localStorage.getItem('hiScores').split(',')[info.index - 1] || 0;
         info.hiScore = currentLevelHiScore;
 
         const first_anim_duration = 365;
