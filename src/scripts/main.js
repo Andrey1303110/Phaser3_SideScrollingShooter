@@ -139,7 +139,7 @@ export const config = {
             x: 485,
             y: 175,
             enemies: 5,
-            enemiesDelay: 2500,
+            enemiesDelay: 3000,
             velocity: 4,
         },
         {
@@ -147,7 +147,7 @@ export const config = {
             x: 506,
             y: 490,
             enemies: 8,
-            enemiesDelay: 2250,
+            enemiesDelay: 2500,
             velocity: 4,
         },
         {
@@ -155,7 +155,7 @@ export const config = {
             x: 758,
             y: 179,
             enemies: 11,
-            enemiesDelay: 2000,
+            enemiesDelay: 2200,
             velocity: 4,
         },
         {
@@ -163,7 +163,7 @@ export const config = {
             x: 430,
             y: 135,
             enemies: 15,
-            enemiesDelay: 1850,
+            enemiesDelay: 1900,
             velocity: 4,
         },
         {
@@ -240,16 +240,16 @@ export const config = {
         },
         {
             index: 14,
-            x: 676,
-            y: 640,
+            x: 956,
+            y: 261,
             enemies: 200,
             enemiesDelay: 950,
             velocity: 4,
         },
         {
             index: 15,
-            x: 956,
-            y: 261,
+            x: 676,
+            y: 640,
             enemies: 250,
             enemiesDelay: 925,
             velocity: 4,

@@ -29,8 +29,8 @@
         "LEVEL_11_NAME": "Donetsk",
         "LEVEL_12_NAME": "Zaporizha",
         "LEVEL_13_NAME": "Kahovska HPP",
-        "LEVEL_14_NAME": "Sevastopol Balaklava",
-        "LEVEL_15_NAME": "Luhansk"
+        "LEVEL_14_NAME": "Luhansk",
+        "LEVEL_15_NAME": "Sevastopol Balaklava"
     },
     "GameScene": {
         "TOP_HIGH_SCORE": "High score:",
