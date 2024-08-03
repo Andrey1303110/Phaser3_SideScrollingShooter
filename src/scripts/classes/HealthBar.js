@@ -15,10 +15,10 @@ export class HealthBar extends Phaser.GameObjects.Container {
         // TODO add tween to update
         let progressValue;
 
-        if (config.Player.currentHealth <= 0) {
+        if (config.player.currentHealth <= 0) {
             progressValue = 0;
         } else {
-            progressValue = config.Player.currentHealth/config.Player.maxHealth;
+            progressValue = config.player.currentHealth/config.player.maxHealth;
         }
 
         let cutWidth = this._healthBarFill.displayWidth * progressValue;

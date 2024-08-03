@@ -93,7 +93,7 @@ export class UpgradeScene extends CommonScene {
 
         const infoText = this.add.text(this._center.x, screenData.bottom - config.height * .075, this._getText('BOTTOM_DESCRIPTION'), style).setOrigin(.5).setAlpha(0);
 
-        const upgradableStats = Object.keys(config.CurrentUpgradableStats);
+        const upgradableStats = Object.keys(config.currentUpgradableStats);
         const height = config.height * 0.4;
 
         for (let i = 0; i < upgradableStats.length; i++) {
@@ -104,16 +104,16 @@ export class UpgradeScene extends CommonScene {
 
             switch (key) {
                 case 'health':
-                    value = (Math.round(config.Player.maxHealth * multiplier) / multiplier * multiplier).toFixed(0);
+                    value = (Math.round(config.player.maxHealth * multiplier) / multiplier * multiplier).toFixed(0);
                     break;
                 case 'reload':
-                    value = (Math.round(config.Weapons.fire[key] * multiplier) / multiplier * multiplier).toFixed(0);
+                    value = (Math.round(config.weapons.fire[key] * multiplier) / multiplier * multiplier).toFixed(0);
                     break;
                 case 'scale':
                     multiplier = 100;
-                    value = (Math.round(config.Weapons.fire[key] * multiplier) / multiplier * multiplier).toFixed(0);
+                    value = (Math.round(config.weapons.fire[key] * multiplier) / multiplier * multiplier).toFixed(0);
                 case 'velocity':
-                    value = (Math.round(config.Weapons.fire[key] * multiplier) / multiplier * multiplier).toFixed(0);
+                    value = (Math.round(config.weapons.fire[key] * multiplier) / multiplier * multiplier).toFixed(0);
                     break;
             }
 
@@ -259,17 +259,17 @@ export class UpgradeScene extends CommonScene {
 
         switch (button.name) {
             case 'health':
-                returnedValue = (Math.round(config.Player.maxHealth * multiplier) / multiplier * multiplier).toFixed(0);
+                returnedValue = (Math.round(config.player.maxHealth * multiplier) / multiplier * multiplier).toFixed(0);
                 break;
             case 'reload':
-                returnedValue = (Math.round(config.Weapons.fire[button.name] * multiplier) / multiplier * multiplier).toFixed(0);
+                returnedValue = (Math.round(config.weapons.fire[button.name] * multiplier) / multiplier * multiplier).toFixed(0);
                 break;
             case 'scale':
                 multiplier = 100;
-                returnedValue = (Math.round(config.Weapons.fire[button.name] * multiplier) / multiplier * multiplier).toFixed(0);
+                returnedValue = (Math.round(config.weapons.fire[button.name] * multiplier) / multiplier * multiplier).toFixed(0);
                 break;
             case 'velocity':
-                returnedValue = (Math.round(config.Weapons.fire[button.name] * multiplier) / multiplier * multiplier).toFixed(0);
+                returnedValue = (Math.round(config.weapons.fire[button.name] * multiplier) / multiplier * multiplier).toFixed(0);
                 break;
         }
 
@@ -287,7 +287,7 @@ export class UpgradeScene extends CommonScene {
             onStart: () => { 
                 button.clicked = false;
                 button.active = false;
-                Object.keys(config.CurrentUpgradableStats).forEach(key => {
+                Object.keys(config.currentUpgradableStats).forEach(key => {
                     this._checkAvailability(this.buttons[key]);
                 })
             }

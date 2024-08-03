@@ -6,18 +6,18 @@ import { CommonScene } from './CommonScene';
 const INIT_DIALOG_DELAY = 1000;
 const BRIEF_DIALOG_DELAY = 2500;
 
-const LOSSES_MAP = {
+const CASUALTIES_MAP = {
     jet: {
-        text: 'TOTAL_LOSSES_JEST',
+        text: 'TOTAL_CASUALTIES_JEST',
     },
     helicopter: {
-        text: 'TOTAL_LOSSES_HELICOPTERS',
+        text: 'TOTAL_CASUALTIES_HELICOPTERS',
     },
     rocket: {
-        text: 'TOTAL_LOSSES_ROCKETS',
+        text: 'TOTAL_CASUALTIES_ROCKETS',
     },
     missile: {
-        text: 'TOTAL_LOSSES_MISSILES'
+        text: 'TOTAL_CASUALTIES_MISSILES'
     }
 }
 
@@ -35,7 +35,7 @@ export class CampaignScene extends CommonScene {
         this._createSounds();
         this._createMap();
         this._createMissions();
-        this._createLosses();
+        this._createCasualties();
         this._createReturnButton();
         this._createControllers();
         this._createAvailableMoney();
@@ -51,7 +51,7 @@ export class CampaignScene extends CommonScene {
 
     _createMissions() {
         const timelineEvents = [];
-        config.Levels.forEach((element, i) => {
+        config.levels.forEach((element, i) => {
             timelineEvents.push({
                 at: i * 100,
                 run: () => this._createDot(element)
@@ -87,10 +87,7 @@ export class CampaignScene extends CommonScene {
             params.scale = 0.75;
         } else {
             dot.setAlpha(1)
-                .on('pointerdown', () => { 
-                    this.sounds.select.play({ volume: .33 });
-                    this._startDialogs(level.index, BRIEF_DIALOG_DELAY);
-                });
+                .on('pointerdown', () => this._onDotClick);
             dot.active = true;
 
             if (config.currentLevelScene > level.index) {
@@ -101,6 +98,11 @@ export class CampaignScene extends CommonScene {
         }
 
         this._createDotTween(dot, params);
+    }
+
+    _onDotClick() {
+        this.sounds.select.play({ volume: .33 });
+        this._startDialogs(level.index, BRIEF_DIALOG_DELAY);
     }
 
     _createDotTween(dot, params) {
@@ -235,9 +237,9 @@ export class CampaignScene extends CommonScene {
         timeline.play();
     }
 
-    _createLosses() {
-        if (this.losses_text) {
-            this.losses_text.forEach(element => {
+    _createCasualties() {
+        if (this._casualtiesText) {
+            this._casualtiesText.forEach(element => {
                 element.destroy();
             });
         }
@@ -247,16 +249,16 @@ export class CampaignScene extends CommonScene {
             y: config.height * .635,
         }
 
-        this.losses_text = [];
+        this._casualtiesText = [];
 
-        this.losses_text.push(this.add.text(points.x, points.y, this._getText('TOTAL_LOSSES'), {
+        this._casualtiesText.push(this.add.text(points.x, points.y, this._getText('TOTAL_CASUALTIES'), {
             font: `${config.width * .025}px ${getFont()}`,
             fill: '#EA0000',
         }).setOrigin(0, 0.5).setAlpha(0.75));
 
-        Object.keys(config.Losses).forEach(name => {
+        Object.keys(config.casualties).forEach(name => {
             points.y += config.width * .0285;
-            this.losses_text.push(this.add.text(points.x, points.y, `${this._getText(LOSSES_MAP[name].text)} ${localStorage.getItem(`losses_${name}`)}`, {
+            this._casualtiesText.push(this.add.text(points.x, points.y, `${this._getText(CASUALTIES_MAP[name].text)} ${localStorage.getItem(`casualties_${name}`)}`, {
                 font: `${config.width * .0215}px ${getFont()}`,
                 fill: '#000000',
             }).setOrigin(0, 0.5).setAlpha(0.75));
@@ -318,7 +320,7 @@ export class CampaignScene extends CommonScene {
     }
 
     _preloadDictateTextAudio() {
-        for (let i = 0; i < config.Levels.length; i++) {
+        for (let i = 0; i < config.levels.length; i++) {
             const texts = this.scene.scene.cache.json.get(`dialogues${i}`)
 
             if (!texts) {

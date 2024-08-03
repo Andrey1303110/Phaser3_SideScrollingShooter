@@ -15,8 +15,8 @@ export class Enemy extends MovableObject {
             }
         }
 
-        const enemyType = Object.keys(config.Enemies)[Phaser.Math.Between(0, typeNums)];
-        const enemyTexture = `enemy${Phaser.Math.Between(1, config.Enemies[enemyType].textureNums)}`;
+        const enemyType = Object.keys(config.enemies)[Phaser.Math.Between(0, typeNums)];
+        const enemyTexture = `enemy${Phaser.Math.Between(1, config.enemies[enemyType].textureNums)}`;
 
         return { x, y, enemyTexture, enemyType };
     }
@@ -32,7 +32,7 @@ export class Enemy extends MovableObject {
             enemyType: data.enemyType,
             texture: data.enemyType,
             frame: data.enemyTexture,
-            velocity: config.Enemies[data.enemyType].velocity * -1,
+            velocity: config.enemies[data.enemyType].velocity * -1,
         });
     }
 
@@ -61,7 +61,7 @@ export class Enemy extends MovableObject {
 
     _addTimer() {
         this.timer = this.scene.time.addEvent({
-            delay: config.Weapons[this.weapon.texture].reload * (Phaser.Math.Between(70, 130) * .01),
+            delay: config.weapons[this.weapon.texture].reload * (Phaser.Math.Between(70, 130) * .01),
             loop: true,
             callback: this._shooting,
             callbackScope: this,
@@ -75,16 +75,16 @@ export class Enemy extends MovableObject {
         this._firesActivate = true;
         this.reward = config.reward[texture];
         this.fires = fires;
-        this.scale = config.Enemies[enemyType].scale;
+        this.scale = config.enemies[enemyType].scale;
     }
 
     _setWeapon(){
         const type = this._enemyType;
-        const enemyWeapon = config.Enemies[type].weapon
-        const { reload, velocity, scale, damage } = config.Weapons[enemyWeapon];
+        const enemyWeapon = config.enemies[type].weapon
+        const { reload, velocity, scale, damage } = config.weapons[enemyWeapon];
 
         this.weapon = {
-            texture: config.Enemies[type].weapon,
+            texture: config.enemies[type].weapon,
             delay: reload,
             velocity,
             scale,

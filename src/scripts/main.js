@@ -50,19 +50,19 @@ export const config = {
     },
 
     level: {
-        scoreCof: 1.2,
-        levelCof: 1.3,
+        scoreCof: 1.185,
+        levelCof: 1.315,
         score: 500,
     },
 
-    Losses: {
-        jet: localStorage.getItem('losses_jet') ?? 0,
-        helicopter: localStorage.getItem('losses_helicopter') ?? 0,
-        rocket: localStorage.getItem('losses_rocket') ?? 0,
-        missile: localStorage.getItem('losses_missile') ?? 0
+    casualties: {
+        jet: localStorage.getItem('casualties_jet') ?? 0,
+        helicopter: localStorage.getItem('casualties_helicopter') ?? 0,
+        rocket: localStorage.getItem('casualties_rocket') ?? 0,
+        missile: localStorage.getItem('casualties_missile') ?? 0
     },
 
-    Player: {
+    player: {
         maxHealth: 100,
         currentHealth: 100,
         velocity: 350,
@@ -70,14 +70,14 @@ export const config = {
         currentWeapon: localStorage.getItem('currentPlayerWeapon'),
     },
 
-    CurrentUpgradableStats: {
+    currentUpgradableStats: {
         health: 1,
         reload: 1,
         velocity: 1,
         scale: 1,
     },
 
-    Enemies: {
+    enemies: {
         helicopter: {
             velocity: 110,
             weapon: 'rocket',
@@ -98,7 +98,7 @@ export const config = {
         },
     },
 
-    Weapons: {
+    weapons: {
         fire: {
             reload: 500,
             velocity: 500,
@@ -133,7 +133,7 @@ export const config = {
         rocket: 100,
     },
 
-    Levels: [
+    levels: [
         {
             index: 1,
             x: 485,
@@ -305,20 +305,20 @@ export function setEndpoints() {
 }
 
 function initHiScores() {
-    const arr = Array(config.Levels.length).fill(0);
+    const arr = Array(config.levels.length).fill(0);
 
     localStorage.setItem('hiScores', arr);
     localStorage.setItem('unlimHiScores', 0);
 };
 
-function initLosses() {
-    Object.keys(config.Losses).forEach(name => {
-        localStorage.setItem(`losses_${name}`, 0);
+function initCasualties() {
+    Object.keys(config.casualties).forEach(name => {
+        localStorage.setItem(`casualties_${name}`, 0);
     });
 };
 
 function initUpgardeLevels() {
-    const stats = Object.keys(config.CurrentUpgradableStats);
+    const stats = Object.keys(config.currentUpgradableStats);
 
     for (let i = 0; i < stats.length; i++) {
         const key = stats[i];
@@ -327,7 +327,7 @@ function initUpgardeLevels() {
 };
 
 function initAbilitiesByLevel() {
-    const stats = Object.keys(config.CurrentUpgradableStats);
+    const stats = Object.keys(config.currentUpgradableStats);
 
     for (let i = 0; i < stats.length; i++) {
         const key = stats[i];
@@ -345,15 +345,15 @@ export function getPlayerAbilities(key) {
 
     switch (key) {
         case 'health':
-            config.Player.maxHealth += config.Player.maxHealth * MULTIPLIER;
-            return config.Player.maxHealth;
+            config.player.maxHealth += config.player.maxHealth * MULTIPLIER;
+            return config.player.maxHealth;
         case 'reload':
-            config.Weapons.fire[key] -= config.Weapons.fire[key] * MULTIPLIER;
-            return config.Weapons.fire[key];
+            config.weapons.fire[key] -= config.weapons.fire[key] * MULTIPLIER;
+            return config.weapons.fire[key];
         case 'scale':
         case 'velocity':
-            config.Weapons.fire[key] += config.Weapons.fire[key] * MULTIPLIER;
-            return config.Weapons.fire[key];
+            config.weapons.fire[key] += config.weapons.fire[key] * MULTIPLIER;
+            return config.weapons.fire[key];
         default:
             throw new Error('Unknown ability upgrade');
     }
@@ -370,7 +370,7 @@ export function setLang(lang) {
 
 if (localStorage.getItem('isFirstTimePlay') !== 0) {
     initHiScores();
-    initLosses();
+    initCasualties();
     initUpgardeLevels();
     localStorage.setItem('currentLevelPlayer', config.currentLevelPlayer);
     localStorage.setItem('currentPlayerWeapon', 'fire');

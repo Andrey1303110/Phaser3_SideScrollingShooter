@@ -14,7 +14,7 @@ export class PauseScene extends CommonScene {
     }
 
     _createBg() {
-        this._black_bg = this.add.rectangle(this._center.x, this._center.y, config.width, config.height, '0x000000', 0);
+        this._blackBG = this.add.rectangle(this._center.x, this._center.y, config.width, config.height, '0x000000', 0);
         this._sceneBG = this.add.image(this._center.x, config.height * -1, 'pause_bg').setOrigin(.5);
 
         this.tweens.add({

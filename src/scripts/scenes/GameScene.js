@@ -20,7 +20,7 @@ export class GameScene extends CommonScene {
         this.info = data;
         this._currentLevelScene = this.info.index;
         this._currentScore = 0;
-        this._black_bg = null;
+        this._blackBG = null;
     }
 
     create(data) {
@@ -34,13 +34,11 @@ export class GameScene extends CommonScene {
         this._createEnemies();
         this._createCompleteEvents();
         this._addOverlap();
-        this._createScoreText();
         this._createSounds();
-        this._addPauseButton();
-        this._addMobileButtons();
-        this._addJoystick();
-        this._addFireButton();
+        this._createScoreText();
         this._addHealthBar();
+        this._addMobileButtons();
+        this._addPauseButton();
         if (!this.info?.unlim) {
             this._addExpProgressBar();
         }
@@ -53,6 +51,10 @@ export class GameScene extends CommonScene {
         this._player.shooting();
         this._healthBar.setPosition(this._player.x, this._player.y - this._player.height * 0.5);
     }
+    
+    get joystick() {
+        return this._joystick;
+    }
 
     _addMobileButtons() {
         if (document.body.clientWidth > 1280) return;
@@ -62,24 +64,30 @@ export class GameScene extends CommonScene {
     }
 
     _addJoystick(){
-        this.joyStick = this.plugins.get('rexvirtualjoystickplugin').add(this, {
-            x: screenData.left + config.joystick.radius + config.joystick.gap,
-            y: screenData.bottom - config.joystick.radius - config.joystick.gap,
-            radius: config.joystick.radius,
-            base: this.add.circle(0, 0, config.joystick.radius).setStrokeStyle(3.5, 0x1a65ac).setAlpha(.75),
-            thumb: this.add.circle(0, 0, config.joystick.radius * 0.5, 0xcccccc).setAlpha(0.5),
+        const { left, bottom } = screenData;
+        const { radius, gap } = config.joystick;
+
+        this._joystick = this.plugins.get('rexvirtualjoystickplugin').add(this, {
+            x: left + radius + gap,
+            y: bottom - radius - gap,
+            radius: radius,
+            base: this.add.circle(0, 0, radius).setStrokeStyle(3.5, 0x1a65ac).setAlpha(.75),
+            thumb: this.add.circle(0, 0, radius * 0.5, 0xcccccc).setAlpha(0.5),
             dir: '8dir',
         });
     }
 
     _dumpJoyStickState() {
-        if (this.joyStick) {
-            this.cursorKeys = this.joyStick.createCursorKeys();
+        if (this._joystick) {
+            this.cursorKeys = this._joystick.createCursorKeys();
         }
     }
 
     _addFireButton(){
-        this.fireButton = this.add.image(screenData.right - config.joystick.radius - config.joystick.gap, this.joyStick.y, 'fire')
+        const { right } = screenData;
+        const { radius, gap } = config.joystick;
+
+        this.fireButton = this.add.image(right - radius - gap, this._joystick.y, 'fire')
             .setAlpha(0.65)
             .setInteractive()
             .setActive(false)
@@ -93,33 +101,38 @@ export class GameScene extends CommonScene {
     }
 
     _createBg(data) {
-        const bg_image = data?.unlim ? `bg${Phaser.Math.Between(1, config.Levels.length)}` : `bg${data.index}`;
+        const { levels: Levels, height, width} = config;
+
+        const bg_image = data?.unlim ? `bg${Phaser.Math.Between(1, Levels.length)}` : `bg${data.index}`;
 
         const real_height = this.textures.list[bg_image].source[0].height;
-        const scale = config.height/real_height;
+        const scale = height/real_height;
 
-        this.speed = config.Levels[this._currentLevelScene-1].velocity;
+        this.speed = Levels[this._currentLevelScene-1].velocity;
 
         if (scale !== 1) {
             this.speed /= scale;
         }
 
-        this._sceneBG = this.add.tileSprite(0, 0, config.width, config.height, bg_image).setOrigin(0).setScale(scale).setAlpha(.65);
+        this._sceneBG = this.add.tileSprite(0, 0, width, height, bg_image).setOrigin(0).setScale(scale).setAlpha(.65);
     }
 
     _createScoreText() {
+        const { right, top } = screenData;
+        const { width } = config;
+
         if (this.hiScoreText) {
             this.hiScoreText.destroy();
         }
 
-        this.scoreText = this.add.text(screenData.right - config.width * .01, screenData.top + config.width * .01, this._currentScore, {
-            font: `${config.width * .03}px ${getFont()}`,
+        this.scoreText = this.add.text(right - width * .01, top + width * .01, this._currentScore, {
+            font: `${width * .03}px ${getFont()}`,
             fill: '#EA0000',
         }).setOrigin(1, 0).setAlpha(.75);
 
         if (this.info?.unlim) {
-            this.hiScoreText = this.add.text(this._center.x, screenData.top + config.width * .01, `${this._getText('TOP_HIGH_SCORE')} ${localStorage.getItem('unlimHiScores')}`, {
-                font: `${config.width * .03}px ${getFont()}`,
+            this.hiScoreText = this.add.text(this._center.x, top + width * .01, `${this._getText('TOP_HIGH_SCORE')} ${localStorage.getItem('unlimHiScores')}`, {
+                font: `${width * .03}px ${getFont()}`,
                 fill: '#EA0000',
             }).setOrigin(0.5, 0).setAlpha(.75);
         }
@@ -163,14 +176,14 @@ export class GameScene extends CommonScene {
 
         if (source !== this._player && target !== this._player) {
             if (!this.info?.unlim) {
-                let losses_name = target.texture.key;
+                let casualtiesName = target.texture.key;
                 if (target.texture.key === 'strategic_jet') {
-                    losses_name = 'jet';
+                    casualtiesName = 'jet';
                 } else if (target.texture.key === 'missile_2') {
-                    losses_name = 'missile';
+                    casualtiesName = 'missile';
                 }
-                let old_value = Number(localStorage.getItem(`losses_${losses_name}`));
-                localStorage.setItem(`losses_${losses_name}`, ++old_value);
+                let old_value = Number(localStorage.getItem(`casualties_${casualtiesName}`));
+                localStorage.setItem(`casualties_${casualtiesName}`, ++old_value);
             }
 
             const reward = Number((target.reward * Math.pow(config.level.scoreCof, this._currentLevelScene - 1)).toFixed(0));
@@ -197,11 +210,11 @@ export class GameScene extends CommonScene {
     }
 
     _onPlayerHit(source, target) {
-        const damage = this._enemies.children.contains(target) ? config.Player.maxHealth : target.damage;
-        config.Player.currentHealth -= damage;
+        const damage = this._enemies.children.contains(target) ? config.player.maxHealth : target.damage;
+        config.player.currentHealth -= damage;
         this._healthBar.updateHealthBar();
 
-        if (config.Player.currentHealth <= 0) {
+        if (config.player.currentHealth <= 0) {
             source.setAlive(false);
         }
     }
@@ -213,12 +226,12 @@ export class GameScene extends CommonScene {
     }
 
     _onComplete() {
-        if (this._black_bg) {
+        if (this._blackBG) {
             return;
         }
 
-        this._black_bg = this.add.rectangle(config.width * 0.5, config.height * 0.5, config.width, config.height, '0x000000', 0).setInteractive().setDepth(DEPTH_LAYERS.COVER_SCREEN);
-        let final_text = this.add.text(this._black_bg.x, this._black_bg.y, '', {
+        this._blackBG = this.add.rectangle(config.width * 0.5, config.height * 0.5, config.width, config.height, '0x000000', 0).setInteractive().setDepth(DEPTH_LAYERS.COVER_SCREEN);
+        let final_text = this.add.text(this._blackBG.x, this._blackBG.y, '', {
             font: `${config.width * .03}px ${getFont()}`,
             fill: '#EA0000',
         }).setOrigin(0.5).setAlpha(0).setDepth(DEPTH_LAYERS.MAX);
@@ -251,7 +264,7 @@ export class GameScene extends CommonScene {
         }
 
         this.tweens.add({
-            targets: [this._black_bg, final_text],
+            targets: [this._blackBG, final_text],
             fillAlpha: 1,
             alpha: 1,
             scale: final_text.scale * 2,
@@ -380,6 +393,6 @@ export class GameScene extends CommonScene {
     }
 
     _reset() {
-        config.Player.currentHealth = config.Player.maxHealth;
+        config.player.currentHealth = config.player.maxHealth;
     }
 }

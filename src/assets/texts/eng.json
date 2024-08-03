@@ -5,11 +5,11 @@
         "UPGRADE": "UPGRADE"
     },
     "Campaign": {
-        "TOTAL_LOSSES": "Total russian losses:",
-        "TOTAL_LOSSES_JEST": "JETS:",
-        "TOTAL_LOSSES_HELICOPTERS": "HELICOPTERS:",
-        "TOTAL_LOSSES_ROCKETS": "ROCKETS:",
-        "TOTAL_LOSSES_MISSILES": "MISSILES:",
+        "TOTAL_CASUALTIES": "Total russian casualties:",
+        "TOTAL_CASUALTIES_JEST": "JETS:",
+        "TOTAL_CASUALTIES_HELICOPTERS": "HELICOPTERS:",
+        "TOTAL_CASUALTIES_ROCKETS": "ROCKETS:",
+        "TOTAL_CASUALTIES_MISSILES": "MISSILES:",
         "MISSION_CARD_MAIN_TITLE": "MISSION",
         "MISSION_CARD_LEVEL": "LEVEL",
         "MISSION_CARD_CITY": "CITY",

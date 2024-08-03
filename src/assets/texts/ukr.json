@@ -5,11 +5,11 @@
         "UPGRADE": "Апгрейд"
     },
     "Campaign": {
-        "TOTAL_LOSSES": "Загальні втрати:",
-        "TOTAL_LOSSES_JEST": "Літаки:",
-        "TOTAL_LOSSES_HELICOPTERS": "Гвинтокрили:",
-        "TOTAL_LOSSES_ROCKETS": "Ракети (некеровані):",
-        "TOTAL_LOSSES_MISSILES": "Крилаті ракети:",
+        "TOTAL_CASUALTIES": "Загальні втрати:",
+        "TOTAL_CASUALTIES_JEST": "Літаки:",
+        "TOTAL_CASUALTIES_HELICOPTERS": "Гвинтокрили:",
+        "TOTAL_CASUALTIES_ROCKETS": "Ракети (некеровані):",
+        "TOTAL_CASUALTIES_MISSILES": "Крилаті ракети:",
         "MISSION_CARD_MAIN_TITLE": "МІСІЯ",
         "MISSION_CARD_LEVEL": "Рівень",
         "MISSION_CARD_CITY": "Локація:",

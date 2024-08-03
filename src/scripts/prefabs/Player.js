@@ -17,13 +17,13 @@ export class Player extends MovableObject {
             y: config.height * 0.5,
             texture: PLAYER_TEXTURE_NAME,
             frame: FIRST_PLAYER_FRAME,
-            velocity: config.Player.velocity,
+            velocity: config.player.velocity,
             weapon: {
                 texture: FIRE_TEXTURE_NAME,
-                delay: config.Weapons.fire.reload,
-                velocity: config.Weapons.fire.velocity,
-                scale: config.Weapons.fire.scale,
-                damage: config.Weapons.fire.damage,
+                delay: config.weapons.fire.reload,
+                velocity: config.weapons.fire.velocity,
+                scale: config.weapons.fire.scale,
+                damage: config.weapons.fire.damage,
                 origin: {x: 1, y: 0.5},
             }
         });
@@ -40,7 +40,7 @@ export class Player extends MovableObject {
 
         this.fires = new Fires(this.scene);
         this.weapon = data.weapon;
-        this.scale = config.Player.scale;
+        this.scale = config.player.scale;
 
         this.scene.events.on(EVENTS.update, this._updateFrame, this);
         this._lastFrame = FIRST_PLAYER_FRAME;
@@ -66,8 +66,8 @@ export class Player extends MovableObject {
     }
 
     shooting() {
-        if ((this.scene.cursors.space.isDown || this.scene.fireButton.active) && !this._firesActivate) {
-            this.scene.fireButton.setAlpha(.95);
+        if ((this.scene.cursors.space.isDown || this.scene.fireButton?.active) && !this._firesActivate) {
+            this.scene.fireButton?.setAlpha(.95);
             this.fires.createFire(this);
             this._firesActivate = true;
 
@@ -75,7 +75,7 @@ export class Player extends MovableObject {
                 delay: this.weapon.delay,
                 callback: () => { 
                     this._firesActivate = false;
-                    this.scene.fireButton.setAlpha(.65);
+                    this.scene.fireButton?.setAlpha(.65);
                 },
                 callbackScope: this,
             });
@@ -136,8 +136,8 @@ export class Player extends MovableObject {
     }
 
     shooting() {
-        if ((this.scene.cursors.space.isDown || this.scene.fireButton.active) && !this._firesActivate) {
-            this.scene.fireButton.setAlpha(.95);
+        if ((this.scene.cursors.space.isDown || this.scene.fireButton?.active) && !this._firesActivate) {
+            this.scene.fireButton?.setAlpha(.95);
             this.fires.createFire(this);
             this._firesActivate = true;
 
@@ -145,7 +145,7 @@ export class Player extends MovableObject {
                 delay: this.weapon.delay,
                 callback: () => { 
                     this._firesActivate = false;
-                    this.scene.fireButton.setAlpha(.65);
+                    this.scene.fireButton?.setAlpha(.65);
                 },
                 callbackScope: this,
             });
