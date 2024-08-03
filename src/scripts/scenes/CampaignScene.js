@@ -34,7 +34,7 @@ export class CampaignScene extends CommonScene {
     async create() {
         this._createSounds();
         this._createMap();
-        this._createMissions();
+        this._createDots();
         this._createCasualties();
         this._createReturnButton();
         this._createControllers();
@@ -49,17 +49,23 @@ export class CampaignScene extends CommonScene {
             .setScale(1.25);
     }
 
-    _createMissions() {
+    _createDots() {
+        this._dots = [];
         const timelineEvents = [];
         config.levels.forEach((element, i) => {
             timelineEvents.push({
                 at: i * 100,
-                run: () => this._createDot(element)
-            })
+                run: () => {
+                    this._createDot(element);
+                    if (i >= config.levels.length - 1) {
+                        this._dots.forEach(dot => dot.setInteractive());
+                    }
+                }
+            });
         });
 
         const timeline = this.add.timeline(timelineEvents);
-        timeline.play(); 
+        timeline.play();
     }
 
     async _createDot(level) {
@@ -69,7 +75,6 @@ export class CampaignScene extends CommonScene {
             .setAlpha(0)
             .setScale(6)
             .setOrigin(0.5)
-            .setInteractive()
             .on('pointerdown', () => this._selectLevel(dot));
         dot.info = level;
         dot.isCurrent = false;
@@ -98,6 +103,7 @@ export class CampaignScene extends CommonScene {
         }
 
         this._createDotTween(dot, params);
+        this._dots.push(dot);
     }
 
     _onDotClick() {
