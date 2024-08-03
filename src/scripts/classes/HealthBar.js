@@ -13,7 +13,7 @@ export class HealthBar extends Phaser.GameObjects.Container {
         this._add();
     }
 
-    async updateHealthBar(force = false){
+    async updateHealthBar(isSkipped = false){
         let progressValue;
 
         if (config.player.currentHealth <= 0) {
@@ -29,7 +29,7 @@ export class HealthBar extends Phaser.GameObjects.Container {
             this.visible = false;
         }
 
-        await this._tweenUpdate(cutWidth, force);
+        await this._tweenUpdate(cutWidth, isSkipped);
     }
 
     _onUpdateComplete(cutWidth) {
@@ -37,14 +37,17 @@ export class HealthBar extends Phaser.GameObjects.Container {
         this._healthBarFill.frame.updateUVs();
     }
 
-    async _tweenUpdate(cutWidth, force = false) {
-        const isForce = Number(!force);
+    async _tweenUpdate(cutWidth, isSkipped = false) {
+        if (isSkipped) {
+            return;
+        }
+
         const increaseValue = 1.14;
     
         await new Promise(resolve => {
             this._scene.tweens.add({
                 targets: this,
-                scale: DEFAULT_SCALE * increaseValue * isForce,
+                scale: DEFAULT_SCALE * increaseValue,
                 ease: 'Power2.in',
                 duration: 140,
                 onComplete: () => {
@@ -59,7 +62,7 @@ export class HealthBar extends Phaser.GameObjects.Container {
                 targets: this,
                 scale: DEFAULT_SCALE,
                 ease: 'Power2.out',
-                duration: 110 * isForce,
+                duration: 110,
                 onComplete: () => resolve()
             });
         });
