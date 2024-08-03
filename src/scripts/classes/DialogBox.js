@@ -3,9 +3,9 @@ import { DEPTH_LAYERS } from '../constants';
 import { config, getFont, screenData } from '../main';
 import { RoundedRectContainer } from './RoundedRectContaier';
 
-// TODO extends from container
-export class DialogBox {
+export class DialogBox extends Phaser.GameObjects.Container {
     constructor (scene, dialogueData) {
+        super(scene);
         this._scene = scene;
 
         this._resolver = new Resolver();
