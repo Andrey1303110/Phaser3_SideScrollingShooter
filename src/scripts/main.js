@@ -368,7 +368,7 @@ export function setLang(lang) {
     localStorage.setItem('lang', lang);
 }
 
-if (localStorage.getItem('isFirstTimePlay') !== 0) {
+if (Number(localStorage.getItem('isFirstTimePlay')) !== 0) {
     initHiScores();
     initCasualties();
     initUpgardeLevels();

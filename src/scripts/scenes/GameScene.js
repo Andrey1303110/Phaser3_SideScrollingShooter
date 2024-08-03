@@ -14,7 +14,7 @@ export class GameScene extends CommonScene {
     init(data) {
         super.init();
 
-        if (localStorage.getItem('isFirstTimePlay') !== 0) {
+        if (Number(localStorage.getItem('isFirstTimePlay')) !== 0) {
             localStorage.setItem('isFirstTimePlay', 0);
         }
         this.info = data;
