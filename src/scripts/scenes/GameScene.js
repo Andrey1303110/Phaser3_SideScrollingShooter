@@ -212,11 +212,12 @@ export class GameScene extends CommonScene {
     _onPlayerHit(source, target) {
         const damage = this._enemies.children.contains(target) ? config.player.maxHealth : target.damage;
         config.player.currentHealth -= damage;
-        this._healthBar.updateHealthBar();
 
         if (config.player.currentHealth <= 0) {
             source.setAlive(false);
         }
+
+        this._healthBar.updateHealthBar();
     }
 
     _createCompleteEvents() {

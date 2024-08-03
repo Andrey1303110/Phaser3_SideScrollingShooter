@@ -1,5 +1,7 @@
 import { config } from "../main";
 
+const DEFAULT_SCALE = 0.37;
+
 export class HealthBar extends Phaser.GameObjects.Container {
     constructor(scene) {
         super(scene);
@@ -11,8 +13,7 @@ export class HealthBar extends Phaser.GameObjects.Container {
         this._add();
     }
 
-    updateHealthBar(){
-        // TODO add tween to update
+    async updateHealthBar(force = false){
         let progressValue;
 
         if (config.player.currentHealth <= 0) {
@@ -28,8 +29,41 @@ export class HealthBar extends Phaser.GameObjects.Container {
             this.visible = false;
         }
 
+        await this._tweenUpdate(cutWidth, force);
+    }
+
+    _onUpdateComplete(cutWidth) {
         this._healthBarFill.frame.cutWidth = cutWidth;
         this._healthBarFill.frame.updateUVs();
+    }
+
+    async _tweenUpdate(cutWidth, force = false) {
+        const isForce = Number(!force);
+        const increaseValue = 1.14;
+    
+        await new Promise(resolve => {
+            this._scene.tweens.add({
+                targets: this,
+                scale: DEFAULT_SCALE * increaseValue * isForce,
+                ease: 'Power2.in',
+                duration: 140,
+                onComplete: () => {
+                    this._onUpdateComplete(cutWidth);
+                    resolve();
+                }
+            });
+        });
+
+        await new Promise(resolve => {
+            this._scene.tweens.add({
+                targets: this,
+                scale: DEFAULT_SCALE,
+                ease: 'Power2.out',
+                duration: 110 * isForce,
+                onComplete: () => resolve()
+            });
+        });
+
     }
 
     _add() {
@@ -41,7 +75,7 @@ export class HealthBar extends Phaser.GameObjects.Container {
     }
 
     _init() {
-        this.setScale(0.4);
+        this.setScale(DEFAULT_SCALE);
     }
 
     _create() {
@@ -55,7 +89,7 @@ export class HealthBar extends Phaser.GameObjects.Container {
         this._healthBarFill = this._scene.add.sprite(this._healthBar.x - this._healthBar.width * 0.0185, this._healthBar.y, 'health_bar_fill')
             .setAlpha(0.95);
 
-        this.updateHealthBar();
+        this.updateHealthBar(true);
     }
 
     _createHeartIcon(){
