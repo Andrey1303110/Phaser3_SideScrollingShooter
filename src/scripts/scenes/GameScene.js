@@ -4,7 +4,7 @@ import { Enemies } from '/src/scripts/prefabs/Enemies';
 import { Boom } from '/src/scripts/prefabs/Boom';
 import { DEPTH_LAYERS, SCENE_NAMES } from '../constants';
 import { CommonScene } from './CommonScene';
-import { PlayerHealthBar } from '../classes/PlayerHealthBar';
+import { HealthBar } from '../classes/HealthBar';
 
 export class GameScene extends CommonScene {
     constructor() {
@@ -280,7 +280,7 @@ export class GameScene extends CommonScene {
     }
 
     _addHealthBar(){
-        this._healthBar = new PlayerHealthBar(this);
+        this._healthBar = new HealthBar(this);
         this.add.existing(this._healthBar);
     }
 

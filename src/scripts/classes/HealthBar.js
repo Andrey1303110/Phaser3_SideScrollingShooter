@@ -1,6 +1,6 @@
 import { config } from "../main";
 
-export class PlayerHealthBar extends Phaser.GameObjects.Container {
+export class HealthBar extends Phaser.GameObjects.Container {
     constructor(scene) {
         super(scene);
 
