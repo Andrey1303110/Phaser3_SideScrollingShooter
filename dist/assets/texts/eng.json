@@ -5,11 +5,11 @@
         "UPGRADE": "UPGRADE"
     },
     "Campaign": {
-        "TOTAL_LOSSES": "Total russian losses:",
-        "TOTAL_LOSSES_JEST": "JETS:",
-        "TOTAL_LOSSES_HELICOPTERS": "HELICOPTERS:",
-        "TOTAL_LOSSES_ROCKETS": "ROCKETS:",
-        "TOTAL_LOSSES_MISSILES": "MISSILES:",
+        "TOTAL_CASUALTIES": "Total russian casualties:",
+        "TOTAL_CASUALTIES_JEST": "JETS:",
+        "TOTAL_CASUALTIES_HELICOPTERS": "HELICOPTERS:",
+        "TOTAL_CASUALTIES_ROCKETS": "ROCKETS:",
+        "TOTAL_CASUALTIES_MISSILES": "MISSILES:",
         "MISSION_CARD_MAIN_TITLE": "MISSION",
         "MISSION_CARD_LEVEL": "LEVEL",
         "MISSION_CARD_CITY": "CITY",
@@ -29,8 +29,8 @@
         "LEVEL_11_NAME": "Donetsk",
         "LEVEL_12_NAME": "Zaporizha",
         "LEVEL_13_NAME": "Kahovska HPP",
-        "LEVEL_14_NAME": "Sevastopol Balaklava",
-        "LEVEL_15_NAME": "Luhansk"
+        "LEVEL_14_NAME": "Luhansk",
+        "LEVEL_15_NAME": "Sevastopol Balaklava"
     },
     "GameScene": {
         "TOP_HIGH_SCORE": "High score:",
