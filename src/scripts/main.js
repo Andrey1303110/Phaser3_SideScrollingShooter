@@ -306,6 +306,7 @@ function initHiScores() {
     const arr = Array(config.levels.length).fill(0);
 
     localStorage.setItem('hiScores', arr);
+    localStorage.setItem('totalScore', 0);
     localStorage.setItem('unlimHiScores', 0);
 };
 

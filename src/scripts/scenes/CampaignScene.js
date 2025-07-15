@@ -277,7 +277,7 @@ export class CampaignScene extends CommonScene {
 
 
     _createInitialDialogs() {
-        const isInitial = config.currentLevelScene === 1 && !localStorage.getItem('totalScore');
+        const isInitial = config.currentLevelScene === 1 && Number(localStorage.getItem('totalScore')) === 0;
         if (!isInitial) {
             return;
         }
