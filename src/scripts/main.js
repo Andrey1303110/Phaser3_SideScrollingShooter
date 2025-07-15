@@ -366,7 +366,7 @@ export function setLang(lang) {
     localStorage.setItem('lang', lang);
 }
 
-if (!localStorage.getItem('isFirstTimePlay') || localStorage.getItem('isFirstTimePlay') !== 0) {
+if (!localStorage.getItem('totalScore') || localStorage.getItem('totalScore') === 0) {
     initHiScores();
     initCasualties();
     initUpgardeLevels();
@@ -377,7 +377,6 @@ function initLocalStorageItems() {
     localStorage.setItem('currentLevelPlayer', config.currentLevelPlayer);
     localStorage.setItem('currentPlayerWeapon', 'fire');
     localStorage.setItem('money', config.money);
-    localStorage.setItem('isFirstTimePlay', 1);
 }
 
 initLang();

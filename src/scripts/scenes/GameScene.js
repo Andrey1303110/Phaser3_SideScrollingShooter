@@ -14,9 +14,6 @@ export class GameScene extends CommonScene {
     init(data) {
         super.init();
 
-        if (Number(localStorage.getItem('isFirstTimePlay')) === 1) {
-            localStorage.setItem('isFirstTimePlay', 0);
-        }
         this.info = data;
         this._currentLevelScene = this.info.index;
         this._currentScore = 0;
