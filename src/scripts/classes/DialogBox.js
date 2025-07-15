@@ -14,8 +14,8 @@ export class DialogBox extends Phaser.GameObjects.Container {
         this._setInitPosition();
     }
 
-    async showEnter() {
-        await new Promise(resolve => {
+    showEnter() {
+        return new Promise(resolve => {
             this._elements.forEach(element => {
                 this._scene.tweens.add({
                     targets: element,
@@ -29,8 +29,8 @@ export class DialogBox extends Phaser.GameObjects.Container {
         });
     }
 
-    async showExit() {
-        await new Promise(resolve => {
+    showExit() {
+        return new Promise(resolve => {
             this._elements.forEach(element => {
                 this._scene.tweens.add({
                     targets: element,
