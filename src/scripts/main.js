@@ -391,9 +391,13 @@ export function rgbToHex(colors) {
     return '0x' + ((1 << 24) + (colors.r << 16) + (colors.g << 8) + colors.b).toString(16).slice(1);
 }
 
-export const delayInMSec = (ms) => {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
+export const delayInMSec = (context, duration) => {
+    const scene = context?.time ? context : context.scene;
+
+    return new Promise(resolve => {
+        scene.time.delayedCall(duration, resolve);
+    });
+};
 
 export function getFont() {
     return config.fonts[config.lang];

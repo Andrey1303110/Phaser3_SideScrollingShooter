@@ -34,7 +34,7 @@ export class DialogBoxController {
 
             const isLast = dialogData === this._data[dialogsCount-1];
             if (isLast) {
-                await delayInMSec(SHOW_DELAY);
+                await delayInMSec(this._scene, SHOW_DELAY);
             }
         }
 
@@ -82,7 +82,7 @@ export class DialogBoxController {
         sound.play();
         await Promise.race([
             dialogBox.resolver.wait(),
-            delayInMSec(duration),
+            delayInMSec(this._scene, duration),
         ]);
         sound.stop();
         

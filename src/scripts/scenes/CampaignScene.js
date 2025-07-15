@@ -349,7 +349,7 @@ export class CampaignScene extends CommonScene {
     }
 
     async _startDialogs(levelIndex, delay = INIT_DIALOG_DELAY) {
-        await delayInMSec(delay);
+        await delayInMSec(this.scene, delay);
         await this._dialogBoxController.flowShow(levelIndex);
     }
 }
