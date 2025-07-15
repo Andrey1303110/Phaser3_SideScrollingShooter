@@ -1,6 +1,6 @@
-import { SCENE_NAMES } from '../constants';
-import { getFont, config, screenData, getPlayerAbilities } from '../main';
-import { CommonScene } from './CommonScene';
+import { SCENE_NAMES } from '/src/scripts/constants';
+import { getFont, config, screenData, getPlayerAbilities, delayInMSec } from '/src/scripts/main';
+import { CommonScene } from '/src/scripts/scenes/CommonScene';
 import { Player } from '/src/scripts/prefabs/Player';
 
 const STATS_MAP = {
@@ -45,24 +45,26 @@ export class UpgradeScene extends CommonScene {
         this.sounds.upgrade.play({ volume: 0.2 });
 
         const objects_nums = 10 + level;
-        const duration = Phaser.Math.Between(750, 1250);
-
+        
         for (let i = 0; i < objects_nums; i++) {
             const x = Phaser.Math.Between(this._player.x - this._player.displayWidth * 0.6, this._player.x + this._player.displayWidth * 0.6);
             const y = Phaser.Math.Between(this._player.y - this._player.displayHeight * 0.5, this._player.y + this._player.displayHeight * 0.5);
             const scale = Phaser.Math.Between(25 + level, 50 + level) / 100;
+            const font = `${config.height * 0.075 * scale}px ${getFont()}`;
+            const fill = `#${STATS_MAP[name].color}`;
+            const duration = Phaser.Math.Between(750, 1250);
 
-            const plus_symbol = this.add.text(x, y, '+', {
-                font: `${config.height * 0.075 * scale}px ${getFont()}`,
-                fill: `#${STATS_MAP[name].color}`,
-            }).setOrigin(0.5).setAlpha(1).setStroke('#fafafa33', 4);
+            const plus_symbol = this.add.text(x, y, '+', { font, fill })
+                .setOrigin(0.5)
+                .setAlpha(1)
+                .setStroke('#fafafa33', 4);
 
             this.tweens.add({
                 targets: plus_symbol,
                 y: screenData.top,
                 alpha: 0,
                 ease: 'Linear',
-                duration: duration,
+                duration,
                 onComplete: () => plus_symbol.destroy(),
             });
         }
@@ -81,7 +83,7 @@ export class UpgradeScene extends CommonScene {
         });
     }
 
-    _createStats(){
+    async _createStats(){
         this.statsText = {};
         this.statsIcon = {};
         this.statsLevel = {};
@@ -99,57 +101,74 @@ export class UpgradeScene extends CommonScene {
         for (let i = 0; i < upgradableStats.length; i++) {
             const key = upgradableStats[i];
 
-            let multiplier = 1;
-            let value = 1;
-
-            switch (key) {
-                case 'health':
-                    value = (Math.round(config.player.maxHealth * multiplier) / multiplier * multiplier).toFixed(0);
-                    break;
-                case 'reload':
-                    value = (Math.round(config.weapons.fire[key] * multiplier) / multiplier * multiplier).toFixed(0);
-                    break;
-                case 'scale':
-                    multiplier = 100;
-                    value = (Math.round(config.weapons.fire[key] * multiplier) / multiplier * multiplier).toFixed(0);
-                case 'velocity':
-                    value = (Math.round(config.weapons.fire[key] * multiplier) / multiplier * multiplier).toFixed(0);
-                    break;
-            }
+            const returnedValue = this._setStatsText(key);
 
             const x = config.width * .57;
             const y = (this._center.y - height * 0.5) + (height / upgradableStats.length) * i;
 
             const level = localStorage.getItem(`playerAbilityLevel_${key}`);
-            const statText = `${this._getText(STATS_MAP[key]['text'])} ${value}`;
+            const statText = `${this._getText(STATS_MAP[key]['text'])} ${returnedValue}`;
             const levelText = `${this._getText('LEVEL_TEXT')} ${level}`;
 
             this.statsText[key] = this.add.text(x, y, statText, style).setOrigin(1, 0).setAlpha(0);
             this.statsIcon[key] = this.add.image(x + config.width * .06, y, key).setOrigin(0.5, 0.15).setAlpha(0).setDisplaySize(config.width * .045, config.width * .045);
             this.statsLevel[key] = this.add.text(x + config.width * .12, y, levelText, style).setOrigin(0, 0).setAlpha(0);
 
+            await this._playShowStatsAnimation(key);
+            this._createUpgredeButton({x, y, key, level});
+
+            const delay = i * 225;
+            await delayInMSec(this.scene, delay);
+        }
+
+        
+        await delayInMSec(this.scene, 350);
+        this._playShowStatsBottomInfo(infoText);
+    }
+
+    _playShowStatsAnimation(key) {
+        const duration = 450;
+
+        return new Promise(resolve => {
             this.tweens.add({
                 targets: [this.statsText[key], this.statsIcon[key], this.statsLevel[key]],
-                delay: i * 275,
                 ease: 'Linear',
                 alpha: .75,
-                duration: 450,
-                onComplete: () => {
-                    this._createUpgredeButton({x, y, key, level});
-
-                    if (i >= upgradableStats.length - 1) {
-                        this.tweens.add({
-                            targets: infoText,
-                            delay: 275,
-                            ease: 'Linear',
-                            alpha: .75,
-                            duration: 450,
-                        })
-                    }
-                },
-                callbackScope: this
+                duration,
+                onComplete: resolve(),
             });
+        });
+    }
+
+    _playShowStatsBottomInfo(infoText) {
+        this.tweens.add({
+            targets: infoText,
+            ease: 'Linear',
+            alpha: .75,
+            duration: 450,
+        })
+    }
+
+    _setStatsText(key, isUpdated = false) {
+        let multiplier = 1;
+        let value = isUpdated ? getPlayerAbilities(key) : 1;
+
+        switch (key) {
+            case 'health':
+                value = (Math.round(config.player.maxHealth * multiplier) / multiplier * multiplier).toFixed(0);
+                break;
+            case 'reload':
+                value = (Math.round(config.weapons.fire[key] * multiplier) / multiplier * multiplier).toFixed(0);
+                break;
+            case 'scale':
+                multiplier = 250;
+                value = (Math.round(config.weapons.fire[key] * multiplier) / multiplier * multiplier).toFixed(0);
+            case 'velocity':
+                value = (Math.round(config.weapons.fire[key] * multiplier) / multiplier * multiplier).toFixed(0);
+                break;
         }
+
+        return value;
     }
 
     _checkAvailability(button){
@@ -254,24 +273,7 @@ export class UpgradeScene extends CommonScene {
         localStorage.setItem(`playerAbilityLevel_${button.name}`, ++value);
         button.level = value;
 
-        let multiplier = 1;
-        let returnedValue = getPlayerAbilities(button.name);
-
-        switch (button.name) {
-            case 'health':
-                returnedValue = (Math.round(config.player.maxHealth * multiplier) / multiplier * multiplier).toFixed(0);
-                break;
-            case 'reload':
-                returnedValue = (Math.round(config.weapons.fire[button.name] * multiplier) / multiplier * multiplier).toFixed(0);
-                break;
-            case 'scale':
-                multiplier = 100;
-                returnedValue = (Math.round(config.weapons.fire[button.name] * multiplier) / multiplier * multiplier).toFixed(0);
-                break;
-            case 'velocity':
-                returnedValue = (Math.round(config.weapons.fire[button.name] * multiplier) / multiplier * multiplier).toFixed(0);
-                break;
-        }
+        const returnedValue = this._setStatsText(button.name, true);
 
         this.statsText[button.name].text = `${this._getText(STATS_MAP[button.name]['text'])} ${returnedValue}`;
         this.statsLevel[button.name].text = `${this._getText('LEVEL_TEXT')} ${localStorage.getItem(`playerAbilityLevel_${button.name}`)}`;

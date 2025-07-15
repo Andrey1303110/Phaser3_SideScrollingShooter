@@ -350,6 +350,8 @@ export function getPlayerAbilities(key) {
             config.weapons.fire[key] -= config.weapons.fire[key] * MULTIPLIER;
             return config.weapons.fire[key];
         case 'scale':
+            config.weapons.fire[key] += config.weapons.fire[key] * MULTIPLIER;
+            return config.weapons.fire[key] * 2.5;
         case 'velocity':
             config.weapons.fire[key] += config.weapons.fire[key] * MULTIPLIER;
             return config.weapons.fire[key];
