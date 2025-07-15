@@ -10,10 +10,12 @@ export class MovableObject extends Phaser.GameObjects.Sprite {
         this.scene.add.existing(this);
         this.scene.physics.add.existing(this);
         this.body.enable = true;
+
         this.velocity = data.velocity;
         this.reward = data.reward;
         this.damage = data.damage;
         this.move();
+
         this.scene.events.on(EVENTS.update, this.update, this);
     }
 
@@ -38,19 +40,19 @@ export class MovableObject extends Phaser.GameObjects.Sprite {
             this.timer.paused = !status;
         }
 
-        if (!status) {
-            this.emit('killed');
-            if (this.launch_sound) {
-                this.launch_sound.stop();
-                if (this.launch_sound.stop()) {
-                    this.launch_sound.destroy();
-                }
-            }
+        if (status) {
+            return;
+        }
+
+        this.emit('killed');
+    
+        if (this.launch_sound) {
+            this.launch_sound.destroy();
         }
     }
 
     isDead(){
-        return false;
+        return !this.body.enable;
     }
 
     move(){
