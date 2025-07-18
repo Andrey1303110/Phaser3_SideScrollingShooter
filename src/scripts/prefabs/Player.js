@@ -47,24 +47,6 @@ export class Player extends MovableObject {
         this._tweenFly = null;
     }
 
-    move() {
-        this.body.setVelocity(0);
-
-        if (this.y < screenData.top + this.displayHeight / 1.5) {
-            this.y = screenData.top + this.displayHeight / 1.5;
-        } else if (this.y > screenData.bottom - this.displayHeight / 1.5) {
-            this.y = screenData.bottom - this.displayHeight / 1.5;
-        }
-
-        if (this.x < screenData.left + this.displayWidth / 1.5) {
-            this.x = screenData.left + this.displayWidth / 1.5;
-        } else if (this.x > screenData.right - this.displayWidth / 1.5) {
-            this.x = screenData.right - this.displayWidth / 1.5;
-        }
-
-        this._handling(); 
-    }
-
     shooting() {
         if ((this.scene.cursors.space.isDown || this.scene.fireButton?.active) && !this._firesActivate) {
             this.scene.fireButton?.setAlpha(.95);
@@ -178,7 +160,7 @@ export class Player extends MovableObject {
         for (let name in this.scene.cursorKeys) {
             if (this.scene.cursorKeys[name].isDown) {
                 isJoystick = true;
-                cof = Math.floor(this.scene.joyStick.force * 100) / 100;
+                cof = Math.floor(this.scene.joystick.force * 100) / 100;
                 if (cof > 100) {
                     cof = 100;
                 }
