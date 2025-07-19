@@ -21,19 +21,17 @@ export class GameScene extends CommonScene {
     }
 
     create(data) {
-        this._reset();
-
         this.cursors = this.input.keyboard.createCursorKeys();
 
         this._createBg(data);
         this._getMaxEnemyHeightFrame();
+        this._addHealthBar();
         this._createPlayer();
         this._createEnemies();
         this._createCompleteEvents();
         this._addOverlap();
         this._createSounds();
         this._createScoreText();
-        this._addHealthBar();
         this._addMobileButtons();
         this._addPauseButton();
         if (!this.info?.unlim) {
@@ -122,8 +120,8 @@ export class GameScene extends CommonScene {
             this.hiScoreText.destroy();
         }
 
-        this.scoreText = this.add.text(right - width * .01, top + width * .01, this._currentScore, {
-            font: `${width * .03}px ${getFont()}`,
+        this.scoreText = this.add.text(right - width * .05, top + width * .02, this._currentScore, {
+            font: `${width * .038}px ${getFont()}`,
             fill: '#EA0000',
         }).setOrigin(1, 0).setAlpha(.75);
 
@@ -137,6 +135,8 @@ export class GameScene extends CommonScene {
 
     _createPlayer() {
         this._player = new Player({ scene: this });
+        config.player.currentHealth = config.player.maxHealth;
+        this._healthBar.updateHealthBar(true);
     }
 
     _createEnemies() {
@@ -281,8 +281,9 @@ export class GameScene extends CommonScene {
     }
 
     _addPauseButton() {
-        this.add.image(screenData.left + config.width * .015, screenData.top + config.width * .015, 'pause')
+        this.add.image(screenData.left + config.width * .05, screenData.top + config.width * .05, 'pause')
             .setAlpha(0.65)
+            .setScale(2)
             .setInteractive()
             .on('pointerdown', () => {
                 this.scene.launch('Pause');
@@ -388,9 +389,5 @@ export class GameScene extends CommonScene {
             }
         });
         this.maxEnemyFrameHeight = max_frame_height;
-    }
-
-    _reset() {
-        config.player.currentHealth = config.player.maxHealth;
     }
 }
