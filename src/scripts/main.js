@@ -81,19 +81,19 @@ export const config = {
         helicopter: {
             velocity: 110,
             weapon: 'rocket',
-            textureNums: 4,
+            textureNum: 4,
             scale: 0.75,
         },
         jet: {
             velocity: 250,
             weapon: 'missile',
-            textureNums: 4,
+            textureNum: 4,
             scale: 0.76,
         },
         strategic_jet: {
             velocity: 200,
             weapon: 'missile_2',
-            textureNums: 4,
+            textureNum: 4,
             scale: 0.83,
         },
     },

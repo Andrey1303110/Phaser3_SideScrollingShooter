@@ -44,9 +44,9 @@ export class UpgradeScene extends CommonScene {
     createUpgradeAnimation(name, level) {
         this.sounds.upgrade.play({ volume: 0.2 });
 
-        const objects_nums = 10 + level;
+        const objectsNum = 10 + level;
         
-        for (let i = 0; i < objects_nums; i++) {
+        for (let i = 0; i < objectsNum; i++) {
             const x = Phaser.Math.Between(this._player.x - this._player.displayWidth * 0.6, this._player.x + this._player.displayWidth * 0.6);
             const y = Phaser.Math.Between(this._player.y - this._player.displayHeight * 0.5, this._player.y + this._player.displayHeight * 0.5);
             const scale = Phaser.Math.Between(25 + level, 50 + level) / 100;

@@ -6,17 +6,17 @@ export class Enemy extends MovableObject {
         const x = screenData.right + config.width * .25;
         const y = Phaser.Math.Between(screenData.top + scene.maxEnemyFrameHeight * 0.5, screenData.bottom - scene.maxEnemyFrameHeight * 0.5);
 
-        let typeNums = 0;
+        let typeNum = 0;
 
         if (scene.info.index > 4) {
-            typeNums = 1;
+            typeNum = 1;
             if (scene.info.index > 8) {
-                typeNums = 2;
+                typeNum = 2;
             }
         }
 
-        const enemyType = Object.keys(config.enemies)[Phaser.Math.Between(0, typeNums)];
-        const enemyTexture = `enemy${Phaser.Math.Between(1, config.enemies[enemyType].textureNums)}`;
+        const enemyType = Object.keys(config.enemies)[Phaser.Math.Between(0, typeNum)];
+        const enemyTexture = `enemy${Phaser.Math.Between(1, config.enemies[enemyType].textureNum)}`;
 
         return { x, y, enemyTexture, enemyType };
     }
