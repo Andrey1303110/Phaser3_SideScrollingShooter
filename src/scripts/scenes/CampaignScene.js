@@ -32,14 +32,15 @@ export class CampaignScene extends CommonScene {
     }
 
     async create() {
+        this._createControllers();
         this._createSounds();
         this._createMap();
-        this._createDots();
-        this._createCasualties();
         this._createReturnButton();
-        this._createControllers();
+        await this._createDots();
+        this._createBackgroundSound();
+        await this._createCasualties();
         this._createAvailableMoney();
-        this._createInitialDialogs(); // todo as initial dialogs
+        this._createInitialDialogs();
     }
 
     _createMap() {
@@ -49,23 +50,37 @@ export class CampaignScene extends CommonScene {
             .setScale(1.25);
     }
 
-    _createDots() {
-        this._dots = [];
-        const timelineEvents = [];
-        config.levels.forEach((element, i) => {
-            timelineEvents.push({
-                at: i * 100,
-                run: () => {
-                    this._createDot(element);
-                    if (i >= config.levels.length - 1) {
-                        this._dots.forEach(dot => dot.setInteractive());
-                    }
-                }
-            });
-        });
+    _createBackgroundSound() {
+        if (config.currentLevelScene >= config.levels.length) {
+            this._addCampaignCompleteSound();
+            return;
+        }
 
-        const timeline = this.add.timeline(timelineEvents);
-        timeline.play();
+        this._addFireSound();
+    }
+
+    _addFireSound() {
+        this.sounds.fire_effect.play({ volume: .05 })
+        this.sounds.fire_effect.loop = true;
+    }
+
+    _addCampaignCompleteSound() {
+        this.sounds.campaign_complete_song.play({ volume: .15 })
+        this.sounds.campaign_complete_song.loop = true;
+    }
+
+    _stopBackgroundSound() {
+        this.sounds.fire_effect.stop();
+        this.sounds.campaign_complete_song.stop();
+    }
+
+    async _createDots() {
+        this._dots = [];
+
+        for (let i = config.levels.length; i > 0; i--) {
+            const level = config.levels[i-1];
+            await this._createDot(level);
+        }
     }
 
     async _createDot(level) {
@@ -75,6 +90,7 @@ export class CampaignScene extends CommonScene {
             .setAlpha(0)
             .setScale(6)
             .setOrigin(0.5)
+            .setInteractive()
             .on('pointerdown', () => this._selectLevel(dot));
         dot.info = level;
         dot.isCurrent = false;
@@ -91,8 +107,7 @@ export class CampaignScene extends CommonScene {
             params.alpha = 0.7;
             params.scale = 0.75;
         } else {
-            dot.setAlpha(1)
-                .on('pointerdown', () => this._onDotClick);
+            dot.setAlpha(1).on('pointerdown', () => this._onDotClick);
             dot.active = true;
 
             if (config.currentLevelScene > level.index) {
@@ -102,8 +117,10 @@ export class CampaignScene extends CommonScene {
             }
         }
 
-        this._createDotTween(dot, params);
         this._dots.push(dot);
+
+        this._createDotTween(dot, params);
+        return delayInMSec(this.scene, 100);
     }
 
     _onDotClick() {
@@ -112,20 +129,20 @@ export class CampaignScene extends CommonScene {
     }
 
     _createDotTween(dot, params) {
-        this.tweens.add({
+        this.scene.scene.tweens.add({
             targets: dot,
             alpha: params.alpha,
             scale: params.scale,
             ease: 'easeInCirc',
             duration: 250,
-            onStart: () => this.sounds.whoosh_map.play({ volume: .15 }),
-            onComplete: () => { 
-                if (dot.isCurrent) this._addDotAnim(dot);
+            onStart: () => this.sounds.whoosh_map.play({ volume: .1 }),
+            onComplete: () => {
+                if (dot.isCurrent) this._addDotCTAAnimation(dot);
             }
-        })
+        });
     }
 
-    _addDotAnim(object) {
+    _addDotCTAAnimation(object) {
         object.setScale(1);
         this.tweens.add({
             targets: object,
@@ -134,113 +151,108 @@ export class CampaignScene extends CommonScene {
             yoyo: true,
             repeat: -1,
         });
-        this.sounds.fire_effect.play({ volume: .1 })
-        this.sounds.fire_effect.loop = true;
     }
 
-    _createLevelCard(info) {
-        const bg_rect = this.add.rectangle(this._center.x, this._center.y, config.width, config.height, '0x000000', 0).setInteractive();
+    async _createLevelCard(info) {
+        const bgRect = this.add.rectangle(this._center.x, this._center.y, config.width, config.height, '0x000000', 0).setInteractive(); // todo move it to transition
         
         const currentLevelHiScore = localStorage.getItem('hiScores').split(',')[info.index - 1] || 0;
         info.hiScore = currentLevelHiScore;
 
-        const first_anim_duration = 365;
-
         const frame = this.add.image(this._center.x, this._center.y, 'frame');
         frame.displayHeight = config.height * .795;
+        frame.texts = [];
 
-        let texts = []
-        texts.push(this.add.text(frame.x, frame.y - frame.displayHeight * 0.5 + frame.displayHeight * .086, this._getText('MISSION_CARD_MAIN_TITLE'), {
+        frame.texts.push(this.add.text(frame.x, frame.y - frame.displayHeight * 0.5 + frame.displayHeight * .086, this._getText('MISSION_CARD_MAIN_TITLE'), {
             font: `${frame.displayWidth * .13}px ${getFont()}`,
             fill: '#0a0a0a',
         }).setOrigin(0.5).setAlpha(0.55));
 
-        texts.push(this.add.text(frame.x, frame.y - frame.displayHeight * 0.5 + frame.displayHeight * .25, `${this._getText('MISSION_CARD_LEVEL')} ${info.index}`, {
+        frame.texts.push(this.add.text(frame.x, frame.y - frame.displayHeight * 0.5 + frame.displayHeight * .25, `${this._getText('MISSION_CARD_LEVEL')} ${info.index}`, {
             font: `${frame.displayWidth * .0925}px ${getFont()}`,
             fill: '#0a0a0a',
         }).setOrigin(0.5).setAlpha(0.8));
 
-        texts.push(this.add.text(frame.x, frame.y - frame.displayHeight * 0.5 + frame.displayHeight * .37, this._getText('MISSION_CARD_CITY'), {
+        frame.texts.push(this.add.text(frame.x, frame.y - frame.displayHeight * 0.5 + frame.displayHeight * .37, this._getText('MISSION_CARD_CITY'), {
             font: `${frame.displayWidth * .055}px ${getFont()}`,
             fill: '#0a0a0a',
         }).setOrigin(0.5).setAlpha(0.8));
 
-        texts.push(this.add.text(frame.x, frame.y - frame.displayHeight * 0.5 + frame.displayHeight * .44, this._getText(`LEVEL_${info.index}_NAME`), {
+        frame.texts.push(this.add.text(frame.x, frame.y - frame.displayHeight * 0.5 + frame.displayHeight * .44, this._getText(`LEVEL_${info.index}_NAME`), {
             font: `${frame.displayWidth * .06175}px ${getFont()}`,
             fill: '#0a0a0a',
         }).setOrigin(0.5).setAlpha(0.8));
 
         if (currentLevelHiScore > 0) {
-            texts.push(this.add.text(frame.x, frame.y - frame.displayHeight * 0.5 + frame.displayHeight * .58, `${this._getText('MISSION_CARD_SCORE')} ${currentLevelHiScore}`, {
+            frame.texts.push(this.add.text(frame.x, frame.y - frame.displayHeight * 0.5 + frame.displayHeight * .58, `${this._getText('MISSION_CARD_SCORE')} ${currentLevelHiScore}`, {
                 font: `${frame.displayWidth * .049}px ${getFont()}`,
                 fill: '#E2B80D',
             }).setOrigin(0.5).setAlpha(0.8));
         }
 
-        texts.push(this.add.text(frame.x, frame.y - frame.displayHeight * 0.5 + frame.displayHeight * .71, `${this._getText('MISSION_CARD_ENEMIES')} ${info.enemies}`, {
+        frame.texts.push(this.add.text(frame.x, frame.y - frame.displayHeight * 0.5 + frame.displayHeight * .71, `${this._getText('MISSION_CARD_ENEMIES')} ${info.enemies}`, {
             font: `${frame.displayWidth * .051}px ${getFont()}`,
             fill: '#EA0000',
         }).setOrigin(0.5).setAlpha(0.8));
 
         this.sounds.stamp.play();
 
-        const stamp = this.add.image(frame.x, frame.y, 'stamp').setAlpha(0).setAngle(31).setScale(2.5);
+        frame.stamp = this.add.image(frame.x, frame.y, 'stamp').setAlpha(0).setAngle(31).setScale(2.5);
 
-        const randX = frame.x + frame.displayWidth * 0.5 - frame.displayWidth * Phaser.Math.Between(25, 35) / 100;
-        const randY = frame.y + frame.displayWidth * 0.5 - frame.displayHeight * Phaser.Math.Between(26, 30) / 100;
+        const randX = frame.x + frame.displayWidth * 0.5 - frame.displayWidth * Phaser.Math.Between(25, 40) / 100;
+        const randY = frame.y + frame.displayWidth * 0.5 - frame.displayHeight * Phaser.Math.Between(28, 40) / 100;
 
-        const timeline = this.add.timeline([
-            {
-                tween: {
-                    targets: stamp,
-                    scale: .26,
-                    x: randX,
-                    y: randY,
-                    alpha: 0.85,
-                    ease: 'Power3',
-                    duration: first_anim_duration,
-                }
-            },
-            {
-                at: first_anim_duration,
-                tween: {
-                    targets: stamp,
-                    scale: .305,
-                    alpha: 0.55,
-                    ease: 'Power2',
-                    duration: first_anim_duration * .75,
-                },
-            },
-            {
-                at: first_anim_duration + first_anim_duration * .75,
-                run: () => {
-                    const start_button = this.add.text(frame.x, frame.y + frame.displayHeight * 0.5 - frame.displayHeight * .09, this._getText('MISSION_CARD_START'), {
-                        font: `${frame.displayWidth * .105}px ${getFont()}`,
-                        fill: '#51E04A',
-                    })
-                        .setOrigin(0.5)
-                        .setAlpha(0.7)
-                        .setInteractive()
-                        .on('pointerdown', () => { 
-                            this._gameStart(info);
-                            this.sounds.fire_effect.stop();
-                        })
-                        .on('pointerover', () => { start_button.setAlpha(0.9) })
-                        .on('pointerout', () => { start_button.setAlpha(0.7) });
-                    texts.push(start_button);
-                    
-                    const close_button = this.add.image(frame.x + frame.displayWidth * 0.5 - config.width * 0.033, frame.y - frame.displayHeight * 0.5 + config.width * 0.037, 'close')
-                        .setOrigin(0.5)
-                        .setAlpha(0.7)
-                        .setInteractive()
-                        .on('pointerdown', () => { this._cardClose({ bg_rect, frame, texts, stamp, close_button }) })
-                        .on('pointerover', () => { close_button.setAlpha(0.9) })
-                        .on('pointerout', () => { close_button.setAlpha(0.7) });
-                }
-            }
-        ]);
+        await new Promise(resolve => {
+            this.scene.scene.tweens.add({
+                targets: frame.stamp,
+                scale: .26,
+                x: randX,
+                y: randY,
+                alpha: 0.85,
+                ease: 'Power3',
+                duration: 350,
+                onComplete: () => resolve()
+            });
+        });
+        await new Promise(resolve => {
+            this.scene.scene.tweens.add({
+                targets: frame.stamp,
+                scale: .305,
+                alpha: 0.55,
+                ease: 'Power2',
+                duration: 250,
+                onComplete: () => resolve()
+            });
+        });
 
-        timeline.play();
+        this._createCardStartButton(frame, info);
+        this._createCardCloseButton(frame, bgRect);
+    }
+
+    _createCardStartButton(frame, info) {
+        frame.startButton = this.add.text(frame.x, frame.y + frame.displayHeight * 0.5 - frame.displayHeight * .09, this._getText('MISSION_CARD_START'), {
+            font: `${frame.displayWidth * .105}px ${getFont()}`,
+            fill: '#51E04A',
+        })
+            .setOrigin(0.5)
+            .setAlpha(0.7)
+            .setInteractive()
+            .on('pointerdown', () => { 
+                this._gameStart(info);
+                this._stopBackgroundSound();
+            })
+            .on('pointerover', () => { frame.startButton.setAlpha(0.9) })
+            .on('pointerout', () => { frame.startButton.setAlpha(0.7) });
+    }
+
+    _createCardCloseButton(frame, bgRect) {
+        frame.closeButton = this.add.image(frame.x + frame.displayWidth * 0.5 - config.width * 0.033, frame.y - frame.displayHeight * 0.5 + config.width * 0.037, 'close')
+            .setOrigin(0.5)
+            .setAlpha(0.7)
+            .setInteractive()
+            .on('pointerdown', () => this._cardClose({ bgRect, frame }))
+            .on('pointerover', () => frame.closeButton.setAlpha(0.9))
+            .on('pointerout', () => frame.closeButton.setAlpha(0.7));
     }
 
     _createCasualties() {
@@ -250,31 +262,49 @@ export class CampaignScene extends CommonScene {
             });
         }
 
-        let points = {
-            x: screenData.left + config.width * .033,
-            y: config.height * .635,
+        let position = {
+            x: screenData.left + config.width * 0.033,
+            y: config.height * 0.635,
         }
 
         this._casualtiesText = [];
 
-        this._casualtiesText.push(this.add.text(points.x, points.y, this._getText('TOTAL_CASUALTIES'), {
+        const title = this.add.text(position.x, position.y, this._getText('TOTAL_CASUALTIES'), {
             font: `${config.width * .025}px ${getFont()}`,
             fill: '#EA0000',
-        }).setOrigin(0, 0.5).setAlpha(0.75));
+        }).setOrigin(0, 0.5).setAlpha(0.75);
 
-        Object.keys(config.casualties).forEach(name => {
-            points.y += config.width * .0285;
-            this._casualtiesText.push(this.add.text(points.x, points.y, `${this._getText(CASUALTIES_MAP[name].text)} ${localStorage.getItem(`casualties_${name}`)}`, {
+        this._casualtiesText.push(title);
+
+        Object.keys(config.casualties).forEach(async name => {
+            position.y += config.width * .0285;
+            const text = this.add.text(position.x, position.y, `${this._getText(CASUALTIES_MAP[name].text)} ${localStorage.getItem(`casualties_${name}`)}`, {
                 font: `${config.width * .0215}px ${getFont()}`,
                 fill: '#000000',
-            }).setOrigin(0, 0.5).setAlpha(0.75));
+            }).setOrigin(0, 0.5).setAlpha(0);
+            this._casualtiesText.push(text);
         });
+
+        return this._addCasualtiesTween();
+    }
+
+    async _addCasualtiesTween() {
+        for (let i = 0; i < this._casualtiesText.length; i++) {
+            const text = this._casualtiesText[i];
+            await delayInMSec(this.scene, 125);
+
+            this.scene.scene.tweens.add({
+                targets: text,
+                alpha: 0.7,
+                ease: 'Linear',
+                duration: 350,
+            });
+        }
     }
 
     _createControllers() {
         this._dialogBoxController = new DialogBoxController(this);
     }
-
 
     _createInitialDialogs() {
         const isInitial = config.currentLevelScene === 1 && Number(localStorage.getItem('totalScore')) === 0;
@@ -296,17 +326,19 @@ export class CampaignScene extends CommonScene {
             ready: this.sound.add('ready'),
             whoosh_map: this.sound.add('whoosh_map'),
             fire_effect: this.sound.add('fire_effect'),
+            campaign_complete_song: this.sound.add('campaign_complete_song'),
         };
     }
 
     _cardClose(data) {
         this.sounds.click.play({ volume: .2 });
 
-        data.bg_rect.destroy();
+        data.bgRect.destroy();
         data.frame.destroy();
-        data.stamp.destroy();
-        data.close_button.destroy();
-        data.texts.forEach(element => {
+        data.frame.stamp.destroy();
+        data.frame.startButton.destroy();
+        data.frame.closeButton.destroy();
+        data.frame.texts.forEach(element => {
             element.destroy();
         });
     }
@@ -314,13 +346,13 @@ export class CampaignScene extends CommonScene {
     _gameStart(info) {
         this.sounds.ready.play();
 
-        const bg_rect = this.add.rectangle(this._center.x, this._center.y, config.width, config.height, '0x000000', 0).setInteractive();
+        const bgRect = this.add.rectangle(this._center.x, this._center.y, config.width, config.height, '0x000000', 0).setInteractive();
 
         this.tweens.add({
-            targets: bg_rect,
+            targets: bgRect,
             fillAlpha: 1,
             ease: 'Linear',
-            duration: this.sounds.ready.duration * 1000 * .7,
+            duration: this.sounds.ready.duration * 1000 * .85,
             onComplete: () => this.scene.start(SCENE_NAMES.game, info),
         });
     }
@@ -351,5 +383,10 @@ export class CampaignScene extends CommonScene {
     async _startDialogs(levelIndex, delay = INIT_DIALOG_DELAY) {
         await delayInMSec(this.scene, delay);
         await this._dialogBoxController.flowShow(levelIndex);
+    }
+
+    _onReturnButtonClick() {
+        super._onReturnButtonClick();
+        this._stopBackgroundSound();
     }
 }

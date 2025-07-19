@@ -41,35 +41,6 @@ export class UpgradeScene extends CommonScene {
         this._createAvailableMoney();
     }
 
-    createUpgradeAnimation(name, level) {
-        this.sounds.upgrade.play({ volume: 0.2 });
-
-        const objectsNum = 10 + level;
-        
-        for (let i = 0; i < objectsNum; i++) {
-            const x = Phaser.Math.Between(this._player.x - this._player.displayWidth * 0.6, this._player.x + this._player.displayWidth * 0.6);
-            const y = Phaser.Math.Between(this._player.y - this._player.displayHeight * 0.5, this._player.y + this._player.displayHeight * 0.5);
-            const scale = Phaser.Math.Between(25 + level, 50 + level) / 100;
-            const font = `${config.height * 0.075 * scale}px ${getFont()}`;
-            const fill = `#${STATS_MAP[name].color}`;
-            const duration = Phaser.Math.Between(750, 1250);
-
-            const plus_symbol = this.add.text(x, y, '+', { font, fill })
-                .setOrigin(0.5)
-                .setAlpha(1)
-                .setStroke('#fafafa33', 4);
-
-            this.tweens.add({
-                targets: plus_symbol,
-                y: screenData.top,
-                alpha: 0,
-                ease: 'Linear',
-                duration,
-                onComplete: () => plus_symbol.destroy(),
-            });
-        }
-    }
-
     _createPlayer(){
         this._player = new Player({ scene: this });
 
@@ -115,7 +86,7 @@ export class UpgradeScene extends CommonScene {
             this.statsLevel[key] = this.add.text(x + config.width * .12, y, levelText, style).setOrigin(0, 0).setAlpha(0);
 
             await this._playShowStatsAnimation(key);
-            this._createUpgredeButton({x, y, key, level});
+            this._createUpgradeButton({x, y, key, level});
 
             const delay = i * 225;
             await delayInMSec(this.scene, delay);
@@ -192,7 +163,7 @@ export class UpgradeScene extends CommonScene {
         button.textCost.text = button.cost;
     }
 
-    _createUpgredeButton(data){
+    _createUpgradeButton(data){
         this.buttons[data.key] = this.add.image(data.x + config.width * .323, data.y, 'button_campaign')
             .setOrigin(0.5, 0.125)
             .setScale(.33)
@@ -295,7 +266,36 @@ export class UpgradeScene extends CommonScene {
             }
         })
 
-        this.createUpgradeAnimation(button.name, value);
+        this._createUpgradeAnimation(button.name, value);
+    }
+
+    _createUpgradeAnimation(name, level) {
+        this.sounds.upgrade.play({ volume: 0.2 });
+
+        const objectsNum = 10 + level;
+        
+        for (let i = 0; i < objectsNum; i++) {
+            const x = Phaser.Math.Between(this._player.x - this._player.displayWidth * 0.6, this._player.x + this._player.displayWidth * 0.6);
+            const y = Phaser.Math.Between(this._player.y - this._player.displayHeight * 0.5, this._player.y + this._player.displayHeight * 0.5);
+            const scale = Phaser.Math.Between(25 + level, 50 + level) / 100;
+            const font = `${config.height * 0.075 * scale}px ${getFont()}`;
+            const fill = `#${STATS_MAP[name].color}`;
+            const duration = Phaser.Math.Between(750, 1250);
+
+            const plus_symbol = this.add.text(x, y, '+', { font, fill })
+                .setOrigin(0.5)
+                .setAlpha(1)
+                .setStroke('#fafafa33', 4);
+
+            this.tweens.add({
+                targets: plus_symbol,
+                y: screenData.top,
+                alpha: 0,
+                ease: 'Linear',
+                duration,
+                onComplete: () => plus_symbol.destroy(),
+            });
+        }
     }
 
     _addReturnButton(){

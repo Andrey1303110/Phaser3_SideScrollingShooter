@@ -37,17 +37,32 @@ export class CommonScene extends Phaser.Scene {
 
     _createAvailableMoney(){
         const style = {
-            font: `${config.width * .031}px ${getFont()}`,
+            font: `${config.width * .038}px ${getFont()}`,
             fill: '#FFFFFF',
         };
 
         this._moneyIcon = this.add.image(screenData.right - config.height * .075, screenData.top + config.height * .075, 'ruby')
             .setScale(.25)
+            .setAlpha(0)
             .setInteractive()
             .on('pointerdown', ()=> this.scene.start(SCENE_NAMES.upgrade));
         this._moneyValueText = this.add.text(this._moneyIcon.x - this._moneyIcon.displayWidth, this._moneyIcon.y, config.money, style)
             .setOrigin(.5)
-            .setAlpha(1);
+            .setAlpha(0);
+
+        this._addAvailableMoneyTween();
+    }
+
+    async _addAvailableMoneyTween() {
+        return new Promise(resolve => {
+            this.scene.scene.tweens.add({
+                targets: [this._moneyIcon, this._moneyValueText],
+                alpha: 0.85,
+                ease: 'Linear',
+                duration: 350,
+                onComplete: () => resolve(),
+            });
+        });
     }
 
     _createBg() {
@@ -66,10 +81,12 @@ export class CommonScene extends Phaser.Scene {
         const button = this.add.image(screenData.left + config.width * 0.03, screenData.top + config.height * 0.05, 'return')
             .setAlpha(0.65)
             .setInteractive()
-            .on('pointerdown', () => {
-                this.scene.start(SCENE_NAMES.main);
-                this.sounds.click.play({ volume: .2 });
-            });
+            .on('pointerdown', () => this._onReturnButtonClick());
+    }
+
+    _onReturnButtonClick() {
+        this.scene.start(SCENE_NAMES.main);
+        this.sounds.click.play({ volume: .2 });
     }
 
     _createTranslations() {
