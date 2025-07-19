@@ -208,12 +208,18 @@ export class GameScene extends CommonScene {
 
     _onPlayerHit(source, target) {
         const damage = this._enemies.children.contains(target) ? config.player.maxHealth : target.damage;
+        const shakeMagnitude = damage / config.player.maxHealth * 0.05;
+        const duration = 125;
+        const color = [255, 0, 0];
+
         config.player.currentHealth -= damage;
 
         if (config.player.currentHealth <= 0) {
             source.setAlive(false);
         }
 
+        this.cameras.main.flash(duration, ...color);
+        this.cameras.main.shake(duration, shakeMagnitude);
         this._healthBar.updateHealthBar();
     }
 
