@@ -195,9 +195,16 @@ export class CampaignScene extends CommonScene {
             fill: '#EA0000',
         }).setOrigin(0.5).setAlpha(0.8));
 
-        this.sounds.stamp.play();
+        await this._createStamp(frame);
+        this._createCardStartButton(frame, info);
+        this._createCardCloseButton(frame, bgRect);
+    }
 
-        frame.stamp = this.add.image(frame.x, frame.y, 'stamp').setAlpha(0).setAngle(31).setScale(2.5);
+    async _createStamp(frame) {
+        this.sounds.stamp.play();
+        const randAngle = Phaser.Math.Between(-45, 45);
+
+        frame.stamp = this.add.image(frame.x, frame.y, 'stamp').setAlpha(0).setAngle(randAngle).setScale(2.5);
 
         const randX = frame.x + frame.displayWidth * 0.5 - frame.displayWidth * Phaser.Math.Between(25, 40) / 100;
         const randY = frame.y + frame.displayWidth * 0.5 - frame.displayHeight * Phaser.Math.Between(28, 40) / 100;
@@ -224,9 +231,6 @@ export class CampaignScene extends CommonScene {
                 onComplete: () => resolve()
             });
         });
-
-        this._createCardStartButton(frame, info);
-        this._createCardCloseButton(frame, bgRect);
     }
 
     _createCardStartButton(frame, info) {
