@@ -34,9 +34,7 @@ export class GameScene extends CommonScene {
         this._createScoreText();
         this._addMobileButtons();
         this._addPauseButton();
-        if (!this.info?.unlim) {
             this._addExpProgressBar();
-        }
     }
 
     update() {
@@ -174,9 +172,9 @@ export class GameScene extends CommonScene {
         if (source !== this._player && target !== this._player) {
             if (!this.info?.unlim) {
                 let casualtiesName = target.texture.key;
-                if (target.texture.key === 'strategic_jet') {
+                if (target.texture.key === 'strategic_jet') { // todo set strategic_jet as constant
                     casualtiesName = 'jet';
-                } else if (target.texture.key === 'missile_2') {
+                } else if (target.texture.key === 'missile_2') { // todo set missile, missile_2 as constants
                     casualtiesName = 'missile';
                 }
                 let old_value = Number(localStorage.getItem(`casualties_${casualtiesName}`));
@@ -192,7 +190,7 @@ export class GameScene extends CommonScene {
                 config.totalScore = last_score + reward;
             }
             this.scoreText.text = this._currentScore;
-            this._updateProgressBar();
+            this._updateExpProgressBar();
         }
 
         if (source === this._player) {
@@ -303,20 +301,24 @@ export class GameScene extends CommonScene {
     }
 
     _addExpProgressBar(){
+        if (this.info?.unlim) {
+            return;
+        }
+
         this._progressExpBar = this.add.image(this._center.x, screenData.top + config.width * .0225, 'progress_bar')
             .setAlpha(0.95);
         this._progressExpBar.fillProgress = this.add.image(this._progressExpBar.x + this._progressExpBar.displayWidth * .1, this._progressExpBar.y + this._progressExpBar.displayHeight * .04, 'progress_bar_fill')
             .setAlpha(0.95);
         
         this._progressExpBar.levelText = this.add.text(this._progressExpBar.x - this._progressExpBar.displayWidth * .38, this._progressExpBar.y - this._progressExpBar.displayHeight * .035, config.currentLevelPlayer, {
-            font: `${this._progressExpBar.displayHeight * .545}px ${getFontName()}`,
+            font: `${this._progressExpBar.displayHeight * .53}px ${getFontName()}`,
             fill: '#FFFFFF',
         }).setOrigin(0.5).setAlpha(0.75);
 
-        this._updateProgressBar();
+        this._updateExpProgressBar();
     }
 
-    _updateProgressBar(){
+    _updateExpProgressBar(){
         if (this.info?.unlim) {
             return;
         }
