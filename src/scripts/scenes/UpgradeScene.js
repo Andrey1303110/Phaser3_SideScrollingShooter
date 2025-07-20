@@ -1,4 +1,4 @@
-import { SCENE_NAMES } from "../constants";
+import { SCENE_NAMES, UPGRADE_MULTIPLIER } from "../constants";
 import { config, delayInMSec, getFontName, getPlayerAbilities, screenData } from "../main";
 import { CommonScene } from "./CommonScene";
 import { Player } from "../prefabs/Player";
@@ -64,7 +64,8 @@ export class UpgradeScene extends CommonScene {
             fill: '#000000',
         };
 
-        const infoText = this.add.text(this._center.x, screenData.bottom - config.height * .075, this._getText('BOTTOM_DESCRIPTION'), style).setOrigin(.5).setAlpha(0);
+        const text = this._getText('BOTTOM_DESCRIPTION') + ` ${UPGRADE_MULTIPLIER * 100}%`;
+        const infoText = this.add.text(this._center.x, screenData.bottom - config.height * .075, text, style).setOrigin(.5).setAlpha(0);
 
         const upgradableStats = Object.keys(config.currentUpgradableStats);
         const height = config.height * 0.4;

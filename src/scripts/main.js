@@ -6,6 +6,7 @@ import { CampaignScene } from './scenes/CampaignScene';
 import { PauseScene } from './scenes/PauseScene';
 import { UpgradeScene } from './scenes/UpgradeScene';
 import { PreloadScene } from './scenes/PreloadScene';
+import { UPGRADE_MULTIPLIER } from './constants';
 
 export const config = {
     type: Phaser.AUTO,
@@ -340,20 +341,19 @@ function initAbilitiesByLevel() {
 
 export function getPlayerAbilities(key) {
     // TODO set by player weapon
-    const MULTIPLIER = 0.05;
 
     switch (key) {
         case 'health':
-            config.player.maxHealth += config.player.maxHealth * MULTIPLIER;
+            config.player.maxHealth += config.player.maxHealth * UPGRADE_MULTIPLIER;
             return config.player.maxHealth;
         case 'reload':
-            config.weapons.fire[key] -= config.weapons.fire[key] * MULTIPLIER;
+            config.weapons.fire[key] -= config.weapons.fire[key] * UPGRADE_MULTIPLIER;
             return config.weapons.fire[key];
         case 'scale':
-            config.weapons.fire[key] += config.weapons.fire[key] * MULTIPLIER;
+            config.weapons.fire[key] += config.weapons.fire[key] * UPGRADE_MULTIPLIER;
             return config.weapons.fire[key] * 2.5;
         case 'velocity':
-            config.weapons.fire[key] += config.weapons.fire[key] * MULTIPLIER;
+            config.weapons.fire[key] += config.weapons.fire[key] * UPGRADE_MULTIPLIER;
             return config.weapons.fire[key];
         default:
             throw new Error('Unknown ability upgrade');

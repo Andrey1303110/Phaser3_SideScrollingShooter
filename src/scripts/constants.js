@@ -31,3 +31,5 @@ export const DEPTH_LAYERS = {
     DIALOGUES: 4,
     MAX: 5,
 }
+
+export const UPGRADE_MULTIPLIER = 0.03;
