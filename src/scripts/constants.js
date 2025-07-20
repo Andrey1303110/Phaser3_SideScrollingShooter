@@ -32,4 +32,6 @@ export const DEPTH_LAYERS = {
     MAX: 5,
 }
 
+export const FIRE_WEAPON_DEFAULT_SCALE = 10/3;
+
 export const UPGRADE_MULTIPLIER = 0.03;

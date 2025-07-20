@@ -1,4 +1,4 @@
-import { SCENE_NAMES, UPGRADE_MULTIPLIER } from "../constants";
+import { FIRE_WEAPON_DEFAULT_SCALE, SCENE_NAMES, UPGRADE_MULTIPLIER } from "../constants";
 import { config, delayInMSec, getFontName, getPlayerAbilities, screenData } from "../main";
 import { CommonScene } from "./CommonScene";
 import { Player } from "../prefabs/Player";
@@ -46,11 +46,11 @@ export class UpgradeScene extends CommonScene {
         this._player = new Player({ scene: this });
 
         await new Promise(resolve => {
-        this.tweens.add({
-            targets: this._player,
-            x: config.width * .125,
-            ease: 'Linear',
-            duration: 1250,
+            this.tweens.add({
+                targets: this._player,
+                x: config.width * .125,
+                ease: 'Linear',
+                duration: 1250,
                 onComplete: () => resolve(),
             });
         });
@@ -134,7 +134,7 @@ export class UpgradeScene extends CommonScene {
                 value = (Math.round(config.weapons.fire[key] * multiplier) / multiplier * multiplier).toFixed(0);
                 break;
             case 'scale':
-                multiplier = 250;
+                multiplier = FIRE_WEAPON_DEFAULT_SCALE * 100; 
                 value = (Math.round(config.weapons.fire[key] * multiplier) / multiplier * multiplier).toFixed(0);
             case 'velocity':
                 value = (Math.round(config.weapons.fire[key] * multiplier) / multiplier * multiplier).toFixed(0);
@@ -276,7 +276,7 @@ export class UpgradeScene extends CommonScene {
             ease: 'Linear',
             alpha: .5,
             duration: 1000,
-            onStart: () => { 
+            onStart: () => {
                 this._disableButtons();
                 this._setPrice(button);
             },
@@ -291,7 +291,7 @@ export class UpgradeScene extends CommonScene {
 
     async _createUpgradeAnimation(name, level) {
         this.sounds.upgrade.play({ volume: 0.2 });
-
+        
         const maxDuration = 1000;
         const minDuration = 500;
         const maxCalculationsLevel = 50;
@@ -315,7 +315,7 @@ export class UpgradeScene extends CommonScene {
                 .setOrigin(0.5)
                 .setAlpha(0)
                 .setStroke('#fafafa33', 4);
-
+            
             this._playPlusUpgradeTweenAnimation(plusSymbol, duration);
         }
 
@@ -331,14 +331,14 @@ export class UpgradeScene extends CommonScene {
             duration,
         });
         await delayInMSec(this.scene, duration * 0.5);
-            this.tweens.add({
+        this.tweens.add({
             targets: symbol,
-                y: screenData.top,
-                alpha: 0,
+            y: screenData.top,
+            alpha: 0,
             ease: 'Back.In',
-                duration,
+            duration,
             onComplete: () => symbol.destroy(),
-            });
+        });
     }
 
     _addReturnButton(){

@@ -6,7 +6,7 @@ import { CampaignScene } from './scenes/CampaignScene';
 import { PauseScene } from './scenes/PauseScene';
 import { UpgradeScene } from './scenes/UpgradeScene';
 import { PreloadScene } from './scenes/PreloadScene';
-import { UPGRADE_MULTIPLIER } from './constants';
+import { FIRE_WEAPON_DEFAULT_SCALE, UPGRADE_MULTIPLIER } from './constants';
 
 export const config = {
     type: Phaser.AUTO,
@@ -103,7 +103,7 @@ export const config = {
         fire: {
             reload: 500,
             velocity: 500,
-            scale: 0.4,
+            scale: 0.3,
         },
         rocket: {
             reload: 1750,
@@ -351,7 +351,7 @@ export function getPlayerAbilities(key) {
             return config.weapons.fire[key];
         case 'scale':
             config.weapons.fire[key] += config.weapons.fire[key] * UPGRADE_MULTIPLIER;
-            return config.weapons.fire[key] * 2.5;
+            return config.weapons.fire[key] * FIRE_WEAPON_DEFAULT_SCALE;
         case 'velocity':
             config.weapons.fire[key] += config.weapons.fire[key] * UPGRADE_MULTIPLIER;
             return config.weapons.fire[key];
