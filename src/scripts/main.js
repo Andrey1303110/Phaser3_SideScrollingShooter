@@ -109,19 +109,19 @@ export const config = {
             reload: 1750,
             velocity: 350 * -1,
             scale: 0.3,
-            damage: 30,
+            damage: 25,
         },
         missile: {
             reload: 2000,
             velocity: 475 * -1,
             scale: 0.375,
-            damage: 45,
+            damage: 40,
         },
         missile_2: {
             reload: 2500,
             velocity: 800 * -1,
             scale: 0.4,
-            damage: 70,
+            damage: 60,
         }
     },
 
