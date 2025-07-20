@@ -236,7 +236,7 @@ export class GameScene extends CommonScene {
 
         this._blackBG = this.add.rectangle(config.width * 0.5, config.height * 0.5, config.width, config.height, '0x000000', 0).setInteractive().setDepth(DEPTH_LAYERS.COVER_SCREEN);
         let final_text = this.add.text(this._blackBG.x, this._blackBG.y, '', {
-            font: `${config.width * .03}px ${getFont()}`,
+            font: `${config.width * .03}px ${getFontName()}`,
             fill: '#EA0000',
         }).setOrigin(0.5).setAlpha(0).setDepth(DEPTH_LAYERS.MAX);
         this.game.sound.stopAll();

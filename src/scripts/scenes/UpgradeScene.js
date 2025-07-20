@@ -143,19 +143,32 @@ export class UpgradeScene extends CommonScene {
     }
 
     _checkAvailability(button){
-        this._setPrice(button);
-
-        let alpha = 0.9;
-        button.active = true;
-
         if (config.money < button.cost || config.money <= 0) {
-            button.active = false;
-            alpha = 0.5;
-        } 
+            return this._toggleButton(button, false);
+        }
+        this._toggleButton(button, true);
+    }
 
+    _checkAvailabilityForAllButtons() {
+        Object.keys(config.currentUpgradableStats).forEach(key => {
+            this._checkAvailability(this.buttons[key]);
+        });
+    }
+
+    _toggleButton(button, isActive) {
+        let alpha = isActive ? 0.9 : 0.5;
+
+        button.active = isActive;
         button.setAlpha(alpha);
         button.textCost.setAlpha(alpha)
         button.crystal.setAlpha(alpha);
+    }
+
+    _disableButtons() {
+        Object.keys(this.buttons).forEach(key => {
+            const button = this.buttons[key];
+            this._toggleButton(button, false);
+        });
     }
 
     _setPrice(button){
@@ -164,56 +177,60 @@ export class UpgradeScene extends CommonScene {
     }
 
     _createUpgradeButton(data){
-        this.buttons[data.key] = this.add.image(data.x + config.width * .323, data.y, 'button_campaign')
+        const button = this.add.image(data.x + config.width * .323, data.y, 'button_campaign')
             .setOrigin(0.5, 0.125)
             .setScale(.33)
             .setAlpha(0)
             .setInteractive()
             .setVisible(false)
-            .on('pointerdown', () => this._upgrade(this.buttons[data.key]));
+            .on('pointerdown', () => this._upgrade(button));
 
-        this.buttons[data.key].name = data.key;
-        this.buttons[data.key].level = data.level;
+        button.name = data.key;
+        button.level = data.level;
         
-        this.buttons[data.key].cost = Math.floor(this.buttons[data.key].level/10) + 1;
+        button.cost = Math.floor(button.level/10) + 1;
 
         const style = {
             font: `${config.width * .023}px ${getFontName()}`,
             fill: '#FFFFFF',
         };
-        this.buttons[data.key].textCost = this.add.text(this.buttons[data.key].x, this.buttons[data.key].y, '1', style).setOrigin(0.5, -0.125).setVisible(false);
+        button.textCost = this.add.text(button.x, button.y, '1', style).setOrigin(0.5, -0.125).setVisible(false);
 
-        this.buttons[data.key].crystal = this.add.image(this.buttons[data.key].x, this.buttons[data.key].y, 'ruby')
+        button.crystal = this.add.image(button.x, button.y, 'ruby')
             .setOrigin(0.5, .05)
             .setScale(.15)
             .setVisible(false);
 
-        this.buttons[data.key].textCost.x -= this.buttons[data.key].crystal.displayWidth * 0.5;
-        this.buttons[data.key].crystal.x += this.buttons[data.key].crystal.displayWidth * 0.5;
+        button.textCost.x -= button.crystal.displayWidth * 0.5;
+        button.crystal.x += button.crystal.displayWidth * 0.5;
 
-        this.buttons[data.key].clicked = false;
+        button.clicked = false;
 
-        this._checkAvailability(this.buttons[data.key]);
-        const currentAlpha = this.buttons[data.key].alpha;
-        this.buttons[data.key].alpha = 0;
-        this.buttons[data.key].textCost.alpha = 0;
-        this.buttons[data.key].crystal.alpha = 0;
+        this._checkAvailability(button);
+        this._setPrice(button);
+
+        const currentAlpha = button.alpha;
+        button.alpha = 0;
+        button.textCost.alpha = 0;
+        button.crystal.alpha = 0;
 
         this.tweens.add({
             targets: [
-                this.buttons[data.key],
-                this.buttons[data.key].textCost,
-                this.buttons[data.key].crystal,
+                button,
+                button.textCost,
+                button.crystal,
             ],
             ease: 'Linear',
             alpha: currentAlpha,
             duration: 500,
             onStart: () => {
-                this.buttons[data.key].setVisible(true);
-                this.buttons[data.key].textCost.setVisible(true);
-                this.buttons[data.key].crystal.setVisible(true);
+                button.setVisible(true);
+                button.textCost.setVisible(true);
+                button.crystal.setVisible(true);
             }
-        })
+        });
+
+        this.buttons[data.key] = button;
     }
 
     _decreaseMoney(value){
@@ -258,39 +275,68 @@ export class UpgradeScene extends CommonScene {
             alpha: .5,
             duration: 1000,
             onStart: () => { 
+                this._disableButtons();
+                this._setPrice(button);
+            },
+            onComplete: () => {
                 button.clicked = false;
-                button.active = false;
-                Object.keys(config.currentUpgradableStats).forEach(key => {
-                    this._checkAvailability(this.buttons[key]);
-                })
+                this._checkAvailabilityForAllButtons();
             }
         })
 
-        this._createUpgradeAnimation(button.name, value);
+        return this._createUpgradeAnimation(button.name, value);
     }
 
-    _createUpgradeAnimation(name, level) {
+    async _createUpgradeAnimation(name, level) {
         this.sounds.upgrade.play({ volume: 0.2 });
 
-        const objectsNum = 10 + level;
+        const maxDuration = 1000;
+        const minDuration = 500;
+        const maxCalculationsLevel = 50;
+
+        let levelForCalculation = level > maxCalculationsLevel ? maxCalculationsLevel : level;
+        let objectsNum = 15 + levelForCalculation * 2;
         
         for (let i = 0; i < objectsNum; i++) {
-            const font = `${config.height * 0.075 * scale}px ${getFontName()}`;
+            const x = Phaser.Math.Between(this._player.x - this._player.displayWidth * 0.57, this._player.x + this._player.displayWidth * 0.57);
+            const y = Phaser.Math.Between(this._player.y - this._player.displayHeight * 0.57, this._player.y + this._player.displayHeight * 0.57);
+            let scale = Phaser.Math.Between(50 + levelForCalculation * 2, 75 + levelForCalculation * 2) / 100;
+            if (scale > 1) {
+                scale = 1;
+            }
 
-            const plus_symbol = this.add.text(x, y, '+', { font, fill })
+            const font = `${config.height * 0.075 * scale}px ${getFontName()}`;
+            const fill = `#${STATS_MAP[name]['color']}`;
+            const duration = Phaser.Math.Between(minDuration, maxDuration);
+
+            const plusSymbol = this.add.text(x, y, '+', { font, fill })
                 .setOrigin(0.5)
-                .setAlpha(1)
+                .setAlpha(0)
                 .setStroke('#fafafa33', 4);
 
+            this._playPlusUpgradeTweenAnimation(plusSymbol, duration);
+        }
+
+        const delay = (maxDuration + minDuration) * 2;
+        return delayInMSec(this.scene, delay);
+    }
+
+    async _playPlusUpgradeTweenAnimation(symbol, duration) {
+        this.tweens.add({
+            targets: symbol,
+            alpha: 1,
+            ease: 'Back.Out(1.5)',
+            duration,
+        });
+        await delayInMSec(this.scene, duration * 0.5);
             this.tweens.add({
-                targets: plus_symbol,
+            targets: symbol,
                 y: screenData.top,
                 alpha: 0,
-                ease: 'Linear',
+            ease: 'Back.In',
                 duration,
-                onComplete: () => plus_symbol.destroy(),
+            onComplete: () => symbol.destroy(),
             });
-        }
     }
 
     _addReturnButton(){
