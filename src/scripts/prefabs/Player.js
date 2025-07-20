@@ -67,6 +67,24 @@ export class Player extends MovableObject {
         }
     }
 
+    move() {
+        this.body.setVelocity(0);
+
+        if (this.y < screenData.top + this.displayHeight / 1.5) {
+            this.y = screenData.top + this.displayHeight / 1.5;
+        } else if (this.y > screenData.bottom - this.displayHeight / 1.5) {
+            this.y = screenData.bottom - this.displayHeight / 1.5;
+        }
+
+        if (this.x < screenData.left + this.displayWidth / 1.5) {
+            this.x = screenData.left + this.displayWidth / 1.5;
+        } else if (this.x > screenData.right - this.displayWidth / 1.5) {
+            this.x = screenData.right - this.displayWidth / 1.5;
+        }
+
+        this._handling(); 
+    }
+
     _createAnimation() {
         if (this.scene.anims.anims.entries[ANIMATION_NAME]) return;
 
@@ -90,72 +108,35 @@ export class Player extends MovableObject {
         if (!this.active) {
             return;
         }
+        this._addTweenFly();
+    }
 
+    _addTweenFly() {
         if (this.frame.name !== this._lastFrame) {
             const last_y = this.y;
             if (this.frame.name === 'dragon6') {
-                if (this.scene.constructor.name !== SCENE_NAMES.GAME) {
-                    this._tweenFly = this.scene.tweens.add({
-                        targets: this,
-                        y: last_y + this.displayHeight / 3,
-                        ease: 'Linear',
-                        duration: FRAME_DURATION,
-                        onComplete: () => this._tweenFly = null
-                    });
-                }
-            }
-            else if (this.frame.name === 'dragon3') {
-                if (this.scene.constructor.name !== SCENE_NAMES.GAME) {
-                    this._tweenFly = this.scene.tweens.add({
-                        targets: this,
-                        y: last_y - this.displayHeight / 3,
-                        ease: 'Linear',
-                        duration: FRAME_DURATION,
-                        onComplete: () => this._tweenFly = null
-                    });
-                }
+                this._tweenFly = this.scene.tweens.add({
+                    targets: this,
+                    y: last_y + this.displayHeight / 4,
+                    ease: 'Linear',
+                    duration: FRAME_DURATION,
+                    onComplete: () => this._tweenFly = null
+                });
+            } else if (this.frame.name === 'dragon3') {
+                this._tweenFly = this.scene.tweens.add({
+                    targets: this,
+                    y: last_y - this.displayHeight / 4,
+                    ease: 'Linear',
+                    duration: FRAME_DURATION,
+                    onComplete: () => this._tweenFly = null
+                });
                 this.scene.sounds.wings.play({volume: 0.1});
             }
         }
         this._lastFrame = this.frame.name;
     }
 
-    shooting() {
-        if ((this.scene.cursors.space.isDown || this.scene.fireButton?.active) && !this._firesActivate) {
-            this.scene.fireButton?.setAlpha(.95);
-            this.fires.createFire(this);
-            this._firesActivate = true;
-
-            this.scene.time.addEvent({
-                delay: this.weapon.delay,
-                callback: () => { 
-                    this._firesActivate = false;
-                    this.scene.fireButton?.setAlpha(.65);
-                },
-                callbackScope: this,
-            });
-        }
-    }
-
-    move() {
-        this.body.setVelocity(0);
-
-        if (this.y < screenData.top + this.displayHeight / 1.5) {
-            this.y = screenData.top + this.displayHeight / 1.5;
-        } else if (this.y > screenData.bottom - this.displayHeight / 1.5) {
-            this.y = screenData.bottom - this.displayHeight / 1.5;
-        }
-
-        if (this.x < screenData.left + this.displayWidth / 1.5) {
-            this.x = screenData.left + this.displayWidth / 1.5;
-        } else if (this.x > screenData.right - this.displayWidth / 1.5) {
-            this.x = screenData.right - this.displayWidth / 1.5;
-        }
-
-        this.handling(); 
-    }
-
-    handling(){
+    _handling(){
         let buttons;
         let cof = 100;
         let isJoystick = false;
