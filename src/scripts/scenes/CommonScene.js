@@ -45,7 +45,7 @@ export class CommonScene extends Phaser.Scene {
             .setScale(.25)
             .setAlpha(0)
             .setInteractive()
-            .on('pointerdown', ()=> this.scene.start(SCENE_NAMES.upgrade));
+            .on('pointerdown', () => this._onMoneyButtonClick());
         this._moneyValueText = this.add.text(this._moneyIcon.x - this._moneyIcon.displayWidth, this._moneyIcon.y, config.money, style)
             .setOrigin(.5)
             .setAlpha(0);
@@ -87,6 +87,10 @@ export class CommonScene extends Phaser.Scene {
     _onReturnButtonClick() {
         this.scene.start(SCENE_NAMES.MAIN);
         this.sounds.click.play({ volume: .2 });
+    }
+
+    _onMoneyButtonClick() {
+        this.scene.start(SCENE_NAMES.UPGRADE);
     }
 
     _createTranslations() {

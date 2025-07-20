@@ -389,4 +389,9 @@ export class CampaignScene extends CommonScene {
         super._onReturnButtonClick();
         this._stopBackgroundSound();
     }
+
+    _onMoneyButtonClick() {
+        super._onMoneyButtonClick();
+        this._stopBackgroundSound();
+    }
 }
