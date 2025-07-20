@@ -29,7 +29,11 @@ export class HealthBar extends Phaser.GameObjects.Container {
             this.visible = false;
         }
 
-        await this._tweenUpdate(cutWidth, isForce);
+        if (isForce) {
+            this._onUpdateComplete(cutWidth);
+        }
+
+        return this._tweenUpdate(cutWidth);
     }
 
     _onUpdateComplete(cutWidth) {
@@ -37,9 +41,8 @@ export class HealthBar extends Phaser.GameObjects.Container {
         this._healthBarFill.frame.updateUVs();
     }
 
-    async _tweenUpdate(cutWidth, isForce) {
-        let duration = isForce ? 0 : 150;
-
+    async _tweenUpdate(cutWidth) {
+        const duration = 150;
         const increaseValue = 1.15;
     
         await new Promise(resolve => {
