@@ -1,11 +1,11 @@
-import { ATLASES_FILES, AUDIO_FILES, IMAGE_FILES, SCENE_NAMES } from '../constants';
+import { ATLAS_FILES, AUDIO_FILES, IMAGE_FILES, SCENE_NAMES } from '../constants';
 import { CommonScene } from './CommonScene';
-import { LoadingBar } from '/src/scripts/classes/LoadingBar';
-import { config } from '/src/scripts/main';
+import { LoadingBar } from '../classes/LoadingBar';
+import { config } from '../main';
 
 export class PreloadScene extends CommonScene {
     constructor() {
-        super(SCENE_NAMES.preload);
+        super(SCENE_NAMES.PRELOAD);
     }
 
     async preload(){
@@ -34,7 +34,7 @@ export class PreloadScene extends CommonScene {
     _preloadResources() {
         config.levels.forEach(level => this.load.image(`bg${level.index}`, `./assets/sprites/bg${level.index}.png`));
 
-        ATLASES_FILES.forEach(name => this.load.atlas(name, `./assets/sprites/${name}.png`, `./assets/sprites/${name}.json`));
+        ATLAS_FILES.forEach(name => this.load.atlas(name, `./assets/sprites/${name}.png`, `./assets/sprites/${name}.json`));
         IMAGE_FILES.forEach(name => this.load.image(name, `./assets/sprites/${name}.png`));
         AUDIO_FILES.forEach(name => this.load.audio(name, `./assets/sounds/${name}.mp3`));
     }

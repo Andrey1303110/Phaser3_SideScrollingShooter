@@ -1,5 +1,5 @@
 import { SCENE_NAMES } from '../constants';
-import { config, rgbToHex } from '/src/scripts/main';
+import { config, rgbToHex } from '../main';
 
 const INITIAL_COLORS = {
     r: 210,
@@ -38,7 +38,7 @@ export class LoadingBar {
 
     _setEvents(){
         this.scene.load.on('progress', this._showProgressBar, this);
-        this.scene.load.on('complete', () => this.scene.scene.start(SCENE_NAMES.main), this);
+        this.scene.load.on('complete', () => this.scene.scene.start(SCENE_NAMES.MAIN), this);
     }
 
     _showProgressBox(){

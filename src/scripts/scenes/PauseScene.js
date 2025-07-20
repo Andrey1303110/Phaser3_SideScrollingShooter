@@ -1,10 +1,10 @@
 import { SCENE_NAMES } from '../constants';
 import { CommonScene } from './CommonScene';
-import { config, screenData } from '/src/scripts/main';
+import { config, screenData } from '../main';
 
 export class PauseScene extends CommonScene {
     constructor() {
-        super(SCENE_NAMES.pause);
+        super(SCENE_NAMES.PAUSE);
     }
 
     create() {
@@ -66,14 +66,14 @@ export class PauseScene extends CommonScene {
             onComplete: () => {
                 switch (command) {
                     case 'resume':
-                        this.scene.resume(SCENE_NAMES.game);
+                        this.scene.resume(SCENE_NAMES.GAME);
                     break;
                     case 'restart':
-                        this.scene.start(SCENE_NAMES.game);
+                        this.scene.start(SCENE_NAMES.GAME);
                     break;
                     case 'return':
-                        this.scene.stop(SCENE_NAMES.game);
-                        this.scene.launch(SCENE_NAMES.campaign);
+                        this.scene.stop(SCENE_NAMES.GAME);
+                        this.scene.launch(SCENE_NAMES.CAMPAIGN);
                     break;
                 }
             }

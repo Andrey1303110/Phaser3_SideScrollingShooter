@@ -316,7 +316,7 @@ function initCasualties() {
     });
 };
 
-function initUpgardeLevels() {
+function initUpgradeLevels() {
     const stats = Object.keys(config.currentUpgradableStats);
 
     for (let i = 0; i < stats.length; i++) {
@@ -372,7 +372,7 @@ export function setLang(lang) {
 if (!localStorage.getItem('totalScore') || localStorage.getItem('totalScore') === 0) {
     initHiScores();
     initCasualties();
-    initUpgardeLevels();
+    initUpgradeLevels();
     initLocalStorageItems();
 }
 
@@ -401,6 +401,6 @@ export const delayInMSec = (context, duration) => {
     });
 };
 
-export function getFont() {
+export function getFontName() {
     return config.fonts[config.lang];
 }

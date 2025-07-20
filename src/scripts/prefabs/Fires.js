@@ -1,4 +1,4 @@
-import { Fire } from '/src/scripts/prefabs/Fire.js';
+import { Fire } from "./Fire";
 
 export class Fires extends Phaser.Physics.Arcade.Group {
     constructor(scene) {

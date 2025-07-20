@@ -1,5 +1,5 @@
 import { SCENE_NAMES } from '../constants';
-import { getFont, getSceneTexts, config, screenData, setEndpoints } from '../main';
+import { getFontName, getSceneTexts, config, screenData, setEndpoints } from '../main';
 
 export class CommonScene extends Phaser.Scene {
     constructor(name) {
@@ -13,8 +13,8 @@ export class CommonScene extends Phaser.Scene {
 
         if (!this.scale.isFullscreen) {
             switch (this.scene.key) {
-                case SCENE_NAMES.boot:
-                case SCENE_NAMES.preload:
+                case SCENE_NAMES.BOOT:
+                case SCENE_NAMES.PRELOAD:
                     return;
             }
             this.scale.startFullscreen();
@@ -37,7 +37,7 @@ export class CommonScene extends Phaser.Scene {
 
     _createAvailableMoney(){
         const style = {
-            font: `${config.width * .038}px ${getFont()}`,
+            font: `${config.width * .038}px ${getFontName()}`,
             fill: '#FFFFFF',
         };
 
@@ -85,7 +85,7 @@ export class CommonScene extends Phaser.Scene {
     }
 
     _onReturnButtonClick() {
-        this.scene.start(SCENE_NAMES.main);
+        this.scene.start(SCENE_NAMES.MAIN);
         this.sounds.click.play({ volume: .2 });
     }
 

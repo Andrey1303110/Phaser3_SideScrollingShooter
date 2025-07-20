@@ -1,6 +1,6 @@
 import { DialogBoxController } from '../classes/DialogBoxController';
 import { SCENE_NAMES } from '../constants';
-import { getFont, delay, config, screenData, delayInMSec } from '../main';
+import { getFontName, config, screenData, delayInMSec } from '../main';
 import { CommonScene } from './CommonScene';
 
 const INIT_DIALOG_DELAY = 1000;
@@ -23,7 +23,7 @@ const CASUALTIES_MAP = {
 
 export class CampaignScene extends CommonScene {
     constructor() {
-        super(SCENE_NAMES.campaign);
+        super(SCENE_NAMES.CAMPAIGN);
     }
 
     preload() {
@@ -164,34 +164,34 @@ export class CampaignScene extends CommonScene {
         frame.texts = [];
 
         frame.texts.push(this.add.text(frame.x, frame.y - frame.displayHeight * 0.5 + frame.displayHeight * .086, this._getText('MISSION_CARD_MAIN_TITLE'), {
-            font: `${frame.displayWidth * .13}px ${getFont()}`,
+            font: `${frame.displayWidth * .13}px ${getFontName()}`,
             fill: '#0a0a0a',
         }).setOrigin(0.5).setAlpha(0.55));
 
         frame.texts.push(this.add.text(frame.x, frame.y - frame.displayHeight * 0.5 + frame.displayHeight * .25, `${this._getText('MISSION_CARD_LEVEL')} ${info.index}`, {
-            font: `${frame.displayWidth * .0925}px ${getFont()}`,
+            font: `${frame.displayWidth * .0925}px ${getFontName()}`,
             fill: '#0a0a0a',
         }).setOrigin(0.5).setAlpha(0.8));
 
         frame.texts.push(this.add.text(frame.x, frame.y - frame.displayHeight * 0.5 + frame.displayHeight * .37, this._getText('MISSION_CARD_CITY'), {
-            font: `${frame.displayWidth * .055}px ${getFont()}`,
+            font: `${frame.displayWidth * .055}px ${getFontName()}`,
             fill: '#0a0a0a',
         }).setOrigin(0.5).setAlpha(0.8));
 
         frame.texts.push(this.add.text(frame.x, frame.y - frame.displayHeight * 0.5 + frame.displayHeight * .44, this._getText(`LEVEL_${info.index}_NAME`), {
-            font: `${frame.displayWidth * .06175}px ${getFont()}`,
+            font: `${frame.displayWidth * .06175}px ${getFontName()}`,
             fill: '#0a0a0a',
         }).setOrigin(0.5).setAlpha(0.8));
 
         if (currentLevelHiScore > 0) {
             frame.texts.push(this.add.text(frame.x, frame.y - frame.displayHeight * 0.5 + frame.displayHeight * .58, `${this._getText('MISSION_CARD_SCORE')} ${currentLevelHiScore}`, {
-                font: `${frame.displayWidth * .049}px ${getFont()}`,
+                font: `${frame.displayWidth * .049}px ${getFontName()}`,
                 fill: '#E2B80D',
             }).setOrigin(0.5).setAlpha(0.8));
         }
 
         frame.texts.push(this.add.text(frame.x, frame.y - frame.displayHeight * 0.5 + frame.displayHeight * .71, `${this._getText('MISSION_CARD_ENEMIES')} ${info.enemies}`, {
-            font: `${frame.displayWidth * .051}px ${getFont()}`,
+            font: `${frame.displayWidth * .051}px ${getFontName()}`,
             fill: '#EA0000',
         }).setOrigin(0.5).setAlpha(0.8));
 
@@ -231,7 +231,7 @@ export class CampaignScene extends CommonScene {
 
     _createCardStartButton(frame, info) {
         frame.startButton = this.add.text(frame.x, frame.y + frame.displayHeight * 0.5 - frame.displayHeight * .09, this._getText('MISSION_CARD_START'), {
-            font: `${frame.displayWidth * .105}px ${getFont()}`,
+            font: `${frame.displayWidth * .105}px ${getFontName()}`,
             fill: '#51E04A',
         })
             .setOrigin(0.5)
@@ -270,7 +270,7 @@ export class CampaignScene extends CommonScene {
         this._casualtiesText = [];
 
         const title = this.add.text(position.x, position.y, this._getText('TOTAL_CASUALTIES'), {
-            font: `${config.width * .025}px ${getFont()}`,
+            font: `${config.width * .025}px ${getFontName()}`,
             fill: '#EA0000',
         }).setOrigin(0, 0.5).setAlpha(0.75);
 
@@ -279,7 +279,7 @@ export class CampaignScene extends CommonScene {
         Object.keys(config.casualties).forEach(async name => {
             position.y += config.width * .0285;
             const text = this.add.text(position.x, position.y, `${this._getText(CASUALTIES_MAP[name].text)} ${localStorage.getItem(`casualties_${name}`)}`, {
-                font: `${config.width * .0215}px ${getFont()}`,
+                font: `${config.width * .0215}px ${getFontName()}`,
                 fill: '#000000',
             }).setOrigin(0, 0.5).setAlpha(0);
             this._casualtiesText.push(text);
@@ -353,7 +353,7 @@ export class CampaignScene extends CommonScene {
             fillAlpha: 1,
             ease: 'Linear',
             duration: this.sounds.ready.duration * 1000 * .85,
-            onComplete: () => this.scene.start(SCENE_NAMES.game, info),
+            onComplete: () => this.scene.start(SCENE_NAMES.GAME, info),
         });
     }
 

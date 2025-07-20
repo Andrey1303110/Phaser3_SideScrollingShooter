@@ -1,11 +1,10 @@
 import { SCENE_NAMES } from '../constants';
-import { screenData, setEndpoints, setLang } from '../main';
+import { config, screenData, setEndpoints, setLang } from '../main';
 import { CommonScene } from './CommonScene';
-import { config } from '/src/scripts/main';
 
 export class BootScene extends CommonScene {
     constructor() {
-        super(SCENE_NAMES.boot);
+        super(SCENE_NAMES.BOOT);
     }
 
     init(){
@@ -144,7 +143,7 @@ export class BootScene extends CommonScene {
         };
         
         const label = this.add.text(config.width * 0.5, screenData.bottom, 'PRESS ANYWHERE TO CONTINUE', textStyle).setOrigin(0.5, 1.5).setAlpha(0);
-        const cliackArea = this.add.rectangle(0, 0, config.width, config.height).setOrigin(0);
+        const clickArea = this.add.rectangle(0, 0, config.width, config.height).setOrigin(0);
 
         await new Promise((resolve) => {
             this.tweens.add({
@@ -166,8 +165,8 @@ export class BootScene extends CommonScene {
             yoyo: true,
         });
 
-        cliackArea.setInteractive();
-        cliackArea.on('pointerdown', () => this._click());
+        clickArea.setInteractive();
+        clickArea.on('pointerdown', () => this._click());
     }
 
     _langSelect(button) {
@@ -178,7 +177,7 @@ export class BootScene extends CommonScene {
 
     _click() {
         this.sounds.click.play({ volume: .2 });
-        this.scene.start(SCENE_NAMES.preload);
+        this.scene.start(SCENE_NAMES.PRELOAD);
     }
 
     _createSounds() {

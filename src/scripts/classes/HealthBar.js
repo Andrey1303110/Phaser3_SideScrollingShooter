@@ -97,6 +97,4 @@ export class HealthBar extends Phaser.GameObjects.Container {
         this._heartIcon = this._scene.add.sprite(this._healthBar.x - this._healthBar.width * 0.53, this._healthBar.y, 'life_icon')
             .setAlpha(0.95);
     }
-
-    reset() {}
 }

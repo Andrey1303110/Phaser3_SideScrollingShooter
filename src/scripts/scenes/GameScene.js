@@ -1,14 +1,14 @@
-import { getFont, config, screenData } from '../main';
-import { Player } from '/src/scripts/prefabs/Player';
-import { Enemies } from '/src/scripts/prefabs/Enemies';
-import { Boom } from '/src/scripts/prefabs/Boom';
-import { DEPTH_LAYERS, SCENE_NAMES } from '../constants';
+import { getFontName, config, screenData } from '../main';
+import { Player } from '../prefabs/Player';
+import { Enemies } from '../prefabs/Enemies';
+import { Boom } from '../prefabs/Boom';
+import { DEPTH_LAYERS, EVENTS, SCENE_NAMES } from '../constants';
 import { CommonScene } from './CommonScene';
 import { HealthBar } from '../classes/HealthBar';
 
 export class GameScene extends CommonScene {
     constructor() {
-        super(SCENE_NAMES.game);
+        super(SCENE_NAMES.GAME);
     }
 
     init(data) {
@@ -121,13 +121,13 @@ export class GameScene extends CommonScene {
         }
 
         this.scoreText = this.add.text(right - width * .05, top + width * .02, this._currentScore, {
-            font: `${width * .038}px ${getFont()}`,
+            font: `${width * .038}px ${getFontName()}`,
             fill: '#EA0000',
         }).setOrigin(1, 0).setAlpha(.75);
 
         if (this.info?.unlim) {
             this.hiScoreText = this.add.text(this._center.x, top + width * .01, `${this._getText('TOP_HIGH_SCORE')} ${localStorage.getItem('unlimHiScores')}`, {
-                font: `${width * .03}px ${getFont()}`,
+                font: `${width * .03}px ${getFontName()}`,
                 fill: '#EA0000',
             }).setOrigin(0.5, 0).setAlpha(.75);
         }
@@ -224,9 +224,9 @@ export class GameScene extends CommonScene {
     }
 
     _createCompleteEvents() {
-        this._player.emit('killed');
-        this._player.once('killed', this._onComplete, this);
-        this.events.once('enemies-killed', this._onComplete, this);
+        this._player.emit(EVENTS.KILLED);
+        this._player.once(EVENTS.KILLED, this._onComplete, this);
+        this.events.once(EVENTS.ALL_ENEMIES_KILLED, this._onComplete, this);
     }
 
     _onComplete() {
@@ -275,7 +275,7 @@ export class GameScene extends CommonScene {
             ease: 'Linear',
             duration: this.sounds.died.duration * 1000 * .75,
             onComplete: () => {
-                this.scene.start(this.info.unlim ? SCENE_NAMES.main : SCENE_NAMES.campaign);
+                this.scene.start(this.info.unlim ? SCENE_NAMES.MAIN : SCENE_NAMES.CAMPAIGN);
                 this.scene.stop();
             }
         })
@@ -309,7 +309,7 @@ export class GameScene extends CommonScene {
             .setAlpha(0.95);
         
         this._progressExpBar.levelText = this.add.text(this._progressExpBar.x - this._progressExpBar.displayWidth * .38, this._progressExpBar.y - this._progressExpBar.displayHeight * .035, config.currentLevelPlayer, {
-            font: `${this._progressExpBar.displayHeight * .545}px ${getFont()}`,
+            font: `${this._progressExpBar.displayHeight * .545}px ${getFontName()}`,
             fill: '#FFFFFF',
         }).setOrigin(0.5).setAlpha(0.75);
 
@@ -351,7 +351,7 @@ export class GameScene extends CommonScene {
         localStorage.setItem('currentLevelPlayer', config.currentLevelPlayer);
 
         const levelTextLabel = this.add.text(this._center.x, this._center.y, config.currentLevelPlayer, {
-            font: `${config.width * .25}px ${getFont()}`,
+            font: `${config.width * .25}px ${getFontName()}`,
             fill: '#FFFFFF',
         }).setOrigin(0.5).setAlpha(0);
         

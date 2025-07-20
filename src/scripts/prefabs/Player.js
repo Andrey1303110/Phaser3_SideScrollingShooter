@@ -1,13 +1,13 @@
-import { EVENTS, SCENE_NAMES } from '/src/scripts/constants';
-import { config, screenData } from '/src/scripts/main';
-import { Fires } from '/src/scripts/prefabs/Fires';
-import { MovableObject } from '/src/scripts/prefabs/MovableObject';
+import { EVENTS, SCENE_NAMES } from "../constants";
+import { config, screenData } from "../main";
+import { Fires } from "./Fires";
+import { MovableObject } from "./MovableObject";
 
 const PLAYER_TEXTURE_NAME = 'dragon';
 const FIRST_PLAYER_FRAME = 'dragon1';
 const FIRE_TEXTURE_NAME = 'fire';
 const ANIMATION_NAME = 'fly';
-const FRAME_DUARTION = 350;
+const FRAME_DURATION = 350;
 
 export class Player extends MovableObject {
     constructor(data) {
@@ -42,7 +42,7 @@ export class Player extends MovableObject {
         this.weapon = data.weapon;
         this.scale = config.player.scale;
 
-        this.scene.events.on(EVENTS.update, this._updateFrame, this);
+        this.scene.events.on(EVENTS.UPDATE, this._updateFrame, this);
         this._lastFrame = FIRST_PLAYER_FRAME;
         this._tweenFly = null;
     }
@@ -91,23 +91,23 @@ export class Player extends MovableObject {
         if (this.frame.name !== this._lastFrame) {
             const last_y = this.y;
             if (this.frame.name === 'dragon6') {
-                if (this.scene.constructor.name !== SCENE_NAMES.game) {
+                if (this.scene.constructor.name !== SCENE_NAMES.GAME) {
                     this._tweenFly = this.scene.tweens.add({
                         targets: this,
                         y: last_y + this.displayHeight / 3,
                         ease: 'Linear',
-                        duration: FRAME_DUARTION,
+                        duration: FRAME_DURATION,
                         onComplete: () => this._tweenFly = null
                     });
                 }
             }
             else if (this.frame.name === 'dragon3') {
-                if (this.scene.constructor.name !== SCENE_NAMES.game) {
+                if (this.scene.constructor.name !== SCENE_NAMES.GAME) {
                     this._tweenFly = this.scene.tweens.add({
                         targets: this,
                         y: last_y - this.displayHeight / 3,
                         ease: 'Linear',
-                        duration: FRAME_DUARTION,
+                        duration: FRAME_DURATION,
                         onComplete: () => this._tweenFly = null
                     });
                 }

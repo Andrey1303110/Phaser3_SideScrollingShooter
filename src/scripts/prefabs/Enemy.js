@@ -1,5 +1,5 @@
-import { config, screenData } from '/src/scripts/main';
-import { MovableObject } from '/src/scripts/prefabs/MovableObject';
+import { config, screenData } from "../main";
+import { MovableObject } from "./MovableObject";
 
 export class Enemy extends MovableObject {
     static generateAttr(scene) {

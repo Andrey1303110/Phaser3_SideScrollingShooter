@@ -1,6 +1,6 @@
 import { Resolver } from '../Resolver';
 import { DEPTH_LAYERS } from '../constants';
-import { config, getFont, screenData } from '../main';
+import { config, getFontName, screenData } from '../main';
 import { RoundedRectContainer } from './RoundedRectContaier';
 
 export class DialogBox extends Phaser.GameObjects.Container {
@@ -107,7 +107,7 @@ export class DialogBox extends Phaser.GameObjects.Container {
         const y = this._bg.y + this._bg.height * 0.5;
 
         let content = this._scene.add.text(0, 0, text, { 
-            font: `${fontSize}px ${getFont()}`,
+            font: `${fontSize}px ${getFontName()}`,
             lineSpacing: fontSize * 0.5,
             color: '#A0A0A0',
             align: 'left',

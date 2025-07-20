@@ -1,7 +1,7 @@
-import { SCENE_NAMES } from '/src/scripts/constants';
-import { getFont, config, screenData, getPlayerAbilities, delayInMSec } from '/src/scripts/main';
-import { CommonScene } from '/src/scripts/scenes/CommonScene';
-import { Player } from '/src/scripts/prefabs/Player';
+import { SCENE_NAMES } from "../constants";
+import { config, delayInMSec, getFontName, getPlayerAbilities, screenData } from "../main";
+import { CommonScene } from "./CommonScene";
+import { Player } from "../prefabs/Player";
 
 const STATS_MAP = {
     health: {
@@ -24,7 +24,7 @@ const STATS_MAP = {
 
 export class UpgradeScene extends CommonScene {
     constructor() {
-        super(SCENE_NAMES.upgrade);
+        super(SCENE_NAMES.UPGRADE);
     }
 
     init(){
@@ -60,7 +60,7 @@ export class UpgradeScene extends CommonScene {
         this.statsLevel = {};
 
         const style = {
-            font: `${config.width * .031}px ${getFont()}`,
+            font: `${config.width * .031}px ${getFontName()}`,
             fill: '#000000',
         };
 
@@ -178,7 +178,7 @@ export class UpgradeScene extends CommonScene {
         this.buttons[data.key].cost = Math.floor(this.buttons[data.key].level/10) + 1;
 
         const style = {
-            font: `${config.width * .023}px ${getFont()}`,
+            font: `${config.width * .023}px ${getFontName()}`,
             fill: '#FFFFFF',
         };
         this.buttons[data.key].textCost = this.add.text(this.buttons[data.key].x, this.buttons[data.key].y, '1', style).setOrigin(0.5, -0.125).setVisible(false);
@@ -275,12 +275,7 @@ export class UpgradeScene extends CommonScene {
         const objectsNum = 10 + level;
         
         for (let i = 0; i < objectsNum; i++) {
-            const x = Phaser.Math.Between(this._player.x - this._player.displayWidth * 0.6, this._player.x + this._player.displayWidth * 0.6);
-            const y = Phaser.Math.Between(this._player.y - this._player.displayHeight * 0.5, this._player.y + this._player.displayHeight * 0.5);
-            const scale = Phaser.Math.Between(25 + level, 50 + level) / 100;
-            const font = `${config.height * 0.075 * scale}px ${getFont()}`;
-            const fill = `#${STATS_MAP[name].color}`;
-            const duration = Phaser.Math.Between(750, 1250);
+            const font = `${config.height * 0.075 * scale}px ${getFontName()}`;
 
             const plus_symbol = this.add.text(x, y, '+', { font, fill })
                 .setOrigin(0.5)
@@ -302,7 +297,7 @@ export class UpgradeScene extends CommonScene {
         this.add.sprite(screenData.left + config.width * .015, screenData.top + config.width * .015, 'return')
             .setAlpha(0.65)
             .setInteractive()
-            .on('pointerdown', () => this.scene.start(SCENE_NAMES.main), this);
+            .on('pointerdown', () => this.scene.start(SCENE_NAMES.MAIN), this);
     }
 
     _createSounds() {

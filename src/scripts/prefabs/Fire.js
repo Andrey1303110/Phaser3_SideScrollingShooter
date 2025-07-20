@@ -1,5 +1,5 @@
-import { config } from '/src/scripts/main';
-import { MovableObject } from '/src/scripts/prefabs/MovableObject';
+import { config } from '../main';
+import { MovableObject } from './MovableObject'
 
 export class Fire extends MovableObject {
     static generate(scene, source) {

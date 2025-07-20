@@ -1,5 +1,6 @@
-import { Fires } from '/src/scripts/prefabs/Fires.js';
-import { Enemy } from '/src/scripts/prefabs/Enemy.js';
+import { Fires } from "./Fires";
+import { Enemy } from "./Enemy";
+import { EVENTS } from "../constants";
 
 export class Enemies extends Phaser.Physics.Arcade.Group {
     constructor(scene) {
@@ -32,7 +33,7 @@ export class Enemies extends Phaser.Physics.Arcade.Group {
     createEnemy() {
         if (this.countMax > this.createdCount) {
             const enemy = Enemy.generate(this.scene, this.fires);
-            enemy.on('killed', this.onEnemyKilled, this);
+            enemy.on(EVENTS.KILLED, this.onEnemyKilled, this);
             this.add(enemy);
             enemy.move();
             this.createdCount++;
@@ -44,7 +45,7 @@ export class Enemies extends Phaser.Physics.Arcade.Group {
     onEnemyKilled() {
         this.killed++;
         if (this.killed >= this.countMax) {
-            this.scene.events.emit('enemies-killed');
+            this.scene.events.emit(EVENTS.ALL_ENEMIES_KILLED);
         }
     }
 }

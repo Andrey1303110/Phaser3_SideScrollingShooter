@@ -1,5 +1,5 @@
 import { SCENE_NAMES } from '../constants';
-import { getFont, config } from '../main';
+import { getFontName, config } from '../main';
 import { CommonScene } from './CommonScene';
 
 const BUTTONS_MAP = [
@@ -7,25 +7,25 @@ const BUTTONS_MAP = [
         sprite: 'button_campaign',
         y: 0.275,
         text: 'CAMPAIGN',
-        startScene: SCENE_NAMES.campaign,
+        startScene: SCENE_NAMES.CAMPAIGN,
     },
     {
         sprite: 'button_unlim',
         y: 0.5,
         text: 'UNLIM',
-        startScene: SCENE_NAMES.game,
+        startScene: SCENE_NAMES.GAME,
     },
     {
         sprite: 'button_upgrade',
         y: 0.725,
         text: 'UPGRADE',
-        startScene: SCENE_NAMES.upgrade,
+        startScene: SCENE_NAMES.UPGRADE,
     },
 ];
 
 export class GameTypeSelect extends CommonScene {
     constructor() {
-        super(SCENE_NAMES.main);
+        super(SCENE_NAMES.MAIN);
     }
 
     init(){
@@ -59,7 +59,7 @@ export class GameTypeSelect extends CommonScene {
 
     _createButtonText(button, textKey) {
         const textStyle = {
-            font: `${config.width * .03}px ${getFont()}`,
+            font: `${config.width * .03}px ${getFontName()}`,
             fill: '#f0f0f0',
         };
         button.buttonText = this.add.text(button.x, button.y, this._getText(textKey), textStyle).setScale(3).setOrigin(0.5).setAlpha(0);
@@ -119,8 +119,8 @@ export class GameTypeSelect extends CommonScene {
     }
 
     _startNewScene(sceneName) {
-        if (sceneName === SCENE_NAMES.game) {
-            this.scene.start(SCENE_NAMES.game, config.unlim);
+        if (sceneName === SCENE_NAMES.GAME) {
+            this.scene.start(SCENE_NAMES.GAME, config.unlim);
         } else {
             this.scene.start(sceneName);
         }
