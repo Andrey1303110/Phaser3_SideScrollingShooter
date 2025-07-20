@@ -25,16 +25,16 @@ export class GameScene extends CommonScene {
 
         this._createBg(data);
         this._getMaxEnemyHeightFrame();
-        this._addHealthBar();
         this._createPlayer();
+        this._createHealthBar();
         this._createEnemies();
         this._createCompleteEvents();
-        this._addOverlap();
+        this._setupOverlapping();
         this._createSounds();
         this._createScoreText();
-        this._addMobileButtons();
-        this._addPauseButton();
-            this._addExpProgressBar();
+        this._createMobileButtons();
+        this._createPauseButton();
+        this._createExpProgressBar();
     }
 
     update() {
@@ -49,7 +49,7 @@ export class GameScene extends CommonScene {
         return this._joystick;
     }
 
-    _addMobileButtons() {
+    _createMobileButtons() {
         if (document.body.clientWidth > 1280) return;
 
         this._addJoystick();
@@ -157,7 +157,7 @@ export class GameScene extends CommonScene {
         };
     }
 
-    _addOverlap() {
+    _setupOverlapping() {
         this.physics.add.overlap(this._player.fires, this._enemies, this._onOverlap, undefined, this);
         this.physics.add.overlap(this._enemies.fires, this._player, this._onOverlap, undefined, this);
         this.physics.add.overlap(this._player.fires, this._enemies.fires, this._onOverlap, undefined, this);
@@ -284,7 +284,7 @@ export class GameScene extends CommonScene {
         });
     }
 
-    _addPauseButton() {
+    _createPauseButton() {
         this.add.image(screenData.left + config.width * .05, screenData.top + config.width * .05, 'pause')
             .setAlpha(0.65)
             .setScale(2)
@@ -295,12 +295,12 @@ export class GameScene extends CommonScene {
             }, this);
     }
 
-    _addHealthBar(){
+    _createHealthBar(){
         this._healthBar = new HealthBar(this);
         this.add.existing(this._healthBar);
     }
 
-    _addExpProgressBar(){
+    _createExpProgressBar(){
         if (this.info?.unlim) {
             return;
         }
