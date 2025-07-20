@@ -16,10 +16,11 @@ export class HealthBar extends Phaser.GameObjects.Container {
     async updateHealthBar(isForce = false){
         let progressValue;
 
-        if (config.player.currentHealth <= 0) {
+        this._scene.player.currentHealth
+        if (this._scene.player.currentHealth <= 0) {
             progressValue = 0;
         } else {
-            progressValue = config.player.currentHealth/config.player.maxHealth;
+            progressValue = this._scene.player.currentHealth/this._scene.player.maxHealth;
         }
 
         let cutWidth = this._healthBarFill.displayWidth * progressValue;
@@ -30,7 +31,7 @@ export class HealthBar extends Phaser.GameObjects.Container {
         }
 
         if (isForce) {
-            this._onUpdateComplete(cutWidth);
+            return this._onUpdateComplete(cutWidth);
         }
 
         return this._tweenUpdate(cutWidth);

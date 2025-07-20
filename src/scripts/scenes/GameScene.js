@@ -49,6 +49,10 @@ export class GameScene extends CommonScene {
         return this._joystick;
     }
 
+    get player() {
+        return this._player;
+    }
+
     _createMobileButtons() {
         if (document.body.clientWidth > 1280) return;
 
@@ -133,8 +137,6 @@ export class GameScene extends CommonScene {
 
     _createPlayer() {
         this._player = new Player({ scene: this });
-        config.player.currentHealth = config.player.maxHealth;
-        this._healthBar.updateHealthBar(true);
     }
 
     _createEnemies() {
@@ -205,20 +207,20 @@ export class GameScene extends CommonScene {
     }
 
     _onPlayerHit(source, target) {
-        const damage = this._enemies.children.contains(target) ? config.player.maxHealth : target.damage;
-        const shakeMagnitude = damage / config.player.maxHealth * 0.05;
+        const damage = this._enemies.children.contains(target) ? this._player.maxHealth : target.damage;
+        const shakeMagnitude = damage * 2 / this._player.maxHealth * 0.05;
         const duration = 125;
         const color = [255, 0, 0];
 
-        config.player.currentHealth -= damage;
-
-        if (config.player.currentHealth <= 0) {
-            source.setAlive(false);
-        }
+        this._player.currentHealth -= damage;
 
         this.cameras.main.flash(duration, ...color);
         this.cameras.main.shake(duration, shakeMagnitude);
         this._healthBar.updateHealthBar();
+
+        if (this._player.currentHealth <= 0) {
+            source.setAlive(false);
+        }
     }
 
     _createCompleteEvents() {

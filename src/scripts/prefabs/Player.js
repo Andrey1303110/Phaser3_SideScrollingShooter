@@ -45,6 +45,9 @@ export class Player extends MovableObject {
         this.scene.events.on(EVENTS.UPDATE, this._updateFrame, this);
         this._lastFrame = FIRST_PLAYER_FRAME;
         this._tweenFly = null;
+
+        this.maxHealth = config.player.maxHealth;
+        this.currentHealth = config.player.maxHealth;
     }
 
     shooting() {
