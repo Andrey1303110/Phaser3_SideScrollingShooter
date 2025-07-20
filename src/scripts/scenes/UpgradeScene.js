@@ -6,19 +6,19 @@ import { Player } from "../prefabs/Player";
 const STATS_MAP = {
     health: {
         text: 'HEALTH_TITLE',
-        color: 'FF2407',
+        color: 'ff2407',
     },
     reload: {
         text: 'RELOAD_TITLE',
-        color: '66E210',
+        color: '66e210',
     },
     velocity: {
         text: 'VELOCITY_TITLE',
-        color: 'FFDC45',
+        color: 'ffdc45',
     },
     scale: {
         text: 'SCALE_TITLE',
-        color: '0291F7',
+        color: '0291f7',
     }
 };
 
