@@ -33,24 +33,26 @@ export class UpgradeScene extends CommonScene {
         this.buttons = {};
     }
 
-    create() {
+    async create() {
         this._createBg();
-        this._createPlayer();
-        this._createReturnButton();
         this._createSounds();
+        this._createReturnButton();
+        await this._createPlayer();
         this._createAvailableMoney();
+        await this._createStats();
     }
 
-    _createPlayer(){
+    async _createPlayer(){
         this._player = new Player({ scene: this });
 
+        await new Promise(resolve => {
         this.tweens.add({
             targets: this._player,
             x: config.width * .125,
             ease: 'Linear',
             duration: 1250,
-            onComplete: () => this._createStats(),
-            callbackScope: this,
+                onComplete: () => resolve(),
+            });
         });
     }
 
@@ -89,8 +91,7 @@ export class UpgradeScene extends CommonScene {
             await this._playShowStatsAnimation(key);
             this._createUpgradeButton({x, y, key, level});
 
-            const delay = i * 225;
-            await delayInMSec(this.scene, delay);
+            await delayInMSec(this.scene, 250);
         }
 
         
@@ -99,7 +100,7 @@ export class UpgradeScene extends CommonScene {
     }
 
     _playShowStatsAnimation(key) {
-        const duration = 450;
+        const duration = 325;
 
         return new Promise(resolve => {
             this.tweens.add({
@@ -117,7 +118,7 @@ export class UpgradeScene extends CommonScene {
             targets: infoText,
             ease: 'Linear',
             alpha: .75,
-            duration: 450,
+            duration: 350,
         })
     }
 
@@ -358,4 +359,6 @@ export class UpgradeScene extends CommonScene {
             error: this.sound.add('error'),
         };
     }
+
+    _onMoneyButtonClick() {}
 }
