@@ -336,29 +336,31 @@ export class GameScene extends CommonScene {
         if (this.info?.unlim) {
             return;
         }
-        let score = {
-            start: this._getRequiredScoreOnLevel(config.currentLevelPlayer - 1),
-            end: this._getRequiredScoreOnLevel(config.currentLevelPlayer),
-            diff: this._getRequiredScoreOnLevel(config.currentLevelPlayer) - this._getRequiredScoreOnLevel(config.currentLevelPlayer - 1)
-        };
+
+        let score = this._calculateScore();
         let currentProgress = (config.totalScore - score.start)/score.diff;
+        
         if (config.currentLevelPlayer < 2) {
             currentProgress = config.totalScore/score.diff;
         }
 
         if (currentProgress >= 1) {
             this._increaseLevel();
-            score = {
-                start: this._getRequiredScoreOnLevel(config.currentLevelPlayer - 1),
-                end: this._getRequiredScoreOnLevel(config.currentLevelPlayer),
-                diff: this._getRequiredScoreOnLevel(config.currentLevelPlayer) - this._getRequiredScoreOnLevel(config.currentLevelPlayer - 1)
-            };
+            score = this._calculateScore();
             currentProgress = 1 - (-1 * (config.totalScore - score.end)/score.diff);
         }
 
         this._progressExpBar.fillProgress.frame.cutWidth = this._progressExpBar.fillProgress.displayWidth * currentProgress;
         this._progressExpBar.fillProgress.frame.updateUVs();
         this._progressExpBar.text = config.currentLevelPlayer;
+    }
+
+    _calculateScore() {
+        return{
+            start: this._getRequiredScoreOnLevel(config.currentLevelPlayer - 1),
+            end: this._getRequiredScoreOnLevel(config.currentLevelPlayer),
+            diff: this._getRequiredScoreOnLevel(config.currentLevelPlayer) - this._getRequiredScoreOnLevel(config.currentLevelPlayer - 1)
+        }
     }
 
     _increaseLevel(){
