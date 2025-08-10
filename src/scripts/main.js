@@ -45,17 +45,6 @@ export const config = {
     totalScore: getLocalStorageItem('totalScore', Number) ?? 0,
     money: getLocalStorageItem('money', Number) ?? 0,
 
-    joystick: {
-        radius: 100,
-        gap: 35
-    },
-
-    level: {
-        scoreCof: 1.185,
-        levelCof: 1.315,
-        score: 500,
-    },
-
     casualties: {
         jet: getLocalStorageItem('casualties_jet', Number) ?? 0,
         helicopter: getLocalStorageItem('casualties_helicopter', Number) ?? 0,

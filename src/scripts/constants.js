@@ -33,5 +33,9 @@ export const DEPTH_LAYERS = {
 }
 
 export const FIRE_WEAPON_DEFAULT_SCALE = 2.5;
-
 export const UPGRADE_MULTIPLIER = 0.04;
+export const JOYSTICK_RADIUS = 90;
+export const JOYSTICK_GAP = 35;
+export const LEVEL_REQUIRED_SCORE = 500;
+export const LEVEL_SCORE_MULTIPLIER = 1.2;
+export const LEVELS_EXP_MULTIPLIER = 1.3;

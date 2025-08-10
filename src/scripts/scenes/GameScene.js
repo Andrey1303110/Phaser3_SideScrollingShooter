@@ -2,7 +2,7 @@ import { getFontName, config, screenData, getLocalStorageItem } from '../main';
 import { Player } from '../prefabs/Player';
 import { Enemies } from '../prefabs/Enemies';
 import { Boom } from '../prefabs/Boom';
-import { DEPTH_LAYERS, EVENTS, SCENE_NAMES } from '../constants';
+import { SCENE_NAMES, DEPTH_LAYERS, EVENTS, JOYSTICK_GAP, JOYSTICK_RADIUS, LEVELS_EXP_MULTIPLIER, LEVEL_REQUIRED_SCORE, LEVEL_SCORE_MULTIPLIER } from '../constants';
 import { CommonScene } from './CommonScene';
 import { HealthBar } from '../classes/HealthBar';
 
@@ -62,14 +62,13 @@ export class GameScene extends CommonScene {
 
     _addJoystick(){
         const { left, bottom } = screenData;
-        const { radius, gap } = config.joystick;
 
         this._joystick = this.plugins.get('rexvirtualjoystickplugin').add(this, {
-            x: left + radius + gap,
-            y: bottom - radius - gap,
-            radius: radius,
-            base: this.add.circle(0, 0, radius).setStrokeStyle(3.5, 0x1a65ac).setAlpha(.75),
-            thumb: this.add.circle(0, 0, radius * 0.5, 0xcccccc).setAlpha(0.5),
+            x: left + JOYSTICK_RADIUS + JOYSTICK_GAP,
+            y: bottom - JOYSTICK_RADIUS - JOYSTICK_GAP,
+            radius: JOYSTICK_RADIUS,
+            base: this.add.circle(0, 0, JOYSTICK_RADIUS).setStrokeStyle(3.5, 0x1a65ac).setAlpha(.75),
+            thumb: this.add.circle(0, 0, JOYSTICK_RADIUS * 0.5, 0xcccccc).setAlpha(0.5),
             dir: '8dir',
         });
     }
@@ -82,9 +81,8 @@ export class GameScene extends CommonScene {
 
     _addFireButton(){
         const { right } = screenData;
-        const { radius, gap } = config.joystick;
 
-        this.fireButton = this.add.image(right - radius - gap, this._joystick.y, 'fire')
+        this.fireButton = this.add.image(right - JOYSTICK_RADIUS - JOYSTICK_GAP, this._joystick.y, 'fire')
             .setAlpha(0.65)
             .setInteractive()
             .setActive(false)
@@ -193,7 +191,7 @@ export class GameScene extends CommonScene {
                 localStorage.setItem(`casualties_${casualtiesName}`, ++oldValue);
             }
 
-            const reward = Number((target.reward * Math.pow(config.level.scoreCof, this._currentLevelScene - 1)).toFixed(0));
+            const reward = Number((target.reward * Math.pow(LEVEL_SCORE_MULTIPLIER, this._currentLevelScene - 1)).toFixed(0));
             this._currentScore += reward;
 
             if (!this.info?.unlim) {
@@ -394,7 +392,7 @@ export class GameScene extends CommonScene {
     _getRequiredScoreOnLevel(level){
         let result = 0;
         for (let i = 0; i < level; i++) {
-            result += Number((config.level.score * Math.pow(config.level.levelCof, i)).toFixed(0));
+            result += Number((LEVEL_REQUIRED_SCORE * Math.pow(LEVELS_EXP_MULTIPLIER, i)).toFixed(0));
         }
         return result;
     }
