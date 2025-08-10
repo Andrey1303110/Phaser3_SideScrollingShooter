@@ -37,7 +37,7 @@ export class CampaignScene extends CommonScene {
         this._createMap();
         this._createReturnButton();
         await this._createDots();
-        this._createBackgroundSound();
+        this._playBackgroundSound();
         await this._createCasualties();
         this._createAvailableMoney();
         this._createInitialDialogs();
@@ -50,8 +50,9 @@ export class CampaignScene extends CommonScene {
             .setScale(1.25);
     }
 
-    _createBackgroundSound() {
-        if (config.currentLevelScene >= config.levels.length) {
+    async _playBackgroundSound() {
+        if (config.currentLevelScene > config.levels.length) {
+            await delayInMSec(this.scene, 1000);
             this._addCampaignCompleteSound();
             return;
         }
@@ -65,7 +66,7 @@ export class CampaignScene extends CommonScene {
     }
 
     _addCampaignCompleteSound() {
-        this.sounds.campaign_complete_song.play({ volume: .15 })
+        this.sounds.campaign_complete_song.play({ volume: .25 })
         this.sounds.campaign_complete_song.loop = true;
     }
 
