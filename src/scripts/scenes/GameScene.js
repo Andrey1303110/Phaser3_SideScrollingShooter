@@ -1,4 +1,4 @@
-import { getFontName, config, screenData } from '../main';
+import { getFontName, config, screenData, getLocalStorageItem } from '../main';
 import { Player } from '../prefabs/Player';
 import { Enemies } from '../prefabs/Enemies';
 import { Boom } from '../prefabs/Boom';
@@ -128,7 +128,7 @@ export class GameScene extends CommonScene {
         }).setOrigin(1, 0).setAlpha(.75);
 
         if (this.info?.unlim) {
-            this.hiScoreText = this.add.text(this._center.x, top + width * .01, `${this._getText('TOP_HIGH_SCORE')} ${localStorage.getItem('unlimHiScores')}`, {
+            this.hiScoreText = this.add.text(this._center.x, top + width * .01, `${this._getText('TOP_HIGH_SCORE')} ${getLocalStorageItem('unlimHiScores', Number)}`, {
                 font: `${width * .03}px ${getFontName()}`,
                 fill: '#EA0000',
             }).setOrigin(0.5, 0).setAlpha(.75);
@@ -189,8 +189,8 @@ export class GameScene extends CommonScene {
                 } else if (target.texture.key === 'missile_2') { // todo set missile, missile_2 as constants
                     casualtiesName = 'missile';
                 }
-                let old_value = Number(localStorage.getItem(`casualties_${casualtiesName}`));
-                localStorage.setItem(`casualties_${casualtiesName}`, ++old_value);
+                let oldValue = getLocalStorageItem(`casualties_${casualtiesName}`, Number);
+                localStorage.setItem(`casualties_${casualtiesName}`, ++oldValue);
             }
 
             const reward = Number((target.reward * Math.pow(config.level.scoreCof, this._currentLevelScene - 1)).toFixed(0));
@@ -274,7 +274,7 @@ export class GameScene extends CommonScene {
             finalText.text = this._getText('FINAL_TEXT_LOSE');
 
             if (this.info.unlim) {
-                if (localStorage.getItem('unlimHiScores') < this._currentScore) {
+                if (getLocalStorageItem('unlimHiScores', Number) < this._currentScore) {
                     localStorage.setItem('unlimHiScores', this._currentScore);
                 }
             }

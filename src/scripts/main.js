@@ -40,10 +40,10 @@ export const config = {
     },
 
     // TODO replace to separate property
-    currentLevelScene: localStorage.getItem('currentLevelScene') ?? 1,
-    currentLevelPlayer: localStorage.getItem('currentLevelPlayer') ?? 1,
-    totalScore: localStorage.getItem('totalScore') ?? 0,
-    money: localStorage.getItem('money') ?? 0,
+    currentLevelScene: getLocalStorageItem('currentLevelScene', Number) ?? 1,
+    currentLevelPlayer: getLocalStorageItem('currentLevelPlayer', Number) ?? 1,
+    totalScore: getLocalStorageItem('totalScore', Number) ?? 0,
+    money: getLocalStorageItem('money', Number) ?? 0,
 
     joystick: {
         radius: 100,
@@ -57,10 +57,10 @@ export const config = {
     },
 
     casualties: {
-        jet: localStorage.getItem('casualties_jet') ?? 0,
-        helicopter: localStorage.getItem('casualties_helicopter') ?? 0,
-        rocket: localStorage.getItem('casualties_rocket') ?? 0,
-        missile: localStorage.getItem('casualties_missile') ?? 0
+        jet: getLocalStorageItem('casualties_jet', Number) ?? 0,
+        helicopter: getLocalStorageItem('casualties_helicopter', Number) ?? 0,
+        rocket: getLocalStorageItem('casualties_rocket', Number) ?? 0,
+        missile: getLocalStorageItem('casualties_missile', Number) ?? 0
     },
 
     player: {
@@ -68,7 +68,7 @@ export const config = {
         currentHealth: 100,
         velocity: 350,
         scale: 0.75,
-        currentWeapon: localStorage.getItem('currentPlayerWeapon'),
+        currentWeapon: getLocalStorageItem('currentPlayerWeapon'),
     },
 
     currentUpgradableStats: {
@@ -331,7 +331,7 @@ function initAbilitiesByLevel() {
 
     for (let i = 0; i < stats.length; i++) {
         const key = stats[i];
-        const level = localStorage.getItem(`playerAbilityLevel_${key}`);
+        const level = getLocalStorageItem(`playerAbilityLevel_${key}`, Number);
 
         for (let j = 1; j < level; j++) {
             getPlayerAbilities(key);
@@ -360,30 +360,23 @@ export function getPlayerAbilities(key) {
     }
 }
 
-function initLang() {
-    config.lang = localStorage.getItem('lang');
+export function getLocalStorageItem(key, type = String) {
+    const value = localStorage.getItem(key);
+    if (!value) {
+        return undefined;
+    }
+
+    if (!type) {
+        return value;
+    }
+
+    return type(value);
 }
 
 export function setLang(lang) {
     config.lang = lang;
     localStorage.setItem('lang', lang);
 }
-
-if (!localStorage.getItem('totalScore') || localStorage.getItem('totalScore') === 0) {
-    initHiScores();
-    initCasualties();
-    initUpgradeLevels();
-    initLocalStorageItems();
-}
-
-function initLocalStorageItems() {
-    localStorage.setItem('currentLevelPlayer', config.currentLevelPlayer);
-    localStorage.setItem('currentPlayerWeapon', 'fire');
-    localStorage.setItem('money', config.money);
-}
-
-initLang();
-initAbilitiesByLevel();
 
 export function getSceneTexts(scene) {
     return scene.cache.json.get('texts')[scene.name];
@@ -404,3 +397,25 @@ export const delayInMSec = (context, duration) => {
 export function getFontName() {
     return config.fonts[config.lang];
 }
+
+function initLang() {
+    config.lang = getLocalStorageItem('lang');
+}
+
+if (!getLocalStorageItem('totalScore', Number) || getLocalStorageItem('totalScore', Number) === 0) {
+    initHiScores();
+    initCasualties();
+    initUpgradeLevels();
+    initLocalStorageItems();
+}
+
+function initLocalStorageItems() {
+    localStorage.setItem('currentLevelScene', config.currentLevelScene);
+    localStorage.setItem('currentLevelPlayer', config.currentLevelPlayer);
+    localStorage.setItem('currentPlayerWeapon', 'fire');
+    localStorage.setItem('money', config.money);
+}
+
+initLang();
+initAbilitiesByLevel();
+

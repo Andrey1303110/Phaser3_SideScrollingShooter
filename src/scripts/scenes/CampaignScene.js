@@ -1,6 +1,6 @@
 import { DialogBoxController } from '../classes/DialogBoxController';
 import { SCENE_NAMES } from '../constants';
-import { getFontName, config, screenData, delayInMSec } from '../main';
+import { getFontName, config, screenData, delayInMSec, getLocalStorageItem } from '../main';
 import { CommonScene } from './CommonScene';
 
 const INIT_DIALOG_DELAY = 1000;
@@ -156,7 +156,7 @@ export class CampaignScene extends CommonScene {
     async _createLevelCard(info) {
         const bgRect = this.add.rectangle(this._center.x, this._center.y, config.width, config.height, '0x000000', 0).setInteractive(); // todo move it to transition
         
-        const currentLevelHiScore = localStorage.getItem('hiScores').split(',')[info.index - 1] || 0;
+        const currentLevelHiScore = getLocalStorageItem('hiScores').split(',')[info.index - 1] || 0;
         info.hiScore = currentLevelHiScore;
 
         const frame = this.add.image(this._center.x, this._center.y, 'frame');
@@ -282,7 +282,7 @@ export class CampaignScene extends CommonScene {
 
         Object.keys(config.casualties).forEach(async name => {
             position.y += config.width * .0285;
-            const text = this.add.text(position.x, position.y, `${this._getText(CASUALTIES_MAP[name].text)} ${localStorage.getItem(`casualties_${name}`)}`, {
+            const text = this.add.text(position.x, position.y, `${this._getText(CASUALTIES_MAP[name].text)} ${getLocalStorageItem(`casualties_${name}`)}`, {
                 font: `${config.width * .0215}px ${getFontName()}`,
                 fill: '#000000',
             }).setOrigin(0, 0.5).setAlpha(0);
@@ -311,7 +311,7 @@ export class CampaignScene extends CommonScene {
     }
 
     _createInitialDialogs() {
-        const isInitial = config.currentLevelScene === 1 && Number(localStorage.getItem('totalScore')) === 0;
+        const isInitial = config.currentLevelScene === 1 && getLocalStorageItem('totalScore', Number) === 0;
         if (!isInitial) {
             return;
         }

@@ -1,5 +1,5 @@
 import { SCENE_NAMES } from '../constants';
-import { config, screenData, setEndpoints, setLang } from '../main';
+import { config, getLocalStorageItem, screenData, setEndpoints, setLang } from '../main';
 import { CommonScene } from './CommonScene';
 
 export class BootScene extends CommonScene {
@@ -21,7 +21,7 @@ export class BootScene extends CommonScene {
 
         await this._createLogoAnimation();
 
-        if (localStorage.getItem('lang')) this._createPressLabel();
+        if (getLocalStorageItem('lang')) this._createPressLabel();
         else this._createButtons();
     }
 
@@ -122,7 +122,7 @@ export class BootScene extends CommonScene {
         const scale = Math.max(scaleX, scaleY);
         logo.setScale(scale).setScrollFactor(0);
 
-        const yoyo = localStorage.getItem('lang') ? false : true;
+        const yoyo = getLocalStorageItem('lang') ? false : true;
 
         await new Promise((resolve) => {
             this.tweens.add({

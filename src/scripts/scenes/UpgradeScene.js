@@ -1,5 +1,5 @@
 import { FIRE_WEAPON_DEFAULT_SCALE, SCENE_NAMES, UPGRADE_MULTIPLIER } from "../constants";
-import { config, delayInMSec, getFontName, getPlayerAbilities, screenData } from "../main";
+import { config, delayInMSec, getFontName, getLocalStorageItem, getPlayerAbilities, screenData } from "../main";
 import { CommonScene } from "./CommonScene";
 import { Player } from "../prefabs/Player";
 
@@ -80,7 +80,7 @@ export class UpgradeScene extends CommonScene {
             const x = config.width * .57;
             const y = (this._center.y - height * 0.5) + (height / upgradableStats.length) * i;
 
-            const level = localStorage.getItem(`playerAbilityLevel_${key}`);
+            const level = getLocalStorageItem(`playerAbilityLevel_${key}`, Number);
             const statText = `${this._getText(STATS_MAP[key]['text'])} ${returnedValue}`;
             const levelText = `${this._getText('LEVEL_TEXT')} ${level}`;
 
@@ -254,7 +254,7 @@ export class UpgradeScene extends CommonScene {
             return
         }
 
-        let value = localStorage.getItem(`playerAbilityLevel_${button.name}`);
+        let value = getLocalStorageItem(`playerAbilityLevel_${button.name}`, Number);
 
         if (this._decreaseMoney(button.cost) === false) {
             return;
@@ -266,7 +266,7 @@ export class UpgradeScene extends CommonScene {
         const returnedValue = this._setStatsText(button.name, true);
 
         this.statsText[button.name].text = `${this._getText(STATS_MAP[button.name]['text'])} ${returnedValue}`;
-        this.statsLevel[button.name].text = `${this._getText('LEVEL_TEXT')} ${localStorage.getItem(`playerAbilityLevel_${button.name}`)}`;
+        this.statsLevel[button.name].text = `${this._getText('LEVEL_TEXT')} ${getLocalStorageItem(`playerAbilityLevel_${button.name}`, Number)}`;
 
         button.clicked = true;
         button.setAlpha(1);
