@@ -6,7 +6,7 @@ import { CampaignScene } from './scenes/CampaignScene';
 import { PauseScene } from './scenes/PauseScene';
 import { UpgradeScene } from './scenes/UpgradeScene';
 import { PreloadScene } from './scenes/PreloadScene';
-import { FIRE_WEAPON_DEFAULT_SCALE, UPGRADE_MULTIPLIER } from './constants';
+import { FIRE_WEAPON_DEFAULT_SCALE, UPGRADE_MULTIPLIER, WEAPONS } from './constants';
 
 export const config = {
     type: Phaser.AUTO,
@@ -65,62 +65,6 @@ export const config = {
         reload: 1,
         velocity: 1,
         scale: 1,
-    },
-
-    enemies: {
-        helicopter: {
-            velocity: 110,
-            weapon: 'rocket',
-            textureNum: 4,
-            scale: 0.81,
-        },
-        jet: {
-            velocity: 250,
-            weapon: 'missile',
-            textureNum: 4,
-            scale: 0.76,
-        },
-        strategic_jet: {
-            velocity: 200,
-            weapon: 'missile_2',
-            textureNum: 4,
-            scale: 0.85,
-        },
-    },
-
-    weapons: {
-        fire: {
-            reload: 1000,
-            velocity: 500,
-            scale: 0.4,
-        },
-        rocket: {
-            reload: 1750,
-            velocity: 350 * -1,
-            scale: 0.3,
-            damage: 25,
-        },
-        missile: {
-            reload: 2000,
-            velocity: 475 * -1,
-            scale: 0.375,
-            damage: 40,
-        },
-        missile_2: {
-            reload: 2500,
-            velocity: 800 * -1,
-            scale: 0.4,
-            damage: 60,
-        }
-    },
-
-    reward: {
-        missile_2: 750,
-        strategic_jet: 500,
-        jet: 375,
-        helicopter: 275,
-        missile: 150,
-        rocket: 100,
     },
 
     levels: [
@@ -336,14 +280,14 @@ export function getPlayerAbilities(key) {
             config.player.maxHealth += config.player.maxHealth * UPGRADE_MULTIPLIER;
             return config.player.maxHealth;
         case 'reload':
-            config.weapons.fire[key] -= config.weapons.fire[key] * UPGRADE_MULTIPLIER;
-            return config.weapons.fire[key];
+            WEAPONS.FIRE[key] -= WEAPONS.FIRE[key] * UPGRADE_MULTIPLIER;
+            return WEAPONS.FIRE[key];
         case 'scale':
-            config.weapons.fire[key] += config.weapons.fire[key] * UPGRADE_MULTIPLIER;
-            return config.weapons.fire[key] * FIRE_WEAPON_DEFAULT_SCALE;
+            WEAPONS.FIRE[key] += WEAPONS.FIRE[key] * UPGRADE_MULTIPLIER;
+            return WEAPONS.FIRE[key] * FIRE_WEAPON_DEFAULT_SCALE;
         case 'velocity':
-            config.weapons.fire[key] += config.weapons.fire[key] * UPGRADE_MULTIPLIER;
-            return config.weapons.fire[key];
+            WEAPONS.FIRE[key] += WEAPONS.FIRE[key] * UPGRADE_MULTIPLIER;
+            return WEAPONS.FIRE[key];
         default:
             throw new Error('Unknown ability upgrade');
     }
@@ -401,7 +345,7 @@ if (!getLocalStorageItem('totalScore', Number) || getLocalStorageItem('totalScor
 function initLocalStorageItems() {
     localStorage.setItem('currentLevelScene', config.currentLevelScene);
     localStorage.setItem('currentLevelPlayer', config.currentLevelPlayer);
-    localStorage.setItem('currentPlayerWeapon', 'fire');
+    localStorage.setItem('currentPlayerWeapon', WEAPONS.FIRE); // todo fix
     localStorage.setItem('money', config.money);
 }
 

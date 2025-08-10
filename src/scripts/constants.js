@@ -39,3 +39,64 @@ export const JOYSTICK_GAP = 35;
 export const LEVEL_REQUIRED_SCORE = 500;
 export const LEVEL_SCORE_MULTIPLIER = 1.2;
 export const LEVELS_EXP_MULTIPLIER = 1.3;
+
+export const WEAPONS = {
+    FIRE: {
+        reload: 1000,
+        velocity: 500,
+        scale: 0.4,
+        textureName: 'fire',
+        reward: 0,
+    },
+    ROCKET: {
+        reload: 1750,
+        velocity: 350 * -1,
+        scale: 0.3,
+        damage: 25,
+        textureName: 'rocket',
+        reward: 100,
+    },
+    MISSILE: {
+        reload: 2000,
+        velocity: 475 * -1,
+        scale: 0.375,
+        damage: 40,
+        textureName: 'missile',
+        reward: 150,
+    },
+    MISSILE_2: {
+        reload: 2500,
+        velocity: 800 * -1,
+        scale: 0.4,
+        damage: 60,
+        textureName: 'missile_2',
+        reward: 750,
+    }
+};
+
+export const ENEMIES = {
+    HELICOPTER: {
+        velocity: 110,
+        weapon: WEAPONS.ROCKET,
+        scale: 0.81,
+        textureName: 'helicopter',
+        textureNum: 4,
+        reward: 275,
+    },
+    JET: {
+        velocity: 250,
+        weapon: WEAPONS.MISSILE,
+        scale: 0.76,
+        textureName: 'jet',
+        textureNum: 4,
+        reward: 375,
+    },
+    STRATEGIC_JET: {
+        velocity: 200,
+        weapon: WEAPONS.MISSILE_2,
+        scale: 0.85,
+        textureName: 'strategic_jet',
+        textureNum: 4,
+        reward: 500,
+    },
+};

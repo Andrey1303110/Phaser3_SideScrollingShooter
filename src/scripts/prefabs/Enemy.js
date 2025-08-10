@@ -1,10 +1,11 @@
-import { config, screenData } from "../main";
+import { ENEMIES } from "../constants";
+import { screenData } from "../main";
 import { MovableObject } from "./MovableObject";
 
 export class Enemy extends MovableObject {
     static generateAttr(scene) {
-        const x = screenData.right + config.width * .25;
-        const y = Phaser.Math.Between(screenData.top + config.height * 0.05, screenData.bottom - config.height * 0.05);
+        const x = screenData.right + screenData.width * .25;
+        const y = Phaser.Math.Between(screenData.top + screenData.height * 0.1, screenData.bottom - screenData.height * 0.1);
 
         let typeNum = 0;
 
@@ -15,32 +16,32 @@ export class Enemy extends MovableObject {
             }
         }
 
-        const enemyType = Object.keys(config.enemies)[Phaser.Math.Between(0, typeNum)];
-        const enemyTexture = `enemy${Phaser.Math.Between(1, config.enemies[enemyType].textureNum)}`;
+        const config = ENEMIES[Object.keys(ENEMIES)[Phaser.Math.Between(0, typeNum)]];
+        const enemyTexture = `enemy${Phaser.Math.Between(1, config.textureNum)}`;
 
-        return { x, y, enemyTexture, enemyType };
+        return { x, y, enemyTexture, config };
     }
 
     static generate(scene, fires) {
         const data = Enemy.generateAttr(scene);
-
         return new Enemy({
             scene,
             fires,
             x: data.x,
             y: data.y,
-            enemyType: data.enemyType,
-            texture: data.enemyType,
+            texture: data.config.textureName,
             frame: data.enemyTexture,
-            velocity: config.enemies[data.enemyType].velocity * -1,
+            velocity: data.config.velocity * -1,
+            scale: data.config.scale,
+            weapon: data.config.weapon,
+            reward: data.config.reward,
         });
     }
 
     init(data) {
         super.init(data);
-
         this._setInitialData(data);
-        this._setWeapon();
+        this._setWeapon(data);
         this._addTimer();
     }
 
@@ -61,7 +62,7 @@ export class Enemy extends MovableObject {
 
     _addTimer() {
         this.timer = this.scene.time.addEvent({
-            delay: config.weapons[this.weapon.texture].reload * (Phaser.Math.Between(70, 130) * .01),
+            delay: this.weapon.reload * (Phaser.Math.Between(70, 130) * .01),
             loop: true,
             callback: this._shooting,
             callbackScope: this,
@@ -69,23 +70,18 @@ export class Enemy extends MovableObject {
     }
 
     _setInitialData(data) {
-        const { enemyType, texture, fires } = data;
+        const { fires } = data;
 
-        this._enemyType = enemyType;
         this._firesActivate = true;
-        this.reward = config.reward[texture];
         this.fires = fires;
-        this.scale = config.enemies[enemyType].scale;
     }
 
-    _setWeapon(){
-        const type = this._enemyType;
-        const enemyWeapon = config.enemies[type].weapon
-        const { reload, velocity, scale, damage } = config.weapons[enemyWeapon];
+    _setWeapon(data) {
+        const { reload, velocity, scale, damage, textureName } = data.weapon;
 
         this.weapon = {
-            texture: config.enemies[type].weapon,
-            delay: reload,
+            texture: textureName,
+            reload,
             velocity,
             scale,
             damage: damage ?? 100,

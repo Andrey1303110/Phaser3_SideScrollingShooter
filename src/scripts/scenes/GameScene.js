@@ -2,13 +2,15 @@ import { getFontName, config, screenData, getLocalStorageItem } from '../main';
 import { Player } from '../prefabs/Player';
 import { Enemies } from '../prefabs/Enemies';
 import { Boom } from '../prefabs/Boom';
-import { SCENE_NAMES, DEPTH_LAYERS, EVENTS, JOYSTICK_GAP, JOYSTICK_RADIUS, LEVELS_EXP_MULTIPLIER, LEVEL_REQUIRED_SCORE, LEVEL_SCORE_MULTIPLIER } from '../constants';
+import { SCENE_NAMES, DEPTH_LAYERS, EVENTS, JOYSTICK_GAP, JOYSTICK_RADIUS, LEVELS_EXP_MULTIPLIER, LEVEL_REQUIRED_SCORE, LEVEL_SCORE_MULTIPLIER, WEAPONS, ENEMIES } from '../constants';
 import { CommonScene } from './CommonScene';
 import { HealthBar } from '../classes/HealthBar';
 
 export class GameScene extends CommonScene {
     constructor() {
         super(SCENE_NAMES.GAME);
+
+        window.gameScene = this;
     }
 
     init(data) {
@@ -24,7 +26,6 @@ export class GameScene extends CommonScene {
         this.cursors = this.input.keyboard.createCursorKeys();
 
         this._createBg(data);
-        this._getMaxEnemyHeightFrame();
         this._createPlayer();
         this._createHealthBar();
         this._createEnemies();
@@ -182,10 +183,10 @@ export class GameScene extends CommonScene {
         if (source !== this._player && target !== this._player) {
             if (!this.info?.unlim) {
                 let casualtiesName = target.texture.key;
-                if (target.texture.key === 'strategic_jet') { // todo set strategic_jet as constant
-                    casualtiesName = 'jet';
-                } else if (target.texture.key === 'missile_2') { // todo set missile, missile_2 as constants
-                    casualtiesName = 'missile';
+                if (target.texture.key === ENEMIES.STRATEGIC_JET.textureName) {
+                    casualtiesName = ENEMIES.JET.textureName;
+                } else if (target.texture.key === WEAPONS.MISSILE_2.textureName) {
+                    casualtiesName = WEAPONS.MISSILE.textureName;
                 }
                 let oldValue = getLocalStorageItem(`casualties_${casualtiesName}`, Number);
                 localStorage.setItem(`casualties_${casualtiesName}`, ++oldValue);
@@ -341,8 +342,8 @@ export class GameScene extends CommonScene {
         
         if (config.currentLevelPlayer < 2) {
             currentProgress = config.totalScore/score.diff;
-        }
-
+        } 
+        
         if (currentProgress >= 1) {
             this._increaseLevel();
             score = this._calculateScore();

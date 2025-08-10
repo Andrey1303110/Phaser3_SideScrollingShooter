@@ -1,3 +1,4 @@
+import { WEAPONS } from '../constants';
 import { config, delayInMSec } from '../main';
 import { MovableObject } from './MovableObject'
 
@@ -11,7 +12,7 @@ export class Fire extends MovableObject {
             velocity: source.weapon.velocity,
             scale: source.weapon.scale,
             damage: source.weapon.damage,
-            reward: config.reward[source.weapon.texture],
+            reward: source.weapon.reward,
         };
 
         return new Fire(data);
@@ -24,13 +25,13 @@ export class Fire extends MovableObject {
 
     async move(){
         switch (this.texture.key) {
-            case 'rocket':
+            case WEAPONS.ROCKET.textureName:
                 this._rocketMove();
                 break;
-            case 'missile':
+            case WEAPONS.MISSILE.textureName:
                 this._missileMove();
                 break;
-            case 'missile_2':
+            case WEAPONS.MISSILE_2.textureName:
                 this._missile2Move();
                 break;
             default:

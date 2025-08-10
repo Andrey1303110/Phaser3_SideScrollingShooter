@@ -1,11 +1,10 @@
-import { EVENTS, SCENE_NAMES } from "../constants";
+import { EVENTS, WEAPONS } from "../constants";
 import { config, screenData } from "../main";
 import { Fires } from "./Fires";
 import { MovableObject } from "./MovableObject";
 
 const PLAYER_TEXTURE_NAME = 'dragon';
 const FIRST_PLAYER_FRAME = 'dragon1';
-const FIRE_TEXTURE_NAME = 'fire';
 const ANIMATION_NAME = 'fly';
 const FRAME_DURATION = 350;
 
@@ -18,12 +17,13 @@ export class Player extends MovableObject {
             texture: PLAYER_TEXTURE_NAME,
             frame: FIRST_PLAYER_FRAME,
             velocity: config.player.velocity,
+            scale: config.player.scale,
             weapon: {
-                texture: FIRE_TEXTURE_NAME,
-                delay: config.weapons.fire.reload,
-                velocity: config.weapons.fire.velocity,
-                scale: config.weapons.fire.scale,
-                damage: config.weapons.fire.damage,
+                texture: WEAPONS.FIRE.textureName,
+                reload: WEAPONS.FIRE.reload,
+                velocity: WEAPONS.FIRE.velocity,
+                scale: WEAPONS.FIRE.scale,
+                damage: WEAPONS.FIRE.damage,
                 origin: {x: 1, y: 0.5},
             }
         });
@@ -40,7 +40,6 @@ export class Player extends MovableObject {
 
         this.fires = new Fires(this.scene);
         this.weapon = data.weapon;
-        this.scale = config.player.scale;
 
         this.scene.events.on(EVENTS.UPDATE, this._updateFrame, this);
         this._lastFrame = FIRST_PLAYER_FRAME;
@@ -57,7 +56,7 @@ export class Player extends MovableObject {
             this._firesActivate = true;
 
             this.scene.time.addEvent({
-                delay: this.weapon.delay,
+                delay: this.weapon.reload,
                 callback: () => { 
                     this._firesActivate = false;
                     this.scene.fireButton?.setAlpha(.65);

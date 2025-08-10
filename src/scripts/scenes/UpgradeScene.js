@@ -1,4 +1,4 @@
-import { FIRE_WEAPON_DEFAULT_SCALE, SCENE_NAMES, UPGRADE_MULTIPLIER } from "../constants";
+import { FIRE_WEAPON_DEFAULT_SCALE, SCENE_NAMES, UPGRADE_MULTIPLIER, WEAPONS } from "../constants";
 import { config, delayInMSec, getFontName, getLocalStorageItem, getPlayerAbilities, screenData } from "../main";
 import { CommonScene } from "./CommonScene";
 import { Player } from "../prefabs/Player";
@@ -131,13 +131,13 @@ export class UpgradeScene extends CommonScene {
                 value = (Math.round(config.player.maxHealth * multiplier) / multiplier * multiplier).toFixed(0);
                 break;
             case 'reload':
-                value = (Math.round(config.weapons.fire[key] * multiplier) / multiplier * multiplier).toFixed(0);
+                value = (Math.round(WEAPONS.FIRE[key] * multiplier) / multiplier * multiplier).toFixed(0);
                 break;
             case 'scale':
                 multiplier = FIRE_WEAPON_DEFAULT_SCALE * 100; 
-                value = (Math.round(config.weapons.fire[key] * multiplier) / multiplier * multiplier).toFixed(0);
+                value = (Math.round(WEAPONS.FIRE[key] * multiplier) / multiplier * multiplier).toFixed(0);
             case 'velocity':
-                value = (Math.round(config.weapons.fire[key] * multiplier) / multiplier * multiplier).toFixed(0);
+                value = (Math.round(WEAPONS.FIRE[key] * multiplier) / multiplier * multiplier).toFixed(0);
                 break;
         }
 
