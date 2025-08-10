@@ -103,7 +103,7 @@ export const config = {
         fire: {
             reload: 500,
             velocity: 500,
-            scale: 0.3,
+            scale: 0.4,
         },
         rocket: {
             reload: 1750,
