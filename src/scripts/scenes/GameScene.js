@@ -160,10 +160,20 @@ export class GameScene extends CommonScene {
     }
 
     _setupOverlapping() {
-        this.physics.add.overlap(this._player.fires, this._enemies, this._onOverlap, undefined, this);
-        this.physics.add.overlap(this._enemies.fires, this._player, this._onOverlap, undefined, this);
-        this.physics.add.overlap(this._player.fires, this._enemies.fires, this._onOverlap, undefined, this);
-        this.physics.add.overlap(this._player, this._enemies, this._onOverlap, undefined, this);
+        this._overlaps = [
+            this._createOverlap(this._player, this._enemies),
+            this._createOverlap(this._player.fires, this._enemies.fires),
+            this._createOverlap(this._player.fires, this._enemies),
+            this._createOverlap(this._enemies.fires, this._player),
+        ];
+    }
+
+    _createOverlap(source, target) {
+        return this.physics.add.overlap(source, target, this._onOverlap, undefined, this);
+    }
+
+    _removeOverlaps() {
+        this._overlaps.forEach(overlap => overlap.destroy());
     }
 
     _onOverlap(source, target) {
@@ -225,26 +235,28 @@ export class GameScene extends CommonScene {
 
     _createCompleteEvents() {
         this._player.emit(EVENTS.KILLED);
-        this._player.once(EVENTS.KILLED, this._onComplete, this);
-        this.events.once(EVENTS.ALL_ENEMIES_KILLED, this._onComplete, this);
+        this._player.once(EVENTS.KILLED, this._onLevelComplete, this);
+        this.events.once(EVENTS.ALL_ENEMIES_KILLED, this._onLevelComplete, this);
     }
 
-    _onComplete() {
+    _onLevelComplete() {
         if (this._blackBG) {
             return;
         }
 
+        this.game.sound.stopAll();
+        this._removeOverlaps();
+
         this._blackBG = this.add.rectangle(config.width * 0.5, config.height * 0.5, config.width, config.height, '0x000000', 0).setInteractive().setDepth(DEPTH_LAYERS.COVER_SCREEN);
-        let final_text = this.add.text(this._blackBG.x, this._blackBG.y, '', {
+        let finalText = this.add.text(this._blackBG.x, this._blackBG.y, '', {
             font: `${config.width * .03}px ${getFontName()}`,
             fill: '#EA0000',
         }).setOrigin(0.5).setAlpha(0).setDepth(DEPTH_LAYERS.MAX);
-        this.game.sound.stopAll();
 
         const isWin = this._player.active;
         if (isWin) {
             this.sounds.win.play();
-            final_text.text = this._getText('FINAL_TEXT_WIN');
+            finalText.text = this._getText('FINAL_TEXT_WIN');
 
             if (this.info.hiScore < this._currentScore) {
                 let hiScores = localStorage.getItem('hiScores').split(',');
@@ -257,7 +269,7 @@ export class GameScene extends CommonScene {
                 localStorage.setItem('currentLevelScene', config.currentLevelScene);
             }
         } else {
-            final_text.text = this._getText('FINAL_TEXT_LOSE');
+            finalText.text = this._getText('FINAL_TEXT_LOSE');
             this.sounds.died.play();
 
             if (this.info.unlim) {
@@ -268,10 +280,10 @@ export class GameScene extends CommonScene {
         }
 
         this.tweens.add({
-            targets: [this._blackBG, final_text],
+            targets: [this._blackBG, finalText],
             fillAlpha: 1,
             alpha: 1,
-            scale: final_text.scale * 2,
+            scale: finalText.scale * 2,
             ease: 'Linear',
             duration: this.sounds.died.duration * 1000 * .75,
             onComplete: () => {
