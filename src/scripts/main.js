@@ -83,7 +83,7 @@ export const config = {
             velocity: 110,
             weapon: 'rocket',
             textureNum: 4,
-            scale: 0.75,
+            scale: 0.81,
         },
         jet: {
             velocity: 250,
@@ -95,7 +95,7 @@ export const config = {
             velocity: 200,
             weapon: 'missile_2',
             textureNum: 4,
-            scale: 0.83,
+            scale: 0.85,
         },
     },
 
