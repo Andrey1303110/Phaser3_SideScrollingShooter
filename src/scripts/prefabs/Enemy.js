@@ -4,7 +4,7 @@ import { MovableObject } from "./MovableObject";
 export class Enemy extends MovableObject {
     static generateAttr(scene) {
         const x = screenData.right + config.width * .25;
-        const y = Phaser.Math.Between(screenData.top + scene.maxEnemyFrameHeight * 0.5, screenData.bottom - scene.maxEnemyFrameHeight * 0.5);
+        const y = Phaser.Math.Between(screenData.top + config.height * 0.05, screenData.bottom - config.height * 0.05);
 
         let typeNum = 0;
 

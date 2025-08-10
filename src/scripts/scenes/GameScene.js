@@ -401,16 +401,4 @@ export class GameScene extends CommonScene {
         ++config.money;
         localStorage.setItem('money', config.money);
     }
-
-    _getMaxEnemyHeightFrame() {
-        let max_frame_height = 0;
-        const frames = this.textures.list.helicopter.frames;
-
-        Object.keys(frames).forEach(function (key) {
-            if (frames[key].cutHeight > max_frame_height) {
-                max_frame_height = frames[key].height;
-            }
-        });
-        this.maxEnemyFrameHeight = max_frame_height;
-    }
 }
