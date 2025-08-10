@@ -254,12 +254,14 @@ export class GameScene extends CommonScene {
         }).setOrigin(0.5).setAlpha(0).setDepth(DEPTH_LAYERS.MAX);
 
         const isWin = this._player.active;
+        const soundKey = isWin ? this.sounds.win : this.sounds.died;
+        soundKey.play();
+
         if (isWin) {
-            this.sounds.win.play();
             finalText.text = this._getText('FINAL_TEXT_WIN');
 
             if (this.info.hiScore < this._currentScore) {
-                let hiScores = localStorage.getItem('hiScores').split(',');
+                let hiScores = getLocalStorageItem('hiScores').split(',');
                 hiScores[this._currentLevelScene - 1] = this._currentScore;
                 localStorage.setItem('hiScores', hiScores.join());
             }
@@ -270,7 +272,6 @@ export class GameScene extends CommonScene {
             }
         } else {
             finalText.text = this._getText('FINAL_TEXT_LOSE');
-            this.sounds.died.play();
 
             if (this.info.unlim) {
                 if (localStorage.getItem('unlimHiScores') < this._currentScore) {
@@ -285,7 +286,7 @@ export class GameScene extends CommonScene {
             alpha: 1,
             scale: finalText.scale * 2,
             ease: 'Linear',
-            duration: this.sounds.died.duration * 1000 * .75,
+            duration: soundKey.duration * 1000 * 0.9,
             onComplete: () => {
                 this.scene.start(this.info.unlim ? SCENE_NAMES.MAIN : SCENE_NAMES.CAMPAIGN);
                 this.scene.stop();
