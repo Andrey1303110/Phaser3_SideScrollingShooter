@@ -101,7 +101,7 @@ export const config = {
 
     weapons: {
         fire: {
-            reload: 500,
+            reload: 1000,
             velocity: 500,
             scale: 0.4,
         },
