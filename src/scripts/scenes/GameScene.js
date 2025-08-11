@@ -30,7 +30,7 @@ export class GameScene extends CommonScene {
         this._createHealthBar();
         this._createEnemies();
         this._createCompleteEvents();
-        // this._setupOverlapping();
+        this._setupOverlapping();
         this._createSounds();
         this._createScoreText();
         this._createMobileButtons();
