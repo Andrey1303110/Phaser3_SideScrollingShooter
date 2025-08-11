@@ -194,7 +194,7 @@ export const config = {
         unlim: true,
         index: 15,
         enemies: 9999,
-        enemiesDelay: 1500
+        enemiesDelay: 2000,
     }
 };
 
