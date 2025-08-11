@@ -77,6 +77,7 @@ export class HealthBar extends Phaser.GameObjects.Container {
             this._healthBarFill,
             this._heartIcon,
         ])
+        this._scene.add.existing(this);
     }
 
     _init() {

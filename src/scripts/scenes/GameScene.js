@@ -332,7 +332,7 @@ export class GameScene extends CommonScene {
 
     _createHealthBar(){
         this._healthBar = new HealthBar(this);
-        this.add.existing(this._healthBar);
+        this._healthBar.setDepth(DEPTH_LAYERS.UI);
     }
 
     _createExpProgressBar(){
