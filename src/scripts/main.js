@@ -345,7 +345,7 @@ if (!getLocalStorageItem('totalScore', Number) || getLocalStorageItem('totalScor
 function initLocalStorageItems() {
     localStorage.setItem('currentLevelScene', config.currentLevelScene);
     localStorage.setItem('currentLevelPlayer', config.currentLevelPlayer);
-    localStorage.setItem('currentPlayerWeapon', WEAPONS.FIRE); // todo fix
+    localStorage.setItem('currentPlayerWeapon', 'FIRE'); // todo fix
     localStorage.setItem('money', config.money);
 }
 

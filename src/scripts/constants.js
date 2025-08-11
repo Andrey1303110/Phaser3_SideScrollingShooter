@@ -44,8 +44,9 @@ export const WEAPONS = {
     FIRE: {
         reload: 1000,
         velocity: 500,
+        damage: 100,
         scale: 0.4,
-        textureName: 'fire',
+        texture: 'fire',
         reward: 0,
     },
     ROCKET: {
@@ -53,7 +54,7 @@ export const WEAPONS = {
         velocity: 350 * -1,
         scale: 0.3,
         damage: 25,
-        textureName: 'rocket',
+        texture: 'rocket',
         reward: 100,
     },
     MISSILE: {
@@ -61,7 +62,7 @@ export const WEAPONS = {
         velocity: 475 * -1,
         scale: 0.375,
         damage: 40,
-        textureName: 'missile',
+        texture: 'missile',
         reward: 150,
     },
     MISSILE_2: {
@@ -69,7 +70,7 @@ export const WEAPONS = {
         velocity: 800 * -1,
         scale: 0.4,
         damage: 60,
-        textureName: 'missile_2',
+        texture: 'missile_2',
         reward: 750,
     }
 };
@@ -79,7 +80,7 @@ export const ENEMIES = {
         velocity: 110,
         weapon: WEAPONS.ROCKET,
         scale: 0.81,
-        textureName: 'helicopter',
+        texture: 'helicopter',
         textureNum: 4,
         reward: 275,
     },
@@ -87,7 +88,7 @@ export const ENEMIES = {
         velocity: 250,
         weapon: WEAPONS.MISSILE,
         scale: 0.76,
-        textureName: 'jet',
+        texture: 'jet',
         textureNum: 4,
         reward: 375,
     },
@@ -95,7 +96,7 @@ export const ENEMIES = {
         velocity: 200,
         weapon: WEAPONS.MISSILE_2,
         scale: 0.85,
-        textureName: 'strategic_jet',
+        texture: 'strategic_jet',
         textureNum: 4,
         reward: 500,
     },

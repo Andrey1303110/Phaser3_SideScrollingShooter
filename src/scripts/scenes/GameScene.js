@@ -188,11 +188,13 @@ export class GameScene extends CommonScene {
         if (source !== this._player && target !== this._player) {
             if (!this.info?.unlim) {
                 let casualtiesName = target.texture.key;
-                if (target.texture.key === ENEMIES.STRATEGIC_JET.textureName) {
-                    casualtiesName = ENEMIES.JET.textureName;
-                } else if (target.texture.key === WEAPONS.MISSILE_2.textureName) {
-                    casualtiesName = WEAPONS.MISSILE.textureName;
+
+                if (target.texture.key === ENEMIES.STRATEGIC_JET.texture) {
+                    casualtiesName = ENEMIES.JET.texture;
+                } else if (target.texture.key === WEAPONS.MISSILE_2.texture) {
+                    casualtiesName = WEAPONS.MISSILE.texture;
                 }
+
                 let oldValue = getLocalStorageItem(`casualties_${casualtiesName}`, Number);
                 localStorage.setItem(`casualties_${casualtiesName}`, ++oldValue);
             }

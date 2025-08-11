@@ -25,13 +25,13 @@ export class Fire extends MovableObject {
 
     async move(){
         switch (this.texture.key) {
-            case WEAPONS.ROCKET.textureName:
+            case WEAPONS.ROCKET.texture:
                 this._rocketMove();
                 break;
-            case WEAPONS.MISSILE.textureName:
+            case WEAPONS.MISSILE.texture:
                 this._missileMove();
                 break;
-            case WEAPONS.MISSILE_2.textureName:
+            case WEAPONS.MISSILE_2.texture:
                 this._missile2Move();
                 break;
             default:

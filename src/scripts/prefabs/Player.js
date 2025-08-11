@@ -19,12 +19,8 @@ export class Player extends MovableObject {
             velocity: config.player.velocity,
             scale: config.player.scale,
             weapon: {
-                texture: WEAPONS.FIRE.textureName,
-                reload: WEAPONS.FIRE.reload,
-                velocity: WEAPONS.FIRE.velocity,
-                scale: WEAPONS.FIRE.scale,
-                damage: WEAPONS.FIRE.damage,
                 origin: {x: 1, y: 0.5},
+                ...WEAPONS.FIRE,
             }
         });
 

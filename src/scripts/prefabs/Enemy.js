@@ -29,12 +29,9 @@ export class Enemy extends MovableObject {
             fires,
             x: data.x,
             y: data.y,
-            texture: data.config.textureName,
             frame: data.enemyTexture,
+            ...data.config,
             velocity: data.config.velocity * -1,
-            scale: data.config.scale,
-            weapon: data.config.weapon,
-            reward: data.config.reward,
         });
     }
 
@@ -76,15 +73,9 @@ export class Enemy extends MovableObject {
         this.fires = fires;
     }
 
-    _setWeapon(data) {
-        const { reload, velocity, scale, damage, textureName } = data.weapon;
-
+    _setWeapon({ weapon }) {
         this.weapon = {
-            texture: textureName,
-            reload,
-            velocity,
-            scale,
-            damage: damage ?? 100,
+            ...weapon,
             origin: {x: -1, y: 0.5},
         }
     }
