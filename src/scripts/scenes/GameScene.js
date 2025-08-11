@@ -262,6 +262,10 @@ export class GameScene extends CommonScene {
             return;
         }
 
+        const isWin = this._player.active;
+        const soundKey = isWin ? this.sounds.win : this.sounds.died;
+        soundKey.play();
+
         this.game.sound.stopAll();
         this._removeOverlaps();
 
@@ -270,10 +274,6 @@ export class GameScene extends CommonScene {
             font: `${config.width * .03}px ${getFontName()}`,
             fill: '#EA0000',
         }).setOrigin(0.5).setAlpha(0).setDepth(DEPTH_LAYERS.MAX);
-
-        const isWin = this._player.active;
-        const soundKey = isWin ? this.sounds.win : this.sounds.died;
-        soundKey.play();
 
         if (isWin) {
             finalText.text = this._getText('FINAL_TEXT_WIN');
@@ -288,13 +288,14 @@ export class GameScene extends CommonScene {
                 config.currentLevelScene++;
                 localStorage.setItem('currentLevelScene', config.currentLevelScene);
             }
-        } else {
+            return;
+        }
+
             finalText.text = this._getText('FINAL_TEXT_LOSE');
 
             if (this.info.unlim) {
                 if (getLocalStorageItem('unlimHiScores', Number) < this._currentScore) {
                     localStorage.setItem('unlimHiScores', this._currentScore);
-                }
             }
         }
 
