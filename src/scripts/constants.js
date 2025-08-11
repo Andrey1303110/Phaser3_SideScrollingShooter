@@ -40,6 +40,13 @@ export const LEVEL_REQUIRED_SCORE = 500;
 export const LEVEL_SCORE_MULTIPLIER = 1.2;
 export const LEVELS_EXP_MULTIPLIER = 1.3;
 
+export const PLAYER = {
+    maxHealth: 100,
+    currentHealth: 100,
+    velocity: 350,
+    scale: 0.6,
+};
+
 export const WEAPONS = {
     FIRE: {
         reload: 1000,
@@ -105,3 +112,133 @@ export const ENEMIES = {
         reward: 500,
     },
 };
+
+export const CAMPAIGN_LEVELS = [
+    {
+        index: 1,
+        x: 485,
+        y: 175,
+        enemies: 5,
+        enemiesDelay: 3000,
+        velocity: 4,
+    },
+    {
+        index: 2,
+        x: 506,
+        y: 490,
+        enemies: 8,
+        enemiesDelay: 2500,
+        velocity: 4,
+    },
+    {
+        index: 3,
+        x: 758,
+        y: 179,
+        enemies: 11,
+        enemiesDelay: 2200,
+        velocity: 4,
+    },
+    {
+        index: 4,
+        x: 430,
+        y: 135,
+        enemies: 15,
+        enemiesDelay: 1900,
+        velocity: 4,
+    },
+    {
+        index: 5,
+        x: 890,
+        y: 397,
+        enemies: 21,
+        enemiesDelay: 1700,
+        velocity: 4,
+    },
+    {
+        index: 6,
+        x: 500,
+        y: 300,
+        enemies: 30,
+        enemiesDelay: 1500,
+        velocity: 4,
+    },
+    {
+        index: 7,
+        x: 600,
+        y: 400,
+        enemies: 40,
+        enemiesDelay: 1300,
+        velocity: 4,
+    },
+    {
+        index: 8,
+        x: 700,
+        y: 500,
+        enemies: 50,
+        enemiesDelay: 1200,
+        velocity: 4,
+    },
+    {
+        index: 9,
+        x: 800,
+        y: 600,
+        enemies: 60,
+        enemiesDelay: 1100,
+        velocity: 4,
+    },
+    {
+        index: 10,
+        x: 900,
+        y: 700,
+        enemies: 70,
+        enemiesDelay: 1000,
+        velocity: 4,
+    },
+    {
+        index: 11,
+        x: 874,
+        y: 333,
+        enemies: 100,
+        enemiesDelay: 1050,
+        velocity: 4,
+    },
+    {
+        index: 12,
+        x: 735,
+        y: 366,
+        enemies: 120,
+        enemiesDelay: 1000,
+        velocity: 4,
+    },
+    {
+        index: 13,
+        x: 665,
+        y: 435,
+        enemies: 145,
+        enemiesDelay: 975,
+        velocity: 4,
+    },
+    {
+        index: 14,
+        x: 956,
+        y: 261,
+        enemies: 200,
+        enemiesDelay: 950,
+        velocity: 4,
+    },
+    {
+        index: 15,
+        x: 676,
+        y: 640,
+        enemies: 250,
+        enemiesDelay: 925,
+        velocity: 4,
+    },
+];
+
+export const UNLIMITED_LEVEL = {
+    isUnlim: true,
+    index: 15,
+    enemies: 1000,
+    enemiesDelay: 2000,
+}

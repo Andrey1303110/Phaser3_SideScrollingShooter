@@ -1,4 +1,4 @@
-import { ATLAS_FILES, AUDIO_FILES, IMAGE_FILES, SCENE_NAMES } from '../constants';
+import { ATLAS_FILES, AUDIO_FILES, CAMPAIGN_LEVELS, IMAGE_FILES, SCENE_NAMES } from '../constants';
 import { CommonScene } from './CommonScene';
 import { LoadingBar } from '../classes/LoadingBar';
 import { config } from '../main';
@@ -28,11 +28,11 @@ export class PreloadScene extends CommonScene {
 
     _preloadDialogues() {
         this.load.json(`dialogues0`, `./assets/dialogues/${config.lang}/0.json`)
-        config.levels.forEach(level => this.load.json(`dialogues${level.index}`, `./assets/dialogues/${config.lang}/${level.index}.json`));
+        CAMPAIGN_LEVELS.forEach(level => this.load.json(`dialogues${level.index}`, `./assets/dialogues/${config.lang}/${level.index}.json`));
     }
 
     _preloadResources() {
-        config.levels.forEach(level => this.load.image(`bg${level.index}`, `./assets/sprites/bg${level.index}.png`));
+        CAMPAIGN_LEVELS.forEach(level => this.load.image(`bg${level.index}`, `./assets/sprites/bg${level.index}.png`));
 
         ATLAS_FILES.forEach(name => this.load.atlas(name, `./assets/sprites/${name}.png`, `./assets/sprites/${name}.json`));
         IMAGE_FILES.forEach(name => this.load.image(name, `./assets/sprites/${name}.png`));

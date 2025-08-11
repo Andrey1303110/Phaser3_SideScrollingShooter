@@ -2,7 +2,7 @@ import { getFontName, config, screenData, getLocalStorageItem } from '../main';
 import { Player } from '../prefabs/Player';
 import { Enemies } from '../prefabs/Enemies';
 import { Boom } from '../prefabs/Boom';
-import { SCENE_NAMES, DEPTH_LAYERS, EVENTS, JOYSTICK_GAP, JOYSTICK_RADIUS, LEVELS_EXP_MULTIPLIER, LEVEL_REQUIRED_SCORE, LEVEL_SCORE_MULTIPLIER, WEAPONS, ENEMIES } from '../constants';
+import { SCENE_NAMES, DEPTH_LAYERS, EVENTS, JOYSTICK_GAP, JOYSTICK_RADIUS, LEVELS_EXP_MULTIPLIER, LEVEL_REQUIRED_SCORE, LEVEL_SCORE_MULTIPLIER, WEAPONS, ENEMIES, CAMPAIGN_LEVELS } from '../constants';
 import { CommonScene } from './CommonScene';
 import { HealthBar } from '../classes/HealthBar';
 
@@ -30,7 +30,7 @@ export class GameScene extends CommonScene {
         this._createHealthBar();
         this._createEnemies();
         this._createCompleteEvents();
-        this._setupOverlapping();
+        // this._setupOverlapping();
         this._createSounds();
         this._createScoreText();
         this._createMobileButtons();
@@ -103,14 +103,14 @@ export class GameScene extends CommonScene {
     }
 
     _createBg(data) {
-        const { levels: Levels, height, width} = config;
+        const { height, width} = config;
 
-        const bg_image = data?.unlim ? `bg${Phaser.Math.Between(1, Levels.length)}` : `bg${data.index}`;
+        const bg_image = data?.isUnlim ? `bg${Phaser.Math.Between(1, CAMPAIGN_LEVELS.length)}` : `bg${data.index}`;
 
         const real_height = this.textures.list[bg_image].source[0].height;
         const scale = height/real_height;
 
-        this.speed = Levels[this._currentLevelScene-1].velocity;
+        this.speed = CAMPAIGN_LEVELS[this._currentLevelScene-1].velocity;
 
         if (scale !== 1) {
             this.speed /= scale;
@@ -132,7 +132,7 @@ export class GameScene extends CommonScene {
             fill: '#EA0000',
         }).setOrigin(1, 0).setAlpha(.75).setDepth(DEPTH_LAYERS.UI);
 
-        if (this.info?.unlim) {
+        if (this.info?.isUnlim) {
             this.hiScoreText = this.add.text(this._center.x, top + width * .01, `${this._getText('TOP_HIGH_SCORE')} ${getLocalStorageItem('unlimHiScores', Number)}`, {
                 font: `${width * .03}px ${getFontName()}`,
                 fill: '#EA0000',
@@ -167,6 +167,7 @@ export class GameScene extends CommonScene {
             rocket_launch: this.sound.add('rocket_launch'),
             fire_launch: this.sound.add('fire_launch'),
             missile_launch: this.sound.add('missile_launch'),
+            missile_2_launch: this.sound.add('missile_2_launch'),
             explosion_small: this.sound.add('explosion_small'),
             wings: this.sound.add('wings'),
             died: this.sound.add('died'),
@@ -198,7 +199,7 @@ export class GameScene extends CommonScene {
         }
 
         if (source !== this._player && target !== this._player) {
-            if (!this.info?.unlim) {
+            if (!this.info?.isUnlim) {
                 let casualtiesName = target.texture.key;
 
                 if (target.texture.key === ENEMIES.STRATEGIC_JET.texture) {
@@ -214,7 +215,7 @@ export class GameScene extends CommonScene {
             const reward = Number((target.reward * Math.pow(LEVEL_SCORE_MULTIPLIER, this._currentLevelScene - 1)).toFixed(0));
             this._currentScore += reward;
 
-            if (!this.info?.unlim) {
+            if (!this.info?.isUnlim) {
                 const last_score = Number(config.totalScore);
                 localStorage.setItem('totalScore', last_score + reward);
                 config.totalScore = last_score + reward;
@@ -291,11 +292,11 @@ export class GameScene extends CommonScene {
             return;
         }
 
-            finalText.text = this._getText('FINAL_TEXT_LOSE');
+        finalText.text = this._getText('FINAL_TEXT_LOSE');
 
-            if (this.info.unlim) {
-                if (getLocalStorageItem('unlimHiScores', Number) < this._currentScore) {
-                    localStorage.setItem('unlimHiScores', this._currentScore);
+        if (this.info.isUnlim) {
+            if (getLocalStorageItem('unlimHiScores', Number) < this._currentScore) {
+                localStorage.setItem('unlimHiScores', this._currentScore);
             }
         }
 
@@ -307,7 +308,7 @@ export class GameScene extends CommonScene {
             ease: 'Linear',
             duration: soundKey.duration * 1000 * 0.9,
             onComplete: () => {
-                this.scene.start(this.info.unlim ? SCENE_NAMES.MAIN : SCENE_NAMES.CAMPAIGN);
+                this.scene.start(this.info.isUnlim ? SCENE_NAMES.MAIN : SCENE_NAMES.CAMPAIGN);
                 this.scene.stop();
             }
         })
@@ -336,7 +337,7 @@ export class GameScene extends CommonScene {
     }
 
     _createExpProgressBar(){
-        if (this.info?.unlim) {
+        if (this.info?.isUnlim) {
             return;
         }
 
@@ -354,7 +355,7 @@ export class GameScene extends CommonScene {
     }
 
     _updateExpProgressBar(){
-        if (this.info?.unlim) {
+        if (this.info?.isUnlim) {
             return;
         }
 

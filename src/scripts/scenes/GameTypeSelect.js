@@ -1,4 +1,4 @@
-import { SCENE_NAMES } from '../constants';
+import { SCENE_NAMES, UNLIMITED_LEVEL } from '../constants';
 import { getFontName, config } from '../main';
 import { CommonScene } from './CommonScene';
 
@@ -120,7 +120,7 @@ export class GameTypeSelect extends CommonScene {
 
     _startNewScene(sceneName) {
         if (sceneName === SCENE_NAMES.GAME) {
-            this.scene.start(SCENE_NAMES.GAME, config.unlim);
+            this.scene.start(SCENE_NAMES.GAME, UNLIMITED_LEVEL);
         } else {
             this.scene.start(sceneName);
         }

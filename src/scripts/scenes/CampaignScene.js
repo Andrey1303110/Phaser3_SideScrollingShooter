@@ -1,5 +1,5 @@
 import { DialogBoxController } from '../classes/DialogBoxController';
-import { SCENE_NAMES } from '../constants';
+import { CAMPAIGN_LEVELS, SCENE_NAMES } from '../constants';
 import { getFontName, config, screenData, delayInMSec, getLocalStorageItem } from '../main';
 import { CommonScene } from './CommonScene';
 
@@ -51,7 +51,7 @@ export class CampaignScene extends CommonScene {
     }
 
     async _playBackgroundSound() {
-        if (config.currentLevelScene > config.levels.length) {
+        if (config.currentLevelScene > CAMPAIGN_LEVELS.length) {
             await delayInMSec(this.scene, 1000);
             this._addCampaignCompleteSound();
             return;
@@ -78,8 +78,8 @@ export class CampaignScene extends CommonScene {
     async _createDots() {
         this._dots = [];
 
-        for (let i = config.levels.length; i > 0; i--) {
-            const level = config.levels[i-1];
+        for (let i = CAMPAIGN_LEVELS.length; i > 0; i--) {
+            const level = CAMPAIGN_LEVELS[i-1];
             await this._createDot(level);
         }
     }
@@ -363,7 +363,7 @@ export class CampaignScene extends CommonScene {
     }
 
     _preloadDictateTextAudio() {
-        for (let i = 0; i < config.levels.length; i++) {
+        for (let i = 0; i < CAMPAIGN_LEVELS.length; i++) {
             const texts = this.scene.scene.cache.json.get(`dialogues${i}`)
 
             if (!texts) {

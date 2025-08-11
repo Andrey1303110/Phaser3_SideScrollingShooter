@@ -6,7 +6,7 @@ import { CampaignScene } from './scenes/CampaignScene';
 import { PauseScene } from './scenes/PauseScene';
 import { UpgradeScene } from './scenes/UpgradeScene';
 import { PreloadScene } from './scenes/PreloadScene';
-import { FIRE_WEAPON_DEFAULT_SCALE, UPGRADE_MULTIPLIER, WEAPONS } from './constants';
+import { CAMPAIGN_LEVELS, FIRE_WEAPON_DEFAULT_SCALE, PLAYER, UPGRADE_MULTIPLIER, WEAPONS } from './constants';
 
 export const config = {
     type: Phaser.AUTO,
@@ -52,13 +52,7 @@ export const config = {
         missile: getLocalStorageItem('casualties_missile', Number) ?? 0
     },
 
-    player: {
-        maxHealth: 100,
-        currentHealth: 100,
-        velocity: 350,
-        scale: 0.75,
-        currentWeapon: getLocalStorageItem('currentPlayerWeapon'),
-    },
+    player: { ...PLAYER },
 
     currentUpgradableStats: {
         health: 1,
@@ -66,136 +60,6 @@ export const config = {
         velocity: 1,
         scale: 1,
     },
-
-    levels: [
-        {
-            index: 1,
-            x: 485,
-            y: 175,
-            enemies: 5,
-            enemiesDelay: 3000,
-            velocity: 4,
-        },
-        {
-            index: 2,
-            x: 506,
-            y: 490,
-            enemies: 8,
-            enemiesDelay: 2500,
-            velocity: 4,
-        },
-        {
-            index: 3,
-            x: 758,
-            y: 179,
-            enemies: 11,
-            enemiesDelay: 2200,
-            velocity: 4,
-        },
-        {
-            index: 4,
-            x: 430,
-            y: 135,
-            enemies: 15,
-            enemiesDelay: 1900,
-            velocity: 4,
-        },
-        {
-            index: 5,
-            x: 890,
-            y: 397,
-            enemies: 21,
-            enemiesDelay: 1700,
-            velocity: 4,
-        },
-        {
-            index: 6,
-            x: 353,
-            y: 287,
-            enemies: 28,
-            enemiesDelay: 1550,
-            velocity: 4,
-        },
-        {
-            index: 7,
-            x: 435,
-            y: 195,
-            enemies: 39,
-            enemiesDelay: 1400,
-            velocity: 4,
-        },
-        {
-            index: 8,
-            x: 105,
-            y: 248,
-            enemies: 50,
-            enemiesDelay: 1300,
-            velocity: 4,
-        },
-        {
-            index: 9,
-            x: 720,
-            y: 311,
-            enemies: 65,
-            enemiesDelay: 1200,
-            velocity: 4,
-        },
-        {
-            index: 10,
-            x: 732,
-            y: 509,
-            enemies: 82,
-            enemiesDelay: 1100,
-            velocity: 4,
-        },
-        {
-            index: 11,
-            x: 874,
-            y: 333,
-            enemies: 100,
-            enemiesDelay: 1050,
-            velocity: 4,
-        },
-        {
-            index: 12,
-            x: 735,
-            y: 366,
-            enemies: 120,
-            enemiesDelay: 1000,
-            velocity: 4,
-        },
-        {
-            index: 13,
-            x: 665,
-            y: 435,
-            enemies: 145,
-            enemiesDelay: 975,
-            velocity: 4,
-        },
-        {
-            index: 14,
-            x: 956,
-            y: 261,
-            enemies: 200,
-            enemiesDelay: 950,
-            velocity: 4,
-        },
-        {
-            index: 15,
-            x: 676,
-            y: 640,
-            enemies: 250,
-            enemiesDelay: 925,
-            velocity: 4,
-        },
-    ],
-
-    unlim: {
-        unlim: true,
-        index: 15,
-        enemies: 9999,
-        enemiesDelay: 2000,
-    }
 };
 
 export const game = new Phaser.Game(config);
@@ -237,7 +101,7 @@ export function setEndpoints() {
 }
 
 function initHiScores() {
-    const arr = Array(config.levels.length).fill(0);
+    const arr = Array(CAMPAIGN_LEVELS.length).fill(0);
 
     localStorage.setItem('hiScores', arr);
     localStorage.setItem('totalScore', 0);
