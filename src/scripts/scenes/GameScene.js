@@ -72,6 +72,9 @@ export class GameScene extends CommonScene {
             thumb: this.add.circle(0, 0, JOYSTICK_RADIUS * 0.5, 0xcccccc).setAlpha(0.5),
             dir: '8dir',
         });
+
+        this._joystick.thumb.setDepth(DEPTH_LAYERS.UI);
+        this._joystick.base.setDepth(DEPTH_LAYERS.UI);
     }
 
     _dumpJoyStickState() {
@@ -87,6 +90,7 @@ export class GameScene extends CommonScene {
             .setAlpha(0.65)
             .setInteractive()
             .setActive(false)
+            .setDepth(DEPTH_LAYERS.UI)
             .on('pointerup', () => {
                 this.fireButton.active = false;
             }, this)
@@ -124,18 +128,19 @@ export class GameScene extends CommonScene {
         this.scoreText = this.add.text(right - width * .05, top + width * .02, this._currentScore, {
             font: `${width * .038}px ${getFontName()}`,
             fill: '#EA0000',
-        }).setOrigin(1, 0).setAlpha(.75);
+        }).setOrigin(1, 0).setAlpha(.75).setDepth(DEPTH_LAYERS.UI);
 
         if (this.info?.unlim) {
             this.hiScoreText = this.add.text(this._center.x, top + width * .01, `${this._getText('TOP_HIGH_SCORE')} ${getLocalStorageItem('unlimHiScores', Number)}`, {
                 font: `${width * .03}px ${getFontName()}`,
                 fill: '#EA0000',
-            }).setOrigin(0.5, 0).setAlpha(.75);
+            }).setOrigin(0.5, 0).setAlpha(.75).setDepth(DEPTH_LAYERS.UI);
         }
     }
 
     _createPlayer() {
         this._player = new Player({ scene: this });
+        this._player.setDepth(DEPTH_LAYERS.UI);
     }
 
     _createEnemies() {
@@ -303,6 +308,7 @@ export class GameScene extends CommonScene {
             .setAlpha(0.65)
             .setScale(2)
             .setInteractive()
+            .setDepth(DEPTH_LAYERS.UI)
             .on('pointerdown', () => {
                 this.scene.launch('Pause');
                 this.scene.pause();
