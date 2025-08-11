@@ -15,6 +15,6 @@ export class Fires extends Phaser.Physics.Arcade.Group {
 
         fire.move();
         this.createdCount++;
-        fire.createSound(source);
+        fire.playLaunchSound();
     }
 }
