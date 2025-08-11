@@ -199,7 +199,15 @@ function initLang() {
     config.lang = getLocalStorageItem('lang');
 }
 
-if (!getLocalStorageItem('totalScore', Number) || getLocalStorageItem('totalScore', Number) === 0) {
+function initGameData() {
+    if (getLocalStorageItem('totalScore', Number)) {
+        return;
+    }
+
+    if (getLocalStorageItem('totalScore', Number) === 0) {
+        return;
+    }
+
     initHiScores();
     initCasualties();
     initUpgradeLevels();
@@ -213,6 +221,6 @@ function initLocalStorageItems() {
     localStorage.setItem('money', config.money);
 }
 
+initGameData();
 initLang();
 initAbilitiesByLevel();
-
