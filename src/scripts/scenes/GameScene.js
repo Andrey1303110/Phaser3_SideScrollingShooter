@@ -36,6 +36,7 @@ export class GameScene extends CommonScene {
         this._createMobileButtons();
         this._createPauseButton();
         this._createExpProgressBar();
+        this._createFPSDebugText();
     }
 
     update() {
@@ -44,6 +45,7 @@ export class GameScene extends CommonScene {
         this._player.move();
         this._player.shooting();
         this._healthBar.setPosition(this._player.x, this._player.y - this._player.height * 0.5);
+        this._updateFPSDebugText(this.game.loop.actualFps);
     }
     
     get joystick() {
@@ -136,6 +138,16 @@ export class GameScene extends CommonScene {
                 fill: '#EA0000',
             }).setOrigin(0.5, 0).setAlpha(.75).setDepth(DEPTH_LAYERS.UI);
         }
+    }
+
+    _createFPSDebugText() {
+        const { top } = screenData;
+        const { width } = config;
+
+        this.debugFPSText = this.add.text(this._center.x, top + width * .08, '', {
+            font: `${width * .038}px ${getFontName()}`,
+            fill: '#00A86B',
+        }).setOrigin(0.5, 0.5).setAlpha(.9).setDepth(DEPTH_LAYERS.UI);
     }
 
     _createPlayer() {
@@ -409,5 +421,13 @@ export class GameScene extends CommonScene {
     _increaseMoney(){
         ++config.money;
         localStorage.setItem('money', config.money);
+    }
+
+    _updateFPSDebugText(value) {
+        if (!this.debugFPSText) {
+            return;
+        }
+
+        this.debugFPSText.text = `FPS: ${Math.round(value)}`;
     }
 }
