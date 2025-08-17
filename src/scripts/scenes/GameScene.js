@@ -263,12 +263,12 @@ export class GameScene extends CommonScene {
             return;
         }
 
+        this.game.sound.stopAll();
+        this._removeOverlaps();
+
         const isWin = this._player.active;
         const sound = isWin ? this.sounds.win : this.sounds.lose;
         sound.play();
-
-        this.game.sound.stopAll();
-        this._removeOverlaps();
 
         this._blackBG = this.add.rectangle(config.width * 0.5, config.height * 0.5, config.width, config.height, '0x000000', 0).setInteractive().setDepth(DEPTH_LAYERS.COVER_SCREEN);
         let finalTextLabel = this.add.text(this._blackBG.x, this._blackBG.y, '', {
