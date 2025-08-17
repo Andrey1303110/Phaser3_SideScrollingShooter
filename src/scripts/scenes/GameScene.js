@@ -1,16 +1,14 @@
-import { getFontName, config, screenData, getLocalStorageItem } from '../main';
+import { getFontName, config, screenData } from '../main';
 import { Player } from '../prefabs/Player';
 import { Enemies } from '../prefabs/Enemies';
 import { Boom } from '../prefabs/Boom';
-import { SCENE_NAMES, DEPTH_LAYERS, EVENTS, JOYSTICK_GAP, JOYSTICK_RADIUS, LEVELS_EXP_MULTIPLIER, LEVEL_REQUIRED_SCORE, LEVEL_SCORE_MULTIPLIER, WEAPONS, ENEMIES, CAMPAIGN_LEVELS } from '../constants';
+import { SCENE_NAMES, DEPTH_LAYERS, EVENTS, JOYSTICK_GAP, JOYSTICK_RADIUS, LEVEL_REQUIRED_SCORE_MULTIPLIER, LEVEL_REQUIRED_SCORE, LEVEL_SCORE_MULTIPLIER, WEAPONS, ENEMIES, CAMPAIGN_LEVELS } from '../constants';
 import { CommonScene } from './CommonScene';
 import { HealthBar } from '../classes/HealthBar';
 
 export class GameScene extends CommonScene {
     constructor() {
         super(SCENE_NAMES.GAME);
-
-        window.gameScene = this;
     }
 
     init(data) {
@@ -20,6 +18,8 @@ export class GameScene extends CommonScene {
         this._currentLevelScene = this.info.index;
         this._currentScore = 0;
         this._blackBG = null;
+
+        window.gameScene = this;
     }
 
     create(data) {
@@ -29,14 +29,15 @@ export class GameScene extends CommonScene {
         this._createPlayer();
         this._createHealthBar();
         this._createEnemies();
-        this._createCompleteEvents();
-        this._setupOverlapping();
         this._createSounds();
         this._createScoreText();
         this._createMobileButtons();
         this._createPauseButton();
         this._createExpProgressBar();
         this._createFPSDebugText();
+
+        this._setupEvents();
+        this._setupOverlapping();
     }
 
     update() {
@@ -133,7 +134,8 @@ export class GameScene extends CommonScene {
         }).setOrigin(1, 0).setAlpha(.75).setDepth(DEPTH_LAYERS.UI);
 
         if (this.info?.isUnlim) {
-            this.hiScoreText = this.add.text(this._center.x, top + width * .01, `${this._getText('TOP_HIGH_SCORE')} ${getLocalStorageItem('unlimHiScores', Number)}`, {
+            const topScoreText = this._getText('TOP_HIGH_SCORE');
+            this.hiScoreText = this.add.text(this._centerDot.x, top + width * .01, `${topScoreText} ${this.model.unlimHiScores}`, {
                 font: `${width * .03}px ${getFontName()}`,
                 fill: '#EA0000',
             }).setOrigin(0.5, 0).setAlpha(.75).setDepth(DEPTH_LAYERS.UI);
@@ -153,6 +155,9 @@ export class GameScene extends CommonScene {
     _createPlayer() {
         this._player = new Player({ scene: this });
         this._player.setDepth(DEPTH_LAYERS.UI);
+
+        this._player.emit(EVENTS.KILLED);
+        this._player.once(EVENTS.KILLED, () => this._onLevelComplete());
     }
 
     _createEnemies() {
@@ -170,7 +175,7 @@ export class GameScene extends CommonScene {
             missile_2_launch: this.sound.add('missile_2_launch'),
             explosion_small: this.sound.add('explosion_small'),
             wings: this.sound.add('wings'),
-            died: this.sound.add('died'),
+            lose: this.sound.add('lose'),
             win: this.sound.add('win'),
             level_up: this.sound.add('level_up'),
         };
@@ -194,7 +199,7 @@ export class GameScene extends CommonScene {
     }
 
     _onOverlap(source, target) {
-        if (target.x > config.width + target.displayWidth * 0.5) {
+        if (target.x > config.width + target.displayWidth * 0.25) {
             return;
         }
 
@@ -208,17 +213,14 @@ export class GameScene extends CommonScene {
                     casualtiesName = WEAPONS.MISSILE.texture;
                 }
 
-                let oldValue = getLocalStorageItem(`casualties_${casualtiesName}`, Number);
-                localStorage.setItem(`casualties_${casualtiesName}`, ++oldValue);
+                this.model.increaseCasualties(casualtiesName);
             }
 
             const reward = Number((target.reward * Math.pow(LEVEL_SCORE_MULTIPLIER, this._currentLevelScene - 1)).toFixed(0));
             this._currentScore += reward;
 
             if (!this.info?.isUnlim) {
-                const last_score = Number(config.totalScore);
-                localStorage.setItem('totalScore', last_score + reward);
-                config.totalScore = last_score + reward;
+                this.model.addTotalScore(reward);
             }
             this.scoreText.text = this._currentScore;
             this._updateExpProgressBar();
@@ -252,10 +254,8 @@ export class GameScene extends CommonScene {
         }
     }
 
-    _createCompleteEvents() {
-        this._player.emit(EVENTS.KILLED);
-        this._player.once(EVENTS.KILLED, this._onLevelComplete, this);
-        this.events.once(EVENTS.ALL_ENEMIES_KILLED, this._onLevelComplete, this);
+    _setupEvents() {
+        this.events.once(EVENTS.ALL_ENEMIES_KILLED, () => this._onLevelComplete());
     }
 
     _onLevelComplete() {
@@ -271,52 +271,62 @@ export class GameScene extends CommonScene {
         this._removeOverlaps();
 
         this._blackBG = this.add.rectangle(config.width * 0.5, config.height * 0.5, config.width, config.height, '0x000000', 0).setInteractive().setDepth(DEPTH_LAYERS.COVER_SCREEN);
-        let finalText = this.add.text(this._blackBG.x, this._blackBG.y, '', {
+        let finalTextLabel = this.add.text(this._blackBG.x, this._blackBG.y, '', {
             font: `${config.width * .03}px ${getFontName()}`,
             fill: '#EA0000',
         }).setOrigin(0.5).setAlpha(0).setDepth(DEPTH_LAYERS.MAX);
 
         if (isWin) {
-            finalText.text = this._getText('FINAL_TEXT_WIN');
-
-            if (this.info.hiScore < this._currentScore) {
-                let hiScores = getLocalStorageItem('hiScores').split(',');
-                hiScores[this._currentLevelScene - 1] = this._currentScore;
-                localStorage.setItem('hiScores', hiScores.join());
-            }
-
-            if (config.currentLevelScene <= this._currentLevelScene) {
-                config.currentLevelScene++;
-                localStorage.setItem('currentLevelScene', config.currentLevelScene);
-            }
-            return;
+            this._successLevelComplete(finalTextLabel);
+        } else {
+            this._failureLevelComplete(finalTextLabel);
         }
-
-        finalText.text = this._getText('FINAL_TEXT_LOSE');
-
-        if (this.info.isUnlim) {
-            if (getLocalStorageItem('unlimHiScores', Number) < this._currentScore) {
-                localStorage.setItem('unlimHiScores', this._currentScore);
-            }
-        }
-
-        this.tweens.add({
-            targets: [this._blackBG, finalText],
-            fillAlpha: 1,
-            alpha: 1,
-            scale: finalText.scale * 2,
-            ease: 'Linear',
-            duration: soundKey.duration * 1000 * 0.9,
-            onComplete: () => {
-                this.scene.start(this.info.isUnlim ? SCENE_NAMES.MAIN : SCENE_NAMES.CAMPAIGN);
-                this.scene.stop();
-            }
-        })
+        this._completeLevelTween(finalTextLabel, sound);
 
         this._enemies.stopTimer();
         this._enemies.children.entries.forEach(enemy => {
             enemy.stopTimer();
         });
+    }
+
+    _successLevelComplete(label) {
+        label.text = this._getText('FINAL_TEXT_WIN');
+
+        if (this.info.hiScore < this._currentScore) {
+            const hiScores = this.model.hiScores.split(',');
+            hiScores[this._currentLevelScene - 1] = this._currentScore;
+            this.model.setHiScores(hiScores.join());
+        }
+
+        if (this.model.currentLevelScene <= this._currentLevelScene) {
+            this.model.increaseSceneLevel();
+        }
+    }
+
+    _failureLevelComplete(label) {
+        label.text = this._getText('FINAL_TEXT_LOSE');
+
+        if (this.info.isUnlim) {
+            const lastHiScore = this.model.unlimHiScores;
+            if (this._currentScore > lastHiScore) {
+                this.model.setUnlimHiScores(this._currentScore);
+            }
+        }
+    }
+
+    _completeLevelTween(finalTextLabel, sound) {
+        this.tweens.add({
+            targets: [this._blackBG, finalTextLabel],
+            fillAlpha: 1,
+            alpha: 1,
+            scale: finalTextLabel.scale * 2,
+            ease: 'Linear',
+            duration: sound.duration * 1000 * 0.85,
+            onComplete: () => {
+                this.scene.start(this.info?.isUnlim ? SCENE_NAMES.MAIN : SCENE_NAMES.CAMPAIGN);
+                this.scene.stop();
+            }
+        })
     }
 
     _createPauseButton() {
@@ -346,7 +356,7 @@ export class GameScene extends CommonScene {
         this._progressExpBar.fillProgress = this.add.image(this._progressExpBar.x + this._progressExpBar.displayWidth * .1, this._progressExpBar.y + this._progressExpBar.displayHeight * .04, 'progress_bar_fill')
             .setAlpha(0.95);
         
-        this._progressExpBar.levelText = this.add.text(this._progressExpBar.x - this._progressExpBar.displayWidth * .38, this._progressExpBar.y - this._progressExpBar.displayHeight * .035, config.currentLevelPlayer, {
+        this._progressExpBar.levelText = this.add.text(this._progressExpBar.x - this._progressExpBar.displayWidth * .38, this._progressExpBar.y - this._progressExpBar.displayHeight * .035, this.model.currentLevelPlayer, {
             font: `${this._progressExpBar.displayHeight * .53}px ${getFontName()}`,
             fill: '#FFFFFF',
         }).setOrigin(0.5).setAlpha(0.75);
@@ -360,37 +370,36 @@ export class GameScene extends CommonScene {
         }
 
         let score = this._calculateScore();
-        let currentProgress = (config.totalScore - score.start)/score.diff;
+        let currentProgress = (this.model.totalScore - score.start)/score.diff;
         
-        if (config.currentLevelPlayer < 2) {
-            currentProgress = config.totalScore/score.diff;
+        if (this.model.currentLevelPlayer < 2) {
+            currentProgress = this.model.totalScore/score.diff;
         } 
         
         if (currentProgress >= 1) {
             this._increaseLevel();
             score = this._calculateScore();
-            currentProgress = 1 - (-1 * (config.totalScore - score.end)/score.diff);
+            currentProgress = 1 - (-1 * (this.model.totalScore - score.end)/score.diff);
         }
 
         this._progressExpBar.fillProgress.frame.cutWidth = this._progressExpBar.fillProgress.displayWidth * currentProgress;
         this._progressExpBar.fillProgress.frame.updateUVs();
-        this._progressExpBar.text = config.currentLevelPlayer;
+        this._progressExpBar.text = this.model.currentLevelPlayer;
     }
 
     _calculateScore() {
         return{
-            start: this._getRequiredScoreOnLevel(config.currentLevelPlayer - 1),
-            end: this._getRequiredScoreOnLevel(config.currentLevelPlayer),
-            diff: this._getRequiredScoreOnLevel(config.currentLevelPlayer) - this._getRequiredScoreOnLevel(config.currentLevelPlayer - 1)
+            start: this._getRequiredScoreOnLevel(this.model.currentLevelPlayer - 1),
+            end: this._getRequiredScoreOnLevel(this.model.currentLevelPlayer),
+            diff: this._getRequiredScoreOnLevel(this.model.currentLevelPlayer) - this._getRequiredScoreOnLevel(this.model.currentLevelPlayer - 1)
         }
     }
 
     _increaseLevel(){
         this.sounds.level_up.play({volume: .5});
-        config.currentLevelPlayer++;
-        localStorage.setItem('currentLevelPlayer', config.currentLevelPlayer);
+        this.model.increasePlayerLevel();
 
-        const levelTextLabel = this.add.text(this._center.x, this._center.y, config.currentLevelPlayer, {
+        const levelTextLabel = this.add.text(this._centerDot.x, this._centerDot.y, this.model.currentLevelPlayer, {
             font: `${config.width * .25}px ${getFontName()}`,
             fill: '#FFFFFF',
         }).setOrigin(0.5).setAlpha(0);
@@ -405,24 +414,19 @@ export class GameScene extends CommonScene {
             duration: 500,
             onComplete: () => {
                 levelTextLabel.destroy();
-                this._progressExpBar.levelText.text = config.currentLevelPlayer;
+                this._progressExpBar.levelText.text = this.model.currentLevelPlayer;
             }
         });
 
-        this._increaseMoney();
+        this.model.increaseMoney();
     }
 
     _getRequiredScoreOnLevel(level){
         let result = 0;
         for (let i = 0; i < level; i++) {
-            result += Number((LEVEL_REQUIRED_SCORE * Math.pow(LEVELS_EXP_MULTIPLIER, i)).toFixed(0));
+            result += Number((LEVEL_REQUIRED_SCORE * Math.pow(LEVEL_REQUIRED_SCORE_MULTIPLIER, i)).toFixed(0));
         }
         return result;
-    }
-
-    _increaseMoney(){
-        ++config.money;
-        localStorage.setItem('money', config.money);
     }
 
     _updateFPSDebugText(value) {

@@ -24,6 +24,10 @@ export const IMAGE_FILES = ['fire', 'flag', 'rocket', 'missile', 'missile_2', 'b
 // Only .mp3
 export const AUDIO_FILES = ['select', 'error', 'rocket_launch', 'fire_launch', 'missile_launch', 'missile_2_launch', 'explosion_small', 'wings', 'stamp', 'ready', 'lose', 'win', 'upgrade', 'level_up', 'whoosh', 'whoosh_map', 'click', 'fire_effect', 'campaign_complete_song'];
 
+export const FONTS = {
+    eng: 'DishOut',
+    ukr: 'Pangolin',
+}
 
 export const DEPTH_LAYERS = {
     NONE: 0,
@@ -38,9 +42,9 @@ export const FIRE_WEAPON_DEFAULT_SCALE = 2.5;
 export const UPGRADE_MULTIPLIER = 0.04;
 export const JOYSTICK_RADIUS = 90;
 export const JOYSTICK_GAP = 35;
-export const LEVEL_REQUIRED_SCORE = 500;
-export const LEVEL_SCORE_MULTIPLIER = 1.2;
-export const LEVELS_EXP_MULTIPLIER = 1.3;
+export const LEVEL_REQUIRED_SCORE = 1000;
+export const LEVEL_SCORE_MULTIPLIER = 1.225;
+export const LEVEL_REQUIRED_SCORE_MULTIPLIER = 1.3;
 
 export const PLAYER = {
     maxHealth: 100,

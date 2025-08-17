@@ -1,5 +1,5 @@
-import { SCENE_NAMES } from '../constants';
-import { config, screenData, setEndpoints, setLang } from '../main';
+import { FONTS, SCENE_NAMES } from '../constants';
+import { config, screenData, setEndpoints } from '../main';
 import { CommonScene } from './CommonScene';
 
 export class BootScene extends CommonScene {
@@ -12,6 +12,8 @@ export class BootScene extends CommonScene {
         setEndpoints();
 
         this._buttons = {};
+
+        this.model.initGameData();
     }
 
     async create() {
@@ -31,12 +33,6 @@ export class BootScene extends CommonScene {
 
         this.load.audio('click', `./assets/sounds/click.mp3`);
         this.load.audio('whoosh', `./assets/sounds/whoosh.mp3`);
-    }
-
-    _addButtonEventListeners(button) {
-        button.on('pointerover', () => button.setAlpha(1));
-        button.on('pointerout', () => button.setAlpha(.75));
-        button.on('pointerdown', () => this._langSelect(button));
     }
 
     async _createLogoAnimation() {
@@ -59,7 +55,7 @@ export class BootScene extends CommonScene {
 
     async _createPressLabel() {
         const textStyle = {
-            font: `${config.width*.035}px ${config.fonts['eng']}`,
+            font: `${config.width * 0.035}px ${FONTS['eng']}`,
             fill: '#f0f0f0',
         };
         
@@ -90,16 +86,10 @@ export class BootScene extends CommonScene {
         clickArea.on('pointerdown', () => this._click());
     }
 
-    _langSelect(button) {
-        this._click();
-
-        setLang(button.name);
-    }
-
     _click() {
         this.sounds.click.play({ volume: .2 });
 
-        const nextScene = config.lang === '' ? SCENE_NAMES.SET_LANGUAGE : SCENE_NAMES.PRELOAD;
+        const nextScene = this.model.lang === '' ? SCENE_NAMES.SET_LANGUAGE : SCENE_NAMES.PRELOAD;
         this.scene.start(nextScene);
     }
 

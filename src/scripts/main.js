@@ -7,7 +7,8 @@ import { PauseScene } from './scenes/PauseScene';
 import { UpgradeScene } from './scenes/UpgradeScene';
 import { PreloadScene } from './scenes/PreloadScene';
 import { SetLanguageScene } from './scenes/SetLanguageScene';
-import { CAMPAIGN_LEVELS, FIRE_WEAPON_DEFAULT_SCALE, PLAYER, UPGRADE_MULTIPLIER, WEAPONS } from './constants';
+import { FONTS } from './constants';
+import { GameModel } from './GameModel';
 
 export const config = {
     type: Phaser.AUTO,
@@ -32,35 +33,6 @@ export const config = {
     },
 
     scene: [BootScene, SetLanguageScene, PreloadScene, GameTypeSelect, CampaignScene, GameScene, PauseScene, UpgradeScene],
-
-    lang: '',
-
-    fonts: {
-        eng: 'DishOut',
-        ukr: 'Pangolin',
-    },
-
-    // TODO replace to separate property
-    currentLevelScene: getLocalStorageItem('currentLevelScene', Number) ?? 1,
-    currentLevelPlayer: getLocalStorageItem('currentLevelPlayer', Number) ?? 1,
-    totalScore: getLocalStorageItem('totalScore', Number) ?? 0,
-    money: getLocalStorageItem('money', Number) ?? 0,
-
-    casualties: {
-        jet: getLocalStorageItem('casualties_jet', Number) ?? 0,
-        helicopter: getLocalStorageItem('casualties_helicopter', Number) ?? 0,
-        rocket: getLocalStorageItem('casualties_rocket', Number) ?? 0,
-        missile: getLocalStorageItem('casualties_missile', Number) ?? 0
-    },
-
-    player: { ...PLAYER },
-
-    currentUpgradableStats: {
-        health: 1,
-        reload: 1,
-        velocity: 1,
-        scale: 1,
-    },
 };
 
 export const game = new Phaser.Game(config);
@@ -101,83 +73,12 @@ export function setEndpoints() {
     screenData.height = screenData.bottom - screenData.top;
 }
 
-function initHiScores() {
-    const arr = Array(CAMPAIGN_LEVELS.length).fill(0);
-
-    localStorage.setItem('hiScores', arr);
-    localStorage.setItem('totalScore', 0);
-    localStorage.setItem('unlimHiScores', 0);
-};
-
-function initCasualties() {
-    Object.keys(config.casualties).forEach(name => {
-        localStorage.setItem(`casualties_${name}`, 0);
-    });
-};
-
-function initUpgradeLevels() {
-    const stats = Object.keys(config.currentUpgradableStats);
-
-    for (let i = 0; i < stats.length; i++) {
-        const key = stats[i];
-        localStorage.setItem(`playerAbilityLevel_${key}`, 1);
-    }
-};
-
-function initAbilitiesByLevel() {
-    const stats = Object.keys(config.currentUpgradableStats);
-
-    for (let i = 0; i < stats.length; i++) {
-        const key = stats[i];
-        const level = getLocalStorageItem(`playerAbilityLevel_${key}`, Number);
-
-        for (let j = 1; j < level; j++) {
-            getPlayerAbilities(key);
-        }
-    }
-}
-
-export function getPlayerAbilities(key) {
-    // TODO set by player weapon
-
-    switch (key) {
-        case 'health':
-            config.player.maxHealth += config.player.maxHealth * UPGRADE_MULTIPLIER;
-            return config.player.maxHealth;
-        case 'reload':
-            WEAPONS.FIRE[key] -= WEAPONS.FIRE[key] * UPGRADE_MULTIPLIER;
-            return WEAPONS.FIRE[key];
-        case 'scale':
-            WEAPONS.FIRE[key] += WEAPONS.FIRE[key] * UPGRADE_MULTIPLIER;
-            return WEAPONS.FIRE[key] * FIRE_WEAPON_DEFAULT_SCALE;
-        case 'velocity':
-            WEAPONS.FIRE[key] += WEAPONS.FIRE[key] * UPGRADE_MULTIPLIER;
-            return WEAPONS.FIRE[key];
-        default:
-            throw new Error('Unknown ability upgrade');
-    }
-}
-
-export function getLocalStorageItem(key, type = String) {
-    const value = localStorage.getItem(key);
-    if (!value) {
-        return undefined;
-    }
-
-    if (!type) {
-        return value;
-    }
-
-    return type(value);
-}
-
-export function setLang(lang) {
-    config.lang = lang;
-    localStorage.setItem('lang', lang);
-}
-
 export function getSceneTexts(scene) {
-    return scene.cache.json.get('texts')[scene.name];
+    const texts = scene.cache.json.get('texts');
+    if (!texts || !scene.name) {
+        return {};
+    }
+    return texts[scene.name];
 }
 
 export function rgbToHex(colors) {
@@ -193,35 +94,6 @@ export const delayInMSec = (context, duration) => {
 };
 
 export function getFontName() {
-    return config.fonts[config.lang];
+    const model = GameModel.getInstance();
+    return FONTS[model.lang];
 }
-
-function initLang() {
-    config.lang = getLocalStorageItem('lang');
-}
-
-function initGameData() {
-    if (getLocalStorageItem('totalScore', Number)) {
-        return;
-    }
-
-    if (getLocalStorageItem('totalScore', Number) === 0) {
-        return;
-    }
-
-    initHiScores();
-    initCasualties();
-    initUpgradeLevels();
-    initLocalStorageItems();
-}
-
-function initLocalStorageItems() {
-    localStorage.setItem('currentLevelScene', config.currentLevelScene);
-    localStorage.setItem('currentLevelPlayer', config.currentLevelPlayer);
-    localStorage.setItem('currentPlayerWeapon', 'FIRE'); // todo fix
-    localStorage.setItem('money', config.money);
-}
-
-initGameData();
-initLang();
-initAbilitiesByLevel();

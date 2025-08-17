@@ -43,7 +43,7 @@ export class DialogBoxController {
 
     _addSoundsToScene(levelIndex, dialogsCount) {
         for (let i = 0; i < dialogsCount; i++) {
-            const name = `level${levelIndex}_text${i}_${config.lang}`;
+            const name = `level${levelIndex}_text${i}_${this._scene.model.lang}`;
             this._scene.sounds[name] = this._scene.sound.add(name);
         }
     }
@@ -75,7 +75,7 @@ export class DialogBoxController {
     async _playShowingDialog(dialogBox, levelIndex, i) {
         await dialogBox.showEnter();
         
-        const soundName = `level${levelIndex}_text${i}_${config.lang}`;
+        const soundName = `level${levelIndex}_text${i}_${this._scene.model.lang}`;
         const sound = this._scene.sounds[soundName];
         const duration = Math.max(sound.duration * 1000, MIN_SHOW_DURATION);
     

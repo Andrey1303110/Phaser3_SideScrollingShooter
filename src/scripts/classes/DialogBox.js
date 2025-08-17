@@ -96,14 +96,14 @@ export class DialogBox extends Phaser.GameObjects.Container {
     _createText(data) {
         const { text } = data;
 
-        const fontSize = config.width * .037;
-        const vertPadding = config.width * .025;
-        const horizPadding = config.width * .02;
+        const fontSize = config.width * 0.037;
+        const vertPadding = config.width * 0.025;
+        const horPadding = config.width * 0.02;
 
         const personEndPointX = this._person.x + this._person.width * 0.5;
         const bgEndPointX = this._bg.x + this._bg.width;
-        const wordWrapWidth = (bgEndPointX - personEndPointX) - horizPadding * 2;
-        const x = this._bg.x + this._bg.width * 0.5 + this._person.width * 0.5 - horizPadding * 0.5;
+        const wordWrapWidth = (bgEndPointX - personEndPointX) - horPadding * 2;
+        const x = this._bg.x + this._bg.width * 0.5 + this._person.width * 0.5 - horPadding * 0.5;
         const y = this._bg.y + this._bg.height * 0.5;
 
         let content = this._scene.add.text(0, 0, text, { 
@@ -113,7 +113,7 @@ export class DialogBox extends Phaser.GameObjects.Container {
             align: 'left',
         }).setDepth(DEPTH_LAYERS.DIALOGUES).setWordWrapWidth(wordWrapWidth);
         
-        content = this._resizeContent(content, horizPadding, vertPadding, wordWrapWidth);
+        content = this._resizeContent(content, horPadding, vertPadding, wordWrapWidth);
 
         content.setPosition(x, y);
         content.setOrigin(0.5);

@@ -1,6 +1,6 @@
 import { DialogBoxController } from '../classes/DialogBoxController';
 import { CAMPAIGN_LEVELS, SCENE_NAMES } from '../constants';
-import { getFontName, config, screenData, delayInMSec, getLocalStorageItem } from '../main';
+import { getFontName, config, screenData, delayInMSec } from '../main';
 import { CommonScene } from './CommonScene';
 
 const INIT_DIALOG_DELAY = 1000;
@@ -51,7 +51,7 @@ export class CampaignScene extends CommonScene {
     }
 
     async _playBackgroundSound() {
-        if (config.currentLevelScene > CAMPAIGN_LEVELS.length) {
+        if (this.model.currentLevelScene > CAMPAIGN_LEVELS.length) {
             await delayInMSec(this.scene, 1000);
             this._addCampaignCompleteSound();
             return;
@@ -101,7 +101,7 @@ export class CampaignScene extends CommonScene {
             scale: 1
         };
 
-        if (level.index > config.currentLevelScene) {
+        if (level.index > this.model.currentLevelScene) {
             dot.on('pointerdown', () => { this.sounds.error.play({ volume: .33 }) });
             dot.active = false;
 
@@ -111,7 +111,7 @@ export class CampaignScene extends CommonScene {
             dot.setAlpha(1).on('pointerdown', () => this._onDotClick);
             dot.active = true;
 
-            if (config.currentLevelScene > level.index) {
+            if (this.model.currentLevelScene > level.index) {
                 dot.setTexture('flag').setOrigin(0, 1);
             } else {
                 dot.isCurrent = true;
@@ -157,7 +157,7 @@ export class CampaignScene extends CommonScene {
     async _createLevelCard(info) {
         const bgRect = this.add.rectangle(this._centerDot.x, this._centerDot.y, config.width, config.height, '0x000000', 0).setInteractive(); // todo move it to transition
         
-        const currentLevelHiScore = getLocalStorageItem('hiScores').split(',')[info.index - 1] || 0;
+        const currentLevelHiScore = this.model.getLevelHiScore(info.index);
         info.hiScore = currentLevelHiScore;
 
         const frame = this.add.image(this._centerDot.x, this._centerDot.y, 'frame');
@@ -281,8 +281,8 @@ export class CampaignScene extends CommonScene {
 
         this._casualtiesText.push(title);
 
-        Object.keys(config.casualties).forEach(async name => {
-            const casualtyText = `${this._getText(CASUALTIES_MAP[name].text)} ${StorageService.get(`casualties_${name}`, 0, Number)}`;
+        Object.keys(this.model.casualties).forEach(async name => {
+            const casualtyText = `${this._getText(CASUALTIES_MAP[name].text)} ${this.model.casualties[name]}`;
             position.y += config.width * .0285;
             const label = this.add.text(position.x, position.y, casualtyText, {
                 font: `${config.width * .0215}px ${getFontName()}`,
@@ -313,7 +313,8 @@ export class CampaignScene extends CommonScene {
     }
 
     _createInitialDialogs() {
-        const isInitial = config.currentLevelScene === 1 && getLocalStorageItem('totalScore', Number) === 0;
+        const isInitial = this.model.currentLevelScene === 1 && this.model.totalScore === 0;
+
         if (!isInitial) {
             return;
         }
@@ -372,8 +373,8 @@ export class CampaignScene extends CommonScene {
             }
 
             for (let j = 0; j < texts.length; j++) {
-                const name = `level${i}_text${j}_${config.lang}`;
-                this.load.audio(name, `./assets/voices/${config.lang}/${i}/${j}.mp3`);
+                const name = `level${i}_text${j}_${this.model.lang}`;
+                this.load.audio(name, `./assets/voices/${this.model.lang}/${i}/${j}.mp3`);
             }
         }
     }

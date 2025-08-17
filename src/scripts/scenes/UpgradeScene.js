@@ -1,5 +1,5 @@
 import { FIRE_WEAPON_DEFAULT_SCALE, SCENE_NAMES, UPGRADE_MULTIPLIER, WEAPONS } from "../constants";
-import { config, delayInMSec, getFontName, getLocalStorageItem, getPlayerAbilities, screenData } from "../main";
+import { config, delayInMSec, getFontName, screenData } from "../main";
 import { CommonScene } from "./CommonScene";
 import { Player } from "../prefabs/Player";
 
@@ -69,7 +69,7 @@ export class UpgradeScene extends CommonScene {
         const text = this._getText('BOTTOM_DESCRIPTION') + ` ${UPGRADE_MULTIPLIER * 100}%`;
         const infoText = this.add.text(this._centerDot.x, screenData.bottom - config.height * .075, text, style).setOrigin(.5).setAlpha(0);
 
-        const upgradableStats = Object.keys(config.currentUpgradableStats);
+        const upgradableStats = Object.keys(this.model.currentUpgradableStats);
         const height = config.height * 0.4;
 
         for (let i = 0; i < upgradableStats.length; i++) {
@@ -80,7 +80,7 @@ export class UpgradeScene extends CommonScene {
             const x = config.width * .57;
             const y = (this._centerDot.y - height * 0.5) + (height / upgradableStats.length) * i;
 
-            const level = getLocalStorageItem(`playerAbilityLevel_${key}`, Number);
+            const level = this.model.currentUpgradableStats[key];
             const statText = `${this._getText(STATS_MAP[key]['text'])} ${returnedValue}`;
             const levelText = `${this._getText('LEVEL_TEXT')} ${level}`;
 
@@ -145,14 +145,14 @@ export class UpgradeScene extends CommonScene {
     }
 
     _checkAvailability(button){
-        if (config.money < button.cost || config.money <= 0) {
+        if (this.model.money < button.cost || this.model.money <= 0) {
             return this._toggleButton(button, false);
         }
         this._toggleButton(button, true);
     }
 
     _checkAvailabilityForAllButtons() {
-        Object.keys(config.currentUpgradableStats).forEach(key => {
+        Object.keys(this.model.currentUpgradableStats).forEach(key => {
             this._checkAvailability(this.buttons[key]);
         });
     }
@@ -235,38 +235,31 @@ export class UpgradeScene extends CommonScene {
         this.buttons[data.key] = button;
     }
 
-    _decreaseMoney(value){
-        if (config.money) {
-            config.money -= value;
-            localStorage.setItem('money', config.money);
-            this._moneyValueText.text = config.money;
-        }
-        else {
-            return false;
-        }
-    }
-
     _upgrade(button){
         if (button.clicked || !button.active) {
             if (!button.active) {
                 this.sounds.error.play({volume: .3});
             }
-            return
-        }
-
-        let value = getLocalStorageItem(`playerAbilityLevel_${button.name}`, Number);
-
-        if (this._decreaseMoney(button.cost) === false) {
             return;
         }
 
-        localStorage.setItem(`playerAbilityLevel_${button.name}`, ++value);
-        button.level = value;
+        let statLevel = this.model.currentUpgradableStats[button.name];
+
+        if (button.cost > this.model.money) {
+            return;
+        }
+
+        this.model.upgradePlayerAbility(button.name);
+        this.model.decreaseMoney(button.cost);
+        this._moneyValueText.text = this.model.money;
+        button.level = statLevel;
 
         const returnedValue = this._setStatsText(button.name, true);
+        const statText = this._getText(STATS_MAP[button.name]['text']);
+        const statTextLevel = this._getText('LEVEL_TEXT');
 
-        this.statsText[button.name].text = `${this._getText(STATS_MAP[button.name]['text'])} ${returnedValue}`;
-        this.statsLevel[button.name].text = `${this._getText('LEVEL_TEXT')} ${getLocalStorageItem(`playerAbilityLevel_${button.name}`, Number)}`;
+        this.statsText[button.name].text = `${statText} ${returnedValue}`;
+        this.statsLevel[button.name].text = `${statTextLevel} ${this.model.currentUpgradableStats[button.name]}`;
 
         button.clicked = true;
         button.setAlpha(1);
@@ -286,7 +279,7 @@ export class UpgradeScene extends CommonScene {
             }
         })
 
-        return this._createUpgradeAnimation(button.name, value);
+        return this._createUpgradeAnimation(button.name, statLevel);
     }
 
     async _createUpgradeAnimation(name, level) {

@@ -1,11 +1,14 @@
+import { GameModel } from '../GameModel';
 import { SCENE_NAMES } from '../constants';
 import { getFontName, getSceneTexts, config, screenData, setEndpoints } from '../main';
 
 export class CommonScene extends Phaser.Scene {
     constructor(name) {
         super(name);
+        window[`${name}Scene`] = this; // For debugging purposes
 
         this.name = name;
+        this.model = GameModel.getInstance();
     }
 
     init() {
@@ -47,7 +50,7 @@ export class CommonScene extends Phaser.Scene {
             .setAlpha(0)
             .setInteractive()
             .on('pointerdown', () => this._onMoneyButtonClick());
-        this._moneyValueText = this.add.text(this._moneyIcon.x - this._moneyIcon.displayWidth, this._moneyIcon.y, config.money, style)
+        this._moneyValueText = this.add.text(this._moneyIcon.x - this._moneyIcon.displayWidth, this._moneyIcon.y, this.model.money, style)
             .setOrigin(.5)
             .setAlpha(0);
 

@@ -1,7 +1,6 @@
 import { ATLAS_FILES, AUDIO_FILES, CAMPAIGN_LEVELS, IMAGE_FILES, SCENE_NAMES } from '../constants';
 import { CommonScene } from './CommonScene';
 import { LoadingBar } from '../classes/LoadingBar';
-import { config } from '../main';
 
 export class PreloadScene extends CommonScene {
     constructor() {
@@ -19,7 +18,7 @@ export class PreloadScene extends CommonScene {
     }
 
     _preloadTexts() {
-        this.load.json('texts', `./assets/texts/${config.lang}.json`);
+        this.load.json('texts', `./assets/texts/${this.model.lang}.json`);
     }
 
     _preloadPlugins(){
@@ -27,8 +26,8 @@ export class PreloadScene extends CommonScene {
     }
 
     _preloadDialogues() {
-        this.load.json(`dialogues0`, `./assets/dialogues/${config.lang}/0.json`)
-        CAMPAIGN_LEVELS.forEach(level => this.load.json(`dialogues${level.index}`, `./assets/dialogues/${config.lang}/${level.index}.json`));
+        this.load.json(`dialogues0`, `./assets/dialogues/${this.model.lang}/0.json`)
+        CAMPAIGN_LEVELS.forEach(level => this.load.json(`dialogues${level.index}`, `./assets/dialogues/${this.model.lang}/${level.index}.json`));
     }
 
     _preloadResources() {

@@ -16,8 +16,8 @@ export class Player extends MovableObject {
             y: config.height * 0.5,
             texture: PLAYER_TEXTURE_NAME,
             frame: FIRST_PLAYER_FRAME,
-            velocity: config.player.velocity,
-            scale: config.player.scale,
+            velocity: data.scene.model.player.velocity,
+            scale: data.scene.model.player.scale,
             weapon: {
                 origin: {x: 1, y: 0.5},
                 ...WEAPONS.FIRE,
@@ -41,8 +41,8 @@ export class Player extends MovableObject {
         this._lastFrame = FIRST_PLAYER_FRAME;
         this._tweenFly = null;
 
-        this.maxHealth = config.player.maxHealth;
-        this.currentHealth = config.player.maxHealth;
+        this.maxHealth = this.scene.model.player.maxHealth;
+        this.currentHealth = this.scene.model.player.maxHealth;
     }
 
     shooting() {

@@ -1,5 +1,6 @@
-import { SCENE_NAMES } from '../constants';
-import { config, delayInMSec, screenData, setEndpoints, setLang } from '../main';
+import { GameModel } from '../GameModel';
+import { FONTS, SCENE_NAMES } from '../constants';
+import { config, delayInMSec, screenData, setEndpoints } from '../main';
 import { CommonScene } from './CommonScene';
 
 export class SetLanguageScene extends CommonScene {
@@ -67,7 +68,7 @@ export class SetLanguageScene extends CommonScene {
         }
 
         const textStyle = {
-            font: `${config.width*.04}px ${config.fonts['eng']}`,
+            font: `${config.width * 0.04}px ${FONTS['eng']}`,
             fill: '#f0f0f0',
         };
         button.buttonText = this.add.text(button.x - config.width * 0.06, button.y, textTitle, textStyle).setScale(3).setOrigin(0.5).setAlpha(0);
@@ -132,7 +133,7 @@ export class SetLanguageScene extends CommonScene {
 
     async _createPressLabel() {
         const textStyle = {
-            font: `${config.width*.035}px ${config.fonts['eng']}`,
+            font: `${config.width * 0.035}px ${FONTS['eng']}`,
             fill: '#f0f0f0',
         };
         
@@ -161,7 +162,7 @@ export class SetLanguageScene extends CommonScene {
 
     _langSelect(button) {
         this._onButtonClick();
-        setLang(button.name);
+        this.model.setLang(button.name);
     }
 
     _onButtonClick() {
