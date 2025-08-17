@@ -1,5 +1,6 @@
+import { getFontName } from '../Utils';
 import { SCENE_NAMES, UNLIMITED_LEVEL } from '../constants';
-import { getFontName, config } from '../main';
+import { config } from '../main';
 import { CommonScene } from './CommonScene';
 
 const BUTTONS_MAP = [

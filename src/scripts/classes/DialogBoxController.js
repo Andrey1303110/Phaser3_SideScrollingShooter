@@ -1,6 +1,7 @@
 import { DialogBox } from './DialogBox';
-import { config, delayInMSec } from '../main';
+import { config } from '../main';
 import { DEPTH_LAYERS } from '../constants';
+import { delayInMSec } from '../Utils';
 
 const MIN_SHOW_DURATION = 2500;
 const SHOW_DELAY = 200;

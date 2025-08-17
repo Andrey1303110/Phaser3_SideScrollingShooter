@@ -1,5 +1,6 @@
+import { delayInMSec } from '../Utils';
 import { WEAPONS } from '../constants';
-import { config, delayInMSec } from '../main';
+import { config } from '../main';
 import { MovableObject } from './MovableObject'
 
 export class Fire extends MovableObject {

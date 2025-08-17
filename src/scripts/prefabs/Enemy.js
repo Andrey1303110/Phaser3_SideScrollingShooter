@@ -1,5 +1,5 @@
+import { screenData } from "../Utils";
 import { ENEMIES } from "../constants";
-import { screenData } from "../main";
 import { MovableObject } from "./MovableObject";
 
 export class Enemy extends MovableObject {

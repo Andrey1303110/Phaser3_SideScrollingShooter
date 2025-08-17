@@ -1,11 +1,12 @@
 import { GameModel } from '../GameModel';
+import { getFontName, getSceneTexts, screenData, setEndpoints } from '../Utils';
 import { SCENE_NAMES } from '../constants';
-import { getFontName, getSceneTexts, config, screenData, setEndpoints } from '../main';
+import { config } from '../main';
 
 export class CommonScene extends Phaser.Scene {
     constructor(name) {
         super(name);
-        window[`${name}Scene`] = this; // For debugging purposes
+        window[`${name}Scene`] = this; // todo remove
 
         this.name = name;
         this.model = GameModel.getInstance();

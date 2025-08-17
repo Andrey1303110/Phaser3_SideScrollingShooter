@@ -1,7 +1,8 @@
 import { Resolver } from '../Resolver';
+import { getFontName, screenData } from '../Utils';
 import { DEPTH_LAYERS } from '../constants';
-import { config, getFontName, screenData } from '../main';
-import { RoundedRectContainer } from './RoundedRectContaier';
+import { config } from '../main';
+import { RoundedRectContainer } from './RoundedRectContainer';
 
 export class DialogBox extends Phaser.GameObjects.Container {
     constructor (scene, dialogueData) {

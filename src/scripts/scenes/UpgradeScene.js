@@ -1,7 +1,8 @@
 import { FIRE_WEAPON_DEFAULT_SCALE, SCENE_NAMES, UPGRADE_MULTIPLIER, WEAPONS } from "../constants";
-import { config, delayInMSec, getFontName, screenData } from "../main";
+import { config } from "../main";
 import { CommonScene } from "./CommonScene";
 import { Player } from "../prefabs/Player";
+import { delayInMSec, getFontName, screenData } from "../Utils";
 
 const STATS_MAP = {
     health: {

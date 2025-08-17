@@ -1,5 +1,6 @@
+import { screenData } from "../Utils";
 import { EVENTS, WEAPONS } from "../constants";
-import { config, screenData } from "../main";
+import { config } from "../main";
 import { Fires } from "./Fires";
 import { MovableObject } from "./MovableObject";
 

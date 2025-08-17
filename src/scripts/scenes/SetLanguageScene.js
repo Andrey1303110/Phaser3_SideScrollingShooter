@@ -1,6 +1,6 @@
-import { GameModel } from '../GameModel';
+import { delayInMSec, screenData, setEndpoints } from '../Utils';
 import { FONTS, SCENE_NAMES } from '../constants';
-import { config, delayInMSec, screenData, setEndpoints } from '../main';
+import { config } from '../main';
 import { CommonScene } from './CommonScene';
 
 export class SetLanguageScene extends CommonScene {

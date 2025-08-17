@@ -1,6 +1,7 @@
 import { SCENE_NAMES } from '../constants';
 import { CommonScene } from './CommonScene';
-import { config, screenData } from '../main';
+import { config } from '../main';
+import { screenData } from '../Utils';
 
 export class PauseScene extends CommonScene {
     constructor() {

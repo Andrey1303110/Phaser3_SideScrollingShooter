@@ -1,5 +1,6 @@
+import { screenData, setEndpoints } from '../Utils';
 import { FONTS, SCENE_NAMES } from '../constants';
-import { config, screenData, setEndpoints } from '../main';
+import { config } from '../main';
 import { CommonScene } from './CommonScene';
 
 export class BootScene extends CommonScene {

@@ -1,6 +1,7 @@
+import { delayInMSec, getFontName, screenData } from '../Utils';
 import { DialogBoxController } from '../classes/DialogBoxController';
 import { CAMPAIGN_LEVELS, SCENE_NAMES } from '../constants';
-import { getFontName, config, screenData, delayInMSec } from '../main';
+import { config } from '../main';
 import { CommonScene } from './CommonScene';
 
 const INIT_DIALOG_DELAY = 1000;
