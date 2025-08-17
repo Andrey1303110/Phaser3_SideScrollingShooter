@@ -6,6 +6,7 @@ import { CampaignScene } from './scenes/CampaignScene';
 import { PauseScene } from './scenes/PauseScene';
 import { UpgradeScene } from './scenes/UpgradeScene';
 import { PreloadScene } from './scenes/PreloadScene';
+import { SetLanguageScene } from './scenes/SetLanguageScene';
 import { CAMPAIGN_LEVELS, FIRE_WEAPON_DEFAULT_SCALE, PLAYER, UPGRADE_MULTIPLIER, WEAPONS } from './constants';
 
 export const config = {
@@ -30,7 +31,7 @@ export const config = {
         parent: 'gameDiv',
     },
 
-    scene: [BootScene, PreloadScene, GameTypeSelect, CampaignScene, GameScene, PauseScene, UpgradeScene],
+    scene: [BootScene, SetLanguageScene, PreloadScene, GameTypeSelect, CampaignScene, GameScene, PauseScene, UpgradeScene],
 
     lang: '',
 

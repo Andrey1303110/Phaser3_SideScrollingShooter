@@ -1,5 +1,5 @@
 import { SCENE_NAMES } from '../constants';
-import { config, getLocalStorageItem, screenData, setEndpoints, setLang } from '../main';
+import { config, screenData, setEndpoints, setLang } from '../main';
 import { CommonScene } from './CommonScene';
 
 export class BootScene extends CommonScene {
@@ -12,17 +12,13 @@ export class BootScene extends CommonScene {
         setEndpoints();
 
         this._buttons = {};
-        this._buttons_num = 0;
     }
 
     async create() {
         this._createBg();
         this._createSounds();
-
         await this._createLogoAnimation();
-
-        if (getLocalStorageItem('lang')) this._createPressLabel();
-        else this._createButtons();
+        this._createPressLabel();
     }
 
     preload() {
@@ -43,78 +39,6 @@ export class BootScene extends CommonScene {
         button.on('pointerdown', () => this._langSelect(button));
     }
 
-    _createButtons() {
-        this._createButton('ukr', .35);
-        this._createButton('eng', .65);
-    }
-
-    async _createButton(name, y){
-        this._buttons_num++;
-
-        this._createButtonSprite(name, y)
-        this._createButtonText(this._buttons[name], name);
-        this._createButtonFlagSprite(this._buttons[name], name);
-        await this._createButtonTweens(this._buttons[name]);
-        this._addButtonEventListeners(this._buttons[name]);
-    }
-
-    _createButtonText(button, name) {
-        let textTitle;
-        switch (name) {
-            case 'ukr':
-                textTitle = 'UKRAINIAN';
-                break;
-            case 'eng':
-                textTitle = 'ENGLISH';
-                break;
-        }
-
-        const textStyle = {
-            font: `${config.width*.04}px ${config.fonts['eng']}`,
-            fill: '#f0f0f0',
-        };
-        button.buttonText = this.add.text(button.x - config.width * 0.06, button.y, textTitle, textStyle).setScale(3).setOrigin(0.5).setAlpha(0);
-    }
-
-    _createButtonFlagSprite(button, name) {
-        button.buttonFlag = this.add.image(button.x + config.width * 0.095, button.y, name).setAlpha(0);
-    }
-
-    _createButtonSprite(buttonName, y) {
-        this._buttons[buttonName] = this.add.image(config.width * 0.5, config.height * y, 'button')
-            .setOrigin(.5)
-            .setScale(5)
-            .setAlpha(0)
-            .setInteractive();
-
-        this._buttons[buttonName].name = buttonName;
-    }
-
-    async _createButtonTweens(button) {
-        await new Promise(resolve => {
-            this.tweens.add({
-                targets: [ button, button.buttonText ],
-                delay: 375 * this._buttons_num,
-                alpha: .675,
-                scale: .85,
-                ease: 'Linear',
-                duration: 225,
-                onStart: () => this.sounds.whoosh.play({ volume: .33 }),
-                onComplete: () => resolve()
-            });
-            this.tweens.add({
-                targets: button.buttonFlag,
-                delay: 375 * this._buttons_num,
-                alpha: .675,
-                scale: .4,
-                ease: 'Linear',
-                duration: 225,
-                onStart: () => this.sounds.whoosh.play({ volume: .33 }),
-                onComplete: () => resolve()
-            })
-        })
-    }
-
     async _createLogoAnimation() {
         const logo = this.add.image(this._center.x, this._center.y, 'pervious_logo').setAlpha(0);
         const scaleX = this.cameras.main.width / logo.width;
@@ -122,15 +46,12 @@ export class BootScene extends CommonScene {
         const scale = Math.max(scaleX, scaleY);
         logo.setScale(scale).setScrollFactor(0);
 
-        const yoyo = getLocalStorageItem('lang') ? false : true;
-
         await new Promise((resolve) => {
             this.tweens.add({
                 targets: logo,
                 alpha: 1,
                 ease: 'Linear',
-                duration: 1750,
-                yoyo,
+                duration: 1500,
                 onComplete: () => resolve()
             });
         });
@@ -177,7 +98,9 @@ export class BootScene extends CommonScene {
 
     _click() {
         this.sounds.click.play({ volume: .2 });
-        this.scene.start(SCENE_NAMES.PRELOAD);
+
+        const nextScene = config.lang === '' ? SCENE_NAMES.SET_LANGUAGE : SCENE_NAMES.PRELOAD;
+        this.scene.start(nextScene);
     }
 
     _createSounds() {
