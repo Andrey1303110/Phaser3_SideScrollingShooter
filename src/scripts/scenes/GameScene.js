@@ -105,10 +105,10 @@ export class GameScene extends CommonScene {
     _createBg(data) {
         const { height, width} = config;
 
-        const bg_image = data?.isUnlim ? `bg${Phaser.Math.Between(1, CAMPAIGN_LEVELS.length)}` : `bg${data.index}`;
+        const bgImage = data?.isUnlim ? `bg${Phaser.Math.Between(1, CAMPAIGN_LEVELS.length)}` : `bg${data.index}`;
 
-        const real_height = this.textures.list[bg_image].source[0].height;
-        const scale = height/real_height;
+        const realHeight = this.textures.list[bgImage].source[0].height;
+        const scale = height/realHeight;
 
         this.speed = CAMPAIGN_LEVELS[this._currentLevelScene-1].velocity;
 
@@ -116,7 +116,7 @@ export class GameScene extends CommonScene {
             this.speed /= scale;
         }
 
-        this._sceneBG = this.add.tileSprite(0, 0, width, height, bg_image).setOrigin(0).setScale(scale).setAlpha(.65);
+        this._sceneBG = this.add.tileSprite(0, 0, width, height, bgImage).setOrigin(0).setScale(scale).setAlpha(.65);
     }
 
     _createScoreText() {
@@ -144,7 +144,7 @@ export class GameScene extends CommonScene {
         const { top } = screenData;
         const { width } = config;
 
-        this.debugFPSText = this.add.text(this._center.x, top + width * .08, '', {
+        this.debugFPSText = this.add.text(this._centerDot.x, top + width * .08, '', {
             font: `${width * .038}px ${getFontName()}`,
             fill: '#00A86B',
         }).setOrigin(0.5, 0.5).setAlpha(.9).setDepth(DEPTH_LAYERS.UI);
@@ -341,7 +341,7 @@ export class GameScene extends CommonScene {
             return;
         }
 
-        this._progressExpBar = this.add.image(this._center.x, screenData.top + config.width * .0225, 'progress_bar')
+        this._progressExpBar = this.add.image(this._centerDot.x, screenData.top + config.width * .0225, 'progress_bar')
             .setAlpha(0.95);
         this._progressExpBar.fillProgress = this.add.image(this._progressExpBar.x + this._progressExpBar.displayWidth * .1, this._progressExpBar.y + this._progressExpBar.displayHeight * .04, 'progress_bar_fill')
             .setAlpha(0.95);
