@@ -4,7 +4,7 @@ import { MovableObject } from "./MovableObject";
 
 export class Enemy extends MovableObject {
     static generateAttr(scene) {
-        const x = screenData.right + screenData.width * .25;
+        const x = screenData.right + screenData.width * 0.25;
         const y = Phaser.Math.Between(screenData.top + screenData.height * 0.1, screenData.bottom - screenData.height * 0.1);
 
         let typeNum = 0;
@@ -59,7 +59,7 @@ export class Enemy extends MovableObject {
 
     _addTimer() {
         this.timer = this.scene.time.addEvent({
-            delay: this.weapon.reload * (Phaser.Math.Between(70, 130) * .01),
+            delay: this.weapon.reload * (Phaser.Math.Between(70, 130) * 0.01),
             loop: true,
             callback: this._shooting,
             callbackScope: this,

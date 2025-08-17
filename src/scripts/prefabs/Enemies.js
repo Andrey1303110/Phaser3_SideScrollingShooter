@@ -20,7 +20,7 @@ export class Enemies extends Phaser.Physics.Arcade.Group {
 
     tick() {
         this.scene.time.addEvent({
-            delay: this.scene.info.enemiesDelay * (Phaser.Math.Between(50, 150) * .01),
+            delay: this.scene.info.enemiesDelay * (Phaser.Math.Between(50, 150) * 0.01),
             callback: () => this.createEnemy(),
         });
     }

@@ -35,7 +35,7 @@ export class PauseScene extends CommonScene {
             .on('pointerover', () => this._play_button.setAlpha(1))
             .on('pointerout', () => this._play_button.setAlpha(.85));
 
-        this._restart_button = this.add.image(this._sceneBG.x + this._sceneBG.displayWidth * .25, this._sceneBG.y, 'restart')
+        this._restart_button = this.add.image(this._sceneBG.x + this._sceneBG.displayWidth * 0.25, this._sceneBG.y, 'restart')
             .setOrigin(.5)
             .setScale(1.25)
             .setAlpha(.65)
@@ -44,7 +44,7 @@ export class PauseScene extends CommonScene {
             .on('pointerover', () => this._restart_button.setAlpha(1))
             .on('pointerout', () => this._restart_button.setAlpha(.65));
 
-        this._return_button = this.add.image(this._sceneBG.x - this._sceneBG.displayWidth * .25, this._sceneBG.y, 'return')
+        this._return_button = this.add.image(this._sceneBG.x - this._sceneBG.displayWidth * 0.25, this._sceneBG.y, 'return')
             .setOrigin(.5)
             .setScale(1.25)
             .setAlpha(.65)
@@ -80,7 +80,7 @@ export class PauseScene extends CommonScene {
         })
         this.tweens.add({
             targets: [this._play_button, this._restart_button, this._return_button],
-            y: y + this._sceneBG.displayHeight * .06085,
+            y: y + this._sceneBG.displayHeight * 0.06085,
             ease: 'Linear',
             duration: tween_duration,
         })

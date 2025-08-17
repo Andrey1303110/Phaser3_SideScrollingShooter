@@ -41,11 +41,11 @@ export class CommonScene extends Phaser.Scene {
 
     _createAvailableMoney(){
         const style = {
-            font: `${config.width * .038}px ${getFontName()}`,
+            font: `${config.width * 0.038}px ${getFontName()}`,
             fill: '#FFFFFF',
         };
 
-        this._moneyIcon = this.add.image(screenData.right - config.height * .075, screenData.top + config.height * .075, 'ruby')
+        this._moneyIcon = this.add.image(screenData.right - config.height * 0.075, screenData.top + config.height * 0.075, 'ruby')
             .setScale(.25)
             .setAlpha(0)
             .setInteractive()

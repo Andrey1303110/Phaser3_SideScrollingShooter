@@ -48,7 +48,7 @@ export class UpgradeScene extends CommonScene {
         await new Promise(resolve => {
             this.tweens.add({
                 targets: this._player,
-                x: config.width * .125,
+                x: config.width * 0.125,
                 ease: 'Linear',
                 duration: 1250,
                 onComplete: () => resolve(),
@@ -62,12 +62,12 @@ export class UpgradeScene extends CommonScene {
         this.statsLevel = {};
 
         const style = {
-            font: `${config.width * .031}px ${getFontName()}`,
+            font: `${config.width * 0.031}px ${getFontName()}`,
             fill: '#000000',
         };
 
         const text = this._getText('BOTTOM_DESCRIPTION') + ` ${UPGRADE_MULTIPLIER * 100}%`;
-        const infoText = this.add.text(this._centerDot.x, screenData.bottom - config.height * .075, text, style).setOrigin(.5).setAlpha(0);
+        const infoText = this.add.text(this._centerDot.x, screenData.bottom - config.height * 0.075, text, style).setOrigin(.5).setAlpha(0);
 
         const upgradableStats = Object.keys(this.model.currentUpgradableStats);
         const height = config.height * 0.4;
@@ -77,7 +77,7 @@ export class UpgradeScene extends CommonScene {
 
             const returnedValue = this._setStatsText(key);
 
-            const x = config.width * .57;
+            const x = config.width * 0.57;
             const y = (this._centerDot.y - height * 0.5) + (height / upgradableStats.length) * i;
 
             const level = this.model.currentUpgradableStats[key];
@@ -85,8 +85,8 @@ export class UpgradeScene extends CommonScene {
             const levelText = `${this._getText('LEVEL_TEXT')} ${level}`;
 
             this.statsText[key] = this.add.text(x, y, statText, style).setOrigin(1, 0).setAlpha(0);
-            this.statsIcon[key] = this.add.image(x + config.width * .06, y, key).setOrigin(0.5, 0.15).setAlpha(0).setDisplaySize(config.width * .045, config.width * .045);
-            this.statsLevel[key] = this.add.text(x + config.width * .12, y, levelText, style).setOrigin(0, 0).setAlpha(0);
+            this.statsIcon[key] = this.add.image(x + config.width * 0.06, y, key).setOrigin(0.5, 0.15).setAlpha(0).setDisplaySize(config.width * 0.045, config.width * 0.045);
+            this.statsLevel[key] = this.add.text(x + config.width * 0.12, y, levelText, style).setOrigin(0, 0).setAlpha(0);
 
             await this._playShowStatsAnimation(key);
             this._createUpgradeButton({x, y, key, level});
@@ -179,7 +179,7 @@ export class UpgradeScene extends CommonScene {
     }
 
     _createUpgradeButton(data){
-        const button = this.add.image(data.x + config.width * .323, data.y, 'button_campaign')
+        const button = this.add.image(data.x + config.width * 0.323, data.y, 'button_campaign')
             .setOrigin(0.5, 0.125)
             .setScale(.33)
             .setAlpha(0)
@@ -193,7 +193,7 @@ export class UpgradeScene extends CommonScene {
         button.cost = Math.floor(button.level/10) + 1;
 
         const style = {
-            font: `${config.width * .023}px ${getFontName()}`,
+            font: `${config.width * 0.023}px ${getFontName()}`,
             fill: '#FFFFFF',
         };
         button.textCost = this.add.text(button.x, button.y, '1', style).setOrigin(0.5, -0.125).setVisible(false);
@@ -335,7 +335,7 @@ export class UpgradeScene extends CommonScene {
     }
 
     _addReturnButton(){
-        this.add.sprite(screenData.left + config.width * .015, screenData.top + config.width * .015, 'return')
+        this.add.sprite(screenData.left + config.width * 0.015, screenData.top + config.width * 0.015, 'return')
             .setAlpha(0.65)
             .setInteractive()
             .on('pointerdown', () => this.scene.start(SCENE_NAMES.MAIN), this);

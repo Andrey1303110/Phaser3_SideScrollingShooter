@@ -161,38 +161,38 @@ export class CampaignScene extends CommonScene {
         info.hiScore = currentLevelHiScore;
 
         const frame = this.add.image(this._centerDot.x, this._centerDot.y, 'frame');
-        frame.displayHeight = config.height * .795;
+        frame.displayHeight = config.height * 0.795;
         frame.texts = [];
 
-        frame.texts.push(this.add.text(frame.x, frame.y - frame.displayHeight * 0.5 + frame.displayHeight * .086, this._getText('MISSION_CARD_MAIN_TITLE'), {
-            font: `${frame.displayWidth * .13}px ${getFontName()}`,
+        frame.texts.push(this.add.text(frame.x, frame.y - frame.displayHeight * 0.5 + frame.displayHeight * 0.086, this._getText('MISSION_CARD_MAIN_TITLE'), {
+            font: `${frame.displayWidth * 0.13}px ${getFontName()}`,
             fill: '#0a0a0a',
         }).setOrigin(0.5).setAlpha(0.55));
 
-        frame.texts.push(this.add.text(frame.x, frame.y - frame.displayHeight * 0.5 + frame.displayHeight * .25, `${this._getText('MISSION_CARD_LEVEL')} ${info.index}`, {
-            font: `${frame.displayWidth * .0925}px ${getFontName()}`,
+        frame.texts.push(this.add.text(frame.x, frame.y - frame.displayHeight * 0.5 + frame.displayHeight * 0.25, `${this._getText('MISSION_CARD_LEVEL')} ${info.index}`, {
+            font: `${frame.displayWidth * 0.0925}px ${getFontName()}`,
             fill: '#0a0a0a',
         }).setOrigin(0.5).setAlpha(0.8));
 
-        frame.texts.push(this.add.text(frame.x, frame.y - frame.displayHeight * 0.5 + frame.displayHeight * .37, this._getText('MISSION_CARD_CITY'), {
-            font: `${frame.displayWidth * .055}px ${getFontName()}`,
+        frame.texts.push(this.add.text(frame.x, frame.y - frame.displayHeight * 0.5 + frame.displayHeight * 0.37, this._getText('MISSION_CARD_CITY'), {
+            font: `${frame.displayWidth * 0.055}px ${getFontName()}`,
             fill: '#0a0a0a',
         }).setOrigin(0.5).setAlpha(0.8));
 
-        frame.texts.push(this.add.text(frame.x, frame.y - frame.displayHeight * 0.5 + frame.displayHeight * .44, this._getText(`LEVEL_${info.index}_NAME`), {
-            font: `${frame.displayWidth * .06175}px ${getFontName()}`,
+        frame.texts.push(this.add.text(frame.x, frame.y - frame.displayHeight * 0.5 + frame.displayHeight * 0.44, this._getText(`LEVEL_${info.index}_NAME`), {
+            font: `${frame.displayWidth * 0.06175}px ${getFontName()}`,
             fill: '#0a0a0a',
         }).setOrigin(0.5).setAlpha(0.8));
 
         if (currentLevelHiScore > 0) {
-            frame.texts.push(this.add.text(frame.x, frame.y - frame.displayHeight * 0.5 + frame.displayHeight * .58, `${this._getText('MISSION_CARD_SCORE')} ${currentLevelHiScore}`, {
-                font: `${frame.displayWidth * .049}px ${getFontName()}`,
+            frame.texts.push(this.add.text(frame.x, frame.y - frame.displayHeight * 0.5 + frame.displayHeight * 0.58, `${this._getText('MISSION_CARD_SCORE')} ${currentLevelHiScore}`, {
+                font: `${frame.displayWidth * 0.049}px ${getFontName()}`,
                 fill: '#E2B80D',
             }).setOrigin(0.5).setAlpha(0.8));
         }
 
-        frame.texts.push(this.add.text(frame.x, frame.y - frame.displayHeight * 0.5 + frame.displayHeight * .71, `${this._getText('MISSION_CARD_ENEMIES')} ${info.enemies}`, {
-            font: `${frame.displayWidth * .051}px ${getFontName()}`,
+        frame.texts.push(this.add.text(frame.x, frame.y - frame.displayHeight * 0.5 + frame.displayHeight * 0.71, `${this._getText('MISSION_CARD_ENEMIES')} ${info.enemies}`, {
+            font: `${frame.displayWidth * 0.051}px ${getFontName()}`,
             fill: '#EA0000',
         }).setOrigin(0.5).setAlpha(0.8));
 
@@ -235,8 +235,8 @@ export class CampaignScene extends CommonScene {
     }
 
     _createCardStartButton(frame, info) {
-        frame.startButton = this.add.text(frame.x, frame.y + frame.displayHeight * 0.5 - frame.displayHeight * .09, this._getText('MISSION_CARD_START'), {
-            font: `${frame.displayWidth * .105}px ${getFontName()}`,
+        frame.startButton = this.add.text(frame.x, frame.y + frame.displayHeight * 0.5 - frame.displayHeight * 0.09, this._getText('MISSION_CARD_START'), {
+            font: `${frame.displayWidth * 0.105}px ${getFontName()}`,
             fill: '#51E04A',
         })
             .setOrigin(0.5)
@@ -275,7 +275,7 @@ export class CampaignScene extends CommonScene {
         this._casualtiesText = [];
 
         const title = this.add.text(position.x, position.y, this._getText('TOTAL_CASUALTIES'), {
-            font: `${config.width * .025}px ${getFontName()}`,
+            font: `${config.width * 0.025}px ${getFontName()}`,
             fill: '#EA0000',
         }).setOrigin(0, 0.5).setAlpha(0.75);
 
@@ -283,9 +283,9 @@ export class CampaignScene extends CommonScene {
 
         Object.keys(this.model.casualties).forEach(async name => {
             const casualtyText = `${this._getText(CASUALTIES_MAP[name].text)} ${this.model.casualties[name]}`;
-            position.y += config.width * .0285;
+            position.y += config.width * 0.0285;
             const label = this.add.text(position.x, position.y, casualtyText, {
-                font: `${config.width * .0215}px ${getFontName()}`,
+                font: `${config.width * 0.0215}px ${getFontName()}`,
                 fill: '#000000',
             }).setOrigin(0, 0.5).setAlpha(0);
             this._casualtiesText.push(label);
@@ -359,7 +359,7 @@ export class CampaignScene extends CommonScene {
             targets: bgRect,
             fillAlpha: 1,
             ease: 'Linear',
-            duration: this.sounds.ready.duration * 1000 * .85,
+            duration: this.sounds.ready.duration * 1000 * 0.85,
             onComplete: () => this.scene.start(SCENE_NAMES.GAME, info),
         });
     }

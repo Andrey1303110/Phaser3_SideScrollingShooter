@@ -128,15 +128,15 @@ export class GameScene extends CommonScene {
             this.hiScoreText.destroy();
         }
 
-        this.scoreText = this.add.text(right - width * .05, top + width * .02, this._currentScore, {
-            font: `${width * .038}px ${getFontName()}`,
+        this.scoreText = this.add.text(right - width * 0.05, top + width * 0.02, this._currentScore, {
+            font: `${width * 0.038}px ${getFontName()}`,
             fill: '#EA0000',
         }).setOrigin(1, 0).setAlpha(.75).setDepth(DEPTH_LAYERS.UI);
 
         if (this.info?.isUnlim) {
             const topScoreText = this._getText('TOP_HIGH_SCORE');
-            this.hiScoreText = this.add.text(this._centerDot.x, top + width * .01, `${topScoreText} ${this.model.unlimHiScores}`, {
-                font: `${width * .03}px ${getFontName()}`,
+            this.hiScoreText = this.add.text(this._centerDot.x, top + width * 0.01, `${topScoreText} ${this.model.unlimHiScores}`, {
+                font: `${width * 0.03}px ${getFontName()}`,
                 fill: '#EA0000',
             }).setOrigin(0.5, 0).setAlpha(.75).setDepth(DEPTH_LAYERS.UI);
         }
@@ -146,8 +146,8 @@ export class GameScene extends CommonScene {
         const { top } = screenData;
         const { width } = config;
 
-        this.debugFPSText = this.add.text(this._centerDot.x, top + width * .08, '', {
-            font: `${width * .038}px ${getFontName()}`,
+        this.debugFPSText = this.add.text(this._centerDot.x, top + width * 0.08, '', {
+            font: `${width * 0.038}px ${getFontName()}`,
             fill: '#00A86B',
         }).setOrigin(0.5, 0.5).setAlpha(.9).setDepth(DEPTH_LAYERS.UI);
     }
@@ -272,7 +272,7 @@ export class GameScene extends CommonScene {
 
         this._blackBG = this.add.rectangle(config.width * 0.5, config.height * 0.5, config.width, config.height, '0x000000', 0).setInteractive().setDepth(DEPTH_LAYERS.COVER_SCREEN);
         let finalTextLabel = this.add.text(this._blackBG.x, this._blackBG.y, '', {
-            font: `${config.width * .03}px ${getFontName()}`,
+            font: `${config.width * 0.03}px ${getFontName()}`,
             fill: '#EA0000',
         }).setOrigin(0.5).setAlpha(0).setDepth(DEPTH_LAYERS.MAX);
 
@@ -330,7 +330,7 @@ export class GameScene extends CommonScene {
     }
 
     _createPauseButton() {
-        this.add.image(screenData.left + config.width * .05, screenData.top + config.width * .05, 'pause')
+        this.add.image(screenData.left + config.width * 0.05, screenData.top + config.width * 0.05, 'pause')
             .setAlpha(0.65)
             .setScale(2)
             .setInteractive()
@@ -351,13 +351,13 @@ export class GameScene extends CommonScene {
             return;
         }
 
-        this._progressExpBar = this.add.image(this._centerDot.x, screenData.top + config.width * .0225, 'progress_bar')
+        this._progressExpBar = this.add.image(this._centerDot.x, screenData.top + config.width * 0.0225, 'progress_bar')
             .setAlpha(0.95);
-        this._progressExpBar.fillProgress = this.add.image(this._progressExpBar.x + this._progressExpBar.displayWidth * .1, this._progressExpBar.y + this._progressExpBar.displayHeight * .04, 'progress_bar_fill')
+        this._progressExpBar.fillProgress = this.add.image(this._progressExpBar.x + this._progressExpBar.displayWidth * 0.1, this._progressExpBar.y + this._progressExpBar.displayHeight * 0.04, 'progress_bar_fill')
             .setAlpha(0.95);
         
-        this._progressExpBar.levelText = this.add.text(this._progressExpBar.x - this._progressExpBar.displayWidth * .38, this._progressExpBar.y - this._progressExpBar.displayHeight * .035, this.model.currentLevelPlayer, {
-            font: `${this._progressExpBar.displayHeight * .53}px ${getFontName()}`,
+        this._progressExpBar.levelText = this.add.text(this._progressExpBar.x - this._progressExpBar.displayWidth * 0.38, this._progressExpBar.y - this._progressExpBar.displayHeight * 0.035, this.model.currentLevelPlayer, {
+            font: `${this._progressExpBar.displayHeight * 0.53}px ${getFontName()}`,
             fill: '#FFFFFF',
         }).setOrigin(0.5).setAlpha(0.75);
 
@@ -400,7 +400,7 @@ export class GameScene extends CommonScene {
         this.model.increasePlayerLevel();
 
         const levelTextLabel = this.add.text(this._centerDot.x, this._centerDot.y, this.model.currentLevelPlayer, {
-            font: `${config.width * .25}px ${getFontName()}`,
+            font: `${config.width * 0.25}px ${getFontName()}`,
             fill: '#FFFFFF',
         }).setOrigin(0.5).setAlpha(0);
         
