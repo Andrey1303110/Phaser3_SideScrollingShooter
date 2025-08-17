@@ -122,26 +122,17 @@ export class UpgradeScene extends CommonScene {
         })
     }
 
-    _setStatsText(key, isUpdated = false) {
-        let multiplier = 1;
-        let value = isUpdated ? getPlayerAbilities(key) : 1;
-
+    _setStatsText(key) {
         switch (key) {
             case 'health':
-                value = (Math.round(config.player.maxHealth * multiplier) / multiplier * multiplier).toFixed(0);
-                break;
+                return Math.round(this.model.player.maxHealth).toFixed(0);
             case 'reload':
-                value = (Math.round(WEAPONS.FIRE[key] * multiplier) / multiplier * multiplier).toFixed(0);
-                break;
+                return Math.round(WEAPONS.FIRE[key]).toFixed(0);
             case 'scale':
-                multiplier = FIRE_WEAPON_DEFAULT_SCALE * 100; 
-                value = (Math.round(WEAPONS.FIRE[key] * multiplier) / multiplier * multiplier).toFixed(0);
+                return Math.round(WEAPONS.FIRE[key] * (FIRE_WEAPON_DEFAULT_SCALE * 100)).toFixed(0);
             case 'velocity':
-                value = (Math.round(WEAPONS.FIRE[key] * multiplier) / multiplier * multiplier).toFixed(0);
-                break;
+                return Math.round(WEAPONS.FIRE[key]).toFixed(0);
         }
-
-        return value;
     }
 
     _checkAvailability(button){
@@ -254,7 +245,7 @@ export class UpgradeScene extends CommonScene {
         this._moneyValueText.text = this.model.money;
         button.level = statLevel;
 
-        const returnedValue = this._setStatsText(button.name, true);
+        const returnedValue = this._setStatsText(button.name);
         const statText = this._getText(STATS_MAP[button.name]['text']);
         const statTextLevel = this._getText('LEVEL_TEXT');
 

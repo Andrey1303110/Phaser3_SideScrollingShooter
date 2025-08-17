@@ -248,3 +248,5 @@ export const UNLIMITED_LEVEL = {
     enemies: 1000,
     enemiesDelay: 2000,
 }
+
+export const LEVEL_HI_SCORES_SEPARATOR = ',';

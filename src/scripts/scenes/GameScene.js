@@ -2,7 +2,7 @@ import { getFontName, config, screenData } from '../main';
 import { Player } from '../prefabs/Player';
 import { Enemies } from '../prefabs/Enemies';
 import { Boom } from '../prefabs/Boom';
-import { SCENE_NAMES, DEPTH_LAYERS, EVENTS, JOYSTICK_GAP, JOYSTICK_RADIUS, LEVEL_REQUIRED_SCORE_MULTIPLIER, LEVEL_REQUIRED_SCORE, LEVEL_SCORE_MULTIPLIER, WEAPONS, ENEMIES, CAMPAIGN_LEVELS } from '../constants';
+import { SCENE_NAMES, DEPTH_LAYERS, EVENTS, JOYSTICK_GAP, JOYSTICK_RADIUS, LEVEL_REQUIRED_SCORE_MULTIPLIER, LEVEL_REQUIRED_SCORE, LEVEL_SCORE_MULTIPLIER, WEAPONS, ENEMIES, CAMPAIGN_LEVELS, LEVEL_HI_SCORES_SEPARATOR } from '../constants';
 import { CommonScene } from './CommonScene';
 import { HealthBar } from '../classes/HealthBar';
 
@@ -293,7 +293,7 @@ export class GameScene extends CommonScene {
         label.text = this._getText('FINAL_TEXT_WIN');
 
         if (this.info.hiScore < this._currentScore) {
-            const hiScores = this.model.hiScores.split(',');
+            const hiScores = this.model.hiScores.split(LEVEL_HI_SCORES_SEPARATOR);
             hiScores[this._currentLevelScene - 1] = this._currentScore;
             this.model.setHiScores(hiScores.join());
         }

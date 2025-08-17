@@ -1,5 +1,5 @@
 import { StorageService } from "./StorageService";
-import { CAMPAIGN_LEVELS, PLAYER, UPGRADE_MULTIPLIER, WEAPONS } from "./constants";
+import { CAMPAIGN_LEVELS, LEVEL_HI_SCORES_SEPARATOR, PLAYER, UPGRADE_MULTIPLIER, WEAPONS } from "./constants";
 
 export class GameModel {
     static _instance = null;
@@ -97,8 +97,8 @@ export class GameModel {
             return 0;
         }
 
-        const scores = this.hiScores.split(',').map(Number);
-        return scores[level - 1] || 0;
+        const scores = this.hiScores.split(LEVEL_HI_SCORES_SEPARATOR).map(Number);
+        return scores[level - 1];
     }
 
     setUnlimHiScores(value) {
@@ -138,9 +138,9 @@ export class GameModel {
     }
 
     initHiScores() {
-        const arr = Array(CAMPAIGN_LEVELS.length).fill(0);
+        const stringifiedArr = Array(CAMPAIGN_LEVELS.length).fill(0).join(LEVEL_HI_SCORES_SEPARATOR);
     
-        this.setHiScores(arr);
+        this.setHiScores(stringifiedArr);
         this.setTotalScore(0);
         this.setUnlimHiScores(0);
     };
