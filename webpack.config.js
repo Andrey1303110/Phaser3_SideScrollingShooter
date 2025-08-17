@@ -6,6 +6,9 @@ const package = require('./package.json');
 module.exports = {
   entry: path.resolve(__dirname, './src/scripts/main.js'),
 
+  mode: "development",
+  devtool: "source-map",
+
   output: {
     filename: '[name].js',
     chunkFilename: '[name].js',
