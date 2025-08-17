@@ -264,8 +264,8 @@ export class GameScene extends CommonScene {
         }
 
         const isWin = this._player.active;
-        const soundKey = isWin ? this.sounds.win : this.sounds.died;
-        soundKey.play();
+        const sound = isWin ? this.sounds.win : this.sounds.lose;
+        sound.play();
 
         this.game.sound.stopAll();
         this._removeOverlaps();
