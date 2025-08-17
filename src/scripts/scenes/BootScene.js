@@ -24,7 +24,7 @@ export class BootScene extends CommonScene {
     preload() {
         super.preload();
     
-        this.load.image('pervious_logo', './assets/sprites/pervious_logo.png');
+        this.load.image('boot_scene_bg', './assets/sprites/boot_scene_bg.png');
         this.load.image('eng', './assets/sprites/eng.png');
         this.load.image('ukr', './assets/sprites/ukr.png');
         this.load.image('button', './assets/sprites/button_lang.png');
@@ -40,7 +40,7 @@ export class BootScene extends CommonScene {
     }
 
     async _createLogoAnimation() {
-        const logo = this.add.image(this._center.x, this._center.y, 'pervious_logo').setAlpha(0);
+        const logo = this.add.image(this._centerDot.x, this._centerDot.y, 'boot_scene_bg').setAlpha(0);
         const scaleX = this.cameras.main.width / logo.width;
         const scaleY = this.cameras.main.height / logo.height;
         const scale = Math.max(scaleX, scaleY);
