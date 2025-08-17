@@ -44,7 +44,7 @@ export class CampaignScene extends CommonScene {
     }
 
     _createMap() {
-        this._map = this.add.image(this._center.x, this._center.y, 'map')
+        this._map = this.add.image(this._centerDot.x, this._centerDot.y, 'map')
             .setAlpha(.65)
             .setOrigin(.5)
             .setScale(1.25);
@@ -155,12 +155,12 @@ export class CampaignScene extends CommonScene {
     }
 
     async _createLevelCard(info) {
-        const bgRect = this.add.rectangle(this._center.x, this._center.y, config.width, config.height, '0x000000', 0).setInteractive(); // todo move it to transition
+        const bgRect = this.add.rectangle(this._centerDot.x, this._centerDot.y, config.width, config.height, '0x000000', 0).setInteractive(); // todo move it to transition
         
         const currentLevelHiScore = getLocalStorageItem('hiScores').split(',')[info.index - 1] || 0;
         info.hiScore = currentLevelHiScore;
 
-        const frame = this.add.image(this._center.x, this._center.y, 'frame');
+        const frame = this.add.image(this._centerDot.x, this._centerDot.y, 'frame');
         frame.displayHeight = config.height * .795;
         frame.texts = [];
 
@@ -282,12 +282,13 @@ export class CampaignScene extends CommonScene {
         this._casualtiesText.push(title);
 
         Object.keys(config.casualties).forEach(async name => {
+            const casualtyText = `${this._getText(CASUALTIES_MAP[name].text)} ${StorageService.get(`casualties_${name}`, 0, Number)}`;
             position.y += config.width * .0285;
-            const text = this.add.text(position.x, position.y, `${this._getText(CASUALTIES_MAP[name].text)} ${getLocalStorageItem(`casualties_${name}`)}`, {
+            const label = this.add.text(position.x, position.y, casualtyText, {
                 font: `${config.width * .0215}px ${getFontName()}`,
                 fill: '#000000',
             }).setOrigin(0, 0.5).setAlpha(0);
-            this._casualtiesText.push(text);
+            this._casualtiesText.push(label);
         });
 
         return this._addCasualtiesTween();
@@ -351,7 +352,7 @@ export class CampaignScene extends CommonScene {
     _gameStart(info) {
         this.sounds.ready.play();
 
-        const bgRect = this.add.rectangle(this._center.x, this._center.y, config.width, config.height, '0x000000', 0).setInteractive();
+        const bgRect = this.add.rectangle(this._centerDot.x, this._centerDot.y, config.width, config.height, '0x000000', 0).setInteractive();
 
         this.tweens.add({
             targets: bgRect,

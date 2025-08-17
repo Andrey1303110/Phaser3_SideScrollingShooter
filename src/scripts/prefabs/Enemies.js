@@ -21,8 +21,7 @@ export class Enemies extends Phaser.Physics.Arcade.Group {
     tick() {
         this.scene.time.addEvent({
             delay: this.scene.info.enemiesDelay * (Phaser.Math.Between(50, 150) * .01),
-            callback: this.createEnemy,
-            callbackScope: this,
+            callback: () => this.createEnemy(),
         });
     }
 
@@ -31,15 +30,16 @@ export class Enemies extends Phaser.Physics.Arcade.Group {
     }
     
     createEnemy() {
-        if (this.countMax > this.createdCount) {
-            const enemy = Enemy.generate(this.scene, this.fires);
-            enemy.on(EVENTS.KILLED, this.onEnemyKilled, this);
-            this.add(enemy);
-            enemy.move();
-            this.createdCount++;
-        } else {
-            this.timer.remove();
+        if (this.createdCount >= this.countMax) {
+            this.stopTimer();
+            return;
         }
+
+        const enemy = Enemy.generate(this.scene, this.fires);
+        enemy.on(EVENTS.KILLED, this.onEnemyKilled, this);
+        this.add(enemy);
+        enemy.move();
+        this.createdCount++;
     }
 
     onEnemyKilled() {

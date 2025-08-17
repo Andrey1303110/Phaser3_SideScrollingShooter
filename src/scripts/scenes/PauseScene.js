@@ -14,12 +14,12 @@ export class PauseScene extends CommonScene {
     }
 
     _createBg() {
-        this._blackBG = this.add.rectangle(this._center.x, this._center.y, config.width, config.height, '0x000000', 0);
-        this._sceneBG = this.add.image(this._center.x, config.height * -1, 'pause_bg').setOrigin(.5);
+        this._blackBG = this.add.rectangle(this._centerDot.x, this._centerDot.y, config.width, config.height, '0x000000', 0);
+        this._sceneBG = this.add.image(this._centerDot.x, config.height * -1, 'pause_bg').setOrigin(.5);
 
         this.tweens.add({
             targets: this._sceneBG,
-            y: this._center.x,
+            y: this._centerDot.x,
             ease: 'Linear',
             duration: 750,
         })
