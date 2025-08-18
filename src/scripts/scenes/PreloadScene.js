@@ -41,7 +41,7 @@ export class PreloadScene extends CommonScene {
 
     _setupLoadingBar() {
         this._loadingBar = new LoadingBar(this);
-        this.scene.scene.load.on('complete', this._onLoadComplete, this);
+        this.scene.scene.load.on('complete', () => this._onLoadComplete());
     }
 
     async _onLoadComplete() {
@@ -54,6 +54,6 @@ export class PreloadScene extends CommonScene {
                 onComplete: () => resolve()
             });
         });
-        this.scene.scene.load.on('complete', this.scene.start(SCENE_NAMES.MAIN_MENU), this);
+        this.scene.start(SCENE_NAMES.MAIN_MENU);
     }
 }
