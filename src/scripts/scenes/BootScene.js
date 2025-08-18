@@ -34,6 +34,8 @@ export class BootScene extends CommonScene {
 
         this.load.audio('click', `./assets/sounds/click.mp3`);
         this.load.audio('whoosh', `./assets/sounds/whoosh.mp3`);
+
+        this.load.json('initial_texts', `./assets/texts/initial_texts.json`);
     }
 
     async _createLogoAnimation() {
@@ -60,7 +62,8 @@ export class BootScene extends CommonScene {
             fill: '#f0f0f0',
         };
         
-        const label = this.add.text(config.width * 0.5, screenData.bottom, 'PRESS ANYWHERE TO CONTINUE', textStyle).setOrigin(0.5, 1.5).setAlpha(0);
+        const text = this.scene.scene.cache.json.get('initial_texts')['Press'];
+        const label = this.add.text(config.width * 0.5, screenData.bottom - config.width * 0.05, text, textStyle).setOrigin(0.5, 1).setAlpha(0);
         const clickArea = this.add.rectangle(0, 0, config.width, config.height).setOrigin(0);
 
         await new Promise((resolve) => {
