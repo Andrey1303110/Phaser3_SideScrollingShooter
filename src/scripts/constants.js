@@ -2,7 +2,7 @@ export const SCENE_NAMES = {
     SET_LANGUAGE: 'SetLanguage',
     BOOT: 'Boot',
     PRELOAD: 'Preload',
-    MAIN: 'Levels',
+    MAIN_MENU: 'MainMenu',
     CAMPAIGN: 'Campaign',
     GAME: 'GameScene',
     UPGRADE: 'Upgrade',

@@ -90,7 +90,7 @@ export class CommonScene extends Phaser.Scene {
     }
 
     _onReturnButtonClick() {
-        this.scene.start(SCENE_NAMES.MAIN);
+        this.scene.start(SCENE_NAMES.MAIN_MENU);
         this.sounds.click.play({ volume: .2 });
     }
 

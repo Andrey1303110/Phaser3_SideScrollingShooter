@@ -330,7 +330,7 @@ export class UpgradeScene extends CommonScene {
         this.add.sprite(screenData.left + config.width * 0.015, screenData.top + config.width * 0.015, 'return')
             .setAlpha(0.65)
             .setInteractive()
-            .on('pointerdown', () => this.scene.start(SCENE_NAMES.MAIN), this);
+            .on('pointerdown', () => this.scene.start(SCENE_NAMES.MAIN_MENU), this);
     }
 
     _createSounds() {

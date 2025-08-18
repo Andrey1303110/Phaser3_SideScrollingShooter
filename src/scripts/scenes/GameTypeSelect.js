@@ -26,7 +26,7 @@ const BUTTONS_MAP = [
 
 export class GameTypeSelect extends CommonScene {
     constructor() {
-        super(SCENE_NAMES.MAIN);
+        super(SCENE_NAMES.MAIN_MENU);
     }
 
     init(){

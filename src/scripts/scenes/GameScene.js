@@ -324,7 +324,7 @@ export class GameScene extends CommonScene {
             ease: 'Linear',
             duration: sound.duration * 1000 * 0.85,
             onComplete: () => {
-                this.scene.start(this.info?.isUnlim ? SCENE_NAMES.MAIN : SCENE_NAMES.CAMPAIGN);
+                this.scene.start(this.info?.isUnlim ? SCENE_NAMES.MAIN_MENU : SCENE_NAMES.CAMPAIGN);
                 this.scene.stop();
             }
         })
