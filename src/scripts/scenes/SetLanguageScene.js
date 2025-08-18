@@ -24,8 +24,7 @@ export class SetLanguageScene extends CommonScene {
 
     preload() {
         super.preload();
-    
-        this.load.image('pervious_logo', './assets/sprites/pervious_logo.png');
+
         this.load.image('eng', './assets/sprites/eng.png');
         this.load.image('ukr', './assets/sprites/ukr.png');
         this.load.image('button', './assets/sprites/button_lang.png');
@@ -110,24 +109,6 @@ export class SetLanguageScene extends CommonScene {
                 onStart: () => this.sounds.whoosh.play({ volume: .33 }),
                 onComplete: () => resolve()
             })
-        });
-    }
-
-    async _createLogoAnimation() {
-        const logo = this.add.image(this._centerDot.x, this._centerDot.y, 'pervious_logo').setAlpha(0);
-        const scaleX = this.cameras.main.width / logo.width;
-        const scaleY = this.cameras.main.height / logo.height;
-        const scale = Math.max(scaleX, scaleY);
-        logo.setScale(scale).setScrollFactor(0);
-
-        await new Promise((resolve) => {
-            this.tweens.add({
-                targets: logo,
-                alpha: 1,
-                ease: 'Linear',
-                duration: 1750,
-                onComplete: () => resolve()
-            });
         });
     }
 
