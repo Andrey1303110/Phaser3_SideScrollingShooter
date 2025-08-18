@@ -1,60 +1,61 @@
-import { rgbToHex } from '../Utils';
-import { SCENE_NAMES } from '../constants';
+import { rgbToHex, screenData } from '../Utils';
 import { config } from '../main';
 
 const INITIAL_COLORS = {
-    r: 210,
-    g: 0,
-    b: 25,
+    r: 30,
+    g: 150,
+    b: 30,
 }
 
-const MAX_VALUE_GREEN = 225;
-const MAX_VALUE_RED = 200;
+const MAX_VALUE_GREEN = 210;
 
 const BOX_COLOR = 0xe3e1da;
 
 export class LoadingBar {
     constructor (scene) {
-        this.scene = scene;
+        this._scene = scene;
 
-        this._colors = {};
-        this._colors.r = INITIAL_COLORS.r;
-        this._colors.g = INITIAL_COLORS.g;
-        this._colors.b = INITIAL_COLORS.b;
+        this._colors = {...INITIAL_COLORS};
 
-        this._style = {
+        const width = config.width * 0.7;
+        const height = config.height * 0.06;
+
+        const params = {
             boxColor: BOX_COLOR,
-            x: config.width * 0.5 - (config.width * 0.5 * 0.5),
-            y: config.height * 0.5 + config.height * 0.25,
-            width: config.width * 0.5,
-            height: config.height * 0.05,
+            x: config.width * 0.5 - (width * 0.5),
+            y: screenData.bottom - (height * 1.5),
+            width,
+            height,
+            round: height * 0.4
         };
 
-        this._progressBox = this.scene.add.graphics();
-        this._progressBar = this.scene.add.graphics();
+        this._progressBox = this._scene.add.graphics();
+        this._progressBar = this._scene.add.graphics();
 
-        this._showProgressBox();
-        this._setEvents();
+        this._showProgressBox(params);
+
+        this._scene.load.on('progress', (value) => this._showProgressBar(value, params));
     }
 
-    _setEvents(){
-        this.scene.load.on('progress', this._showProgressBar, this);
-        this.scene.load.on('complete', () => this.scene.scene.start(SCENE_NAMES.MAIN), this);
+    get graphicsElements() {
+        return [ this._progressBox, this._progressBar ];
     }
 
-    _showProgressBox(){
+    _showProgressBox(params){
+        const { x, y, width, height, round, boxColor } = params;
+
         this._progressBox
-            .fillStyle(this._style.boxColor)
-            .fillRect(this._style.x, this._style.y, this._style.width, this._style.height);
+            .fillStyle(boxColor)
+            .fillRoundedRect(x, y, width, height, round);
     }
 
-    _showProgressBar(value){
-        this._colors.r = INITIAL_COLORS.r - value * MAX_VALUE_RED;
-        this._colors.g = value * MAX_VALUE_GREEN;
+    _showProgressBar(value, params){
+        const { x, y, width, height, round } = params;
+        this._colors.g = (MAX_VALUE_GREEN - INITIAL_COLORS.g) * value + INITIAL_COLORS.g;
 
         this._progressBar
             .clear()
             .fillStyle(rgbToHex(this._colors))
-            .fillRect(this._style.x, this._style.y, this._style.width * value, this._style.height);
+            .fillRoundedRect(x, y, width * value, height, round);
     }
 }
