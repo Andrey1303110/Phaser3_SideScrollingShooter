@@ -1,5 +1,5 @@
 {
-    "Levels": {
+    "MainMenu": {
         "CAMPAIGN": "Кампанія",
         "UNLIM": "Виживання",
         "UPGRADE": "Апгрейд"
@@ -39,7 +39,7 @@
     },
     "Upgrade": {
         "HEALTH_TITLE": "Живучість (очок):",
-        "RELOAD_TITLE": "Перезарядка (мс):",
+        "RELOAD_TITLE": "Перезарядка (мсек):",
         "VELOCITY_TITLE": "Швидкість (м/с):",
         "SCALE_TITLE": "Розмір (%):",
         "LEVEL_TEXT": "Рів.",
