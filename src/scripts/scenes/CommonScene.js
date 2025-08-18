@@ -18,6 +18,7 @@ export class CommonScene extends Phaser.Scene {
         if (!this.scale.isFullscreen) {
             switch (this.scene.key) {
                 case SCENE_NAMES.BOOT:
+                case SCENE_NAMES.DISCLAIMER:
                 case SCENE_NAMES.SET_LANGUAGE:
                 case SCENE_NAMES.PRELOAD:
                     return;

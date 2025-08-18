@@ -92,9 +92,7 @@ export class BootScene extends CommonScene {
 
     _click() {
         this.sounds.click.play({ volume: .2 });
-
-        const nextScene = this.model.lang === '' ? SCENE_NAMES.SET_LANGUAGE : SCENE_NAMES.PRELOAD;
-        this.scene.start(nextScene);
+        this.scene.start(SCENE_NAMES.DISCLAIMER);
     }
 
     _createSounds() {

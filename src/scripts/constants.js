@@ -1,6 +1,7 @@
 export const SCENE_NAMES = {
-    SET_LANGUAGE: 'SetLanguage',
     BOOT: 'Boot',
+    DISCLAIMER: 'Disclaimer',
+    SET_LANGUAGE: 'SetLanguage',
     PRELOAD: 'Preload',
     MAIN_MENU: 'MainMenu',
     CAMPAIGN: 'Campaign',
