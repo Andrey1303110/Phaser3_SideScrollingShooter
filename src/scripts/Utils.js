@@ -1,4 +1,5 @@
 import { GameModel } from "./GameModel";
+import { FONTS } from "./constants";
 import { config } from "./main";
 
 export const screenData = {
