@@ -1,4 +1,4 @@
-import { screenData, setEndpoints } from '../Utils';
+import { screenData, setEndpoints, tweenPromise } from '../Utils';
 import { FONTS, SCENE_NAMES } from '../constants';
 import { config } from '../main';
 import { CommonScene } from './CommonScene';
@@ -21,7 +21,7 @@ export class BootScene extends CommonScene {
         this._createBg();
         this._createSounds();
         await this._createLogoAnimation();
-        this._createPressLabel();
+        await this._createPressLabel();
     }
 
     preload() {
@@ -38,25 +38,22 @@ export class BootScene extends CommonScene {
         this.load.json('initial_texts', `./assets/texts/initial_texts.json`);
     }
 
-    async _createLogoAnimation() {
+    _createLogoAnimation() {
         const logo = this.add.image(this._centerDot.x, this._centerDot.y, 'boot_scene_bg').setAlpha(0);
         const scaleX = this.cameras.main.width / logo.width;
         const scaleY = this.cameras.main.height / logo.height;
         const scale = Math.max(scaleX, scaleY);
         logo.setScale(scale).setScrollFactor(0);
 
-        await new Promise((resolve) => {
-            this.tweens.add({
-                targets: logo,
-                alpha: 1,
-                ease: 'Linear',
-                duration: 1500,
-                onComplete: () => resolve()
-            });
+        return tweenPromise(this, {
+            targets: logo,
+            alpha: 1,
+            ease: 'Linear',
+            duration: 1500,
         });
     }
 
-    async _createPressLabel() {
+    _createPressLabel() {
         const textStyle = {
             font: `${config.width * 0.035}px ${FONTS['eng']}`,
             fill: '#f0f0f0',
@@ -65,16 +62,20 @@ export class BootScene extends CommonScene {
         const text = this.scene.scene.cache.json.get('initial_texts')['Press'];
         const label = this.add.text(config.width * 0.5, screenData.bottom - config.width * 0.05, text, textStyle).setOrigin(0.5, 1).setAlpha(0);
         const clickArea = this.add.rectangle(0, 0, config.width, config.height).setOrigin(0);
+        const onComplete = () => this._launchPressLabelCTA(label, clickArea);
 
-        await new Promise((resolve) => {
-            this.tweens.add({
-                targets: label,
-                alpha: 0.5,
-                ease: 'Linear',
-                duration: 350,
-                onComplete: () => resolve()
-            });
+        return tweenPromise(this, {
+            targets: label,
+            alpha: 0.5,
+            ease: 'Linear',
+            duration: 350,
+            onComplete,
         });
+    }
+
+    _launchPressLabelCTA(label, clickArea) {
+        clickArea.setInteractive();
+        clickArea.on('pointerdown', () => this._click());
 
         this.tweens.add({
             targets: label,
@@ -85,13 +86,10 @@ export class BootScene extends CommonScene {
             repeat: -1,
             yoyo: true,
         });
-
-        clickArea.setInteractive();
-        clickArea.on('pointerdown', () => this._click());
     }
 
     _click() {
-        this.sounds.click.play({ volume: .2 });
+        this.sounds.click.play({ volume: 0.2 });
         this.scene.start(SCENE_NAMES.DISCLAIMER);
     }
 

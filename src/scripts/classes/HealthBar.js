@@ -1,4 +1,4 @@
-import { config } from "../main";
+import { tweenPromise } from "../Utils";
 
 const DEFAULT_SCALE = 0.37;
 
@@ -45,30 +45,21 @@ export class HealthBar extends Phaser.GameObjects.Container {
     async _tweenUpdate(cutWidth) {
         const duration = 150;
         const increaseValue = 1.15;
-    
-        await new Promise(resolve => {
-            this._scene.tweens.add({
-                targets: this,
-                scale: DEFAULT_SCALE * increaseValue,
-                ease: 'Power2.in',
-                duration,
-                onComplete: () => {
-                    this._onUpdateComplete(cutWidth);
-                    resolve();
-                }
-            });
+
+        await tweenPromise(this._scene, {
+            targets: this,
+            scale: DEFAULT_SCALE * increaseValue,
+            ease: 'Power2.in',
+            duration,
+            onComplete: () => this._onUpdateComplete(cutWidth)
         });
 
-        await new Promise(resolve => {
-            this._scene.tweens.add({
-                targets: this,
-                scale: DEFAULT_SCALE,
-                ease: 'Power2.out',
-                duration: duration * 0.75,
-                onComplete: () => resolve()
-            });
+        await tweenPromise(this._scene, {
+            targets: this,
+            scale: DEFAULT_SCALE,
+            ease: 'Power2.out',
+            duration: duration * 0.75,
         });
-
     }
 
     _add() {

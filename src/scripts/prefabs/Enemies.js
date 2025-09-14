@@ -13,8 +13,7 @@ export class Enemies extends Phaser.Physics.Arcade.Group {
         this.timer = this.scene.time.addEvent({
             delay: this.scene.info.enemiesDelay,
             loop: true,
-            callback: this.tick,
-            callbackScope: this,
+            callback: () => this.tick(),
         });
     }
 

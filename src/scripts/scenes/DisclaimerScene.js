@@ -1,4 +1,4 @@
-import { delayInMSec, screenData } from '../Utils';
+import { delayInMSec, screenData, tweenPromise } from '../Utils';
 import { FONTS, SCENE_NAMES } from '../constants';
 import { config } from '../main';
 import { CommonScene } from './CommonScene';
@@ -13,7 +13,7 @@ export class DisclaimerScene extends CommonScene {
         this._createSounds();
         await this._createTextLabel();
         await delayInMSec(this.scene, 2500);
-        this._createPressLabel();
+        await this._createPressLabel();
         this._createInteractivity();
     }
 
@@ -36,18 +36,15 @@ export class DisclaimerScene extends CommonScene {
             align: 'center',
         }).setOrigin(0.5).setAlpha(0);
 
-        return new Promise((resolve) => {
-            this.tweens.add({
-                targets: this._textLabel,
-                alpha: 0.85,
-                ease: 'Linear',
-                duration: 500,
-                onComplete: () => resolve()
-            });
+        return tweenPromise(this, {
+            targets: this._textLabel,
+            alpha: 0.85,
+            ease: 'Linear',
+            duration: 500,
         });
     }
 
-    async _createPressLabel() {
+    _createPressLabel() {
         const textStyle = {
             font: `${config.width * 0.035}px ${FONTS['eng']}`,
             fill: '#C40000',
@@ -56,17 +53,17 @@ export class DisclaimerScene extends CommonScene {
         const text = this.scene.scene.cache.json.get('initial_texts')['DisclaimerPress'];
         this._pressLabel = this.add.text(config.width * 0.5, screenData.bottom - config.width * 0.03, text, textStyle).setOrigin(0.5, 1).setAlpha(0);
 
-        await new Promise((resolve) => {
-            this.tweens.add({
-                targets: this._pressLabel,
-                alpha: 0.5,
-                ease: 'Linear',
-                duration: 350,
-                onComplete: () => resolve()
-            });
+        return tweenPromise(this, {
+            targets: this._pressLabel,
+            alpha: 0.5,
+            ease: 'Linear',
+            duration: 350,
+            onComplete: () => this._playCTA(),
         });
+    }
 
-        this.tweens.add({
+    _playCTA() {
+        return tweenPromise(this, {
             targets: this._pressLabel,
             scale: 1.15,
             alpha: 1,
@@ -78,7 +75,7 @@ export class DisclaimerScene extends CommonScene {
     }
 
     async _onClick() {
-        this.sounds.click.play({ volume: .2 });
+        this.sounds.click.play({ volume: 0.2 });
 
         await this._tweenHideScene();
 
@@ -87,14 +84,11 @@ export class DisclaimerScene extends CommonScene {
     }
 
     _tweenHideScene() {
-        return new Promise((resolve) => {
-            this.tweens.add({
-                targets: [this._blackBG, this._textLabel, this._pressLabel],
-                alpha: 0,
-                ease: 'Power3',
-                duration: 500,
-                onComplete: () => resolve()
-            });
+        return tweenPromise(this, {
+            targets: [this._blackBG, this._textLabel, this._pressLabel],
+            alpha: 0,
+            ease: 'Power3',
+            duration: 500,
         });
     }
 

@@ -1,5 +1,5 @@
 import { GameModel } from '../GameModel';
-import { getFontName, getSceneTexts, screenData, setEndpoints } from '../Utils';
+import { getFontName, getSceneTexts, screenData, setEndpoints, tweenPromise } from '../Utils';
 import { SCENE_NAMES } from '../constants';
 import { config } from '../main';
 
@@ -48,33 +48,30 @@ export class CommonScene extends Phaser.Scene {
         };
 
         this._moneyIcon = this.add.image(screenData.right - config.height * 0.075, screenData.top + config.height * 0.075, 'ruby')
-            .setScale(.25)
+            .setScale(0.25)
             .setAlpha(0)
             .setInteractive()
             .on('pointerdown', () => this._onMoneyButtonClick());
         this._moneyValueText = this.add.text(this._moneyIcon.x - this._moneyIcon.displayWidth, this._moneyIcon.y, this.model.money, style)
-            .setOrigin(.5)
+            .setOrigin(0.5)
             .setAlpha(0);
 
         this._addAvailableMoneyTween();
     }
 
-    async _addAvailableMoneyTween() {
-        return new Promise(resolve => {
-            this.scene.scene.tweens.add({
-                targets: [this._moneyIcon, this._moneyValueText],
-                alpha: 0.85,
-                ease: 'Linear',
-                duration: 350,
-                onComplete: () => resolve(),
-            });
+    _addAvailableMoneyTween() {
+        return tweenPromise(this.scene.scene, {
+            targets: [this._moneyIcon, this._moneyValueText],
+            alpha: 0.85,
+            ease: 'Linear',
+            duration: 350,
         });
     }
 
     _createBg() {
         const bg = this.add.image(this._centerDot.x, this._centerDot.y, 'bg')
-            .setAlpha(.925)
-            .setOrigin(.5)
+            .setAlpha(0.925)
+            .setOrigin(0.5)
             .setInteractive();
 
         const scaleX = this.cameras.main.width / bg.width;
@@ -92,7 +89,7 @@ export class CommonScene extends Phaser.Scene {
 
     _onReturnButtonClick() {
         this.scene.start(SCENE_NAMES.MAIN_MENU);
-        this.sounds.click.play({ volume: .2 });
+        this.sounds.click.play({ volume: 0.2 });
     }
 
     _onMoneyButtonClick() {

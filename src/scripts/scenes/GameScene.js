@@ -5,7 +5,7 @@ import { Boom } from '../prefabs/Boom';
 import { SCENE_NAMES, DEPTH_LAYERS, EVENTS, JOYSTICK_GAP, JOYSTICK_RADIUS, LEVEL_REQUIRED_SCORE_MULTIPLIER, LEVEL_REQUIRED_SCORE, LEVEL_SCORE_MULTIPLIER, WEAPONS, ENEMIES, CAMPAIGN_LEVELS, LEVEL_HI_SCORES_SEPARATOR } from '../constants';
 import { CommonScene } from './CommonScene';
 import { HealthBar } from '../classes/HealthBar';
-import { getFontName, screenData } from '../Utils';
+import { getFontName, screenData, tweenPromise } from '../Utils';
 
 export class GameScene extends CommonScene {
     constructor() {
@@ -59,7 +59,9 @@ export class GameScene extends CommonScene {
     }
 
     _createMobileButtons() {
-        if (document.body.clientWidth > 1280) return;
+        if (document.body.clientWidth > 1280) {
+            return;
+        }
 
         this._addJoystick();
         this._addFireButton();
@@ -72,7 +74,7 @@ export class GameScene extends CommonScene {
             x: left + JOYSTICK_RADIUS + JOYSTICK_GAP,
             y: bottom - JOYSTICK_RADIUS - JOYSTICK_GAP,
             radius: JOYSTICK_RADIUS,
-            base: this.add.circle(0, 0, JOYSTICK_RADIUS).setStrokeStyle(3.5, 0x1a65ac).setAlpha(.75),
+            base: this.add.circle(0, 0, JOYSTICK_RADIUS).setStrokeStyle(3.5, 0x1a65ac).setAlpha(0.75),
             thumb: this.add.circle(0, 0, JOYSTICK_RADIUS * 0.5, 0xcccccc).setAlpha(0.5),
             dir: '8dir',
         });
@@ -118,7 +120,7 @@ export class GameScene extends CommonScene {
             this.speed /= scale;
         }
 
-        this._sceneBG = this.add.tileSprite(0, 0, width, height, bgImage).setOrigin(0).setScale(scale).setAlpha(.65);
+        this._sceneBG = this.add.tileSprite(0, 0, width, height, bgImage).setOrigin(0).setScale(scale).setAlpha(0.65);
     }
 
     _createScoreText() {
@@ -132,14 +134,14 @@ export class GameScene extends CommonScene {
         this.scoreText = this.add.text(right - width * 0.05, top + width * 0.02, this._currentScore, {
             font: `${width * 0.038}px ${getFontName()}`,
             fill: '#EA0000',
-        }).setOrigin(1, 0).setAlpha(.75).setDepth(DEPTH_LAYERS.UI);
+        }).setOrigin(1, 0).setAlpha(0.75).setDepth(DEPTH_LAYERS.UI);
 
         if (this.info?.isUnlim) {
             const topScoreText = this._getText('TOP_HIGH_SCORE');
             this.hiScoreText = this.add.text(this._centerDot.x, top + width * 0.01, `${topScoreText} ${this.model.unlimHiScores}`, {
                 font: `${width * 0.03}px ${getFontName()}`,
                 fill: '#EA0000',
-            }).setOrigin(0.5, 0).setAlpha(.75).setDepth(DEPTH_LAYERS.UI);
+            }).setOrigin(0.5, 0).setAlpha(0.75).setDepth(DEPTH_LAYERS.UI);
         }
     }
 
@@ -150,7 +152,7 @@ export class GameScene extends CommonScene {
         this.debugFPSText = this.add.text(this._centerDot.x, top + width * 0.08, '', {
             font: `${width * 0.038}px ${getFontName()}`,
             fill: '#00A86B',
-        }).setOrigin(0.5, 0.5).setAlpha(.9).setDepth(DEPTH_LAYERS.UI);
+        }).setOrigin(0.5, 0.5).setAlpha(0.9).setDepth(DEPTH_LAYERS.UI);
     }
 
     _createPlayer() {
@@ -316,18 +318,22 @@ export class GameScene extends CommonScene {
     }
 
     _completeLevelTween(finalTextLabel, sound) {
-        this.tweens.add({
-            targets: [this._blackBG, finalTextLabel],
+        const duration = sound.duration * 1000 * 0.85;
+        const scale = finalTextLabel.scale * 2;
+        const targets = [this._blackBG, finalTextLabel];
+        
+        return tweenPromise(this, {
+            targets,
             fillAlpha: 1,
             alpha: 1,
-            scale: finalTextLabel.scale * 2,
+            scale,
             ease: 'Linear',
-            duration: sound.duration * 1000 * 0.85,
+            duration,
             onComplete: () => {
                 this.scene.start(this.info?.isUnlim ? SCENE_NAMES.MAIN_MENU : SCENE_NAMES.CAMPAIGN);
                 this.scene.stop();
-            }
-        })
+            },
+        });
     }
 
     _createPauseButton() {
@@ -397,29 +403,30 @@ export class GameScene extends CommonScene {
     }
 
     _increaseLevel(){
-        this.sounds.level_up.play({volume: .5});
+        this.sounds.level_up.play({volume: 0.5});
         this.model.increasePlayerLevel();
 
         const levelTextLabel = this.add.text(this._centerDot.x, this._centerDot.y, this.model.currentLevelPlayer, {
             font: `${config.width * 0.25}px ${getFontName()}`,
             fill: '#FFFFFF',
         }).setOrigin(0.5).setAlpha(0);
-        
-        this.tweens.add({
+
+        const scale = this._progressExpBar.levelText.displayWidth/levelTextLabel.displayWidth;
+
+        return tweenPromise(this, {
             targets: levelTextLabel,
             alpha: 1,
+            scale,
             x: this._progressExpBar.levelText.x,
             y: this._progressExpBar.levelText.y,
-            scale: this._progressExpBar.levelText.displayWidth/levelTextLabel.displayWidth,
             ease: 'Linear',
             duration: 500,
             onComplete: () => {
                 levelTextLabel.destroy();
+                this.model.increaseMoney();
                 this._progressExpBar.levelText.text = this.model.currentLevelPlayer;
             }
         });
-
-        this.model.increaseMoney();
     }
 
     _getRequiredScoreOnLevel(level){

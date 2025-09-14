@@ -1,5 +1,5 @@
 import { Resolver } from '../Resolver';
-import { getFontName, screenData } from '../Utils';
+import { getFontName, screenData, tweenPromise } from '../Utils';
 import { DEPTH_LAYERS } from '../constants';
 import { config } from '../main';
 import { RoundedRectContainer } from './RoundedRectContainer';
@@ -16,33 +16,27 @@ export class DialogBox extends Phaser.GameObjects.Container {
     }
 
     showEnter() {
-        return new Promise(resolve => {
-            this._elements.forEach(element => {
-                this._scene.tweens.add({
-                    targets: element,
-                    x: element.x + config.width,
-                    ease: 'Cubic.easeOut',
-                    duration: 625,
-                    onStart: () => this._showSkipButton(),
-                    onComplete: () => resolve()
-                });
-            });
-        });
+        this._showSkipButton();
+        return Promise.all(this._elements.map(element =>
+            tweenPromise(this._scene, {
+                targets: element,
+                x: element.x + config.width,
+                ease: 'Cubic.easeOut',
+                duration: 625,
+            })
+        ));
     }
 
     showExit() {
-        return new Promise(resolve => {
-            this._elements.forEach(element => {
-                this._scene.tweens.add({
-                    targets: element,
-                    x: element.x - config.width,
-                    ease: 'Cubic.easeIn',
-                    duration: 425,
-                    onStart: () => this._hideSkipButton(),
-                    onComplete: () => resolve()
-                });
-            });
-        });
+        this._hideSkipButton();
+        return Promise.all(this._elements.map(element =>
+            tweenPromise(this._scene, {
+                targets: element,
+                x: element.x - config.width,
+                ease: 'Cubic.easeIn',
+                duration: 425,
+            })
+        ));
     }
 
     get resolver() {
@@ -123,7 +117,7 @@ export class DialogBox extends Phaser.GameObjects.Container {
     }
 
     _showSkipButton() {
-        this._scene.tweens.add({
+        return tweenPromise(this._scene, {
             targets: this._skipButton,
             alpha: 1,
             ease: 'Power1',
@@ -133,19 +127,20 @@ export class DialogBox extends Phaser.GameObjects.Container {
     }
 
     _hideSkipButton() {
-        this._scene.tweens.add({
+        this._skipButton.removeInteractive();
+        return tweenPromise(this._scene, {
             targets: this._skipButton,
             alpha: 0,
             ease: 'Power1',
             duration: 150,
-            onStart: () => this._skipButton.removeInteractive(),
             onComplete: () => this._skipButton.destroy()
         });
     }
 
     _skipDialog() {
+        this._skipButton.removeInteractive();
         this._resolver.resolve();
-        this._scene.sounds.click.play({ volume: .2 });
+        this._scene.sounds.click.play({ volume: 0.2 });
     }
 
     _resizeContent(content, horizPadding, vertPadding, maxWidth) {

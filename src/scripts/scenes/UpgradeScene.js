@@ -2,7 +2,7 @@ import { FIRE_WEAPON_DEFAULT_SCALE, SCENE_NAMES, UPGRADE_MULTIPLIER, WEAPONS } f
 import { config } from "../main";
 import { CommonScene } from "./CommonScene";
 import { Player } from "../prefabs/Player";
-import { delayInMSec, getFontName, screenData } from "../Utils";
+import { delayInMSec, getFontName, screenData, tweenPromise } from "../Utils";
 
 const STATS_MAP = {
     health: {
@@ -43,17 +43,14 @@ export class UpgradeScene extends CommonScene {
         await this._createStats();
     }
 
-    async _createPlayer(){
+    _createPlayer(){
         this._player = new Player({ scene: this });
 
-        await new Promise(resolve => {
-            this.tweens.add({
-                targets: this._player,
-                x: config.width * 0.125,
-                ease: 'Linear',
-                duration: 1250,
-                onComplete: () => resolve(),
-            });
+        return tweenPromise(this, {
+            targets: this._player,
+            x: config.width * 0.125,
+            ease: 'Linear',
+            duration: 1250,
         });
     }
 
@@ -68,7 +65,7 @@ export class UpgradeScene extends CommonScene {
         };
 
         const text = this._getText('BOTTOM_DESCRIPTION') + ` ${UPGRADE_MULTIPLIER * 100}%`;
-        const infoText = this.add.text(this._centerDot.x, screenData.bottom - config.height * 0.075, text, style).setOrigin(.5).setAlpha(0);
+        const infoText = this.add.text(this._centerDot.x, screenData.bottom - config.height * 0.075, text, style).setOrigin(0.5).setAlpha(0);
 
         const upgradableStats = Object.keys(this.model.currentUpgradableStats);
         const height = config.height * 0.4;
@@ -102,25 +99,23 @@ export class UpgradeScene extends CommonScene {
 
     _playShowStatsAnimation(key) {
         const duration = 325;
+        const targets = [this.statsText[key], this.statsIcon[key], this.statsLevel[key]];
 
-        return new Promise(resolve => {
-            this.tweens.add({
-                targets: [this.statsText[key], this.statsIcon[key], this.statsLevel[key]],
-                ease: 'Linear',
-                alpha: .75,
-                duration,
-                onComplete: resolve(),
-            });
+        return tweenPromise(this, {
+            targets,
+            ease: 'Linear',
+            alpha: 0.75,
+            duration,
         });
     }
 
     _playShowStatsBottomInfo(infoText) {
-        this.tweens.add({
+        return tweenPromise(this, {
             targets: infoText,
             ease: 'Linear',
-            alpha: .75,
+            alpha: 0.75,
             duration: 350,
-        })
+        });
     }
 
     _setStatsText(key) {
@@ -173,7 +168,7 @@ export class UpgradeScene extends CommonScene {
     _createUpgradeButton(data){
         const button = this.add.image(data.x + config.width * 0.323, data.y, 'button_campaign')
             .setOrigin(0.5, 0.125)
-            .setScale(.33)
+            .setScale(0.33)
             .setAlpha(0)
             .setInteractive()
             .setVisible(false)
@@ -191,8 +186,8 @@ export class UpgradeScene extends CommonScene {
         button.textCost = this.add.text(button.x, button.y, '1', style).setOrigin(0.5, -0.125).setVisible(false);
 
         button.crystal = this.add.image(button.x, button.y, 'ruby')
-            .setOrigin(0.5, .05)
-            .setScale(.15)
+            .setOrigin(0.5, 0.05)
+            .setScale(0.15)
             .setVisible(false);
 
         button.textCost.x -= button.crystal.displayWidth * 0.5;
@@ -207,30 +202,23 @@ export class UpgradeScene extends CommonScene {
         button.alpha = 0;
         button.textCost.alpha = 0;
         button.crystal.alpha = 0;
+        button.setVisible(true);
+        button.textCost.setVisible(true);
+        button.crystal.setVisible(true);
+        this.buttons[data.key] = button;
 
-        this.tweens.add({
-            targets: [
-                button,
-                button.textCost,
-                button.crystal,
-            ],
+        return tweenPromise(this, {
+            targets: [button, button.textCost, button.crystal],
             ease: 'Linear',
             alpha: currentAlpha,
             duration: 500,
-            onStart: () => {
-                button.setVisible(true);
-                button.textCost.setVisible(true);
-                button.crystal.setVisible(true);
-            }
         });
-
-        this.buttons[data.key] = button;
     }
 
     _upgrade(button){
         if (button.clicked || !button.active) {
             if (!button.active) {
-                this.sounds.error.play({volume: .3});
+                this.sounds.error.play({volume: 0.3});
             }
             return;
         }
@@ -256,15 +244,14 @@ export class UpgradeScene extends CommonScene {
         button.clicked = true;
         button.setAlpha(1);
 
+        this._disableButtons();
+        this._setPrice(button);
+
         this.tweens.add({
             targets: this,
             ease: 'Linear',
-            alpha: .5,
+            alpha: 0.5,
             duration: 1000,
-            onStart: () => {
-                this._disableButtons();
-                this._setPrice(button);
-            },
             onComplete: () => {
                 button.clicked = false;
                 this._checkAvailabilityForAllButtons();
@@ -309,14 +296,16 @@ export class UpgradeScene extends CommonScene {
     }
 
     async _playPlusUpgradeTweenAnimation(symbol, duration) {
-        this.tweens.add({
-            targets: symbol,
-            alpha: 1,
-            ease: 'Back.Out(1.5)',
-            duration,
-        });
-        await delayInMSec(this.scene, duration * 0.5);
-        this.tweens.add({
+        await Promise.race([
+            tweenPromise(this, {
+                targets: symbol,
+                alpha: 1,
+                ease: 'Back.Out(1.5)',
+                duration,
+            }),
+            delayInMSec(this.scene, duration * 0.5)
+        ]);
+        return tweenPromise(this, {
             targets: symbol,
             y: screenData.top,
             alpha: 0,
