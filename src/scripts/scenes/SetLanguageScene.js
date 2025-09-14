@@ -119,7 +119,7 @@ export class SetLanguageScene extends CommonScene {
         };
         
         const text = this.scene.scene.cache.json.get('initial_texts')['SelectLanguage'];
-        const label = this.add.text(config.width * 0.5, screenData.bottom - config.width * 0.05, text, textStyle).setOrigin(0.5, 1).setAlpha(0);
+        const label = this.add.text(config.width * 0.5, screenData.bottom - config.width * 0.025, text, textStyle).setOrigin(0.5, 1).setAlpha(0);
 
         await new Promise((resolve) => {
             this.tweens.add({
