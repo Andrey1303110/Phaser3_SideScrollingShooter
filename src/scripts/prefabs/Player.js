@@ -5,9 +5,9 @@ import { Fires } from "./Fires";
 import { MovableObject } from "./MovableObject";
 
 const PLAYER_TEXTURE_NAME = 'dragon';
-const FIRST_PLAYER_FRAME = 'dragon1';
 const ANIMATION_NAME = 'fly';
-const FRAME_DURATION = 350;
+const FRAME_RATE = 8;
+const FRAME_DURATION = 1000 / FRAME_RATE;
 
 export class Player extends MovableObject {
     constructor(data) {
@@ -16,7 +16,6 @@ export class Player extends MovableObject {
             x: screenData.left,
             y: config.height * 0.5,
             texture: PLAYER_TEXTURE_NAME,
-            frame: FIRST_PLAYER_FRAME,
             velocity: data.scene.model.player.velocity,
             scale: data.scene.model.player.scale,
             weapon: {
@@ -39,8 +38,8 @@ export class Player extends MovableObject {
         this.weapon = data.weapon;
 
         this.scene.events.on(EVENTS.UPDATE, this._updateFrame, this);
-        this._lastFrame = FIRST_PLAYER_FRAME;
-        this._tweenFly = null;
+        this._lastFrame = null;
+        this._tweenFlying = null;
 
         this.maxHealth = this.scene.model.player.maxHealth;
         this.currentHealth = this.scene.model.player.maxHealth;
@@ -48,7 +47,7 @@ export class Player extends MovableObject {
 
     shooting() {
         if ((this.scene.cursors.space.isDown || this.scene.fireButton?.active) && !this._firesActivate) {
-            this.scene.fireButton?.setAlpha(.95);
+            this.scene.fireButton?.setAlpha(0.95);
             this.fires.createFire(this);
             this._firesActivate = true;
 
@@ -56,9 +55,8 @@ export class Player extends MovableObject {
                 delay: this.weapon.reload,
                 callback: () => { 
                     this._firesActivate = false;
-                    this.scene.fireButton?.setAlpha(.65);
-                },
-                callbackScope: this,
+                    this.scene.fireButton?.setAlpha(0.65);
+                }
             });
         }
     }
@@ -82,7 +80,9 @@ export class Player extends MovableObject {
     }
 
     _createAnimation() {
-        if (this.scene.anims.anims.entries[ANIMATION_NAME]) return;
+        if (this.scene.anims.anims.entries[ANIMATION_NAME]) {
+            return;
+        }
 
         const frames = this.scene.anims.generateFrameNames(PLAYER_TEXTURE_NAME,{
             prefix: PLAYER_TEXTURE_NAME,
@@ -93,7 +93,7 @@ export class Player extends MovableObject {
         this.scene.anims.create({
             key: ANIMATION_NAME,
             frames,
-            frameRate: 8,
+            frameRate: FRAME_RATE,
             repeat: -1,
         });
 
@@ -108,28 +108,36 @@ export class Player extends MovableObject {
     }
 
     _addTweenFly() {
-        if (this.frame.name !== this._lastFrame) {
-            const last_y = this.y;
-            if (this.frame.name === 'dragon6') {
-                this._tweenFly = this.scene.tweens.add({
-                    targets: this,
-                    y: last_y + this.displayHeight / 4,
-                    ease: 'Linear',
-                    duration: FRAME_DURATION,
-                    onComplete: () => this._tweenFly = null
-                });
-            } else if (this.frame.name === 'dragon3') {
-                this._tweenFly = this.scene.tweens.add({
-                    targets: this,
-                    y: last_y - this.displayHeight / 4,
-                    ease: 'Linear',
-                    duration: FRAME_DURATION,
-                    onComplete: () => this._tweenFly = null
-                });
-                this.scene.sounds.wings.play({volume: 0.1});
-            }
+        if (this.frame.name === this._lastFrame) {
+            return;
         }
+
         this._lastFrame = this.frame.name;
+
+        if (this.frame.name === 'dragon3') {
+            this.scene.sounds.wings.play({volume: 0.1});
+            return this._tweenFly(false);
+        }
+        if (this.frame.name === 'dragon6') {
+            return this._tweenFly(true);
+        }
+    }
+
+    async _tweenFly(isDown) {
+        const height = this.displayHeight * 0.2;
+        const duration = FRAME_DURATION * 2.5;
+        const y = isDown ? this.y + height : this.y - height;
+
+        this._tweenFlying = this.scene.tweens.add({
+            targets: this,
+            y,
+            ease: 'Linear',
+            duration,
+            onComplete: () => {
+                this._tweenFlying.destroy();
+                this._tweenFlying = null;
+            }
+        });
     }
 
     _handling(){
@@ -166,8 +174,8 @@ export class Player extends MovableObject {
         }
 
         if (buttons.up.isDown || buttons.down.isDown) {
-            if (this._tweenFly) {
-                this._tweenFly.paused = true;
+            if (this._tweenFlying) {
+                this._tweenFlying.paused = true;
             }
             if (buttons.up.isDown) {
                 if (this.y < this.y - this.velocity) { 

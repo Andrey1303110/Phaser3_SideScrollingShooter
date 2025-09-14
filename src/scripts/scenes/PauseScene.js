@@ -1,7 +1,9 @@
 import { SCENE_NAMES } from '../constants';
 import { CommonScene } from './CommonScene';
 import { config } from '../main';
-import { screenData } from '../Utils';
+import { createScreenBlackRectangle, screenData, tweenPromise } from '../Utils';
+
+const DEFAULT_BUTTON_ALPHA = 0.85;
 
 export class PauseScene extends CommonScene {
     constructor() {
@@ -15,75 +17,73 @@ export class PauseScene extends CommonScene {
     }
 
     _createBg() {
-        this._blackBG = this.add.rectangle(this._centerDot.x, this._centerDot.y, config.width, config.height, '0x000000', 0);
-        this._sceneBG = this.add.image(this._centerDot.x, config.height * -1, 'pause_bg').setOrigin(.5);
+        this._blackBG = createScreenBlackRectangle(this);
+        this._sceneBG = this.add.image(this._centerDot.x, config.height * -1, 'pause_bg').setOrigin(0.5);
 
-        this.tweens.add({
-            targets: this._sceneBG,
+        return tweenPromise(this, {
+            targets: this._blackBG,
             y: this._centerDot.x,
             ease: 'Linear',
             duration: 750,
-        })
+        });
     }
 
     _createButtons() {
-        this._play_button = this.add.image(this._sceneBG.x, this._sceneBG.y, 'play')
-            .setOrigin(.5)
-            .setScale(.8)
-            .setAlpha(.85)
-            .setInteractive()
-            .on('pointerdown', () => this._toggleMenu('resume'), this)
-            .on('pointerover', () => this._play_button.setAlpha(1))
-            .on('pointerout', () => this._play_button.setAlpha(.85));
-
-        this._restart_button = this.add.image(this._sceneBG.x + this._sceneBG.displayWidth * 0.25, this._sceneBG.y, 'restart')
-            .setOrigin(.5)
-            .setScale(1.25)
-            .setAlpha(.65)
-            .setInteractive()
-            .on('pointerdown', () => this._toggleMenu('restart'), this)
-            .on('pointerover', () => this._restart_button.setAlpha(1))
-            .on('pointerout', () => this._restart_button.setAlpha(.65));
-
-        this._return_button = this.add.image(this._sceneBG.x - this._sceneBG.displayWidth * 0.25, this._sceneBG.y, 'return')
-            .setOrigin(.5)
-            .setScale(1.25)
-            .setAlpha(.65)
-            .setInteractive()
-            .on('pointerdown', () => this._toggleMenu('return'), this)
-            .on('pointerover', () => this._return_button.setAlpha(1))
-            .on('pointerout', () => this._return_button.setAlpha(.65));
+        this._buttons = [
+            this._createButton(this._sceneBG.x, this._sceneBG.y, 0.8, 'play'),
+            this._createButton(this._sceneBG.x + this._sceneBG.displayWidth * 0.25, this._sceneBG.y, 1.25, 'restart'),
+            this._createButton(this._sceneBG.x - this._sceneBG.displayWidth * 0.25, this._sceneBG.y, 1.25, 'return'),
+        ]
     }
 
-    _toggleMenu(command) {
-        const tween_duration = 750;
+    _createButton(x, y, scale, name) {
+        const button =  this.add.image(x, y, name)
+            .setAlpha(DEFAULT_BUTTON_ALPHA)
+            .setScale(scale)
+            .setOrigin(0.5);
+        button.setInteractive()
+            .on('pointerdown', () => this._toggleMenu(name))
+            .on('pointerover', () => button.setAlpha(1))
+            .on('pointerout', () => button.setAlpha(DEFAULT_BUTTON_ALPHA));
+        
+        return button;
+    }
+
+    async _toggleMenu(command) {
+        const duration = 750;
         const y = this._sceneBG.y < 0 ? screenData.top + this._sceneBG.displayHeight * 0.5 : config.height * -1;
 
-        this.tweens.add({
-            targets: this._sceneBG,
-            y: y,
-            ease: 'Linear',
-            duration: tween_duration,
-            onComplete: () => {
-                switch (command) {
-                    case 'resume':
-                        this.scene.resume(SCENE_NAMES.GAME);
-                    break;
-                    case 'restart':
-                        this.scene.start(SCENE_NAMES.GAME);
-                    break;
-                    case 'return':
-                        this.scene.stop(SCENE_NAMES.GAME);
-                        this.scene.launch(SCENE_NAMES.CAMPAIGN);
-                    break;
-                }
-            }
-        })
-        this.tweens.add({
-            targets: [this._play_button, this._restart_button, this._return_button],
-            y: y + this._sceneBG.displayHeight * 0.06085,
-            ease: 'Linear',
-            duration: tween_duration,
-        })
+        await Promise.all([
+            tweenPromise(this, {
+                targets: this._sceneBG,
+                y,
+                ease: 'Linear',
+                duration,
+            }),
+            tweenPromise(this, {
+                targets: this._buttons,
+                y: y + this._sceneBG.displayHeight * 0.06085,
+                ease: 'Linear',
+                duration,
+            }),
+        ]);
+
+        this._handleScreen(command);
+    }
+
+    _handleScreen(command) {
+        switch (command) {
+            case 'play':
+                this.scene.resume(SCENE_NAMES.GAME);
+            break;
+            case 'restart':
+                this.scene.start(SCENE_NAMES.GAME);
+            break;
+            case 'return':
+                //todo store last scene and return to the menu or map
+                this.scene.stop(SCENE_NAMES.GAME);
+                this.scene.launch(SCENE_NAMES.CAMPAIGN);
+            break;
+        }
     }
 }

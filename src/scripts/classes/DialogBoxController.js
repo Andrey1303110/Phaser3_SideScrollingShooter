@@ -1,7 +1,7 @@
 import { DialogBox } from './DialogBox';
 import { config } from '../main';
 import { DEPTH_LAYERS } from '../constants';
-import { delayInMSec } from '../Utils';
+import { delayInMSec, tweenPromise } from '../Utils';
 
 const MIN_SHOW_DURATION = 2500;
 const SHOW_DELAY = 200;
@@ -57,14 +57,11 @@ export class DialogBoxController {
             this._darkBg.setInteractive();
         }
 
-        await new Promise(resolve => {
-            this._scene.tweens.add({
-                targets: this._darkBg,
-                alpha,
-                ease: 'Power1',
-                duration: 250,
-                onComplete: () => resolve()
-            });
+        await tweenPromise(this._scene, {
+            targets: this._darkBg,
+            alpha,
+            ease: 'Power1',
+            duration: 250,
         });
 
         if (!value) { 

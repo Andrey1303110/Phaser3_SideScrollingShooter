@@ -1,4 +1,4 @@
-import { delayInMSec, getFontName, screenData } from '../Utils';
+import { createScreenBlackRectangle, delayInMSec, getFontName, screenData, tweenPromise } from '../Utils';
 import { DialogBoxController } from '../classes/DialogBoxController';
 import { CAMPAIGN_LEVELS, SCENE_NAMES } from '../constants';
 import { config } from '../main';
@@ -46,8 +46,8 @@ export class CampaignScene extends CommonScene {
 
     _createMap() {
         this._map = this.add.image(this._centerDot.x, this._centerDot.y, 'map')
-            .setAlpha(.65)
-            .setOrigin(.5)
+            .setAlpha(0.65)
+            .setOrigin(0.5)
             .setScale(1.25);
     }
 
@@ -62,12 +62,12 @@ export class CampaignScene extends CommonScene {
     }
 
     _addFireSound() {
-        this.sounds.fire_effect.play({ volume: .05 })
+        this.sounds.fire_effect.play({ volume: 0.05 })
         this.sounds.fire_effect.loop = true;
     }
 
     _addCampaignCompleteSound() {
-        this.sounds.campaign_complete_song.play({ volume: .25 })
+        this.sounds.campaign_complete_song.play({ volume: 0.25 })
         this.sounds.campaign_complete_song.loop = true;
     }
 
@@ -103,7 +103,7 @@ export class CampaignScene extends CommonScene {
         };
 
         if (level.index > this.model.currentLevelScene) {
-            dot.on('pointerdown', () => { this.sounds.error.play({ volume: .33 }) });
+            dot.on('pointerdown', () => { this.sounds.error.play({ volume: 0.33 }) });
             dot.active = false;
 
             params.alpha = 0.7;
@@ -126,27 +126,29 @@ export class CampaignScene extends CommonScene {
     }
 
     _onDotClick() {
-        this.sounds.select.play({ volume: .33 });
+        this.sounds.select.play({ volume: 0.33 });
         this._startDialogs(level.index, BRIEF_DIALOG_DELAY);
     }
 
     _createDotTween(dot, params) {
-        this.scene.scene.tweens.add({
+        this.sounds.whoosh_map.play({ volume: 0.1 });
+        return tweenPromise(this.scene.scene, {
             targets: dot,
             alpha: params.alpha,
             scale: params.scale,
             ease: 'easeInCirc',
             duration: 250,
-            onStart: () => this.sounds.whoosh_map.play({ volume: .1 }),
-            onComplete: () => {
-                if (dot.isCurrent) this._addDotCTAAnimation(dot);
-            }
+            onComplete: () => this._addDotCTAAnimation(dot),
         });
     }
 
     _addDotCTAAnimation(object) {
+        if (!object.isCurrent) {
+            return;
+        }
         object.setScale(1);
-        this.tweens.add({
+
+        return tweenPromise(this, {
             targets: object,
             scale: 1.5,
             duration: 425,
@@ -156,7 +158,7 @@ export class CampaignScene extends CommonScene {
     }
 
     async _createLevelCard(info) {
-        const bgRect = this.add.rectangle(this._centerDot.x, this._centerDot.y, config.width, config.height, '0x000000', 0).setInteractive(); // todo move it to transition
+        const bgRect = createScreenBlackRectangle(this); // todo move it to transition
         
         const currentLevelHiScore = this.model.getLevelHiScore(info.index);
         info.hiScore = currentLevelHiScore;
@@ -211,27 +213,21 @@ export class CampaignScene extends CommonScene {
         const randX = frame.x + frame.displayWidth * 0.5 - frame.displayWidth * Phaser.Math.Between(25, 40) / 100;
         const randY = frame.y + frame.displayWidth * 0.5 - frame.displayHeight * Phaser.Math.Between(28, 40) / 100;
 
-        await new Promise(resolve => {
-            this.scene.scene.tweens.add({
-                targets: frame.stamp,
-                scale: .26,
-                x: randX,
-                y: randY,
-                alpha: 0.85,
-                ease: 'Power3',
-                duration: 350,
-                onComplete: () => resolve()
-            });
+        await tweenPromise(this.scene.scene, {
+            targets: frame.stamp,
+            alpha: 0.85,
+            scale: 0.26,
+            x: randX,
+            y: randY,
+            ease: 'Power3',
+            duration: 350,
         });
-        await new Promise(resolve => {
-            this.scene.scene.tweens.add({
-                targets: frame.stamp,
-                scale: .305,
-                alpha: 0.55,
-                ease: 'Power2',
-                duration: 250,
-                onComplete: () => resolve()
-            });
+        await tweenPromise(this.scene.scene, {
+            targets: frame.stamp,
+            scale: 0.305,
+            alpha: 0.55,
+            ease: 'Power2',
+            duration: 250,
         });
     }
 
@@ -339,7 +335,7 @@ export class CampaignScene extends CommonScene {
     }
 
     _cardClose(data) {
-        this.sounds.click.play({ volume: .2 });
+        this.sounds.click.play({ volume: 0.2 });
 
         data.bgRect.destroy();
         data.frame.destroy();
@@ -352,15 +348,15 @@ export class CampaignScene extends CommonScene {
     }
 
     _gameStart(info) {
+        const bgRect = createScreenBlackRectangle(this);
+        const duration = this.sounds.ready.duration * 1000 * 0.85;
         this.sounds.ready.play();
 
-        const bgRect = this.add.rectangle(this._centerDot.x, this._centerDot.y, config.width, config.height, '0x000000', 0).setInteractive();
-
-        this.tweens.add({
+        return tweenPromise(this, {
             targets: bgRect,
             fillAlpha: 1,
             ease: 'Linear',
-            duration: this.sounds.ready.duration * 1000 * 0.85,
+            duration,
             onComplete: () => this.scene.start(SCENE_NAMES.GAME, info),
         });
     }

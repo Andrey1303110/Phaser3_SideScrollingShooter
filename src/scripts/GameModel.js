@@ -1,6 +1,9 @@
 import { StorageService } from "./StorageService";
 import { CAMPAIGN_LEVELS, LEVEL_HI_SCORES_SEPARATOR, PLAYER, UPGRADE_MULTIPLIER, WEAPONS } from "./constants";
 
+const ABILITY_PREFIX = 'playerAbilityLevel_';
+const CASUALTIES_PREFIX = 'casualties_';
+
 export class GameModel {
     static _instance = null;
 
@@ -17,16 +20,16 @@ export class GameModel {
         this.money = StorageService.get('money', 0, Number);
         this.player = { ...PLAYER };
         this.currentUpgradableStats = { 
-            health: StorageService.get('playerAbilityLevel_health', 1, Number),
-            reload: StorageService.get('playerAbilityLevel_reload', 1, Number),
-            velocity: StorageService.get('playerAbilityLevel_velocity', 1, Number),
-            scale: StorageService.get('playerAbilityLevel_scale', 1, Number),
+            health: 1,
+            reload: 1,
+            velocity: 1,
+            scale: 1,
         };
         this.casualties = { 
-            jet: StorageService.get('casualties_jet', 0, Number),
-            helicopter: StorageService.get('casualties_helicopter', 0, Number),
-            rocket: StorageService.get('casualties_rocket', 0, Number),
-            missile: StorageService.get('casualties_missile', 0, Number),
+            jet: StorageService.get(`${CASUALTIES_PREFIX}jet`, 0, Number),
+            helicopter: StorageService.get(`${CASUALTIES_PREFIX}helicopter`, 0, Number),
+            rocket: StorageService.get(`${CASUALTIES_PREFIX}rocket`, 0, Number),
+            missile: StorageService.get(`${CASUALTIES_PREFIX}missile`, 0, Number),
         };
         
         this.lang = StorageService.get('lang', '', String);
@@ -133,7 +136,7 @@ export class GameModel {
 
     initCasualties() {
         Object.keys(this.casualties).forEach(name => {
-            StorageService.set(`casualties_${name}`, 0);
+            StorageService.set(`${CASUALTIES_PREFIX}${name}`, 0);
         });
     }
 
@@ -150,7 +153,7 @@ export class GameModel {
     
         for (let i = 0; i < stats.length; i++) {
             const key = stats[i];
-            StorageService.set(`playerAbilityLevel_${key}`, 1);
+            StorageService.set(`${ABILITY_PREFIX}${key}`, 1);
         }
     };
 
@@ -159,7 +162,7 @@ export class GameModel {
     
         for (let i = 0; i < stats.length; i++) {
             const key = stats[i];
-            const level = StorageService.get(`playerAbilityLevel_${key}`, 1, Number);
+            const level = StorageService.get(`${ABILITY_PREFIX}${key}`, 1, Number);
     
             for (let j = 1; j < level; j++) {
                 this.upgradePlayerAbility(key);
@@ -186,7 +189,7 @@ export class GameModel {
         }
 
         this.currentUpgradableStats[key] += 1;
-        StorageService.set(`playerAbilityLevel_${key}`, this.currentUpgradableStats[key]);
+        StorageService.set(`${ABILITY_PREFIX}${key}`, this.currentUpgradableStats[key]);
     }
 
     increaseCasualties(name) {

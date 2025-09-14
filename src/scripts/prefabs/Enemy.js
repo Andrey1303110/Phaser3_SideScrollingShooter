@@ -61,8 +61,7 @@ export class Enemy extends MovableObject {
         this.timer = this.scene.time.addEvent({
             delay: this.weapon.reload * (Phaser.Math.Between(70, 130) * 0.01),
             loop: true,
-            callback: this._shooting,
-            callbackScope: this,
+            callback: () => this._shooting(),
         });
     }
 

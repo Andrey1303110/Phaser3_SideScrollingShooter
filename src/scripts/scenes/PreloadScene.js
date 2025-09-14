@@ -1,6 +1,7 @@
 import { ATLAS_FILES, AUDIO_FILES, CAMPAIGN_LEVELS, IMAGE_FILES, SCENE_NAMES } from '../constants';
 import { CommonScene } from './CommonScene';
 import { LoadingBar } from '../classes/LoadingBar';
+import { tweenPromise } from '../Utils';
 
 export class PreloadScene extends CommonScene {
     constructor() {
@@ -44,16 +45,13 @@ export class PreloadScene extends CommonScene {
         this.scene.scene.load.on('complete', () => this._onLoadComplete());
     }
 
-    async _onLoadComplete() {
-        await new Promise(resolve => {
-            this.scene.scene.tweens.add({
-                targets: this._loadingBar.graphicsElements,
-                alpha: 0,
-                ease: 'Power3',
-                duration: 400,
-                onComplete: () => resolve()
-            });
+    _onLoadComplete() {
+        return tweenPromise(this.scene.scene, {
+            targets: this._loadingBar.graphicsElements,
+            alpha: 0,
+            ease: 'Power3',
+            duration: 400,
+            onComplete: this.scene.start(SCENE_NAMES.MAIN_MENU),
         });
-        this.scene.start(SCENE_NAMES.MAIN_MENU);
     }
 }

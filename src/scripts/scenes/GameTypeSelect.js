@@ -1,4 +1,4 @@
-import { getFontName } from '../Utils';
+import { getFontName, tweenPromise } from '../Utils';
 import { SCENE_NAMES, UNLIMITED_LEVEL } from '../constants';
 import { config } from '../main';
 import { CommonScene } from './CommonScene';
@@ -43,7 +43,7 @@ export class GameTypeSelect extends CommonScene {
 
     _addButtonEventListeners(button, startScene) {
         button.on('pointerover', () => button.setAlpha(1));
-        button.on('pointerout', () => button.setAlpha(.75));
+        button.on('pointerout', () => button.setAlpha(0.75));
         button.on('pointerdown', () => this._gameSelect(button, startScene));
     }
 
@@ -68,7 +68,7 @@ export class GameTypeSelect extends CommonScene {
 
     _createButtonSprite(spriteKey, y) {
         const button = this.add.image(this._centerDot.x, config.height * y, spriteKey)
-            .setOrigin(.5)
+            .setOrigin(0.5)
             .setScale(5)
             .setAlpha(0)
             .setInteractive();
@@ -77,39 +77,34 @@ export class GameTypeSelect extends CommonScene {
         return button;
     }
 
-    async _createButtonTweens(button) {
+    _createButtonTweens(button) {
         const delay = 375 * this._buttons.length;
-        Promise.all([
-            new Promise(resolve => {
-                this.tweens.add({
-                    targets: [ button, button.buttonText ],
-                    delay,
-                    alpha: .675,
-                    scale: .65,
-                    ease: 'Linear',
-                    duration: 225,
-                    onStart: () => this.sounds.whoosh.play({ volume: .33 }),
-                    onComplete: () => resolve()
-                })
+        
+        return Promise.all([
+            tweenPromise(this, {
+                targets: [ button, button.buttonText ],
+                delay,
+                alpha: 0.675,
+                scale: 0.65,
+                ease: 'Linear',
+                duration: 225,
+                onStart: () => this.sounds.whoosh.play({ volume: 0.33 }),
             }),
-            new Promise(resolve => {
-                this.tweens.add({
-                    targets: button.buttonText,
-                    delay,
-                    alpha: .9,
-                    scale: 1,
-                    ease: 'Linear',
-                    duration: 225,
-                    onComplete: () => resolve()
-                })
+            tweenPromise(this, {
+                targets: button.buttonText,
+                delay,
+                alpha: 0.9,
+                scale: 1,
+                ease: 'Linear',
+                duration: 225,
             })
         ]);
     }
 
     _gameSelect(button, startScene){
-        this.sounds.click.play({ volume: .2 });
+        this.sounds.click.play({ volume: 0.2 });
 
-        this.tweens.add({
+        return tweenPromise(this, {
             targets: [button, button.buttonText],
             alpha: 0,
             scale: 7,
