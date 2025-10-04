@@ -7,32 +7,16 @@ export class Enemy extends MovableObject {
         const x = screenData.right + screenData.width * 0.25;
         const y = Phaser.Math.Between(screenData.top + screenData.height * 0.1, screenData.bottom - screenData.height * 0.1);
 
-        let typeNum = 0;
+        const configs = Object.values(ENEMIES).filter(enemy => enemy.entryLevel <= scene.info.index);
+        const config = configs[Phaser.Math.Between(0, configs.length-1)];
+        const frame = Phaser.Math.Between(0, config.frames);
 
-        if (scene.info.index > 4) {
-            typeNum = 1;
-            if (scene.info.index > 8) {
-                typeNum = 2;
-            }
-        }
-
-        const config = ENEMIES[Object.keys(ENEMIES)[Phaser.Math.Between(0, typeNum)]];
-        const enemyTexture = `enemy${Phaser.Math.Between(1, config.textureNum)}`;
-
-        return { x, y, enemyTexture, config };
+        return { x, y, config, frame };
     }
 
     static generate(scene, fires) {
-        const data = Enemy.generateAttr(scene);
-        return new Enemy({
-            scene,
-            fires,
-            x: data.x,
-            y: data.y,
-            frame: data.enemyTexture,
-            ...data.config,
-            velocity: data.config.velocity * -1,
-        });
+        const { x, y, frame, config } = Enemy.generateAttr(scene);
+        return new Enemy({ scene, fires, x, y, frame, ...config });
     }
 
     init(data) {
