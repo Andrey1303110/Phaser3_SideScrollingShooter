@@ -29,11 +29,11 @@ export class DialogBoxController {
         this._addSoundsToScene(level, dialogsCount);
 
         for (let i = 0; i < dialogsCount; i++) {
+            const isLast = i === dialogsCount-1;
             const dialogData = this._data[i];
             const dialogBox = new DialogBox(this._scene, dialogData);
             await this._playShowingDialog(dialogBox, level, i);
 
-            const isLast = dialogData === this._data[dialogsCount-1];
             if (isLast) {
                 await delayInMSec(this._scene, SHOW_DELAY);
             }
