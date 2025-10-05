@@ -13,8 +13,6 @@ export class CommonScene extends Phaser.Scene {
     }
 
     init() {
-        this._createCenterDot();
-
         if (!this.scale.isFullscreen) {
             switch (this.scene.key) {
                 case SCENE_NAMES.BOOT:
@@ -28,13 +26,6 @@ export class CommonScene extends Phaser.Scene {
 
         setEndpoints();
         this._createTranslations();
-    }
-
-    _createCenterDot() {
-        this._centerDot = {
-            x: this.scale.width * 0.5,
-            y: this.scale.height * 0.5,
-        }
     }
 
     preload() {
@@ -69,7 +60,7 @@ export class CommonScene extends Phaser.Scene {
     }
 
     _createBg() {
-        const bg = this.add.image(this._centerDot.x, this._centerDot.y, 'bg')
+        const bg = this.add.image(this.scene.scene.cameras.main.midPoint.x, this.scene.scene.cameras.main.midPoint.y, 'bg')
             .setAlpha(0.925)
             .setOrigin(0.5)
             .setInteractive();

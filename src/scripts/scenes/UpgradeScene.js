@@ -65,7 +65,7 @@ export class UpgradeScene extends CommonScene {
         };
 
         const text = this._getText('BOTTOM_DESCRIPTION') + ` ${UPGRADE_MULTIPLIER * 100}%`;
-        const infoText = this.add.text(this._centerDot.x, screenData.bottom - config.height * 0.075, text, style).setOrigin(0.5).setAlpha(0);
+        const infoText = this.add.text(this.scene.scene.cameras.main.midPoint.x, screenData.bottom - config.height * 0.075, text, style).setOrigin(0.5).setAlpha(0);
 
         const upgradableStats = Object.keys(this.model.currentUpgradableStats);
         const height = config.height * 0.4;
@@ -76,7 +76,7 @@ export class UpgradeScene extends CommonScene {
             const returnedValue = this._setStatsText(key);
 
             const x = config.width * 0.57;
-            const y = (this._centerDot.y - height * 0.5) + (height / upgradableStats.length) * i;
+            const y = (this.scene.scene.cameras.main.midPoint.y - height * 0.5) + (height / upgradableStats.length) * i;
 
             const level = this.model.currentUpgradableStats[key];
             const statText = `${this._getText(STATS_MAP[key]['text'])} ${returnedValue}`;

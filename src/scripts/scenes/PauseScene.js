@@ -18,11 +18,11 @@ export class PauseScene extends CommonScene {
 
     _createBg() {
         this._blackBG = createScreenBlackRectangle(this);
-        this._sceneBG = this.add.image(this._centerDot.x, config.height * -1, 'pause_bg').setOrigin(0.5);
+        this._sceneBG = this.add.image(this.scene.scene.cameras.main.midPoint.x, config.height * -1, 'pause_bg').setOrigin(0.5);
 
         return tweenPromise(this, {
             targets: this._blackBG,
-            y: this._centerDot.x,
+            y: this.scene.scene.cameras.main.midPoint.y,
             ease: 'Linear',
             duration: 750,
         });

@@ -30,7 +30,7 @@ export class DisclaimerScene extends CommonScene {
 
     _createTextLabel() {
         const text = this.scene.scene.cache.json.get('initial_texts')['Disclaimer'];
-        this._textLabel = this.add.text(this._centerDot.x, this._centerDot.y - config.width * 0.035, text, {
+        this._textLabel = this.add.text(this.scene.scene.cameras.main.midPoint.x, this.scene.scene.cameras.main.midPoint.y - config.width * 0.035, text, {
             font: `${config.width * 0.0225}px ${FONTS['eng']}`,
             fill: '#d9d9d9',
             align: 'center',

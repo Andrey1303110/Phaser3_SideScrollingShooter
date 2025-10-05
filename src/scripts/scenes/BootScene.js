@@ -39,7 +39,7 @@ export class BootScene extends CommonScene {
     }
 
     _createLogoAnimation() {
-        const logo = this.add.image(this._centerDot.x, this._centerDot.y, 'boot_scene_bg').setAlpha(0);
+        const logo = this.add.image(this.scene.scene.cameras.main.midPoint.x, this.scene.scene.cameras.main.midPoint.y, 'boot_scene_bg').setAlpha(0);
         const scaleX = this.cameras.main.width / logo.width;
         const scaleY = this.cameras.main.height / logo.height;
         const scale = Math.max(scaleX, scaleY);

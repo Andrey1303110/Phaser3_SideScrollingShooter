@@ -46,7 +46,7 @@ export class CampaignScene extends CommonScene {
     }
 
     _createMap() {
-        this._map = this.add.image(this._centerDot.x, this._centerDot.y, 'map')
+        this._map = this.add.image(this.scene.scene.cameras.main.midPoint.x, this.scene.scene.cameras.main.midPoint.y, 'map')
             .setAlpha(0.65)
             .setOrigin(0.5)
             .setScale(1.25);

@@ -138,7 +138,7 @@ export class GameScene extends CommonScene {
 
         if (this.info?.isUnlim) {
             const topScoreText = this._getText('TOP_HIGH_SCORE');
-            this.hiScoreText = this.add.text(this._centerDot.x, top + width * 0.01, `${topScoreText} ${this.model.unlimHiScores}`, {
+            this.hiScoreText = this.add.text(this.scene.scene.cameras.main.midPoint.x, top + width * 0.01, `${topScoreText} ${this.model.unlimHiScores}`, {
                 font: `${width * 0.03}px ${getFontName()}`,
                 fill: '#EA0000',
             }).setOrigin(0.5, 0).setAlpha(0.75).setDepth(DEPTH_LAYERS.UI);
@@ -149,7 +149,7 @@ export class GameScene extends CommonScene {
         const { top } = screenData;
         const { width } = config;
 
-        this.debugFPSText = this.add.text(this._centerDot.x, top + width * 0.08, '', {
+        this.debugFPSText = this.add.text(this.scene.scene.cameras.main.midPoint.x, top + width * 0.08, '', {
             font: `${width * 0.038}px ${getFontName()}`,
             fill: '#00A86B',
         }).setOrigin(0.5, 0.5).setAlpha(0.9).setDepth(DEPTH_LAYERS.UI);
@@ -358,7 +358,7 @@ export class GameScene extends CommonScene {
             return;
         }
 
-        this._progressExpBar = this.add.image(this._centerDot.x, screenData.top + config.width * 0.0225, 'progress_bar')
+        this._progressExpBar = this.add.image(this.scene.scene.cameras.main.midPoint.x, screenData.top + config.width * 0.0225, 'progress_bar')
             .setAlpha(0.95);
         this._progressExpBar.fillProgress = this.add.image(this._progressExpBar.x + this._progressExpBar.displayWidth * 0.1, this._progressExpBar.y + this._progressExpBar.displayHeight * 0.04, 'progress_bar_fill')
             .setAlpha(0.95);
@@ -406,7 +406,7 @@ export class GameScene extends CommonScene {
         this.sounds.level_up.play({volume: 0.5});
         this.model.increasePlayerLevel();
 
-        const levelTextLabel = this.add.text(this._centerDot.x, this._centerDot.y, this.model.currentLevelPlayer, {
+        const levelTextLabel = this.add.text(this.scene.scene.cameras.main.midPoint.x, this.scene.scene.cameras.main.midPoint.y, this.model.currentLevelPlayer, {
             font: `${config.width * 0.25}px ${getFontName()}`,
             fill: '#FFFFFF',
         }).setOrigin(0.5).setAlpha(0);
