@@ -76,7 +76,7 @@ export class DialogBox extends Phaser.GameObjects.Container {
             .setAlpha(0)
             .setOrigin(1, 0.5)
             .setDepth(DEPTH_LAYERS.DIALOGUES)
-            .on('pointerdown', () => this._skipDialog());
+            .once('pointerdown', () => this._skipDialog());
     }
 
     _createPerson({ image }) {
@@ -138,7 +138,6 @@ export class DialogBox extends Phaser.GameObjects.Container {
     }
 
     _skipDialog() {
-        this._skipButton.removeInteractive();
         this._resolver.resolve();
         this._scene.sounds.click.play({ volume: 0.2 });
     }

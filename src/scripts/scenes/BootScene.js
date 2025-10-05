@@ -75,7 +75,7 @@ export class BootScene extends CommonScene {
 
     _launchPressLabelCTA(label, clickArea) {
         clickArea.setInteractive();
-        clickArea.on('pointerdown', () => this._click());
+        clickArea.once('pointerdown', () => this._click());
 
         this.tweens.add({
             targets: label,

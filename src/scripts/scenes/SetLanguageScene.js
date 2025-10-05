@@ -36,7 +36,7 @@ export class SetLanguageScene extends CommonScene {
     _addButtonEventListeners(button) {
         button.on('pointerover', () => button.setAlpha(1));
         button.on('pointerout', () => button.setAlpha(0.75));
-        button.on('pointerdown', () => this._langSelect(button));
+        button.once('pointerdown', () => this._langSelect(button));
     }
 
     async _createButtons() {

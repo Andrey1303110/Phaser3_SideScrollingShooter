@@ -109,7 +109,7 @@ export class CampaignScene extends CommonScene {
             params.alpha = 0.7;
             params.scale = 0.75;
         } else {
-            dot.setAlpha(1).on('pointerdown', () => this._onDotClick);
+            dot.setAlpha(1).once('pointerdown', () => this._onDotClick);
             dot.active = true;
 
             if (this.model.currentLevelScene > level.index) {
@@ -239,7 +239,7 @@ export class CampaignScene extends CommonScene {
             .setOrigin(0.5)
             .setAlpha(0.7)
             .setInteractive()
-            .on('pointerdown', () => { 
+            .once('pointerdown', () => { 
                 this._gameStart(info);
                 this._stopBackgroundSound();
             })
@@ -252,7 +252,7 @@ export class CampaignScene extends CommonScene {
             .setOrigin(0.5)
             .setAlpha(0.7)
             .setInteractive()
-            .on('pointerdown', () => this._cardClose({ bgRect, frame }))
+            .once('pointerdown', () => this._cardClose({ bgRect, frame }))
             .on('pointerover', () => frame.closeButton.setAlpha(0.9))
             .on('pointerout', () => frame.closeButton.setAlpha(0.7));
     }

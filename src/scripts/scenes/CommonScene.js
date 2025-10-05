@@ -51,7 +51,7 @@ export class CommonScene extends Phaser.Scene {
             .setScale(0.25)
             .setAlpha(0)
             .setInteractive()
-            .on('pointerdown', () => this._onMoneyButtonClick());
+            .once('pointerdown', () => this._onMoneyButtonClick());
         this._moneyValueText = this.add.text(this._moneyIcon.x - this._moneyIcon.displayWidth, this._moneyIcon.y, this.model.money, style)
             .setOrigin(0.5)
             .setAlpha(0);
@@ -84,7 +84,7 @@ export class CommonScene extends Phaser.Scene {
         const button = this.add.image(screenData.left + config.width * 0.03, screenData.top + config.height * 0.05, 'return')
             .setAlpha(0.65)
             .setInteractive()
-            .on('pointerdown', () => this._onReturnButtonClick());
+            .once('pointerdown', () => this._onReturnButtonClick());
     }
 
     _onReturnButtonClick() {

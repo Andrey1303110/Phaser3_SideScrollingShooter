@@ -44,7 +44,7 @@ export class GameTypeSelect extends CommonScene {
     _addButtonEventListeners(button, startScene) {
         button.on('pointerover', () => button.setAlpha(1));
         button.on('pointerout', () => button.setAlpha(0.75));
-        button.on('pointerdown', () => this._gameSelect(button, startScene));
+        button.once('pointerdown', () => this._gameSelect(button, startScene));
     }
 
     _createButtons() {

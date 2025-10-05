@@ -46,6 +46,7 @@ export class DisclaimerScene extends CommonScene {
 
     _createPressLabel() {
         const textStyle = {
+            align: 'center',
             font: `${config.width * 0.035}px ${FONTS['eng']}`,
             fill: '#C40000',
         };
@@ -103,6 +104,6 @@ export class DisclaimerScene extends CommonScene {
 
     _createInteractivity() {
         this._blackBG.setInteractive();
-        this._blackBG.on('pointerdown', () => this._onClick());
+        this._blackBG.once('pointerdown', () => this._onClick());
     }
 }
