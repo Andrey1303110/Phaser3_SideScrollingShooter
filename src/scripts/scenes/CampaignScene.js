@@ -1,8 +1,9 @@
 import { createScreenBlackRectangle, delayInMSec, getFontName, screenData, tweenPromise } from '../Utils';
 import { DialogBoxController } from '../classes/DialogBoxController';
-import { CAMPAIGN_LEVELS, SCENE_NAMES } from '../constants';
+import { CAMPAIGN_LEVELS, DEPTH_LAYERS, SCENE_NAMES } from '../constants';
 import { config } from '../main';
 import { CommonScene } from './CommonScene';
+import { LevelCard } from './components/LevelCard';
 
 const INIT_DIALOG_DELAY = 1000;
 const BRIEF_DIALOG_DELAY = 2500;
@@ -157,104 +158,17 @@ export class CampaignScene extends CommonScene {
         });
     }
 
-    async _createLevelCard(info) {
-        const bgRect = createScreenBlackRectangle(this); // todo move it to transition
-        
-        const currentLevelHiScore = this.model.getLevelHiScore(info.index);
-        info.hiScore = currentLevelHiScore;
-
-        const frame = this.add.image(this._centerDot.x, this._centerDot.y, 'frame');
-        frame.displayHeight = config.height * 0.795;
-        frame.texts = [];
-
-        frame.texts.push(this.add.text(frame.x, frame.y - frame.displayHeight * 0.5 + frame.displayHeight * 0.086, this._getText('MISSION_CARD_MAIN_TITLE'), {
-            font: `${frame.displayWidth * 0.13}px ${getFontName()}`,
-            fill: '#0a0a0a',
-        }).setOrigin(0.5).setAlpha(0.55));
-
-        frame.texts.push(this.add.text(frame.x, frame.y - frame.displayHeight * 0.5 + frame.displayHeight * 0.25, `${this._getText('MISSION_CARD_LEVEL')} ${info.index}`, {
-            font: `${frame.displayWidth * 0.0925}px ${getFontName()}`,
-            fill: '#0a0a0a',
-        }).setOrigin(0.5).setAlpha(0.8));
-
-        frame.texts.push(this.add.text(frame.x, frame.y - frame.displayHeight * 0.5 + frame.displayHeight * 0.37, this._getText('MISSION_CARD_CITY'), {
-            font: `${frame.displayWidth * 0.055}px ${getFontName()}`,
-            fill: '#0a0a0a',
-        }).setOrigin(0.5).setAlpha(0.8));
-
-        frame.texts.push(this.add.text(frame.x, frame.y - frame.displayHeight * 0.5 + frame.displayHeight * 0.44, this._getText(`LEVEL_${info.index}_NAME`), {
-            font: `${frame.displayWidth * 0.06175}px ${getFontName()}`,
-            fill: '#0a0a0a',
-        }).setOrigin(0.5).setAlpha(0.8));
-
-        if (currentLevelHiScore > 0) {
-            frame.texts.push(this.add.text(frame.x, frame.y - frame.displayHeight * 0.5 + frame.displayHeight * 0.58, `${this._getText('MISSION_CARD_SCORE')} ${currentLevelHiScore}`, {
-                font: `${frame.displayWidth * 0.049}px ${getFontName()}`,
-                fill: '#E2B80D',
-            }).setOrigin(0.5).setAlpha(0.8));
-        }
-
-        frame.texts.push(this.add.text(frame.x, frame.y - frame.displayHeight * 0.5 + frame.displayHeight * 0.71, `${this._getText('MISSION_CARD_ENEMIES')} ${info.enemies}`, {
-            font: `${frame.displayWidth * 0.051}px ${getFontName()}`,
-            fill: '#EA0000',
-        }).setOrigin(0.5).setAlpha(0.8));
-
-        await this._createStamp(frame);
-        this._createCardStartButton(frame, info);
-        this._createCardCloseButton(frame, bgRect);
-    }
-
-    async _createStamp(frame) {
-        this.sounds.stamp.play();
-        const randAngle = Phaser.Math.Between(-45, 45);
-
-        frame.stamp = this.add.image(frame.x, frame.y, 'stamp').setAlpha(0).setAngle(randAngle).setScale(2.5);
-
-        const randX = frame.x + frame.displayWidth * 0.5 - frame.displayWidth * Phaser.Math.Between(25, 40) / 100;
-        const randY = frame.y + frame.displayWidth * 0.5 - frame.displayHeight * Phaser.Math.Between(28, 40) / 100;
-
-        await tweenPromise(this.scene.scene, {
-            targets: frame.stamp,
-            alpha: 0.85,
-            scale: 0.26,
-            x: randX,
-            y: randY,
-            ease: 'Power3',
-            duration: 350,
-        });
-        await tweenPromise(this.scene.scene, {
-            targets: frame.stamp,
-            scale: 0.305,
-            alpha: 0.55,
-            ease: 'Power2',
-            duration: 250,
-        });
-    }
-
-    _createCardStartButton(frame, info) {
-        frame.startButton = this.add.text(frame.x, frame.y + frame.displayHeight * 0.5 - frame.displayHeight * 0.09, this._getText('MISSION_CARD_START'), {
-            font: `${frame.displayWidth * 0.105}px ${getFontName()}`,
-            fill: '#51E04A',
-        })
-            .setOrigin(0.5)
-            .setAlpha(0.7)
-            .setInteractive()
-            .once('pointerdown', () => { 
+    _createLevelCard(info) {
+        const card = new LevelCard(
+            this,
+            info,
+            this.model,
+            this.sounds,
+            (info) => {
                 this._gameStart(info);
                 this._stopBackgroundSound();
-            })
-            .on('pointerover', () => { frame.startButton.setAlpha(0.9) })
-            .on('pointerout', () => { frame.startButton.setAlpha(0.7) });
-    }
-
-    _createCardCloseButton(frame, bgRect) {
-        frame.closeButton = this.add.image(frame.x + frame.displayWidth * 0.5 - config.width * 0.033, frame.y - frame.displayHeight * 0.5 + config.width * 0.037, 'close')
-            .setOrigin(0.5)
-            .setAlpha(0.7)
-            .setInteractive()
-            .once('pointerdown', () => this._cardClose({ bgRect, frame }))
-            .on('pointerover', () => frame.closeButton.setAlpha(0.9))
-            .on('pointerout', () => frame.closeButton.setAlpha(0.7));
+            }
+        );
     }
 
     _createCasualties() {
@@ -334,21 +248,9 @@ export class CampaignScene extends CommonScene {
         };
     }
 
-    _cardClose(data) {
-        this.sounds.click.play({ volume: 0.2 });
-
-        data.bgRect.destroy();
-        data.frame.destroy();
-        data.frame.stamp.destroy();
-        data.frame.startButton.destroy();
-        data.frame.closeButton.destroy();
-        data.frame.texts.forEach(element => {
-            element.destroy();
-        });
-    }
-
     _gameStart(info) {
         const bgRect = createScreenBlackRectangle(this);
+        bgRect.setDepth(DEPTH_LAYERS.COVER_SCREEN);
         const duration = this.sounds.ready.duration * 1000 * 0.85;
         this.sounds.ready.play();
 
