@@ -113,5 +113,7 @@ export function tweenPromise(scene, config) {
  * @returns {Phaser.GameObjects.Rectangle}
  */
 export function createScreenBlackRectangle(scene) {
-    return scene.add.rectangle(screenData.left, screenData.top, screenData.width, screenData.height, '0x000000', 0).setOrigin(0);
+    const x = screenData.left + screenData.width * 0.5;
+    const y = screenData.top + screenData.height * 0.5;
+    return scene.add.rectangle(x, y, screenData.width, screenData.height, '0x000000', 0).setOrigin(0.5).setScale(2);
 }
