@@ -30,7 +30,7 @@ export class DisclaimerScene extends CommonScene {
 
     _createTextLabel() {
         const text = this.scene.scene.cache.json.get('initial_texts')['Disclaimer'];
-        this._textLabel = this.add.text(this._centerDot.x, this._centerDot.y - config.width * 0.015, text, {
+        this._textLabel = this.add.text(this._centerDot.x, this._centerDot.y - config.width * 0.035, text, {
             font: `${config.width * 0.0225}px ${FONTS['eng']}`,
             fill: '#d9d9d9',
             align: 'center',
@@ -52,7 +52,7 @@ export class DisclaimerScene extends CommonScene {
         };
         
         const text = this.scene.scene.cache.json.get('initial_texts')['DisclaimerPress'];
-        this._pressLabel = this.add.text(config.width * 0.5, screenData.bottom - config.width * 0.03, text, textStyle).setOrigin(0.5, 1).setAlpha(0);
+        this._pressLabel = this.add.text(config.width * 0.5, screenData.bottom - config.width * 0.01, text, textStyle).setOrigin(0.5, 1).setAlpha(0);
 
         return tweenPromise(this, {
             targets: this._pressLabel,
