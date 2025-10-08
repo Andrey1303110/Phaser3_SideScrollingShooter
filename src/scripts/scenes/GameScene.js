@@ -92,7 +92,7 @@ export class GameScene extends CommonScene {
     _addFireButton(){
         const { right } = screenData;
 
-        this.fireButton = this.add.image(right - JOYSTICK_RADIUS - JOYSTICK_GAP, this._joystick.y, 'fire')
+        this.fireButton = this.add.image(right - JOYSTICK_RADIUS - JOYSTICK_GAP, this._joystick.y, 'fire_button')
             .setAlpha(0.65)
             .setInteractive()
             .setActive(false)

@@ -20,7 +20,7 @@ export const EVENTS = {
 export const ATLAS_FILES = ['dragon', 'jet', 'strategic_jet', 'helicopter', 'boom'];
 
 // Only .png
-export const IMAGE_FILES = ['fire', 'flag', 'rocket', 'missile', 'missile_2', 'button_campaign', 'button_unlim', 'button_upgrade', 'map', 'battle', 'ruby', 'flag', 'frame', 'stamp', 'close', 'return', 'pause', 'pause_bg', 'restart', 'play', 'scale', 'reload', 'velocity', 'progress_bar', 'progress_bar_fill', 'skobeeva', 'chief_commander', 'commander', 'president', 'next', 'life_icon', 'health_bar_empty', 'health_bar_fill', 'health'];
+export const IMAGE_FILES = ['fire', 'flag', 'rocket', 'missile', 'missile_2', 'button_campaign', 'button_unlim', 'button_upgrade', 'map', 'battle', 'ruby', 'flag', 'frame', 'stamp', 'close', 'return', 'pause', 'pause_bg', 'restart', 'play', 'scale', 'reload', 'velocity', 'progress_bar', 'progress_bar_fill', 'skobeeva', 'chief_commander', 'commander', 'president', 'next', 'life_icon', 'health_bar_empty', 'health_bar_fill', 'health', 'explosion_particle', 'fire_button'];
 
 // Only .mp3
 export const AUDIO_FILES = ['select', 'error', 'rocket_launch', 'fire_launch', 'missile_launch', 'missile_2_launch', 'explosion_small', 'wings', 'stamp', 'ready', 'lose', 'win', 'upgrade', 'level_up', 'whoosh', 'whoosh_map', 'click', 'fire_effect', 'campaign_complete_song'];
@@ -58,7 +58,19 @@ export const WEAPONS = {
     FIRE: {
         reload: 1000,
         velocity: 500,
+        maxSpeed: 500,
+        acceleration: 500,
         damage: 100,
+        particlesSetting: {
+            quantity: 15,
+            speedX: { min: -5, max: 250 },
+            speedY: { min: -75, max: 75 },
+            lifespan: { min: 25, max: 250 },
+            alpha: { start: 1, end: 0 },
+            scale: { start: 0.35, end: 0.05 },
+            tint: [0xFFFF00, 0xFF8000, 0xFF0000],
+            angle: { min: -25, max: 25 },
+        },
         scale: 0.4,
         reward: 0,
         texture: 'fire',
@@ -67,6 +79,17 @@ export const WEAPONS = {
     ROCKET: {
         reload: 1750,
         velocity: -350,
+        maxSpeed: -350,
+        acceleration: -400,
+        particlesSetting: {
+            quantity: 10,
+            speedX: { min: -25, max: -100 },
+            speedY: { min: -100, max: 100 },
+            lifespan: { min: 25, max: 100 },
+            alpha: { start: 0.35, end: 0 },
+            scale: { start: 0.1, end: 0.2 },
+            tint: 0xC4ADAD
+        },
         scale: 0.4,
         damage: 25,
         reward: 100,
@@ -76,6 +99,17 @@ export const WEAPONS = {
     MISSILE: {
         reload: 2000,
         velocity: -475,
+        maxSpeed: -475,
+        acceleration: -900,
+        particlesSetting: {
+            quantity: 25,
+            speedX: { min: -25, max: -150 },
+            speedY: { min: -50, max: 50 },
+            lifespan: { min: 25, max: 100 },
+            alpha: { start: 0.15, end: 0 },
+            scale: { start: 0.1, end: 0.25 },
+            tint: 0xFF7700
+        },
         scale: 0.375,
         damage: 40,
         reward: 150,
@@ -85,6 +119,17 @@ export const WEAPONS = {
     MISSILE_2: {
         reload: 2500,
         velocity: -800,
+        maxSpeed: -800,
+        acceleration: -2250,
+        particlesSetting: {
+            quantity: 35,
+            speedX: { min: -25, max: -200 },
+            speedY: { min: -25, max: 25 },
+            lifespan: { min: 25, max: 100 },
+            alpha: { start: 0.25, end: 0 },
+            scale: { start: 0.1, end: 0.35 },
+            tint: 0xC18CFF
+        },
         scale: 0.4,
         damage: 60,
         reward: 750,
