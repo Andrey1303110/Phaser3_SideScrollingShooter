@@ -72,7 +72,7 @@ export class CampaignScene extends CommonScene {
     }
 
     _addCampaignCompleteSound() {
-        // this.sounds.campaign_complete_song.play({ volume: 0.2 });
+        this.sounds.campaign_complete_song.play({ volume: 0.2 });
         this.sounds.campaign_complete_song.loop = true;
     }
 

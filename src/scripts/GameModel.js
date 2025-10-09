@@ -57,7 +57,7 @@ export class GameModel {
     }
   
     initMoney() {
-        this.money = 99;
+        this.money = 0;
         this.setMoney(this.money);
     }
 
@@ -110,7 +110,7 @@ export class GameModel {
     }
 
     initSceneLevel() {
-        this.currentLevelScene = CAMPAIGN_LEVELS.at(-1).index + 1;
+        this.currentLevelScene = 1;
         StorageService.set('currentLevelScene', this.currentLevelScene);
     }
   
