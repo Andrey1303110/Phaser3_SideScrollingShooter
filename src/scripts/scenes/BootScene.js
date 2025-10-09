@@ -1,5 +1,5 @@
 import { screenData, setEndpoints, tweenPromise } from '../Utils';
-import { FONTS, SCENE_NAMES } from '../constants';
+import { CAMPAIGN_LEVELS, FONTS, SCENE_NAMES } from '../constants';
 import { config } from '../main';
 import { CommonScene } from './CommonScene';
 
@@ -36,6 +36,8 @@ export class BootScene extends CommonScene {
         this.load.audio('whoosh', `./assets/sounds/whoosh.mp3`);
 
         this.load.json('initial_texts', `./assets/texts/initial_texts.json`);
+        this.load.json(`dialogues0`, `./assets/dialogues/${this.model.lang}/0.json`)
+        CAMPAIGN_LEVELS.forEach(level => this.load.json(`dialogues${level.index}`, `./assets/dialogues/${this.model.lang}/${level.index}.json`));
     }
 
     _createLogoAnimation() {

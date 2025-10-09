@@ -26,8 +26,6 @@ export class DialogBoxController {
         await this._toggleShowingBg(true);
 
         const dialogsCount = this._data.length;
-        this._addSoundsToScene(level, dialogsCount);
-
         for (let i = 0; i < dialogsCount; i++) {
             const isLast = i === dialogsCount-1;
             const dialogData = this._data[i];
@@ -40,13 +38,6 @@ export class DialogBoxController {
         }
 
         await this._toggleShowingBg(false);
-    }
-
-    _addSoundsToScene(levelIndex, dialogsCount) {
-        for (let i = 0; i < dialogsCount; i++) {
-            const name = `level${levelIndex}_text${i}_${this._scene.model.lang}`;
-            this._scene.sounds[name] = this._scene.sound.add(name);
-        }
     }
 
     async _toggleShowingBg(value) {

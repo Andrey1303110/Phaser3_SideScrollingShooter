@@ -12,7 +12,7 @@ export class LevelCard extends Phaser.GameObjects.Container {
         this.sounds = sounds;
         this.onStart = onStart;
 
-        this.setDepth(DEPTH_LAYERS.COVER_SCREEN);
+        this.setDepth(DEPTH_LAYERS.UI);
 
         this._createBackground();
         this._createFrame();
@@ -37,6 +37,7 @@ export class LevelCard extends Phaser.GameObjects.Container {
 
     _createFrame() {
         this.frame = this.scene.add.image(0, 0, 'frame');
+        this.frame.setInteractive();
         this.frame.displayHeight = config.height * 0.795;
         this.frame.texts = [];
         this.add(this.frame);

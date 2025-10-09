@@ -28,14 +28,18 @@ export class CampaignScene extends CommonScene {
         super(SCENE_NAMES.CAMPAIGN);
     }
 
+    init() {
+        super.init();
+        this._createSounds();
+        this._createControllers();
+    }
+
     preload() {
         this._createBg(); // needs to smooth transition between scenes
-        this._preloadDictateTextAudio();
+        this._addDialoguesAudio();
     }
 
     async create() {
-        this._createControllers();
-        this._createSounds();
         this._createMap();
         this._createReturnButton();
         await this._createDots();
@@ -68,7 +72,7 @@ export class CampaignScene extends CommonScene {
     }
 
     _addCampaignCompleteSound() {
-        this.sounds.campaign_complete_song.play({ volume: 0.25 })
+        // this.sounds.campaign_complete_song.play({ volume: 0.2 });
         this.sounds.campaign_complete_song.loop = true;
     }
 
@@ -94,7 +98,6 @@ export class CampaignScene extends CommonScene {
             .setScale(6)
             .setOrigin(0.5)
             .setInteractive()
-            .on('pointerdown', () => this._selectLevel(dot));
         dot.info = level;
         dot.isCurrent = false;
 
@@ -110,7 +113,8 @@ export class CampaignScene extends CommonScene {
             params.alpha = 0.7;
             params.scale = 0.75;
         } else {
-            dot.setAlpha(1).once('pointerdown', () => this._onDotClick);
+            dot.setAlpha(1);
+            dot.on('pointerdown', () => this._onDotClick(dot));
             dot.active = true;
 
             if (this.model.currentLevelScene > level.index) {
@@ -126,9 +130,12 @@ export class CampaignScene extends CommonScene {
         return delayInMSec(this.scene, 100);
     }
 
-    _onDotClick() {
+    async _onDotClick(dot) {
+        dot.removeInteractive();
         this.sounds.select.play({ volume: 0.33 });
-        this._startDialogs(level.index, BRIEF_DIALOG_DELAY);
+        await this._startDialogs(dot.info.index, 250);
+        this._createLevelCard(dot.info);
+        dot.setInteractive();
     }
 
     _createDotTween(dot, params) {
@@ -263,8 +270,8 @@ export class CampaignScene extends CommonScene {
         });
     }
 
-    _preloadDictateTextAudio() {
-        for (let i = 0; i < CAMPAIGN_LEVELS.length; i++) {
+    _addDialoguesAudio() {
+        for (let i = 0; i <= CAMPAIGN_LEVELS.at(-1).index; i++) {
             const texts = this.scene.scene.cache.json.get(`dialogues${i}`)
 
             if (!texts) {
@@ -273,17 +280,9 @@ export class CampaignScene extends CommonScene {
 
             for (let j = 0; j < texts.length; j++) {
                 const name = `level${i}_text${j}_${this.model.lang}`;
-                this.load.audio(name, `./assets/voices/${this.model.lang}/${i}/${j}.mp3`);
+                this.sounds[name] = this.sound.add(name);
             }
         }
-    }
-
-    _selectLevel({active, info}) {
-        if (!active) {
-            return;
-        }
-        
-        this._createLevelCard(info);
     }
 
     async _startDialogs(levelIndex, delay = INIT_DIALOG_DELAY) {
