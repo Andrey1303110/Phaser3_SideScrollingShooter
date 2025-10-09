@@ -14,7 +14,7 @@ export class PreloadScene extends CommonScene {
         this._preloadTexts();
         this._preloadResources();
         this._preloadPlugins();
-        this._preloadDialogues();
+        this._preloadDialoguesAudio();
 
         this._setupLoadingBar();
     }
@@ -27,9 +27,15 @@ export class PreloadScene extends CommonScene {
         this.load.plugin('rexvirtualjoystickplugin', './assets/plugins/rexvirtualjoystickplugin.min.js', true);
     }
 
-    _preloadDialogues() {
-        this.load.json(`dialogues0`, `./assets/dialogues/${this.model.lang}/0.json`)
-        CAMPAIGN_LEVELS.forEach(level => this.load.json(`dialogues${level.index}`, `./assets/dialogues/${this.model.lang}/${level.index}.json`));
+    _preloadDialoguesAudio() {
+        for (let i = 0; i <= CAMPAIGN_LEVELS.at(-1).index; i++) {
+            const texts = this.scene.scene.cache.json.get(`dialogues${i}`);
+            for (let j = 0; j < texts.length; j++) {
+                const name = `level${i}_text${j}_${this.model.lang}`;
+                const path = `./assets/voices/${this.model.lang}/${i}/${j}.mp3`;
+                this.load.audio(name, path);
+            }
+        }
     }
 
     _preloadResources() {

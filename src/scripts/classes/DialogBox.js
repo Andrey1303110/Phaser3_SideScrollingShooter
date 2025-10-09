@@ -67,6 +67,7 @@ export class DialogBox extends Phaser.GameObjects.Container {
 
         this._bg = new RoundedRectContainer(this._scene, { width, height, radius, fillColor, fillAlpha });
         this._bg.setPosition(x, y);
+        this._bg.setDepth(DEPTH_LAYERS.DIALOGUES)
     }
 
     _createSkipButton() {
