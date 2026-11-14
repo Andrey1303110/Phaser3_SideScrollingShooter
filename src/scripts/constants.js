@@ -175,7 +175,7 @@ export const CAMPAIGN_LEVELS = [
         x: 485,
         y: 175,
         enemies: 5,
-        enemiesDelay: 3000,
+        enemiesDelay: 5000,
         velocity: 4,
     },
     {
@@ -183,7 +183,7 @@ export const CAMPAIGN_LEVELS = [
         x: 506,
         y: 490,
         enemies: 8,
-        enemiesDelay: 2500,
+        enemiesDelay: 4464,
         velocity: 4,
     },
     {
@@ -191,7 +191,7 @@ export const CAMPAIGN_LEVELS = [
         x: 758,
         y: 179,
         enemies: 11,
-        enemiesDelay: 2200,
+        enemiesDelay: 4191,
         velocity: 4,
     },
     {
@@ -199,7 +199,7 @@ export const CAMPAIGN_LEVELS = [
         x: 430,
         y: 135,
         enemies: 15,
-        enemiesDelay: 1900,
+        enemiesDelay: 3845,
         velocity: 4,
     },
     {
@@ -207,7 +207,7 @@ export const CAMPAIGN_LEVELS = [
         x: 890,
         y: 397,
         enemies: 21,
-        enemiesDelay: 1700,
+        enemiesDelay: 3643,
         velocity: 4,
     },
     {
@@ -215,7 +215,7 @@ export const CAMPAIGN_LEVELS = [
         x: 353,
         y: 287,
         enemies: 28,
-        enemiesDelay: 1550,
+        enemiesDelay: 3506,
         velocity: 4,
     },
     {
@@ -223,7 +223,7 @@ export const CAMPAIGN_LEVELS = [
         x: 435,
         y: 195,
         enemies: 39,
-        enemiesDelay: 1400,
+        enemiesDelay: 3334,
         velocity: 4,
     },
     {
@@ -231,7 +231,7 @@ export const CAMPAIGN_LEVELS = [
         x: 105,
         y: 248,
         enemies: 50,
-        enemiesDelay: 1300,
+        enemiesDelay: 3250,
         velocity: 4,
     },
     {
@@ -239,7 +239,7 @@ export const CAMPAIGN_LEVELS = [
         x: 720,
         y: 311,
         enemies: 65,
-        enemiesDelay: 1200,
+        enemiesDelay: 3143,
         velocity: 4,
     },
     {
@@ -247,7 +247,7 @@ export const CAMPAIGN_LEVELS = [
         x: 732,
         y: 509,
         enemies: 82,
-        enemiesDelay: 1100,
+        enemiesDelay: 3011,
         velocity: 4,
     },
     {
@@ -255,7 +255,7 @@ export const CAMPAIGN_LEVELS = [
         x: 874,
         y: 333,
         enemies: 100,
-        enemiesDelay: 1050,
+        enemiesDelay: 3000,
         velocity: 4,
     },
     {
@@ -263,7 +263,7 @@ export const CAMPAIGN_LEVELS = [
         x: 735,
         y: 366,
         enemies: 120,
-        enemiesDelay: 1000,
+        enemiesDelay: 2976,
         velocity: 4,
     },
     {
@@ -271,7 +271,7 @@ export const CAMPAIGN_LEVELS = [
         x: 665,
         y: 435,
         enemies: 145,
-        enemiesDelay: 975,
+        enemiesDelay: 2950,
         velocity: 4,
     },
     {
@@ -279,7 +279,7 @@ export const CAMPAIGN_LEVELS = [
         x: 956,
         y: 261,
         enemies: 200,
-        enemiesDelay: 950,
+        enemiesDelay: 2900,
         velocity: 4,
     },
     {
@@ -287,7 +287,7 @@ export const CAMPAIGN_LEVELS = [
         x: 676,
         y: 640,
         enemies: 250,
-        enemiesDelay: 925,
+        enemiesDelay: 2850,
         velocity: 4,
     },
 ];

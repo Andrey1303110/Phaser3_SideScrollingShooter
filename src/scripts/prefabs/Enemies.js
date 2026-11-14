@@ -1,6 +1,9 @@
 import { Fires } from "./Fires";
 import { Enemy } from "./Enemy";
 import { EVENTS, GAME_ACTOR_SCALE_MULTIPLIER } from "../constants";
+import { screenData } from "../Utils";
+
+const FIRST_ENEMY_DELAY = 1500;
 
 export class Enemies extends Phaser.Physics.Arcade.Group {
     constructor(scene) {
@@ -12,16 +15,21 @@ export class Enemies extends Phaser.Physics.Arcade.Group {
         this.createdCount = 0;
         this.stopped = false;
         this.timer = this.scene.time.addEvent({
-            delay: this.scene.info.enemiesDelay,
-            loop: true,
+            delay: FIRST_ENEMY_DELAY,
             callback: () => this.tick(),
         });
     }
 
     tick() {
-        this.scene.time.addEvent({
+        if (this.stopped) return;
+        this.createEnemy();
+        if (this.stopped || this.createdCount >= this.countMax) {
+            this.stopTimer();
+            return;
+        }
+        this.timer = this.scene.time.addEvent({
             delay: this.scene.info.enemiesDelay * (Phaser.Math.Between(50, 150) * 0.01),
-            callback: () => this.createEnemy(),
+            callback: () => this.tick(),
         });
     }
 
@@ -39,6 +47,10 @@ export class Enemies extends Phaser.Physics.Arcade.Group {
 
         const enemy = Enemy.generate(this.scene, this.fires);
         enemy.setScale(enemy.scaleX * GAME_ACTOR_SCALE_MULTIPLIER);
+        if (this.createdCount === 0) {
+            // Enter immediately instead of crossing the offscreen spawn gap.
+            enemy.x = screenData.right + enemy.displayWidth * 0.5;
+        }
         enemy.on(EVENTS.KILLED, this.onEnemyKilled, this);
         this.add(enemy);
         enemy.move();
