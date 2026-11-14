@@ -6,13 +6,16 @@ import { config } from '../main';
 export class CommonScene extends Phaser.Scene {
     constructor(name) {
         super(name);
-        window[`${name}Scene`] = this; // todo remove
 
         this.name = name;
         this.model = GameModel.getInstance();
     }
 
     init() {
+        this.events.once('shutdown', () => {
+            Object.values(this.sounds ?? {}).forEach(sound => sound.destroy());
+            this.sounds = null;
+        });
         if (!this.scale.isFullscreen) {
             switch (this.scene.key) {
                 case SCENE_NAMES.BOOT:

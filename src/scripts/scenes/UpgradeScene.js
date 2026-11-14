@@ -1,4 +1,4 @@
-import { FIRE_WEAPON_DEFAULT_SCALE, SCENE_NAMES, UPGRADE_MULTIPLIER, WEAPONS } from "../constants";
+import { FIRE_WEAPON_DEFAULT_SCALE, SCENE_NAMES, UPGRADE_MULTIPLIER } from "../constants";
 import { config } from "../main";
 import { CommonScene } from "./CommonScene";
 import { Player } from "../prefabs/Player";
@@ -45,6 +45,7 @@ export class UpgradeScene extends CommonScene {
 
     _createPlayer(){
         this._player = new Player({ scene: this });
+        this._player.setScale(this.model.player.scale * 1.75);
 
         return tweenPromise(this, {
             targets: this._player,
@@ -123,11 +124,11 @@ export class UpgradeScene extends CommonScene {
             case 'health':
                 return Math.round(this.model.player.maxHealth).toFixed(0);
             case 'reload':
-                return Math.round(WEAPONS.FIRE[key]).toFixed(0);
+                return Math.round(this.model.fireWeapon[key]).toFixed(0);
             case 'scale':
-                return Math.round(WEAPONS.FIRE[key] * (FIRE_WEAPON_DEFAULT_SCALE * 100)).toFixed(0);
+                return Math.round(this.model.fireWeapon[key] * (FIRE_WEAPON_DEFAULT_SCALE * 100)).toFixed(0);
             case 'velocity':
-                return Math.round(WEAPONS.FIRE[key]).toFixed(0);
+                return Math.round(this.model.fireWeapon[key]).toFixed(0);
         }
     }
 
@@ -139,7 +140,7 @@ export class UpgradeScene extends CommonScene {
     }
 
     _checkAvailabilityForAllButtons() {
-        Object.keys(this.model.currentUpgradableStats).forEach(key => {
+        Object.keys(this.buttons).forEach(key => {
             this._checkAvailability(this.buttons[key]);
         });
     }
@@ -232,7 +233,7 @@ export class UpgradeScene extends CommonScene {
         this.model.upgradePlayerAbility(button.name);
         this.model.decreaseMoney(button.cost);
         this._moneyValueText.text = this.model.money;
-        button.level = statLevel;
+        button.level = this.model.currentUpgradableStats[button.name];
 
         const returnedValue = this._setStatsText(button.name);
         const statText = this._getText(STATS_MAP[button.name]['text']);

@@ -19,6 +19,7 @@ export class GameModel {
         this.unlimHiScores = StorageService.get('unlimHiScores', 0, Number);
         this.money = StorageService.get('money', 0, Number);
         this.player = { ...PLAYER };
+        this.fireWeapon = { ...WEAPONS.FIRE };
         this.currentUpgradableStats = { 
             health: 1,
             reload: 1,
@@ -33,6 +34,7 @@ export class GameModel {
         };
         
         this.lang = StorageService.get('lang', '', String);
+        if (!['eng', 'ukr'].includes(this.lang)) this.lang = '';
     }
 
     static getInstance() {
@@ -43,17 +45,8 @@ export class GameModel {
     }
 
     initGameData() {
-        if (this.totalScore !== 0) {
-            this.initAbilitiesByLevel(); // todo
-            return;
-        }
-
-        this.initCasualties();
-        this.initHiScores();
-        this.initUpgradeLevels();
-        this.initSceneLevel();
-        this.initPlayerLevel();
-        this.initMoney();
+        // Each field already has a default; a zero score does not mean no save exists.
+        this.initAbilitiesByLevel();
     }
   
     initMoney() {
@@ -67,12 +60,13 @@ export class GameModel {
     }
 
     decreaseMoney(value) {
-        if (this.money <= 0) {
-            return;
+        if (!Number.isFinite(value) || value < 0 || value > this.money) {
+            return false;
         }
 
         this.money -= value;
         this.setMoney(this.money);
+        return true;
     }
 
     setMoney(value) {
@@ -101,7 +95,8 @@ export class GameModel {
         }
 
         const scores = this.hiScores.split(LEVEL_HI_SCORES_SEPARATOR).map(Number);
-        return scores[level - 1];
+        const score = scores[level - 1];
+        return Number.isFinite(score) && score >= 0 ? score : 0;
     }
 
     setUnlimHiScores(value) {
@@ -136,6 +131,7 @@ export class GameModel {
 
     initCasualties() {
         Object.keys(this.casualties).forEach(name => {
+            this.casualties[name] = 0;
             StorageService.set(`${CASUALTIES_PREFIX}${name}`, 0);
         });
     }
@@ -158,16 +154,23 @@ export class GameModel {
     };
 
     initAbilitiesByLevel() {
+        if (this._abilitiesInitialized) return;
+        this._abilitiesInitialized = true;
         const stats = Object.keys(this.currentUpgradableStats);
     
         for (let i = 0; i < stats.length; i++) {
             const key = stats[i];
-            const level = StorageService.get(`${ABILITY_PREFIX}${key}`, 1, Number);
-    
-            for (let j = 1; j < level; j++) {
-                this.upgradePlayerAbility(key);
-            }
+            const savedLevel = StorageService.get(`${ABILITY_PREFIX}${key}`, 1, Number);
+            const level = Number.isSafeInteger(savedLevel) && savedLevel >= 1 ? savedLevel : 1;
+            const base = key === 'health' ? PLAYER.maxHealth : WEAPONS.FIRE[key];
+            const multiplier = key === 'reload' ? 1 - UPGRADE_MULTIPLIER : 1 + UPGRADE_MULTIPLIER;
+            const value = base * Math.pow(multiplier, level - 1);
+            const valid = Number.isFinite(value) && value > 0;
+            this.currentUpgradableStats[key] = valid ? level : 1;
+            if (key === 'health') this.player.maxHealth = valid ? value : base;
+            else this.fireWeapon[key] = valid ? value : base;
         }
+        this.fireWeapon.maxSpeed = this.fireWeapon.velocity;
     }
 
     upgradePlayerAbility(key) {
@@ -176,13 +179,14 @@ export class GameModel {
                 this.player.maxHealth += this.player.maxHealth * UPGRADE_MULTIPLIER;
                 break;
             case 'reload':
-                WEAPONS.FIRE[key] -= WEAPONS.FIRE[key] * UPGRADE_MULTIPLIER;
+                this.fireWeapon[key] -= this.fireWeapon[key] * UPGRADE_MULTIPLIER;
                 break;
             case 'scale':
-                WEAPONS.FIRE[key] += WEAPONS.FIRE[key] * UPGRADE_MULTIPLIER;
+                this.fireWeapon[key] += this.fireWeapon[key] * UPGRADE_MULTIPLIER;
                 break;
             case 'velocity':
-                WEAPONS.FIRE[key] += WEAPONS.FIRE[key] * UPGRADE_MULTIPLIER;
+                this.fireWeapon[key] += this.fireWeapon[key] * UPGRADE_MULTIPLIER;
+                this.fireWeapon.maxSpeed = this.fireWeapon.velocity;
                 break;
             default:
                 throw new Error('Unknown ability: ' + key);
@@ -193,6 +197,7 @@ export class GameModel {
     }
 
     increaseCasualties(name) {
+        if (!Object.hasOwn(this.casualties, name)) return;
         this.casualties[name] += 1;
 
         switch (name) {
@@ -211,4 +216,3 @@ export class GameModel {
         }
     }
 }
-  

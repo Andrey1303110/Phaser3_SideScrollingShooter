@@ -140,8 +140,8 @@ export class SetLanguageScene extends CommonScene {
     }
 
     _langSelect(button) {
-        this._onButtonClick();
         this.model.setLang(button.name);
+        this._onButtonClick();
     }
 
     _onButtonClick() {

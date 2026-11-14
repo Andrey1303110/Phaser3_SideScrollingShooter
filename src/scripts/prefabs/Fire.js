@@ -22,7 +22,7 @@ export class Fire extends MovableObject {
         this._setup(data);
         this._addParticles(data.particlesSetting);
 
-        this.once('killed', () => this._onKilled());
+        this.once('destroy', () => this._onKilled());
     }
 
     move(){
@@ -49,14 +49,9 @@ export class Fire extends MovableObject {
         }
     }
 
-    reset() {
-        debugger
-        return false;
-    }
-
     _setup({ sourceVelocity, maxSpeed, sound }) {
         this.body.setVelocityX(sourceVelocity);
-        this.body.setMaxSpeed(maxSpeed);
+        this.body.setMaxSpeed(Math.abs(maxSpeed));
 
         this._sound = this.scene.sounds[sound];
     }
@@ -77,6 +72,7 @@ export class Fire extends MovableObject {
         } 
         const randomVelocityModifier = (Phaser.Math.Between(-20, 20) * 0.01);
         await delayInMSec(this.scene, randomDelay);
+        if (!this.active || !this.body) return;
         this.body.setVelocityY(this.velocity * randomVelocityModifier);
         this._rocketMove();
     }
@@ -87,6 +83,7 @@ export class Fire extends MovableObject {
         } 
         this.body.setVelocityY(230);
         await delayInMSec(this.scene, 225);
+        if (!this.active || !this.body) return;
         this.body.setVelocityY(this.velocity * 0.035);
     }
 
@@ -96,6 +93,7 @@ export class Fire extends MovableObject {
         }
         this.body.setVelocityY(280);
         await delayInMSec(this.scene, 225);
+        if (!this.active || !this.body) return;
         this.body.setVelocityY(this.velocity * 0.05);
     }
 
@@ -116,12 +114,16 @@ export class Fire extends MovableObject {
         this._emitter.tintFill = true;
     }
 
+    isDead() {
+        return !this.active || !this.body || this.x > config.width + this.displayWidth || this.x < -this.displayWidth
+            || this.y < -this.displayHeight || this.y > config.height + this.displayHeight;
+    }
+
     _isDead() {
-        return (this.x > config.width + this.displayWidth || this.x < -this.displayWidth);
+        return this.isDead();
     }
 
     _onKilled() {
-        this._emitter.destroy();
-        this._sound.stop();
+        this._emitter?.destroy();
     }
 }

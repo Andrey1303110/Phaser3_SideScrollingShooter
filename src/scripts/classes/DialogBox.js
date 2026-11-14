@@ -27,9 +27,9 @@ export class DialogBox extends Phaser.GameObjects.Container {
         ));
     }
 
-    showExit() {
+    async showExit() {
         this._hideSkipButton();
-        return Promise.all(this._elements.map(element =>
+        await Promise.all(this._elements.map(element =>
             tweenPromise(this._scene, {
                 targets: element,
                 x: element.x - config.width,
@@ -37,6 +37,8 @@ export class DialogBox extends Phaser.GameObjects.Container {
                 duration: 425,
             })
         ));
+        this._elements.forEach(element => element.destroy());
+        this.destroy();
     }
 
     get resolver() {

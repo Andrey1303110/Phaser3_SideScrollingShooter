@@ -1,5 +1,5 @@
 import { screenData } from "../Utils";
-import { EVENTS, WEAPONS } from "../constants";
+import { EVENTS } from "../constants";
 import { config } from "../main";
 import { Fires } from "./Fires";
 import { MovableObject } from "./MovableObject";
@@ -20,7 +20,7 @@ export class Player extends MovableObject {
             scale: data.scene.model.player.scale,
             weapon: {
                 origin: {x: 1, y: 0.5},
-                ...WEAPONS.FIRE,
+                ...data.scene.model.fireWeapon,
             }
         });
 
@@ -30,30 +30,42 @@ export class Player extends MovableObject {
 
     init(data) {
         super.init(data);
-        this.scene.add.existing(this);
-        this.scene.physics.add.existing(this);
-        this.body.enable = true;
 
         this.fires = new Fires(this.scene);
         this.weapon = data.weapon;
 
         this.scene.events.on(EVENTS.UPDATE, this._updateFrame, this);
+        this.once('destroy', () => {
+            this.scene.events.off(EVENTS.UPDATE, this._updateFrame, this);
+            this._reloadTimer?.remove();
+            this._reloadTimer = null;
+            this._tweenFlying?.stop();
+            this._tweenFlying = null;
+        });
+        this._reloadTimer = null;
         this._lastFrame = null;
         this._tweenFlying = null;
+        this._flightMotion = { offset: 0 };
+        this._lastFlightOffset = 0;
+        this._flightVelocity = 0;
+        this._inputVelocityY = 0;
 
         this.maxHealth = this.scene.model.player.maxHealth;
         this.currentHealth = this.scene.model.player.maxHealth;
     }
 
     shooting() {
+        if (!this.active || !this.scene) return;
         if ((this.scene.cursors.space.isDown || this.scene.fireButton?.active) && !this._firesActivate) {
             this.scene.fireButton?.setAlpha(0.95);
             this.fires.createFire(this);
             this._firesActivate = true;
 
-            this.scene.time.addEvent({
+            this._reloadTimer = this.scene.time.addEvent({
                 delay: this.weapon.reload,
-                callback: () => { 
+                callback: () => {
+                    this._reloadTimer = null;
+                    if (!this.active || !this.scene) return;
                     this._firesActivate = false;
                     this.scene.fireButton?.setAlpha(0.65);
                 }
@@ -100,11 +112,19 @@ export class Player extends MovableObject {
         this.play(ANIMATION_NAME);
     }
 
-    _updateFrame() {
-        if (!this.active) {
+    _updateFrame(time, delta) {
+        if (!this.active || !this.body) {
             return;
         }
         this._addTweenFly();
+
+        // Animate an offset, then add its change to physics velocity. Never tween
+        // the same position that Arcade Physics updates for player movement.
+        this._flightVelocity = delta > 0
+            ? (this._flightMotion.offset - this._lastFlightOffset) * 1000 / delta
+            : 0;
+        this._lastFlightOffset = this._flightMotion.offset;
+        this.body.setVelocityY(this._inputVelocityY + this._flightVelocity);
     }
 
     _addTweenFly() {
@@ -123,71 +143,31 @@ export class Player extends MovableObject {
         }
     }
 
-    async _tweenFly(isDown) {
+    _tweenFly(isDown) {
         const height = this.displayHeight * 0.2;
         const duration = FRAME_DURATION * 2.5;
-        const y = isDown ? this.y + height : this.y - height;
+
+        this._tweenFlying?.stop();
 
         this._tweenFlying = this.scene.tweens.add({
-            targets: this,
-            y,
-            ease: 'Linear',
+            targets: this._flightMotion,
+            offset: isDown ? 0 : -height,
+            ease: 'Sine.InOut',
             duration,
-            onComplete: () => {
-                this._tweenFlying.destroy();
-                this._tweenFlying = null;
-            }
+            onComplete: () => { this._tweenFlying = null; }
         });
     }
 
     _handling(){
-        let buttons;
-        let cof = 100;
-        let isJoystick = false;
+        const isJoystick = Object.values(this.scene.cursorKeys ?? {}).some(key => key.isDown);
+        const buttons = isJoystick ? this.scene.cursorKeys : this.scene.cursors;
+        if (!buttons) return;
 
-        for (let name in this.scene.cursorKeys) {
-            if (this.scene.cursorKeys[name].isDown) {
-                isJoystick = true;
-                cof = Math.floor(this.scene.joystick.force * 100) / 100;
-                if (cof > 100) {
-                    cof = 100;
-                }
-            }
-        }
-
-        (!isJoystick) ? buttons = this.scene.cursors : buttons = this.scene.cursorKeys;
-
-        if (!buttons) {
-            return;
-        }
-
-        if (buttons.left.isDown) {
-            if (this.x < this.x - this.velocity) { 
-                return;
-            }
-            this.body.setVelocityX(-this.velocity * (cof / 100));
-        } else if (buttons.right.isDown) {
-            if (this.x > this.x + this.velocity) { 
-                return;
-            }
-            this.body.setVelocityX(this.velocity * (cof / 100));
-        }
-
-        if (buttons.up.isDown || buttons.down.isDown) {
-            if (this._tweenFlying) {
-                this._tweenFlying.paused = true;
-            }
-            if (buttons.up.isDown) {
-                if (this.y < this.y - this.velocity) { 
-                    return;
-                }
-                this.body.setVelocityY(-this.velocity * (cof / 100));
-            } else if (buttons.down.isDown) {
-                if (this.y > this.y + this.velocity) { 
-                    return;
-                }
-                this.body.setVelocityY(this.velocity * (cof / 100));
-            }
-        }
+        const force = isJoystick ? Math.min(1, this.scene.joystick.force / this.scene.joystick.radius) : 1;
+        const x = Number(buttons.right.isDown) - Number(buttons.left.isDown);
+        const y = Number(buttons.down.isDown) - Number(buttons.up.isDown);
+        const length = Math.hypot(x, y) || 1;
+        this._inputVelocityY = y / length * this.velocity * force;
+        this.body.setVelocity(x / length * this.velocity * force, this._inputVelocityY + this._flightVelocity);
     }
 }

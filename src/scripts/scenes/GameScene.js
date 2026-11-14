@@ -2,7 +2,7 @@ import { config } from '../main';
 import { Player } from '../prefabs/Player';
 import { Enemies } from '../prefabs/Enemies';
 import { Boom } from '../prefabs/Boom';
-import { SCENE_NAMES, DEPTH_LAYERS, EVENTS, JOYSTICK_GAP, JOYSTICK_RADIUS, LEVEL_REQUIRED_SCORE_MULTIPLIER, LEVEL_REQUIRED_SCORE, LEVEL_SCORE_MULTIPLIER, WEAPONS, ENEMIES, CAMPAIGN_LEVELS, LEVEL_HI_SCORES_SEPARATOR } from '../constants';
+import { SCENE_NAMES, DEPTH_LAYERS, EVENTS, JOYSTICK_GAP, JOYSTICK_RADIUS, LEVEL_REQUIRED_SCORE_MULTIPLIER, LEVEL_REQUIRED_SCORE, LEVEL_SCORE_MULTIPLIER, WEAPONS, ENEMIES, CAMPAIGN_LEVELS, LEVEL_HI_SCORES_SEPARATOR, GAME_ACTOR_SCALE_MULTIPLIER } from '../constants';
 import { CommonScene } from './CommonScene';
 import { HealthBar } from '../classes/HealthBar';
 import { getFontName, screenData, tweenPromise } from '../Utils';
@@ -15,12 +15,13 @@ export class GameScene extends CommonScene {
     init(data) {
         super.init();
 
-        this.info = data;
+        this.info = { ...data };
+        this._joystick = null;
+        this.cursorKeys = null;
+        this.fireButton = null;
         this._currentLevelScene = this.info.index;
         this._currentScore = 0;
         this._blackBG = null;
-
-        window.gameScene = this;
     }
 
     create(data) {
@@ -41,8 +42,9 @@ export class GameScene extends CommonScene {
         this._setupOverlapping();
     }
 
-    update() {
-        this._sceneBG.tilePositionX += this._sceneBG.width / 10000 * this.speed;
+    update(time, delta) {
+        if (this._blackBG || !this._player.active) return;
+        this._sceneBG.tilePositionX += this._sceneBG.width / 10000 * this.speed * delta / (1000 / 60);
         this._dumpJoyStickState();
         this._player.move();
         this._player.shooting();
@@ -100,6 +102,7 @@ export class GameScene extends CommonScene {
             .on('pointerup', () => {
                 this.fireButton.active = false;
             }, this)
+            .on('pointerout', () => { this.fireButton.active = false; })
             .on('pointerdown', () => {
                 this.fireButton.active = true;
                 this._player.shooting();
@@ -157,9 +160,9 @@ export class GameScene extends CommonScene {
 
     _createPlayer() {
         this._player = new Player({ scene: this });
+        this._player.setScale(this.model.player.scale * GAME_ACTOR_SCALE_MULTIPLIER);
         this._player.setDepth(DEPTH_LAYERS.UI);
 
-        this._player.emit(EVENTS.KILLED);
         this._player.once(EVENTS.KILLED, () => this._onLevelComplete());
     }
 
@@ -202,6 +205,9 @@ export class GameScene extends CommonScene {
     }
 
     _onOverlap(source, target) {
+        if (!source.active || !target.active) return;
+        // Arcade may supply group members before the individual player object.
+        if (target === this._player) [source, target] = [target, source];
         if (target.x > config.width + target.displayWidth * 0.25) {
             return;
         }
@@ -235,9 +241,10 @@ export class GameScene extends CommonScene {
             source.setAlive(false);
         }
 
+        const { x, y } = target;
         target.setAlive(false);
         this.sounds.explosion_small.play();
-        Boom.generate(this, target.x, target.y);
+        Boom.generate(this, x, y);
     }
 
     _onPlayerHit(source, target) {
@@ -293,9 +300,14 @@ export class GameScene extends CommonScene {
     }
 
     _successLevelComplete(label) {
+        if (this.info.isUnlim) {
+            this._failureLevelComplete(label);
+            label.text = this._getText('FINAL_TEXT_WIN');
+            return;
+        }
         label.text = this._getText('FINAL_TEXT_WIN');
 
-        if (this.info.hiScore < this._currentScore) {
+        if (this.model.getLevelHiScore(this._currentLevelScene) < this._currentScore) {
             const hiScores = this.model.hiScores.split(LEVEL_HI_SCORES_SEPARATOR);
             hiScores[this._currentLevelScene - 1] = this._currentScore;
             this.model.setHiScores(hiScores.join());
@@ -343,7 +355,8 @@ export class GameScene extends CommonScene {
             .setInteractive()
             .setDepth(DEPTH_LAYERS.UI)
             .on('pointerdown', () => {
-                this.scene.launch('Pause');
+                if (this.fireButton) this.fireButton.active = false;
+                this.scene.launch(SCENE_NAMES.PAUSE);
                 this.scene.pause();
             }, this);
     }
@@ -383,15 +396,15 @@ export class GameScene extends CommonScene {
             currentProgress = this.model.totalScore/score.diff;
         } 
         
-        if (currentProgress >= 1) {
+        while (currentProgress >= 1) {
             this._increaseLevel();
             score = this._calculateScore();
-            currentProgress = 1 - (-1 * (this.model.totalScore - score.end)/score.diff);
+            currentProgress = (this.model.totalScore - score.start) / score.diff;
         }
 
-        this._progressExpBar.fillProgress.frame.cutWidth = this._progressExpBar.fillProgress.displayWidth * currentProgress;
-        this._progressExpBar.fillProgress.frame.updateUVs();
-        this._progressExpBar.text = this.model.currentLevelPlayer;
+        const fill = this._progressExpBar.fillProgress;
+        fill.setCrop(0, 0, fill.width * Math.max(0, Math.min(1, currentProgress)), fill.height);
+        this._progressExpBar.levelText.setText(this.model.currentLevelPlayer);
     }
 
     _calculateScore() {
@@ -405,6 +418,7 @@ export class GameScene extends CommonScene {
     _increaseLevel(){
         this.sounds.level_up.play({volume: 0.5});
         this.model.increasePlayerLevel();
+        this.model.increaseMoney();
 
         const levelTextLabel = this.add.text(this.scene.scene.cameras.main.midPoint.x, this.scene.scene.cameras.main.midPoint.y, this.model.currentLevelPlayer, {
             font: `${config.width * 0.25}px ${getFontName()}`,
@@ -423,7 +437,6 @@ export class GameScene extends CommonScene {
             duration: 500,
             onComplete: () => {
                 levelTextLabel.destroy();
-                this.model.increaseMoney();
                 this._progressExpBar.levelText.text = this.model.currentLevelPlayer;
             }
         });
