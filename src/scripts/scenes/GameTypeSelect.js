@@ -1,4 +1,4 @@
-import { getFontName, tweenPromise } from '../Utils';
+import { getFontName, screenData, tweenPromise } from '../Utils';
 import { SCENE_NAMES, UNLIMITED_LEVEL } from '../constants';
 import { config } from '../main';
 import { CommonScene } from './CommonScene';
@@ -39,6 +39,24 @@ export class GameTypeSelect extends CommonScene {
         this._createBg();
         this._createSounds();
         this._createButtons();
+        this._createInfoButton();
+    }
+
+    _createInfoButton() {
+        const unit = screenData.width / document.body.clientWidth;
+        const button = this.add.text(this.cameras.main.centerX, screenData.bottom - 16 * unit, this._getText('INFO'), {
+            font: `${18 * unit}px ${getFontName()}`,
+            color: '#243c43',
+            backgroundColor: '#f6edda',
+            padding: { x: 24 * unit, y: 12 * unit },
+        }).setFixedSize(0, 48 * unit).setOrigin(0.5, 1).setInteractive({ useHandCursor: true });
+
+        button.on('pointerover', () => button.setAlpha(0.75));
+        button.on('pointerout', () => button.setAlpha(1));
+        button.once('pointerdown', () => {
+            this.sounds.click.play({ volume: 0.2 });
+            this._startNewScene(SCENE_NAMES.INFO);
+        });
     }
 
     _addButtonEventListeners(button, startScene) {
@@ -67,7 +85,9 @@ export class GameTypeSelect extends CommonScene {
     }
 
     _createButtonSprite(spriteKey, y) {
-        const button = this.add.image(this.scene.scene.cameras.main.midPoint.x, config.height * y, spriteKey)
+        const unit = screenData.width / document.body.clientWidth;
+        const menuHeight = screenData.height - 80 * unit;
+        const button = this.add.image(this.scene.scene.cameras.main.midPoint.x, screenData.top + menuHeight * y, spriteKey)
             .setOrigin(0.5)
             .setScale(5)
             .setAlpha(0)

@@ -2,7 +2,25 @@
     "MainMenu": {
         "CAMPAIGN": "CAMPAIGN",
         "UNLIM": "UNLIM",
-        "UPGRADE": "UPGRADE"
+        "UPGRADE": "UPGRADE",
+        "INFO": "ABOUT THE GAME"
+    },
+    "Info": {
+        "TITLE": "About the game",
+        "BACK": "Back to menu",
+        "FOOTER": "Swipe to change section",
+        "ABOUT_TAB": "The game",
+        "ABOUT_TITLE": "A dragon defending the skies",
+        "ABOUT_BODY": "Invaders Must Die is a side-scrolling arcade shooter. In this fictional story, you control a dragon defending Ukrainian skies from invading aircraft.\n\nBreathe fire, intercept missiles and survive enemy waves. Build your score, improve your dragon and complete the campaign.\n\nCreated by Andrii Pastushenko.",
+        "CONTROLS_TAB": "Controls",
+        "CONTROLS_TITLE": "Move, breathe fire, survive",
+        "CONTROLS_BODY": "Drag the left joystick to move; hold the fire button on the right. You can move and shoot at the same time with two fingers. Play in landscape orientation.\n\nFire is released automatically after each reload while you hold the button.\n\nTap the pause icon to pause, resume, restart or leave a level. The arrow button skips the current dialogue line.",
+        "MODES_TAB": "Modes",
+        "MODES_TITLE": "Campaign or endless survival",
+        "MODES_BODY": "Campaign: survive waves across {levels} locations. Completing a mission unlocks the next one; completed missions can be replayed.\n\nSurvival: an endless stream of enemies. Stay alive and beat your high score. This mode does not grant campaign experience.\n\nFire destroys aircraft and intercepts missiles. Missiles drain health; colliding with an aircraft is fatal. A new attempt starts at full health.",
+        "UPGRADES_TAB": "Progress",
+        "UPGRADES_TITLE": "Turn points into upgrades",
+        "UPGRADES_BODY": "Destroy aircraft and missiles to score points. In the campaign, points also grant experience: each new player level gives one crystal.\n\nSpend crystals in Upgrade to increase health, fire speed or fire size, or to reduce reload time by {percent}% per upgrade. Fire speed means projectile speed, not movement speed.\n\nProgress, upgrades and records are saved locally on this device. Clearing the app data removes the save."
     },
     "Campaign": {
         "TOTAL_CASUALTIES": "Total russian casualties:",
