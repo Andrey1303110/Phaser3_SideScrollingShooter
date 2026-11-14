@@ -9,15 +9,8 @@ export class StorageService {
         if (value === null) {
             return def;
         }
-        if (parser) {
-            try {
-                const parsed = parser(value);
-                return typeof parsed === 'number' && !Number.isFinite(parsed) ? def : parsed;
-            } catch {
-                return def;
-            }
-        }
-        return value;
+        const parsed = parser ? parser(value) : value;
+        return typeof parsed === 'number' && !Number.isFinite(parsed) ? def : parsed;
     }
   
     static set(key, value) {
