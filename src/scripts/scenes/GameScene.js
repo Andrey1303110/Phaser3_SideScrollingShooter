@@ -181,8 +181,6 @@ export class GameScene extends CommonScene {
             missile_2_launch: this.sound.add('missile_2_launch'),
             explosion_small: this.sound.add('explosion_small'),
             wings: this.sound.add('wings'),
-            lose: this.sound.add('lose'),
-            win: this.sound.add('win'),
             level_up: this.sound.add('level_up'),
         };
     }
@@ -273,12 +271,11 @@ export class GameScene extends CommonScene {
             return;
         }
 
-        this.game.sound.stopAll();
+        Object.values(this.sounds).forEach(sound => sound.stop());
         this._removeOverlaps();
 
         const isWin = this._player.active;
-        const sound = isWin ? this.sounds.win : this.sounds.lose;
-        sound.play();
+        const sound = this._playTransitionSound(isWin ? 'win' : 'lose');
 
         this._blackBG = this.add.rectangle(config.width * 0.5, config.height * 0.5, config.width, config.height, '0x000000', 0).setInteractive().setDepth(DEPTH_LAYERS.COVER_SCREEN);
         let finalTextLabel = this.add.text(this._blackBG.x, this._blackBG.y, '', {

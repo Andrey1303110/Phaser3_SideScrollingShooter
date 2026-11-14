@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.2
+
+- Redesigned pause menu.
+- Fixed audio playback during screen transitions.
+
 ## 1.1.1
 
 - Added an in-game guide.
