@@ -4,6 +4,7 @@ import { Enemies } from '../prefabs/Enemies';
 import { Boom } from '../prefabs/Boom';
 import { SCENE_NAMES, DEPTH_LAYERS, EVENTS, JOYSTICK_GAP, JOYSTICK_RADIUS, LEVEL_REQUIRED_SCORE_MULTIPLIER, LEVEL_REQUIRED_SCORE, LEVEL_SCORE_MULTIPLIER, WEAPONS, ENEMIES, CAMPAIGN_LEVELS, LEVEL_HI_SCORES_SEPARATOR, GAME_ACTOR_SCALE_MULTIPLIER } from '../constants';
 import { CommonScene } from './CommonScene';
+import { UI, uiUnit, uiText, createButton } from '../ui';
 import { HealthBar } from '../classes/HealthBar';
 import { getFontName, screenData, tweenPromise } from '../Utils';
 
@@ -22,6 +23,7 @@ export class GameScene extends CommonScene {
         this._currentLevelScene = this.info.index;
         this._currentScore = 0;
         this._blackBG = null;
+        this.debugFPSText = null;
     }
 
     create(data) {
@@ -119,34 +121,39 @@ export class GameScene extends CommonScene {
 
     _createScoreText() {
         const { right, top } = screenData;
-        const { width } = config;
+        const u = uiUnit();
 
         if (this.hiScoreText) {
             this.hiScoreText.destroy();
         }
+        this._hiScoreBackground?.destroy();
 
-        this.scoreText = this.add.text(right - width * 0.05, top + width * 0.02, this._currentScore, {
-            font: `${width * 0.038}px ${getFontName()}`,
-            fill: '#EA0000',
-        }).setOrigin(1, 0).setAlpha(0.75).setDepth(DEPTH_LAYERS.UI);
+        this.scoreText = this.add.text(right - 16 * u, top + 12 * u, this._currentScore,
+            uiText(UI.type.section)).setOrigin(1, 0).setDepth(DEPTH_LAYERS.UI);
 
         if (this.info?.isUnlim) {
             const topScoreText = this._getText('TOP_HIGH_SCORE');
-            this.hiScoreText = this.add.text(this.scene.scene.cameras.main.midPoint.x, top + width * 0.01, `${topScoreText} ${this.model.unlimHiScores}`, {
-                font: `${width * 0.03}px ${getFontName()}`,
-                fill: '#EA0000',
-            }).setOrigin(0.5, 0).setAlpha(0.75).setDepth(DEPTH_LAYERS.UI);
+            const x = this.cameras.main.centerX;
+            this.hiScoreText = this.add.text(x, top + 20 * u,
+                `${topScoreText} ${this.model.unlimHiScores}`, {
+                    ...uiText(UI.type.body), fontStyle: 'bold',
+                }).setOrigin(0.5, 0).setDepth(DEPTH_LAYERS.UI + 0.01);
+            this._hiScoreBackground = this.add.graphics().setDepth(DEPTH_LAYERS.UI);
+            this._hiScoreBackground.fillStyle(UI.colors.panel, 0.96).lineStyle(u, UI.colors.border)
+                .fillRoundedRect(x - this.hiScoreText.width / 2 - 12 * u, top + 12 * u,
+                    this.hiScoreText.width + 24 * u, this.hiScoreText.height + 16 * u, UI.radius * u)
+                .strokeRoundedRect(x - this.hiScoreText.width / 2 - 12 * u, top + 12 * u,
+                    this.hiScoreText.width + 24 * u, this.hiScoreText.height + 16 * u, UI.radius * u);
         }
     }
 
     _createFPSDebugText() {
-        const { top } = screenData;
-        const { width } = config;
-
-        this.debugFPSText = this.add.text(this.scene.scene.cameras.main.midPoint.x, top + width * 0.08, '', {
-            font: `${width * 0.038}px ${getFontName()}`,
-            fill: '#00A86B',
-        }).setOrigin(0.5, 0.5).setAlpha(0.9).setDepth(DEPTH_LAYERS.UI);
+        if (!this.model.showFPS) return;
+        const u = uiUnit();
+        this.debugFPSText = this.add.text(this.cameras.main.centerX, screenData.top + 56 * u, '', {
+            ...uiText(UI.type.caption), backgroundColor: '#203a38',
+            padding: { x: 8 * u, y: 4 * u },
+        }).setOrigin(0.5, 0).setDepth(DEPTH_LAYERS.UI + 0.01);
     }
 
     _createPlayer() {
@@ -337,16 +344,18 @@ export class GameScene extends CommonScene {
     }
 
     _createPauseButton() {
-        this.add.image(screenData.left + config.width * 0.05, screenData.top + config.width * 0.05, 'pause')
-            .setAlpha(0.65)
-            .setScale(2)
-            .setInteractive()
-            .setDepth(DEPTH_LAYERS.UI)
-            .on('pointerdown', () => {
+        const u = uiUnit();
+        this._pauseButton = createButton(this, {
+            x: screenData.left + 24 * u, y: screenData.top + 24 * u, width: 44 * u, text: '',
+            canPress: () => !this._blackBG,
+            onPress: () => {
                 if (this.fireButton) this.fireButton.active = false;
                 this.scene.launch(SCENE_NAMES.PAUSE);
                 this.scene.pause();
-            }, this);
+            },
+        });
+        this._pauseButton.root.setDepth(DEPTH_LAYERS.UI).add(this.add.image(0, 0, 'pause')
+            .setDisplaySize(20 * u, 20 * u).setTintFill(0xf3eddd));
     }
 
     _createHealthBar(){

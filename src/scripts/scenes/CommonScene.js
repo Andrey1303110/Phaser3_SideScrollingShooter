@@ -1,7 +1,7 @@
 import { GameModel } from '../GameModel';
-import { getFontName, getSceneTexts, screenData, setEndpoints, tweenPromise } from '../Utils';
+import { getSceneTexts, setEndpoints } from '../Utils';
 import { SCENE_NAMES } from '../constants';
-import { config } from '../main';
+import { createBackArrow } from '../ui';
 
 export class CommonScene extends Phaser.Scene {
     constructor(name) {
@@ -12,6 +12,7 @@ export class CommonScene extends Phaser.Scene {
     }
 
     init() {
+        this.sound.mute = !this.model.soundEnabled;
         this.events.once('shutdown', () => {
             Object.values(this.sounds ?? {}).forEach(sound => sound.destroy());
             this.sounds = null;
@@ -44,33 +45,6 @@ export class CommonScene extends Phaser.Scene {
         return sound;
     }
 
-    _createAvailableMoney(){
-        const style = {
-            font: `${config.width * 0.038}px ${getFontName()}`,
-            fill: '#FFFFFF',
-        };
-
-        this._moneyIcon = this.add.image(screenData.right - config.height * 0.075, screenData.top + config.height * 0.075, 'ruby')
-            .setScale(0.25)
-            .setAlpha(0)
-            .setInteractive()
-            .once('pointerdown', () => this._onMoneyButtonClick());
-        this._moneyValueText = this.add.text(this._moneyIcon.x - this._moneyIcon.displayWidth, this._moneyIcon.y, this.model.money, style)
-            .setOrigin(0.5)
-            .setAlpha(0);
-
-        this._addAvailableMoneyTween();
-    }
-
-    _addAvailableMoneyTween() {
-        return tweenPromise(this.scene.scene, {
-            targets: [this._moneyIcon, this._moneyValueText],
-            alpha: 0.85,
-            ease: 'Linear',
-            duration: 350,
-        });
-    }
-
     _createBg() {
         const bg = this.add.image(this.scene.scene.cameras.main.midPoint.x, this.scene.scene.cameras.main.midPoint.y, 'bg')
             .setAlpha(0.925)
@@ -84,19 +58,12 @@ export class CommonScene extends Phaser.Scene {
     }
 
     _createReturnButton() {
-        const button = this.add.image(screenData.left + config.width * 0.03, screenData.top + config.height * 0.05, 'return')
-            .setAlpha(0.65)
-            .setInteractive()
-            .once('pointerdown', () => this._onReturnButtonClick());
+        this._backButton = createBackArrow(this);
     }
 
     _onReturnButtonClick() {
         this.scene.start(SCENE_NAMES.MAIN_MENU);
         this.sounds.click.play({ volume: 0.2 });
-    }
-
-    _onMoneyButtonClick() {
-        this.scene.start(SCENE_NAMES.UPGRADE);
     }
 
     _createTranslations() {

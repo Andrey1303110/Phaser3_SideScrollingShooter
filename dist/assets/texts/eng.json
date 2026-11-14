@@ -3,7 +3,30 @@
         "CAMPAIGN": "CAMPAIGN",
         "UNLIM": "UNLIM",
         "UPGRADE": "UPGRADE",
-        "INFO": "ABOUT THE GAME"
+        "INFO": "ABOUT",
+        "SETTINGS": "SETTINGS",
+        "TAGLINE": "YOUR SKY. YOUR FIGHT.",
+        "MISSION_HINT": "Mission {level} / {total}",
+        "CAMPAIGN_DONE": "Campaign completed",
+        "SURVIVAL_HINT": "Endless enemy waves",
+        "UPGRADE_HINT": "Build a stronger dragon",
+        "PLAYER_LEVEL": "Level {level}"
+    },
+    "Settings": {
+        "TITLE": "Settings",
+        "BACK": "Back",
+        "SOUND": "Sound",
+        "FPS": "FPS counter",
+        "ON": "On",
+        "OFF": "Off",
+        "LANGUAGE": "Language",
+        "PROGRESS": "Progress",
+        "RESET": "Reset progress",
+        "SAVED": "Saved",
+        "CONFIRM_TITLE": "Reset all progress?",
+        "CONFIRM_BODY": "Missions, experience, crystals, upgrades and records will be reset. This cannot be undone. Language, sound and FPS settings will stay.",
+        "CANCEL": "Cancel",
+        "RESET_DONE": "Progress reset"
     },
     "Pause": {
         "TITLE": "Paused",
@@ -33,6 +56,27 @@
         "UPGRADES_BODY": "Destroy aircraft and missiles to score points. In the campaign, points also grant experience: each new player level gives one crystal.\n\nSpend crystals in Upgrade to increase health, fire speed or fire size, or to reduce reload time by {percent}% per upgrade. Fire speed means projectile speed, not movement speed.\n\nProgress, upgrades and records are saved locally on this device. Clearing the app data removes the save."
     },
     "Campaign": {
+        "TITLE": "Campaign",
+        "PROGRESS": "Liberated {done} of {total} locations",
+        "REPORT": "Report",
+        "REPORT_TITLE": "Campaign report",
+        "MISSION_NUMBER": "Mission {level} / {total}",
+        "LIBERATED": "Liberated",
+        "CURRENT": "Current mission",
+        "LOCKED": "Locked",
+        "LOCKED_HINT": "Complete mission {level} first",
+        "BRIEFING": "Briefing",
+        "REPLAY_BRIEFING": "Replay briefing",
+        "START": "Start",
+        "KYIV_MISSIONS": "Kyiv: select a district",
+        "KYIV_CLUSTER": "Kyiv · 3",
+        "TYPE_HELICOPTER": "Helicopters",
+        "TYPE_JET": "Jets",
+        "TYPE_STRATEGIC_JET": "Strategic aircraft",
+        "TARGETS": "Airborne targets: {count}",
+        "RECORD": "Mission record: {score}",
+        "MISSION_COMPLETE": "Mission complete · next location unlocked",
+        "CAMPAIGN_COMPLETE": "Campaign complete · the skies are free",
         "TOTAL_CASUALTIES": "Total russian casualties:",
         "TOTAL_CASUALTIES_JEST": "JETS:",
         "TOTAL_CASUALTIES_HELICOPTERS": "HELICOPTERS:",
@@ -66,11 +110,12 @@
         "FINAL_TEXT_LOSE": "HEROES DON'T DIE!"
     },
     "Upgrade": {
-        "HEALTH_TITLE": "HP (point):",
-        "RELOAD_TITLE": "RELOAD (ms):",
-        "VELOCITY_TITLE": "VELOCITY (m/s):",
-        "SCALE_TITLE": "SCALE (%):",
+        "TITLE": "Upgrades",
+        "HEALTH_TITLE": "Health",
+        "RELOAD_TITLE": "Reload time (ms)",
+        "VELOCITY_TITLE": "Fire speed (px/s)",
+        "SCALE_TITLE": "Fire size (%)",
         "LEVEL_TEXT": "Lvl. ",
-        "BOTTOM_DESCRIPTION": "Every level increase your ability on"
+        "BOTTOM_DESCRIPTION": "Each upgrade improves its stat by {percent}%."
     }
 }

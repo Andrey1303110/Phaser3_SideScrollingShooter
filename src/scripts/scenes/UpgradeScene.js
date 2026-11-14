@@ -1,326 +1,120 @@
-import { FIRE_WEAPON_DEFAULT_SCALE, SCENE_NAMES, UPGRADE_MULTIPLIER } from "../constants";
-import { config } from "../main";
-import { CommonScene } from "./CommonScene";
-import { Player } from "../prefabs/Player";
-import { delayInMSec, getFontName, screenData, tweenPromise } from "../Utils";
+import { FIRE_WEAPON_DEFAULT_SCALE, SCENE_NAMES, UPGRADE_MULTIPLIER } from '../constants';
+import { CommonScene } from './CommonScene';
+import { screenData, setEndpoints } from '../Utils';
+import { UI, uiText, createButton } from '../ui';
 
-const STATS_MAP = {
-    health: {
-        text: 'HEALTH_TITLE',
-        color: 'ff2407',
-    },
-    reload: {
-        text: 'RELOAD_TITLE',
-        color: '66e210',
-    },
-    velocity: {
-        text: 'VELOCITY_TITLE',
-        color: 'ffdc45',
-    },
-    scale: {
-        text: 'SCALE_TITLE',
-        color: '0291f7',
-    }
+const STATS = {
+    health: 'HEALTH_TITLE', reload: 'RELOAD_TITLE',
+    velocity: 'VELOCITY_TITLE', scale: 'SCALE_TITLE',
 };
 
 export class UpgradeScene extends CommonScene {
-    constructor() {
-        super(SCENE_NAMES.UPGRADE);
-    }
+    constructor() { super(SCENE_NAMES.UPGRADE); }
 
-    init(){
+    init() {
         super.init();
-
-        this.buttons = {};
+        this._cooldown = false;
     }
 
-    async create() {
+    create() {
+        this.sounds = { click: this.sound.add('click'), upgrade: this.sound.add('upgrade') };
+        this._render();
+        const resize = () => { setEndpoints(); this._render(); };
+        this.scale.on('resize', resize);
+        this.events.once('shutdown', () => this.scale.off('resize', resize));
+    }
+
+    _render() {
+        this.tweens.killAll();
+        this.children.removeAll(true);
         this._createBg();
-        this._createSounds();
+        this.add.rectangle(this.cameras.main.centerX, this.cameras.main.centerY,
+            this.cameras.main.width, this.cameras.main.height, 0x102323, 0.88);
+        const u = screenData.width / document.body.clientWidth;
+        this._unit = u;
         this._createReturnButton();
-        await this._createPlayer();
-        this._createAvailableMoney();
-        await this._createStats();
-    }
-
-    _createPlayer(){
-        this._player = new Player({ scene: this });
-        this._player.setScale(this.model.player.scale * 1.75);
-
-        return tweenPromise(this, {
-            targets: this._player,
-            x: config.width * 0.125,
-            ease: 'Linear',
-            duration: 1250,
-        });
-    }
-
-    async _createStats(){
+        this.add.text(screenData.left + 56 * u, screenData.top + 12 * u,
+            this._getText('TITLE'), uiText(UI.type.title));
+        this._moneyValueText = this.add.text(screenData.right - 16 * u, screenData.top + 24 * u,
+            String(this.model.money), uiText(UI.type.button, UI.colors.accent)).setOrigin(1, 0.5);
+        this._moneyIcon = this.add.image(this._moneyValueText.getBounds().left - 16 * u,
+            screenData.top + 24 * u, 'ruby').setDisplaySize(18 * u, 18 * u);
+        const compact = screenData.height / u < 320;
+        const left = screenData.left + screenData.width * 0.33;
+        const width = screenData.right - left - 16 * u;
+        const top = screenData.top + (compact ? 54 : 62) * u;
+        const gap = (compact ? 4 : 8) * u;
+        const height = Math.max(44 * u, Math.min(56 * u, (screenData.height - 116 * u - gap * 3) / 4));
+        this.buttons = {};
         this.statsText = {};
-        this.statsIcon = {};
-        this.statsLevel = {};
+        Object.entries(STATS).forEach(([key, title], index) => {
+            const y = top + index * (height + gap);
+            const panel = this.add.graphics().fillStyle(UI.colors.panel).lineStyle(u, UI.colors.border, 0.8);
+            panel.fillRoundedRect(left, y, width, height, UI.radius * u)
+                .strokeRoundedRect(left, y, width, height, UI.radius * u);
+            this.add.image(left + 24 * u, y + height / 2, key).setDisplaySize(24 * u, 24 * u);
+            const name = this.add.text(left + 48 * u, y + 4 * u, this._getText(title), uiText());
+            const textWidth = width - 148 * u;
+            if (name.width > textWidth) name.setFontSize(UI.type.body * u * textWidth / name.width);
+            this.statsText[key] = this.add.text(left + 48 * u, y + 25 * u, '', uiText(UI.type.caption, UI.colors.muted));
+            const button = createButton(this, {
+                x: left + width - 44 * u, y: y + height / 2, width: 76 * u, text: '',
+                variant: 'primary', onPress: () => this._upgrade(key),
+            });
+            button.root.add(this.add.image(18 * u, 0, 'ruby').setDisplaySize(18 * u, 18 * u));
+            this.buttons[key] = button;
+        });
+        const areaWidth = left - screenData.left - 32 * u;
+        const x = screenData.left + 16 * u + areaWidth / 2;
+        const y = top + (height * 4 + gap * 3) / 2;
+        if (!this.anims.exists('menu-fly')) {
+            this.anims.create({ key: 'menu-fly', frames: this.anims.generateFrameNames('dragon',
+                { prefix: 'dragon', start: 1, end: 6 }), frameRate: 8, repeat: -1 });
+        }
+        this._player = this.add.sprite(x, y, 'dragon', 'dragon1')
+            .setScale(Math.min(180 * u, areaWidth * 0.9) / 153).play('menu-fly');
+        this.tweens.add({ targets: this._player, y: y - 4 * u, duration: 1300, yoyo: true,
+            repeat: -1, ease: 'Sine.InOut' });
+        if (!compact) {
+            this.add.text((screenData.left + screenData.right) / 2, screenData.bottom - 16 * u,
+                this._getText('BOTTOM_DESCRIPTION').replace('{percent}', Math.round(UPGRADE_MULTIPLIER * 100)),
+                { ...uiText(UI.type.caption, UI.colors.muted), align: 'center',
+                    wordWrap: { width: screenData.width - 32 * u } }).setOrigin(0.5, 1);
+        }
+        this._refresh();
+    }
 
-        const style = {
-            font: `${config.width * 0.031}px ${getFontName()}`,
-            fill: '#000000',
-        };
+    _value(key) {
+        if (key === 'health') return Math.round(this.model.player.maxHealth);
+        if (key === 'scale') return Math.round(this.model.fireWeapon.scale * FIRE_WEAPON_DEFAULT_SCALE * 100);
+        return Math.round(this.model.fireWeapon[key]);
+    }
 
-        const text = this._getText('BOTTOM_DESCRIPTION') + ` ${UPGRADE_MULTIPLIER * 100}%`;
-        const infoText = this.add.text(this.scene.scene.cameras.main.midPoint.x, screenData.bottom - config.height * 0.075, text, style).setOrigin(0.5).setAlpha(0);
-
-        const upgradableStats = Object.keys(this.model.currentUpgradableStats);
-        const height = config.height * 0.4;
-
-        for (let i = 0; i < upgradableStats.length; i++) {
-            const key = upgradableStats[i];
-
-            const returnedValue = this._setStatsText(key);
-
-            const x = config.width * 0.57;
-            const y = (this.scene.scene.cameras.main.midPoint.y - height * 0.5) + (height / upgradableStats.length) * i;
-
+    _refresh() {
+        const u = this._unit;
+        this._moneyValueText.setText(String(this.model.money));
+        this._moneyIcon.x = this._moneyValueText.getBounds().left - 16 * u;
+        for (const key of Object.keys(STATS)) {
             const level = this.model.currentUpgradableStats[key];
-            const statText = `${this._getText(STATS_MAP[key]['text'])} ${returnedValue}`;
-            const levelText = `${this._getText('LEVEL_TEXT')} ${level}`;
-
-            this.statsText[key] = this.add.text(x, y, statText, style).setOrigin(1, 0).setAlpha(0);
-            this.statsIcon[key] = this.add.image(x + config.width * 0.06, y, key).setOrigin(0.5, 0.15).setAlpha(0).setDisplaySize(config.width * 0.045, config.width * 0.045);
-            this.statsLevel[key] = this.add.text(x + config.width * 0.12, y, levelText, style).setOrigin(0, 0).setAlpha(0);
-
-            await this._playShowStatsAnimation(key);
-            this._createUpgradeButton({x, y, key, level});
-
-            await delayInMSec(this.scene, 250);
-        }
-
-        
-        await delayInMSec(this.scene, 350);
-        this._playShowStatsBottomInfo(infoText);
-    }
-
-    _playShowStatsAnimation(key) {
-        const duration = 325;
-        const targets = [this.statsText[key], this.statsIcon[key], this.statsLevel[key]];
-
-        return tweenPromise(this, {
-            targets,
-            ease: 'Linear',
-            alpha: 0.75,
-            duration,
-        });
-    }
-
-    _playShowStatsBottomInfo(infoText) {
-        return tweenPromise(this, {
-            targets: infoText,
-            ease: 'Linear',
-            alpha: 0.75,
-            duration: 350,
-        });
-    }
-
-    _setStatsText(key) {
-        switch (key) {
-            case 'health':
-                return Math.round(this.model.player.maxHealth).toFixed(0);
-            case 'reload':
-                return Math.round(this.model.fireWeapon[key]).toFixed(0);
-            case 'scale':
-                return Math.round(this.model.fireWeapon[key] * (FIRE_WEAPON_DEFAULT_SCALE * 100)).toFixed(0);
-            case 'velocity':
-                return Math.round(this.model.fireWeapon[key]).toFixed(0);
-        }
-    }
-
-    _checkAvailability(button){
-        if (this.model.money < button.cost || this.model.money <= 0) {
-            return this._toggleButton(button, false);
-        }
-        this._toggleButton(button, true);
-    }
-
-    _checkAvailabilityForAllButtons() {
-        Object.keys(this.buttons).forEach(key => {
-            this._checkAvailability(this.buttons[key]);
-        });
-    }
-
-    _toggleButton(button, isActive) {
-        let alpha = isActive ? 0.9 : 0.5;
-
-        button.active = isActive;
-        button.setAlpha(alpha);
-        button.textCost.setAlpha(alpha)
-        button.crystal.setAlpha(alpha);
-    }
-
-    _disableButtons() {
-        Object.keys(this.buttons).forEach(key => {
             const button = this.buttons[key];
-            this._toggleButton(button, false);
-        });
-    }
-
-    _setPrice(button){
-        button.cost = Math.floor(button.level / 10) + 1;
-        button.textCost.text = button.cost;
-    }
-
-    _createUpgradeButton(data){
-        const button = this.add.image(data.x + config.width * 0.323, data.y, 'button_campaign')
-            .setOrigin(0.5, 0.125)
-            .setScale(0.33)
-            .setAlpha(0)
-            .setInteractive()
-            .setVisible(false)
-            .on('pointerdown', () => this._upgrade(button));
-
-        button.name = data.key;
-        button.level = data.level;
-        
-        button.cost = Math.floor(button.level/10) + 1;
-
-        const style = {
-            font: `${config.width * 0.023}px ${getFontName()}`,
-            fill: '#FFFFFF',
-        };
-        button.textCost = this.add.text(button.x, button.y, '1', style).setOrigin(0.5, -0.125).setVisible(false);
-
-        button.crystal = this.add.image(button.x, button.y, 'ruby')
-            .setOrigin(0.5, 0.05)
-            .setScale(0.15)
-            .setVisible(false);
-
-        button.textCost.x -= button.crystal.displayWidth * 0.5;
-        button.crystal.x += button.crystal.displayWidth * 0.5;
-
-        button.clicked = false;
-
-        this._checkAvailability(button);
-        this._setPrice(button);
-
-        const currentAlpha = button.alpha;
-        button.alpha = 0;
-        button.textCost.alpha = 0;
-        button.crystal.alpha = 0;
-        button.setVisible(true);
-        button.textCost.setVisible(true);
-        button.crystal.setVisible(true);
-        this.buttons[data.key] = button;
-
-        return tweenPromise(this, {
-            targets: [button, button.textCost, button.crystal],
-            ease: 'Linear',
-            alpha: currentAlpha,
-            duration: 500,
-        });
-    }
-
-    _upgrade(button){
-        if (button.clicked || !button.active) {
-            if (!button.active) {
-                this.sounds.error.play({volume: 0.3});
-            }
-            return;
+            button.cost = Math.floor(level / 10) + 1;
+            button.active = !this._cooldown && this.model.money >= button.cost;
+            button.clicked = this._cooldown;
+            button.setText(String(button.cost)).setEnabled(button.active);
+            button.label.setX(-6 * u);
+            this.statsText[key].setText(this._value(key) + ' · ' + this._getText('LEVEL_TEXT').trim() + ' ' + level);
         }
-
-        let statLevel = this.model.currentUpgradableStats[button.name];
-
-        if (button.cost > this.model.money) {
-            return;
-        }
-
-        this.model.upgradePlayerAbility(button.name);
-        this.model.decreaseMoney(button.cost);
-        this._moneyValueText.text = this.model.money;
-        button.level = this.model.currentUpgradableStats[button.name];
-
-        const returnedValue = this._setStatsText(button.name);
-        const statText = this._getText(STATS_MAP[button.name]['text']);
-        const statTextLevel = this._getText('LEVEL_TEXT');
-
-        this.statsText[button.name].text = `${statText} ${returnedValue}`;
-        this.statsLevel[button.name].text = `${statTextLevel} ${this.model.currentUpgradableStats[button.name]}`;
-
-        button.clicked = true;
-        button.setAlpha(1);
-
-        this._disableButtons();
-        this._setPrice(button);
-
-        this.time.delayedCall(1000, () => {
-            button.clicked = false;
-            this._checkAvailabilityForAllButtons();
-        });
-
-        return this._createUpgradeAnimation(button.name, statLevel);
     }
 
-    async _createUpgradeAnimation(name, level) {
+    _upgrade(key) {
+        const button = this.buttons[key];
+        if (!button.active || this._cooldown) return;
+        if (!this.model.decreaseMoney(button.cost)) return;
+        this.model.upgradePlayerAbility(key);
+        this._cooldown = true;
         this.sounds.upgrade.play({ volume: 0.2 });
-        
-        const maxDuration = 1000;
-        const minDuration = 500;
-        const maxCalculationsLevel = 50;
-
-        let levelForCalculation = level > maxCalculationsLevel ? maxCalculationsLevel : level;
-        let objectsNum = 15 + levelForCalculation * 2;
-        
-        for (let i = 0; i < objectsNum; i++) {
-            const x = Phaser.Math.Between(this._player.x - this._player.displayWidth * 0.57, this._player.x + this._player.displayWidth * 0.57);
-            const y = Phaser.Math.Between(this._player.y - this._player.displayHeight * 0.57, this._player.y + this._player.displayHeight * 0.57);
-            let scale = Phaser.Math.Between(50 + levelForCalculation * 2, 75 + levelForCalculation * 2) / 100;
-            if (scale > 1) {
-                scale = 1;
-            }
-
-            const font = `${config.height * 0.075 * scale}px ${getFontName()}`;
-            const fill = `#${STATS_MAP[name]['color']}`;
-            const duration = Phaser.Math.Between(minDuration, maxDuration);
-
-            const plusSymbol = this.add.text(x, y, '+', { font, fill })
-                .setOrigin(0.5)
-                .setAlpha(0)
-                .setStroke('#fafafa33', 4);
-            
-            this._playPlusUpgradeTweenAnimation(plusSymbol, duration);
-        }
-
-        const delay = (maxDuration + minDuration) * 2;
-        return delayInMSec(this.scene, delay);
+        this._refresh();
+        this.tweens.add({ targets: button.root, alpha: { from: 0.65, to: 1 }, duration: 220 });
+        this.time.delayedCall(1000, () => { this._cooldown = false; this._refresh(); });
     }
-
-    async _playPlusUpgradeTweenAnimation(symbol, duration) {
-        await Promise.race([
-            tweenPromise(this, {
-                targets: symbol,
-                alpha: 1,
-                ease: 'Back.Out(1.5)',
-                duration,
-            }),
-            delayInMSec(this.scene, duration * 0.5)
-        ]);
-        return tweenPromise(this, {
-            targets: symbol,
-            y: screenData.top,
-            alpha: 0,
-            ease: 'Back.In',
-            duration,
-            onComplete: () => symbol.destroy(),
-        });
-    }
-
-    _createSounds() {
-        if (this.sounds) {
-            return;
-        }
-        this.sounds = {
-            click: this.sound.add('click'),
-            wings: this.sound.add('wings'),
-            upgrade: this.sound.add('upgrade'),
-            error: this.sound.add('error'),
-        };
-    }
-
-    _onMoneyButtonClick() {}
 }

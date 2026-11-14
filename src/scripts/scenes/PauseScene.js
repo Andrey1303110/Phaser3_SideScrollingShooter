@@ -1,6 +1,7 @@
 import { SCENE_NAMES } from '../constants';
 import { CommonScene } from './CommonScene';
-import { getFontName, screenData, setEndpoints } from '../Utils';
+import { screenData, setEndpoints } from '../Utils';
+import { UI, uiText, createButton } from '../ui';
 
 export class PauseScene extends CommonScene {
     constructor() {
@@ -36,7 +37,7 @@ export class PauseScene extends CommonScene {
     _createMenu() {
         const unit = screenData.width / document.body.clientWidth;
         const width = Math.min(420 * unit, screenData.width - 32 * unit);
-        const height = Math.min(252 * unit, screenData.height - 24 * unit);
+        const height = Math.min(200 * unit, screenData.height - 24 * unit);
         this._unit = unit;
         this._blackBG = this.add.rectangle((screenData.left + screenData.right) / 2,
             (screenData.top + screenData.bottom) / 2, screenData.width, screenData.height,
@@ -46,61 +47,41 @@ export class PauseScene extends CommonScene {
 
         const background = this.add.graphics();
         background.fillStyle(0x071014, 0.2).fillRoundedRect(-width / 2 + 4 * unit,
-            -height / 2 + 6 * unit, width, height, 18 * unit);
-        background.fillStyle(0xf6edda).lineStyle(1.5 * unit, 0xd9c8a8)
-            .fillRoundedRect(-width / 2, -height / 2, width, height, 18 * unit)
-            .strokeRoundedRect(-width / 2, -height / 2, width, height, 18 * unit);
+            -height / 2 + 6 * unit, width, height, UI.panelRadius * unit);
+        background.fillStyle(UI.colors.panel).lineStyle(1.5 * unit, UI.colors.border)
+            .fillRoundedRect(-width / 2, -height / 2, width, height, UI.panelRadius * unit)
+            .strokeRoundedRect(-width / 2, -height / 2, width, height, UI.panelRadius * unit);
         this._panel.add(background);
 
         const title = this.add.text(0, -height / 2 + 22 * unit, this._getText('TITLE'), {
-            font: `${32 * unit}px ${getFontName()}`, color: '#243c43',
+            ...uiText(UI.type.title),
         }).setOrigin(0.5, 0);
         const context = this._info.isUnlim ? this._getText('SURVIVAL')
             : `${this._getText('CAMPAIGN')} · ${this._getText('LEVEL')} ${this._info.index}`;
-        const subtitle = this.add.text(0, -height / 2 + 68 * unit, context, {
-            fontFamily: 'Arial', fontSize: 15 * unit, color: '#687268',
+        const subtitle = this.add.text(0, -height / 2 + 52 * unit, context, {
+            ...uiText(UI.type.caption, UI.colors.muted),
         }).setOrigin(0.5, 0);
         this._panel.add([title, subtitle]);
 
-        const buttonWidth = width - 48 * unit;
+        const buttonWidth = width - 32 * unit;
         const secondaryWidth = (buttonWidth - 12 * unit) / 2;
         this._buttons = [
-            this._createButton(0, -height / 2 + 122 * unit, buttonWidth, 54 * unit,
+            this._createButton(0, -height / 2 + 106 * unit, buttonWidth, 44 * unit,
                 this._getText('RESUME'), 'play', true),
-            this._createButton(-(secondaryWidth + 12 * unit) / 2, -height / 2 + 192 * unit,
-                secondaryWidth, 50 * unit, this._getText('RESTART'), 'restart'),
-            this._createButton((secondaryWidth + 12 * unit) / 2, -height / 2 + 192 * unit,
-                secondaryWidth, 50 * unit, this._getText(this._info.isUnlim ? 'TO_MENU' : 'TO_CAMPAIGN'), 'return'),
+            this._createButton(-(secondaryWidth + 12 * unit) / 2, -height / 2 + 162 * unit,
+                secondaryWidth, 44 * unit, this._getText('RESTART'), 'restart'),
+            this._createButton((secondaryWidth + 12 * unit) / 2, -height / 2 + 162 * unit,
+                secondaryWidth, 44 * unit, this._getText(this._info.isUnlim ? 'TO_MENU' : 'TO_CAMPAIGN'), 'return'),
         ];
     }
 
     _createButton(x, y, width, height, text, command, primary = false) {
-        const graphics = this.add.graphics();
-        const draw = pressed => {
-            graphics.clear().fillStyle(primary ? (pressed ? 0x28613b : 0x367c4b) : (pressed ? 0xd4c5a9 : 0xe6dac1))
-                .fillRoundedRect(x - width / 2, y - height / 2, width, height, 10 * this._unit);
-        };
-        draw(false);
-        const label = this.add.text(x, y, text, {
-            fontFamily: 'Arial', fontSize: (primary ? 20 : 17) * this._unit,
-            fontStyle: primary ? 'bold' : 'normal', color: primary ? '#ffffff' : '#243c43',
-        }).setOrigin(0.5);
-        const hitArea = this.add.zone(x, y, width, height).setInteractive({ useHandCursor: true });
-        let pressedPointer = null;
-        hitArea.on('pointerdown', pointer => {
-            if (this._transitioning) return;
-            pressedPointer = pointer.id;
-            draw(true);
-        });
-        hitArea.on('pointerout', () => { pressedPointer = null; draw(false); });
-        hitArea.on('pointerup', pointer => {
-            if (pressedPointer !== pointer.id) return;
-            pressedPointer = null;
-            draw(false);
-            this._close(command);
-        });
-        this._panel.add([graphics, label, hitArea]);
-        return { hitArea, label, command };
+        return { ...createButton(this, {
+            x, y, width, height, text, parent: this._panel,
+            variant: primary ? 'primary' : 'secondary',
+            canPress: () => !this._transitioning,
+            onPress: () => this._close(command),
+        }), command };
     }
 
     _close(command) {

@@ -1,5 +1,6 @@
 import { Resolver } from '../Resolver';
-import { getFontName, screenData, tweenPromise } from '../Utils';
+import { screenData, tweenPromise } from '../Utils';
+import { UI, uiUnit, uiText, createButton } from '../ui';
 import { DEPTH_LAYERS } from '../constants';
 import { config } from '../main';
 import { RoundedRectContainer } from './RoundedRectContainer';
@@ -58,64 +59,54 @@ export class DialogBox extends Phaser.GameObjects.Container {
     }
 
     _createSpeechBg() {
-        const padding = config.width * 0.08;
-        const width = screenData.width - padding * 2;
-        const height = config.height * 0.55;
-        const x = screenData.left + padding;
-        const y = screenData.bottom - height;
-        const radius = width * 0.025;
-        const fillColor = 0x000000;
-        const fillAlpha = 0.6;
-
-        this._bg = new RoundedRectContainer(this._scene, { width, height, radius, fillColor, fillAlpha });
-        this._bg.setPosition(x, y);
-        this._bg.setDepth(DEPTH_LAYERS.DIALOGUES)
+        const u = uiUnit();
+        const width = screenData.width - 24 * u;
+        const height = Math.min(280 * u, screenData.height - 24 * u);
+        this._bg = new RoundedRectContainer(this._scene, {
+            width, height, radius: UI.panelRadius * u,
+            fillColor: UI.colors.panel, fillAlpha: 0.98,
+        });
+        this._bg.setPosition(screenData.left + 12 * u, screenData.bottom - height - 12 * u)
+            .setDepth(DEPTH_LAYERS.DIALOGUES);
     }
 
     _createSkipButton() {
-        const y = this._bg.y + this._bg.height * 0.5;
-
-        this._skipButton = this._scene.add.image(screenData.right, y, 'next')
-            .setAlpha(0)
-            .setOrigin(1, 0.5)
-            .setDepth(DEPTH_LAYERS.DIALOGUES)
-            .once('pointerdown', () => this._skipDialog());
+        const u = uiUnit();
+        this._skipControl = createButton(this._scene, {
+            x: this._bg.x + this._bg.width - 44 * u,
+            y: this._bg.y + this._bg.height - 44 * u,
+            width: UI.dialogueButtonSize * u, height: UI.dialogueButtonSize * u,
+            text: '', enabled: false, onPress: () => this._skipDialog(),
+        });
+        this._skipControl.root.add(this._scene.add.image(0, 0, 'next').setDisplaySize(36 * u, 36 * u));
+        this._skipButton = this._skipControl.root.setAlpha(0).setDepth(DEPTH_LAYERS.DIALOGUES);
     }
 
     _createPerson({ image }) {
-        const { width } = this._scene.textures.getFrame('president');
-    
-        const x = this._bg.x + width * 0.25;
-        const y = this._bg.y + this._bg.height;
-
-        this._person = this._scene.add.image(x, y, image).setDepth(DEPTH_LAYERS.DIALOGUES).setOrigin(0.5, 1);
+        const u = uiUnit();
+        const size = Math.min(150 * u, this._bg.height - 24 * u);
+        this._person = this._scene.add.image(this._bg.x + 16 * u + size / 2,
+            this._bg.y + this._bg.height, image).setDisplaySize(size, size)
+            .setDepth(DEPTH_LAYERS.DIALOGUES).setOrigin(0.5, 1);
     }
 
-    _createText(data) {
-        const { text } = data;
-
-        const fontSize = config.width * 0.037;
-        const vertPadding = config.width * 0.025;
-        const horPadding = config.width * 0.02;
-
-        const personEndPointX = this._person.x + this._person.width * 0.5;
-        const bgEndPointX = this._bg.x + this._bg.width;
-        const wordWrapWidth = (bgEndPointX - personEndPointX) - horPadding * 2;
-        const x = this._bg.x + this._bg.width * 0.5 + this._person.width * 0.5 - horPadding * 0.5;
-        const y = this._bg.y + this._bg.height * 0.5;
-
-        let content = this._scene.add.text(0, 0, text, { 
-            font: `${fontSize}px ${getFontName()}`,
-            lineSpacing: fontSize * 0.5,
-            color: '#A0A0A0',
-            align: 'left',
-        }).setDepth(DEPTH_LAYERS.DIALOGUES).setWordWrapWidth(wordWrapWidth);
-        
-        content = this._resizeContent(content, horPadding, vertPadding, wordWrapWidth);
-
-        content.setPosition(x, y);
-        content.setOrigin(0.5);
-
+    _createText({ text }) {
+        const u = uiUnit();
+        const left = this._person.x + this._person.displayWidth / 2 + 12 * u;
+        const maxWidth = this._bg.x + this._bg.width - left - 88 * u;
+        const content = this._scene.add.text(0, 0, text, {
+            ...uiText(UI.type.dialogue), lineSpacing: 5 * u, wordWrap: { width: maxWidth },
+        }).setDepth(DEPTH_LAYERS.DIALOGUES);
+        while (content.height > this._bg.height - 32 * u && parseFloat(content.style.fontSize) > 20 * u) {
+            content.setFontSize(parseFloat(content.style.fontSize) - u);
+        }
+        const height = Math.min(this._bg.height, Math.max(190 * u, content.height + 32 * u));
+        this._bg.removeAll(true);
+        this._bg.create({ width: this._bg.width, height, radius: UI.panelRadius * u,
+            fillColor: UI.colors.panel, fillAlpha: 0.98 });
+        this._bg.y = screenData.bottom - height - 12 * u;
+        this._person.y = this._bg.y + height;
+        content.setPosition(left, this._bg.y + this._bg.height / 2).setOrigin(0, 0.5);
         this._text = content;
     }
 
@@ -125,12 +116,12 @@ export class DialogBox extends Phaser.GameObjects.Container {
             alpha: 1,
             ease: 'Power1',
             duration: 250,
-            onComplete: () => this._skipButton.setInteractive()
+            onComplete: () => this._skipControl.setEnabled(true)
         });
     }
 
     _hideSkipButton() {
-        this._skipButton.removeInteractive();
+        this._skipControl.setEnabled(false);
         return tweenPromise(this._scene, {
             targets: this._skipButton,
             alpha: 0,
@@ -145,17 +136,4 @@ export class DialogBox extends Phaser.GameObjects.Container {
         this._scene.sounds.click.play({ volume: 0.2 });
     }
 
-    _resizeContent(content, horizPadding, vertPadding, maxWidth) {
-        const oldFontSize = parseFloat(content.style.fontSize);
-        const decreasedFontSize = oldFontSize * 0.93;
-
-        content.setFontSize(decreasedFontSize);
-        content.setWordWrapWidth(maxWidth);
-
-        if (content.height > this._bg.height - vertPadding || content.width > maxWidth) {
-            return this._resizeContent(content, horizPadding, vertPadding, maxWidth);
-        }
-    
-        return content;
-    }
 }

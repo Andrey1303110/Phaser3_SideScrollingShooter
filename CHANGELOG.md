@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.4.0
+
+- Increased dialogue text and next-button sizes.
+- Added a persistent FPS counter toggle in settings.
+- Unified UI typography, buttons and spacing across game screens.
+- Redesigned upgrades and improved dialogue readability.
+- Removed unused assets and the obsolete mission card, preserving voiceovers.
+- Redesigned the campaign map with mission details, district selection and a separate report.
+- Added briefing replay and campaign progress feedback.
+- Redesigned the main menu with an animated dragon and responsive mode cards.
+- Added settings for sound, language and progress reset with confirmation.
+- Made the settings panel compact and added a back arrow.
+
 ## 1.3.2
 
 - Expanded the introduction with controls, experience and upgrade guidance.

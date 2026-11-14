@@ -35,6 +35,8 @@ export class GameModel {
         
         this.lang = StorageService.get('lang', '', String);
         if (!['eng', 'ukr'].includes(this.lang)) this.lang = '';
+        this.soundEnabled = StorageService.get('soundEnabled', true, value => value !== 'false');
+        this.showFPS = StorageService.get('showFPS', false, value => value === 'true');
     }
 
     static getInstance() {
@@ -127,6 +129,29 @@ export class GameModel {
     setLang(lang) {
         this.lang = lang;
         StorageService.set('lang', lang);
+    }
+
+    setSoundEnabled(enabled) {
+        this.soundEnabled = enabled;
+        StorageService.set('soundEnabled', enabled);
+    }
+
+    setShowFPS(enabled) {
+        this.showFPS = enabled;
+        StorageService.set('showFPS', enabled);
+    }
+
+    resetProgress() {
+        this.initSceneLevel();
+        this.initPlayerLevel();
+        this.initMoney();
+        this.initHiScores();
+        this.initCasualties();
+        this.initUpgradeLevels();
+        this.player = { ...PLAYER };
+        this.fireWeapon = { ...WEAPONS.FIRE };
+        this._abilitiesInitialized = false;
+        this.initAbilitiesByLevel();
     }
 
     initCasualties() {

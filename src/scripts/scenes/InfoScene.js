@@ -1,13 +1,20 @@
 import { CommonScene } from './CommonScene';
 import { CAMPAIGN_LEVELS, SCENE_NAMES, UPGRADE_MULTIPLIER } from '../constants';
-import { getFontName, screenData, setEndpoints } from '../Utils';
+import { screenData, setEndpoints } from '../Utils';
+import { UI, uiText, createButton, createBackArrow } from '../ui';
 
 const SECTIONS = ['ABOUT', 'CONTROLS', 'MODES', 'UPGRADES'];
-const COLORS = { ink: '#243c43', muted: '#59645f', accent: '#c35e27' };
+const COLORS = { ink: UI.colors.text, muted: UI.colors.muted };
 
 export class InfoScene extends CommonScene {
     constructor() {
         super(SCENE_NAMES.INFO);
+    }
+
+    _createBg() {
+        super._createBg();
+        this.add.rectangle(this.cameras.main.centerX, this.cameras.main.centerY,
+            this.cameras.main.width, this.cameras.main.height, 0x102323, 0.88);
     }
 
     create() {
@@ -38,25 +45,23 @@ export class InfoScene extends CommonScene {
         // Screen-pixel sizes stay readable even though Phaser scales a 1280x720 canvas.
         const unit = screenData.width / document.body.clientWidth;
         this._unit = unit;
-        const width = Math.min(screenData.width - 20 * unit, 1080);
+        const width = Math.min(screenData.width - 104 * unit, 680 * unit);
         const height = screenData.height - 20 * unit;
         const left = (screenData.left + screenData.right - width) / 2;
         const top = screenData.top + 10 * unit;
-        const padding = 14 * unit;
+        const padding = UI.padding * unit;
         const buttonHeight = 44 * unit;
 
-        this.add.rectangle(left + width / 2, top + height / 2, width, height, 0xf6edda, 0.97)
-            .setStrokeStyle(2, 0xc9b896);
+        this.add.graphics().fillStyle(UI.colors.panel, 0.98).lineStyle(unit, UI.colors.border)
+            .fillRoundedRect(left, top, width, height, UI.panelRadius * unit)
+            .strokeRoundedRect(left, top, width, height, UI.panelRadius * unit);
 
         this.add.text(left + padding, top + 12 * unit, this._getText('TITLE'), {
-            font: `${22 * unit}px ${getFontName()}`, color: COLORS.ink,
+            ...uiText(UI.type.title),
             wordWrap: { width: width - padding * 3 - 110 * unit },
         });
 
-        const backWidth = 110 * unit;
-        this._backButton = this._createTouchButton(left + width - padding - backWidth / 2,
-            top + 6 * unit + buttonHeight / 2, backWidth, buttonHeight,
-            this._getText('BACK'), () => this._onReturnButtonClick());
+        this._backButton = createBackArrow(this);
 
         const tabWidth = (width - padding * 2) / SECTIONS.length;
         const tabsTop = top + 58 * unit;
@@ -78,7 +83,7 @@ export class InfoScene extends CommonScene {
             .fillRect(this._view.x, this._view.y, this._view.width, this._view.height).setVisible(false);
         this._content.setMask(maskShape.createGeometryMask());
         this._heading = this.add.text(0, 0, '', {
-            font: `${20 * unit}px ${getFontName()}`, color: COLORS.ink,
+            ...uiText(UI.type.section),
             wordWrap: { width: this._view.width - 12 * unit },
         });
         this._body = this.add.text(0, 0, '', {
@@ -89,7 +94,7 @@ export class InfoScene extends CommonScene {
         this._scrollTrack = this.add.rectangle(this._view.x + this._view.width - 3 * unit,
             this._view.y, 2 * unit, this._view.height, 0xc9b896).setOrigin(0.5, 0);
         this._scrollThumb = this.add.rectangle(this._scrollTrack.x, this._view.y,
-            3 * unit, 24 * unit, 0xc35e27).setOrigin(0.5, 0);
+            3 * unit, 24 * unit, UI.colors.primary).setOrigin(0.5, 0);
         this._createTouchButton(left + padding + buttonHeight / 2, footerY, buttonHeight, buttonHeight,
             '←', () => this._selectSection((this._selectedSection + SECTIONS.length - 1) % SECTIONS.length));
         this._createTouchButton(left + width - padding - buttonHeight / 2, footerY, buttonHeight, buttonHeight,
@@ -103,13 +108,7 @@ export class InfoScene extends CommonScene {
     }
 
     _createTouchButton(x, y, width, height, text, callback) {
-        const background = this.add.rectangle(x, y, width, height, 0xe6dac1)
-            .setInteractive({ useHandCursor: true });
-        const label = this.add.text(x, y, text, {
-            fontFamily: 'Arial', fontSize: 16 * this._unit, color: COLORS.ink,
-        }).setOrigin(0.5);
-        background.on('pointerdown', callback);
-        return { background, label };
+        return createButton(this, { x, y, width, height, text, onPress: callback });
     }
 
     _selectSection(index) {
@@ -131,8 +130,7 @@ export class InfoScene extends CommonScene {
         this._scrollTo(0);
         this._pageLabel.setText(`${index + 1} / ${SECTIONS.length}`);
         this._tabs.forEach((tab, i) => {
-            tab.label.setColor(i === index ? '#ffffff' : COLORS.ink);
-            tab.background.setFillStyle(i === index ? 0xc35e27 : 0xe6dac1);
+            tab.setSelected(i === index);
         });
     }
 

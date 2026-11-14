@@ -5,6 +5,7 @@ export const SCENE_NAMES = {
     PRELOAD: 'Preload',
     MAIN_MENU: 'MainMenu',
     INFO: 'Info',
+    SETTINGS: 'Settings',
     CAMPAIGN: 'Campaign',
     GAME: 'GameScene',
     UPGRADE: 'Upgrade',
@@ -21,10 +22,10 @@ export const EVENTS = {
 export const ATLAS_FILES = ['dragon', 'jet', 'strategic_jet', 'helicopter', 'boom'];
 
 // Only .png
-export const IMAGE_FILES = ['fire', 'flag', 'rocket', 'missile', 'missile_2', 'button_campaign', 'button_unlim', 'button_upgrade', 'map', 'battle', 'ruby', 'frame', 'stamp', 'close', 'return', 'pause', 'pause_bg', 'restart', 'play', 'scale', 'reload', 'velocity', 'progress_bar', 'progress_bar_fill', 'skobeeva', 'chief_commander', 'commander', 'president', 'next', 'life_icon', 'health_bar_empty', 'health_bar_fill', 'health', 'explosion_particle', 'fire_button'];
+export const IMAGE_FILES = ['fire', 'flag', 'rocket', 'missile', 'missile_2', 'map', 'ruby', 'return', 'pause', 'scale', 'reload', 'velocity', 'progress_bar', 'progress_bar_fill', 'skobeeva', 'chief_commander', 'commander', 'president', 'next', 'life_icon', 'health_bar_empty', 'health_bar_fill', 'health', 'explosion_particle', 'fire_button'];
 
 // Only .mp3
-export const AUDIO_FILES = ['select', 'error', 'rocket_launch', 'fire_launch', 'missile_launch', 'missile_2_launch', 'explosion_small', 'wings', 'stamp', 'ready', 'lose', 'win', 'upgrade', 'level_up', 'whoosh', 'whoosh_map', 'click', 'fire_effect', 'campaign_complete_song'];
+export const AUDIO_FILES = ['error', 'rocket_launch', 'fire_launch', 'missile_launch', 'missile_2_launch', 'explosion_small', 'wings', 'ready', 'lose', 'win', 'upgrade', 'level_up', 'whoosh', 'click', 'fire_effect', 'campaign_complete_song'];
 
 export const FONTS = {
     eng: 'DishOut',

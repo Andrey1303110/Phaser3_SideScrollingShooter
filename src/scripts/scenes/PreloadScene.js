@@ -8,6 +8,11 @@ export class PreloadScene extends CommonScene {
         super(SCENE_NAMES.PRELOAD);
     }
 
+    init(data) {
+        super.init();
+        this._destination = data?.returnTo ?? SCENE_NAMES.MAIN_MENU;
+    }
+
     preload(){
         this._createBg();
 
@@ -21,6 +26,7 @@ export class PreloadScene extends CommonScene {
     }
 
     _preloadTexts() {
+        this.cache.json.remove('texts');
         this.load.json('texts', `./assets/texts/${this.model.lang}.json`);
     }
 
@@ -67,7 +73,7 @@ export class PreloadScene extends CommonScene {
             alpha: 0,
             ease: 'Power3',
             duration: 400,
-            onComplete: () => this.scene.start(SCENE_NAMES.MAIN_MENU),
+            onComplete: () => this.scene.start(this._destination),
         });
     }
 }
