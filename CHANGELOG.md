@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.3.1
+
+- Fixed rapid menu transitions and mission card animation cleanup.
+- Improved touch controls, background sizing and upgrade handling.
+- Fixed enemy attack timer cleanup and health bar positioning.
+- Corrected location names.
+
 ## 1.3.0
 
 - Added a story introduction and unique mission dialogues in Ukrainian and English.

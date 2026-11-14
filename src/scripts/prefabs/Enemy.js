@@ -48,6 +48,7 @@ export class Enemy extends MovableObject {
 
     stopTimer(){
         this._firesActivate = false;
+        this.timer?.remove();
         this.flight?.stop();
     }
 

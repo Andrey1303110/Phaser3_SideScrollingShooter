@@ -33,6 +33,7 @@ export class GameTypeSelect extends CommonScene {
         super.init();
 
         this._buttons = [];
+        this._transitioning = false;
     }
 
     create() {
@@ -54,6 +55,8 @@ export class GameTypeSelect extends CommonScene {
         button.on('pointerover', () => button.setAlpha(0.75));
         button.on('pointerout', () => button.setAlpha(1));
         button.once('pointerdown', () => {
+            if (this._transitioning) return;
+            this._transitioning = true;
             this.sounds.click.play({ volume: 0.2 });
             this._startNewScene(SCENE_NAMES.INFO);
         });
@@ -122,6 +125,8 @@ export class GameTypeSelect extends CommonScene {
     }
 
     _gameSelect(button, startScene){
+        if (this._transitioning) return;
+        this._transitioning = true;
         this.sounds.click.play({ volume: 0.2 });
 
         return tweenPromise(this, {

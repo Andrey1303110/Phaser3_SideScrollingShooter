@@ -24,7 +24,8 @@ export class LevelCard extends Phaser.GameObjects.Container {
 
         this._animateBackground();
         this._createStamp();
-
+        const tweenTargets = [this.bgRect, this.stamp];
+        this.once('destroy', () => scene.tweens.killTweensOf(tweenTargets));
     }
 
     _createBackground() {
@@ -106,7 +107,7 @@ export class LevelCard extends Phaser.GameObjects.Container {
         });
     }
 
-    async _createStamp() {
+    _createStamp() {
         this.sounds.stamp.play();
         const randAngle = Phaser.Math.Between(-45, 45);
 
@@ -120,21 +121,12 @@ export class LevelCard extends Phaser.GameObjects.Container {
         const randX = this.frame.displayWidth * 0.5 - this.frame.displayWidth * Phaser.Math.Between(25, 40) / 100;
         const randY = this.frame.displayWidth * 0.5 - this.frame.displayHeight * Phaser.Math.Between(28, 40) / 100;
 
-        await tweenPromise(this.scene, {
+        this.scene.tweens.chain({
             targets: this.stamp,
-            alpha: 0.85,
-            scale: 0.26,
-            x: randX,
-            y: randY,
-            ease: 'Power3',
-            duration: 350,
-        });
-        await tweenPromise(this.scene, {
-            targets: this.stamp,
-            scale: 0.305,
-            alpha: 0.55,
-            ease: 'Power2',
-            duration: 250,
+            tweens: [
+                { alpha: 0.85, scale: 0.26, x: randX, y: randY, ease: 'Power3', duration: 350 },
+                { scale: 0.305, alpha: 0.55, ease: 'Power2', duration: 250 },
+            ],
         });
     }
 

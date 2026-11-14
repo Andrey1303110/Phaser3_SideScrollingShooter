@@ -248,16 +248,10 @@ export class UpgradeScene extends CommonScene {
         this._disableButtons();
         this._setPrice(button);
 
-        this.tweens.add({
-            targets: this,
-            ease: 'Linear',
-            alpha: 0.5,
-            duration: 1000,
-            onComplete: () => {
-                button.clicked = false;
-                this._checkAvailabilityForAllButtons();
-            }
-        })
+        this.time.delayedCall(1000, () => {
+            button.clicked = false;
+            this._checkAvailabilityForAllButtons();
+        });
 
         return this._createUpgradeAnimation(button.name, statLevel);
     }
@@ -314,13 +308,6 @@ export class UpgradeScene extends CommonScene {
             duration,
             onComplete: () => symbol.destroy(),
         });
-    }
-
-    _addReturnButton(){
-        this.add.sprite(screenData.left + config.width * 0.015, screenData.top + config.width * 0.015, 'return')
-            .setAlpha(0.65)
-            .setInteractive()
-            .once('pointerdown', () => this.scene.start(SCENE_NAMES.MAIN_MENU), this);
     }
 
     _createSounds() {

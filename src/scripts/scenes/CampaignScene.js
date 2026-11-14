@@ -6,7 +6,6 @@ import { CommonScene } from './CommonScene';
 import { LevelCard } from './components/LevelCard';
 
 const INIT_DIALOG_DELAY = 1000;
-const BRIEF_DIALOG_DELAY = 2500;
 
 const CASUALTIES_MAP = {
     jet: {

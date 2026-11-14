@@ -45,10 +45,9 @@ export class GameScene extends CommonScene {
     update(time, delta) {
         if (this._blackBG || !this._player.active) return;
         this._sceneBG.tilePositionX += this._sceneBG.width / 10000 * this.speed * delta / (1000 / 60);
-        this._dumpJoyStickState();
         this._player.move();
         this._player.shooting();
-        this._healthBar.setPosition(this._player.x, this._player.y - this._player.height * 0.5);
+        this._healthBar.setPosition(this._player.x, this._player.y - this._player.displayHeight * 0.5);
         this._updateFPSDebugText(this.game.loop.actualFps);
     }
     
@@ -61,10 +60,6 @@ export class GameScene extends CommonScene {
     }
 
     _createMobileButtons() {
-        if (document.body.clientWidth > 1280) {
-            return;
-        }
-
         this._addJoystick();
         this._addFireButton();
     }
@@ -83,12 +78,7 @@ export class GameScene extends CommonScene {
 
         this._joystick.thumb.setDepth(DEPTH_LAYERS.UI);
         this._joystick.base.setDepth(DEPTH_LAYERS.UI);
-    }
-
-    _dumpJoyStickState() {
-        if (this._joystick) {
-            this.cursorKeys = this._joystick.createCursorKeys();
-        }
+        this.cursorKeys = this._joystick.createCursorKeys();
     }
 
     _addFireButton(){
@@ -123,7 +113,8 @@ export class GameScene extends CommonScene {
             this.speed /= scale;
         }
 
-        this._sceneBG = this.add.tileSprite(0, 0, width, height, bgImage).setOrigin(0).setScale(scale).setAlpha(0.65);
+        this._sceneBG = this.add.tileSprite(0, 0, width, height, bgImage)
+            .setOrigin(0).setTileScale(scale).setAlpha(0.65);
     }
 
     _createScoreText() {
