@@ -30,6 +30,8 @@ export class CampaignScene extends CommonScene {
 
     init() {
         super.init();
+        this._lastBriefingLevel = null;
+        this._openingMission = false;
         this._createSounds();
         this._createControllers();
     }
@@ -131,11 +133,21 @@ export class CampaignScene extends CommonScene {
     }
 
     async _onDotClick(dot) {
+        if (this._openingMission) return;
+        this._openingMission = true;
         dot.removeInteractive();
-        this.sounds.select.play({ volume: 0.33 });
-        await this._startDialogs(dot.info.index, 250);
-        this._createLevelCard(dot.info);
-        dot.setInteractive();
+        try {
+            this.sounds.select.play({ volume: 0.33 });
+            if (this._lastBriefingLevel !== dot.info.index) {
+                await this._startDialogs(dot.info.index, 250);
+                if (!dot.scene || !this.sys.isActive()) return;
+                this._lastBriefingLevel = dot.info.index;
+            }
+            this._createLevelCard(dot.info);
+        } finally {
+            if (dot.scene) dot.setInteractive();
+            this._openingMission = false;
+        }
     }
 
     _createDotTween(dot, params) {

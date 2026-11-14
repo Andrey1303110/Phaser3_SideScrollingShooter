@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.3
+
+- Fixed repeated briefings when reopening the same mission.
+
 ## 1.1.2
 
 - Redesigned pause menu.

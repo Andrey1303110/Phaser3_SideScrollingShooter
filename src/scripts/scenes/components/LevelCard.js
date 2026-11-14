@@ -113,7 +113,7 @@ export class LevelCard extends Phaser.GameObjects.Container {
         this.stamp = this.scene.add.image(this.frame.x, this.frame.y, 'stamp')
             .setAlpha(0)
             .setAngle(randAngle)
-            .setScale(2.5);
+            .setScale(0.85);
 
         this.add(this.stamp);
 
