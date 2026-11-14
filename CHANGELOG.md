@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.3.2
+
+- Expanded the introduction with controls, experience and upgrade guidance.
+- Updated voiceover scripts in Ukrainian and English.
+
 ## 1.3.1
 
 - Fixed rapid menu transitions and mission card animation cleanup.

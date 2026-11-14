@@ -18,20 +18,48 @@
         "voice": "Daniel",
         "language": "en",
         "audio": false,
-        "text": "Cover the evacuation. Keep enemy aircraft from making uncontested runs over our cities. Our units are already holding the line."
+        "text": "Our reserve is a dragon. Guide him, destroy enemy aircraft and survive each wave. Together, we will free our land, one mission at a time."
     },
     {
         "image": "commander",
         "voice": "George",
         "language": "en",
         "audio": false,
-        "text": "Understood. That is a lot of sky for a small brigade."
+        "text": "A dragon? All right. How do I get him to listen?"
     },
     {
         "image": "chief_commander",
         "voice": "Daniel",
         "language": "en",
         "audio": false,
-        "text": "There is an idea. No details over the radio yet. Meet me in Pechersk, by the old hangar."
+        "text": "Steer with the left joystick and hold the fire button on the right. You can move and shoot at the same time."
+    },
+    {
+        "image": "chief_commander",
+        "voice": "Daniel",
+        "language": "en",
+        "audio": false,
+        "text": "Shoot down missiles with fire, too. In the campaign, destroying enemies and missiles earns experience. Each new player level gives you one crystal."
+    },
+    {
+        "image": "commander",
+        "voice": "George",
+        "language": "en",
+        "audio": false,
+        "text": "So the better we defend the sky, the stronger our partner can become?"
+    },
+    {
+        "image": "chief_commander",
+        "voice": "Daniel",
+        "language": "en",
+        "audio": false,
+        "text": "Yes. Spend crystals in Upgrade on the dragon’s health, faster or larger fireballs, or a shorter reload time."
+    },
+    {
+        "image": "commander",
+        "voice": "George",
+        "language": "en",
+        "audio": false,
+        "text": "Understood. Meet me by the hangar in Pechersk. Time to get to know our new partner."
     }
 ]
