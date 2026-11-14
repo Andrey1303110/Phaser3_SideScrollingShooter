@@ -142,7 +142,6 @@ export const WEAPONS = {
 
 export const ENEMIES = {
     HELICOPTER: {
-        velocity: -110,
         weapon: WEAPONS.ROCKET,
         scale: 0.9,
         texture: 'helicopter',
@@ -170,6 +169,23 @@ export const ENEMIES = {
     },
 };
 
+// Shared maneuver settings. Speed is in pixels/second; delays are in milliseconds.
+// rocketInterval is the minimum between launches; moving and aiming may extend it.
+export const HELICOPTER_FLIGHT_DEFAULTS = {
+    shots: { min: 3, max: 5 },
+    approachPercent: { min: 68, max: 82 },
+    advancePercent: { min: 12, max: 22 },
+    altitudePercent: { min: 18, max: 30 },
+    altitudeChangeChance: 0.5,
+    exitMargin: 0.18,
+    heightPadding: 12,
+    arrivalDistance: 5,
+    arrivalSpeed: 14,
+    slowdown: 3,
+    steeringTime: 160,
+    maxTilt: 0.06,
+};
+
 export const CAMPAIGN_LEVELS = [
     {
         index: 1,
@@ -178,6 +194,13 @@ export const CAMPAIGN_LEVELS = [
         enemies: 5,
         enemiesDelay: 5000,
         velocity: 4,
+        helicopter: {
+            ...HELICOPTER_FLIGHT_DEFAULTS,
+            speed: 60,
+            aimDelay: 2500,
+            rocketInterval: 7000,
+            recoveryDelay: 1300,
+        },
     },
     {
         index: 2,
@@ -186,6 +209,13 @@ export const CAMPAIGN_LEVELS = [
         enemies: 8,
         enemiesDelay: 4464,
         velocity: 4,
+        helicopter: {
+            ...HELICOPTER_FLIGHT_DEFAULTS,
+            speed: 65,
+            aimDelay: 2400,
+            rocketInterval: 6700,
+            recoveryDelay: 1250,
+        },
     },
     {
         index: 3,
@@ -194,6 +224,13 @@ export const CAMPAIGN_LEVELS = [
         enemies: 11,
         enemiesDelay: 4191,
         velocity: 4,
+        helicopter: {
+            ...HELICOPTER_FLIGHT_DEFAULTS,
+            speed: 70,
+            aimDelay: 2300,
+            rocketInterval: 6400,
+            recoveryDelay: 1200,
+        },
     },
     {
         index: 4,
@@ -202,6 +239,13 @@ export const CAMPAIGN_LEVELS = [
         enemies: 15,
         enemiesDelay: 3845,
         velocity: 4,
+        helicopter: {
+            ...HELICOPTER_FLIGHT_DEFAULTS,
+            speed: 75,
+            aimDelay: 2200,
+            rocketInterval: 6100,
+            recoveryDelay: 1150,
+        },
     },
     {
         index: 5,
@@ -210,6 +254,13 @@ export const CAMPAIGN_LEVELS = [
         enemies: 21,
         enemiesDelay: 3643,
         velocity: 4,
+        helicopter: {
+            ...HELICOPTER_FLIGHT_DEFAULTS,
+            speed: 80,
+            aimDelay: 2100,
+            rocketInterval: 5800,
+            recoveryDelay: 1100,
+        },
     },
     {
         index: 6,
@@ -218,6 +269,13 @@ export const CAMPAIGN_LEVELS = [
         enemies: 28,
         enemiesDelay: 3506,
         velocity: 4,
+        helicopter: {
+            ...HELICOPTER_FLIGHT_DEFAULTS,
+            speed: 85,
+            aimDelay: 2000,
+            rocketInterval: 5500,
+            recoveryDelay: 1050,
+        },
     },
     {
         index: 7,
@@ -226,6 +284,13 @@ export const CAMPAIGN_LEVELS = [
         enemies: 39,
         enemiesDelay: 3334,
         velocity: 4,
+        helicopter: {
+            ...HELICOPTER_FLIGHT_DEFAULTS,
+            speed: 90,
+            aimDelay: 1900,
+            rocketInterval: 5200,
+            recoveryDelay: 1000,
+        },
     },
     {
         index: 8,
@@ -234,6 +299,13 @@ export const CAMPAIGN_LEVELS = [
         enemies: 50,
         enemiesDelay: 3250,
         velocity: 4,
+        helicopter: {
+            ...HELICOPTER_FLIGHT_DEFAULTS,
+            speed: 95,
+            aimDelay: 1800,
+            rocketInterval: 4900,
+            recoveryDelay: 950,
+        },
     },
     {
         index: 9,
@@ -242,6 +314,13 @@ export const CAMPAIGN_LEVELS = [
         enemies: 65,
         enemiesDelay: 3143,
         velocity: 4,
+        helicopter: {
+            ...HELICOPTER_FLIGHT_DEFAULTS,
+            speed: 100,
+            aimDelay: 1700,
+            rocketInterval: 4600,
+            recoveryDelay: 900,
+        },
     },
     {
         index: 10,
@@ -250,6 +329,13 @@ export const CAMPAIGN_LEVELS = [
         enemies: 82,
         enemiesDelay: 3011,
         velocity: 4,
+        helicopter: {
+            ...HELICOPTER_FLIGHT_DEFAULTS,
+            speed: 105,
+            aimDelay: 1600,
+            rocketInterval: 4300,
+            recoveryDelay: 850,
+        },
     },
     {
         index: 11,
@@ -258,6 +344,13 @@ export const CAMPAIGN_LEVELS = [
         enemies: 100,
         enemiesDelay: 3000,
         velocity: 4,
+        helicopter: {
+            ...HELICOPTER_FLIGHT_DEFAULTS,
+            speed: 110,
+            aimDelay: 1500,
+            rocketInterval: 4000,
+            recoveryDelay: 800,
+        },
     },
     {
         index: 12,
@@ -266,6 +359,13 @@ export const CAMPAIGN_LEVELS = [
         enemies: 120,
         enemiesDelay: 2976,
         velocity: 4,
+        helicopter: {
+            ...HELICOPTER_FLIGHT_DEFAULTS,
+            speed: 115,
+            aimDelay: 1400,
+            rocketInterval: 3700,
+            recoveryDelay: 750,
+        },
     },
     {
         index: 13,
@@ -274,6 +374,13 @@ export const CAMPAIGN_LEVELS = [
         enemies: 145,
         enemiesDelay: 2950,
         velocity: 4,
+        helicopter: {
+            ...HELICOPTER_FLIGHT_DEFAULTS,
+            speed: 120,
+            aimDelay: 1300,
+            rocketInterval: 3400,
+            recoveryDelay: 700,
+        },
     },
     {
         index: 14,
@@ -282,6 +389,13 @@ export const CAMPAIGN_LEVELS = [
         enemies: 200,
         enemiesDelay: 2900,
         velocity: 4,
+        helicopter: {
+            ...HELICOPTER_FLIGHT_DEFAULTS,
+            speed: 125,
+            aimDelay: 1200,
+            rocketInterval: 3100,
+            recoveryDelay: 650,
+        },
     },
     {
         index: 15,
@@ -290,6 +404,13 @@ export const CAMPAIGN_LEVELS = [
         enemies: 250,
         enemiesDelay: 2850,
         velocity: 4,
+        helicopter: {
+            ...HELICOPTER_FLIGHT_DEFAULTS,
+            speed: 130,
+            aimDelay: 1100,
+            rocketInterval: 2800,
+            recoveryDelay: 600,
+        },
     },
 ];
 
@@ -298,6 +419,7 @@ export const UNLIMITED_LEVEL = {
     index: 15,
     enemies: 1000,
     enemiesDelay: 2000,
+    helicopter: { ...CAMPAIGN_LEVELS.at(-1).helicopter },
 }
 
 export const LEVEL_HI_SCORES_SEPARATOR = ',';

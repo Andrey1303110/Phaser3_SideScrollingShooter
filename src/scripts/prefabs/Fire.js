@@ -67,7 +67,7 @@ export class Fire extends MovableObject {
     async _rocketMove() {
         const randomDelay = Phaser.Math.Between(500, 1000);
         
-        if (this._isDead()) {
+        if (this.isDead()) {
             return;
         } 
         const randomVelocityModifier = (Phaser.Math.Between(-20, 20) * 0.01);
@@ -78,7 +78,7 @@ export class Fire extends MovableObject {
     }
 
     async _missileMove() {
-        if (this._isDead()) {
+        if (this.isDead()) {
             return;
         } 
         this.body.setVelocityY(230);
@@ -88,7 +88,7 @@ export class Fire extends MovableObject {
     }
 
     async _missile2Move() {
-        if (this._isDead()) {
+        if (this.isDead()) {
             return;
         }
         this.body.setVelocityY(280);
@@ -117,10 +117,6 @@ export class Fire extends MovableObject {
     isDead() {
         return !this.active || !this.body || this.x > config.width + this.displayWidth || this.x < -this.displayWidth
             || this.y < -this.displayHeight || this.y > config.height + this.displayHeight;
-    }
-
-    _isDead() {
-        return this.isDead();
     }
 
     _onKilled() {

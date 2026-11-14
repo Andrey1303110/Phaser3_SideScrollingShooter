@@ -90,7 +90,7 @@ export class GameModel {
     }
 
     getLevelHiScore(level) {
-        if (!this.hiScores || !this.hiScores.length) {
+        if (!this.hiScores) {
             return 0;
         }
 
@@ -200,19 +200,6 @@ export class GameModel {
         if (!Object.hasOwn(this.casualties, name)) return;
         this.casualties[name] += 1;
 
-        switch (name) {
-            case 'jet':
-                StorageService.set('casualties_jet', this.casualties[name]);
-                break;
-            case 'helicopter':
-                StorageService.set('casualties_helicopter', this.casualties[name]);
-                break;
-            case 'rocket':
-                StorageService.set('casualties_rocket', this.casualties[name]);
-                break;
-            case 'missile':
-                StorageService.set('casualties_missile', this.casualties[name]);
-                break;
-        }
+        StorageService.set(`${CASUALTIES_PREFIX}${name}`, this.casualties[name]);
     }
 }

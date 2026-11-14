@@ -23,7 +23,7 @@ export class Enemies extends Phaser.Physics.Arcade.Group {
     tick() {
         if (this.stopped) return;
         this.createEnemy();
-        if (this.stopped || this.createdCount >= this.countMax) {
+        if (this.createdCount >= this.countMax) {
             this.stopTimer();
             return;
         }
@@ -39,7 +39,6 @@ export class Enemies extends Phaser.Physics.Arcade.Group {
     }
     
     createEnemy() {
-        if (this.stopped) return;
         if (this.createdCount >= this.countMax) {
             this.stopTimer();
             return;

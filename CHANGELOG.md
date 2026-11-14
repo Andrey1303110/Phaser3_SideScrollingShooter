@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.2.0
+
+- Added animated helicopter rotors.
+- Added helicopter hovering, rocket attacks and random flight maneuvers.
+- Added level-based helicopter speed and attack timing.
+
 ## 1.1.3
 
 - Fixed repeated briefings when reopening the same mission.

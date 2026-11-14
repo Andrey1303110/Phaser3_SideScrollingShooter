@@ -1,6 +1,8 @@
 import { screenData } from "../Utils";
 import { ENEMIES } from "../constants";
 import { MovableObject } from "./MovableObject";
+import { HelicopterRotors } from "./HelicopterRotors";
+import { HelicopterFlight } from "./HelicopterFlight";
 
 export class Enemy extends MovableObject {
     static generateAttr(scene) {
@@ -23,11 +25,30 @@ export class Enemy extends MovableObject {
         super.init(data);
         this._setInitialData(data);
         this._setWeapon(data);
-        this._addTimer();
+        if (data.texture === ENEMIES.HELICOPTER.texture) {
+            const flightConfig = this.scene.info.helicopter;
+            this.velocity = -flightConfig.speed;
+            this.weapon.reload = flightConfig.rocketInterval;
+            this.flight = new HelicopterFlight(this, flightConfig);
+            this.rotors = new HelicopterRotors(this.scene, this);
+        } else {
+            this._addTimer();
+        }
+    }
+
+    move() {
+        if (this.flight) this.flight.start();
+        else super.move();
+    }
+
+    update(time, delta) {
+        super.update();
+        if (this.active) this.flight?.update(delta);
     }
 
     stopTimer(){
         this._firesActivate = false;
+        this.flight?.stop();
     }
 
     reset() {
