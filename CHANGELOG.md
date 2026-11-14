@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.1
+
+- Added an in-game guide.
+- Improved mobile controls and game balance.
+- Fixed gameplay bugs.
+
 ## 1.1.0
 
 - Global refactoring.
