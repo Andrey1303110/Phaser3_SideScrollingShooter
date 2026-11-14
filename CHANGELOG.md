@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.3.0
+
+- Added a story introduction and unique mission dialogues in Ukrainian and English.
+- Added Russian dialogue for Skobeeva in the Ukrainian version.
+- Added text-only playback until new voiceovers are ready.
+- Fixed mission selection during the introduction.
+
 ## 1.2.0
 
 - Added animated helicopter rotors.

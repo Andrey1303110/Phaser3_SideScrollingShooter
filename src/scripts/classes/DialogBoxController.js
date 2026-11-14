@@ -4,6 +4,7 @@ import { DEPTH_LAYERS } from '../constants';
 import { delayInMSec, tweenPromise } from '../Utils';
 
 const MIN_SHOW_DURATION = 2500;
+const READING_MS_PER_CHARACTER = 65;
 const SHOW_DELAY = 200;
 
 export class DialogBoxController {
@@ -30,7 +31,7 @@ export class DialogBoxController {
             const isLast = i === dialogsCount-1;
             const dialogData = this._data[i];
             const dialogBox = new DialogBox(this._scene, dialogData);
-            await this._playShowingDialog(dialogBox, level, i);
+            await this._playShowingDialog(dialogBox, level, i, dialogData.text);
 
             if (isLast) {
                 await delayInMSec(this._scene, SHOW_DELAY);
@@ -61,19 +62,19 @@ export class DialogBoxController {
         }
     }
 
-    async _playShowingDialog(dialogBox, levelIndex, i) {
+    async _playShowingDialog(dialogBox, levelIndex, i, text) {
         await dialogBox.showEnter();
         
         const soundName = `level${levelIndex}_text${i}_${this._scene.model.lang}`;
         const sound = this._scene.sounds[soundName];
-        const duration = Math.max(sound.duration * 1000, MIN_SHOW_DURATION);
+        const duration = Math.max(sound ? sound.duration * 1000 : text.length * READING_MS_PER_CHARACTER, MIN_SHOW_DURATION);
     
-        sound.play();
+        sound?.play();
         await Promise.race([
             dialogBox.resolver.wait(),
             delayInMSec(this._scene, duration),
         ]);
-        sound.stop();
+        sound?.stop();
         
         await dialogBox.showExit();
     }

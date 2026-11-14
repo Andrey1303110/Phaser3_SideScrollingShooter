@@ -31,7 +31,8 @@ export class CampaignScene extends CommonScene {
     init() {
         super.init();
         this._lastBriefingLevel = null;
-        this._openingMission = false;
+        this._showIntro = this.model.currentLevelScene === 1 && this.model.totalScore === 0;
+        this._openingMission = this._showIntro;
         this._createSounds();
         this._createControllers();
     }
@@ -242,13 +243,12 @@ export class CampaignScene extends CommonScene {
         this._dialogBoxController = new DialogBoxController(this);
     }
 
-    _createInitialDialogs() {
-        const isInitial = this.model.currentLevelScene === 1 && this.model.totalScore === 0;
-
-        if (!isInitial) {
+    async _createInitialDialogs() {
+        if (!this._showIntro) {
             return;
         }
-        this._startDialogs(0); 
+        await this._startDialogs(0);
+        this._openingMission = false;
     }
 
     _createSounds() {
@@ -290,6 +290,7 @@ export class CampaignScene extends CommonScene {
             }
 
             for (let j = 0; j < texts.length; j++) {
+                if (texts[j].audio === false) continue;
                 const name = `level${i}_text${j}_${this.model.lang}`;
                 this.sounds[name] = this.sound.add(name);
             }

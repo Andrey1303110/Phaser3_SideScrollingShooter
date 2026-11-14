@@ -32,6 +32,7 @@ export class PreloadScene extends CommonScene {
         for (let i = 0; i <= CAMPAIGN_LEVELS.at(-1).index; i++) {
             this.load.once(`filecomplete-json-dialogues${i}`, (key, type, texts) => {
                 for (let j = 0; j < texts.length; j++) {
+                    if (texts[j].audio === false) continue;
                     const name = `level${i}_text${j}_${this.model.lang}`;
                     const path = `./assets/voices/${this.model.lang}/${i}/${j}.mp3`;
                     this.load.audio(name, path);

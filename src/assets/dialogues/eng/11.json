@@ -1,42 +1,30 @@
 [
     {
-        "image": "president",
-        "voice": "Edward",
-        "text": "Citizens of Ukraine, we are facing a severe ordeal. The heart of our country is under attack by Russia. We cannot allow our independence to be destroyed. We stand up in defense of our freedom and right to exist."
-    },
-    {
-        "image": "skobeeva",
-        "voice": "Emilia",
-        "text": "Dear viewers, we are in the center of events. Our sources claim that there are biolaboratories in Ukraine. This is one of the reasons why Russia decided to attack. It's time to reveal the truth and prevent a threat that could loom over the entire world."
+        "image": "commander",
+        "voice": "George",
+        "language": "en",
+        "audio": false,
+        "text": "Donetsk on the horizon. The dragon has gone quiet. I am short on words myself."
     },
     {
         "image": "chief_commander",
         "voice": "Daniel",
-        "text": "Russian forces are advancing, and we need to act now. We need to do something until support from Western allies arrives. We need a plan now."
-    },
-    {
-        "image": "president",
-        "voice": "Edward",
-        "text": "We have a unique reserve. We will use our newest tool, the biological marvel known as the dragon. This creature was not originally designed for combat. However, we had to tame it and train it to defend our skies, turning it into a powerful weapon."
-    },
-    {
-        "image": "chief_commander",
-        "voice": "Daniel",
-        "text": "Bondarenko, as commander of the brigade, I am entrusting you with a responsible mission. Reveal the secret of the dragon, which will be used against enemy air forces. Reveal its taming and training. On your shoulders lies a key role in the defense of our homeland."
+        "language": "en",
+        "audio": false,
+        "text": "People here have waited a long time to go home without checkpoints. We are doing this for them."
     },
     {
         "image": "commander",
         "voice": "George",
-        "text": "As Brigade Commander, I accept this order. The Dragon will be used against enemy air forces. I promise we will defend our Homeland."
+        "language": "en",
+        "audio": false,
+        "text": "All three aircraft types up there?"
     },
     {
         "image": "chief_commander",
         "voice": "Daniel",
-        "text": "Bondarenko, the whole Ukraine hopes for you and your brigade. Use the dragon with honor and strength. Let the enemy feel what it means to attack our freedom. For Ukraine!"
-    },
-    {
-        "image": "president",
-        "voice": "Edward",
-        "text": "Thank you for your unbending loyalty and bravery, Bondarenko and all defenders of the Homeland. Together we are a force that will crush the enemy and preserve our future. Glory to Ukraine!"
+        "language": "en",
+        "audio": false,
+        "text": "Yes. A longer wave, too. Pace yourself. Do not get boxed in by missiles. We need you back."
     }
 ]
