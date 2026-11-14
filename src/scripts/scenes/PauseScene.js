@@ -11,6 +11,7 @@ export class PauseScene extends CommonScene {
     }
 
     create() {
+        this._transitioning = false;
         this._createBg();
         this._createButtons();
         this._toggleMenu();
@@ -50,6 +51,8 @@ export class PauseScene extends CommonScene {
     }
 
     async _toggleMenu(command) {
+        if (this._transitioning) return;
+        this._transitioning = true;
         const duration = 750;
         const y = this._sceneBG.y < 0 ? screenData.top + this._sceneBG.displayHeight * 0.5 : config.height * -1;
 
@@ -68,21 +71,23 @@ export class PauseScene extends CommonScene {
             }),
         ]);
 
-        this._handleScreen(command);
+        this._transitioning = false;
+        if (command) this._handleScreen(command);
     }
 
     _handleScreen(command) {
         switch (command) {
             case 'play':
                 this.scene.resume(SCENE_NAMES.GAME);
+                this.scene.stop();
             break;
             case 'restart':
-                this.scene.start(SCENE_NAMES.GAME);
+                this.scene.start(SCENE_NAMES.GAME, { ...this.scene.get(SCENE_NAMES.GAME).info });
             break;
             case 'return':
-                //todo store last scene and return to the menu or map
+                const destination = this.scene.get(SCENE_NAMES.GAME).info.isUnlim ? SCENE_NAMES.MAIN_MENU : SCENE_NAMES.CAMPAIGN;
                 this.scene.stop(SCENE_NAMES.GAME);
-                this.scene.launch(SCENE_NAMES.CAMPAIGN);
+                this.scene.start(destination);
             break;
         }
     }

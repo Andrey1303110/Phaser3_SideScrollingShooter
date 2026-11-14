@@ -25,15 +25,7 @@ module.exports = {
       },
       {
         test: /\.(png|svg|jpg|gif|mp3|wav)$/,
-        use: [
-          {
-            loader: 'file-loader',
-          },
-        ],
-      },
-      {
-        test: /\.json$/,
-        loader: 'json-loader',
+        type: 'asset/resource',
       },
     ],
   },

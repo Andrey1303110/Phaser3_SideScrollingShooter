@@ -49,7 +49,7 @@ export function getSceneTexts(scene) {
     if (!texts || !scene.name) {
         return {};
     }
-    return texts[scene.name];
+    return texts[scene.name] ?? {};
 }
 
 /**

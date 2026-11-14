@@ -14,21 +14,16 @@ export class HealthBar extends Phaser.GameObjects.Container {
     }
 
     async updateHealthBar(isForce = false){
+        this.setVisible(this._scene.player.currentHealth > 0);
         let progressValue;
 
-        this._scene.player.currentHealth
         if (this._scene.player.currentHealth <= 0) {
             progressValue = 0;
         } else {
             progressValue = this._scene.player.currentHealth/this._scene.player.maxHealth;
         }
 
-        let cutWidth = this._healthBarFill.displayWidth * progressValue;
-
-        if (cutWidth < 0 || !cutWidth) {
-            cutWidth = this._healthBarFill.displayWidth;
-            this.visible = false;
-        }
+        const cutWidth = this._healthBarFill.width * Math.max(0, Math.min(1, progressValue));
 
         if (isForce) {
             return this._onUpdateComplete(cutWidth);
@@ -38,8 +33,7 @@ export class HealthBar extends Phaser.GameObjects.Container {
     }
 
     _onUpdateComplete(cutWidth) {
-        this._healthBarFill.frame.cutWidth = cutWidth;
-        this._healthBarFill.frame.updateUVs();
+        this._healthBarFill.setCrop(0, 0, cutWidth, this._healthBarFill.height);
     }
 
     async _tweenUpdate(cutWidth) {

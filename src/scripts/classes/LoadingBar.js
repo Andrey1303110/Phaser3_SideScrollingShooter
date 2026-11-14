@@ -34,7 +34,9 @@ export class LoadingBar {
 
         this._showProgressBox(params);
 
-        this._scene.load.on('progress', (value) => this._showProgressBar(value, params));
+        const onProgress = value => this._showProgressBar(value, params);
+        this._scene.load.on('progress', onProgress);
+        this._scene.events.once('shutdown', () => this._scene.load.off('progress', onProgress));
     }
 
     get graphicsElements() {

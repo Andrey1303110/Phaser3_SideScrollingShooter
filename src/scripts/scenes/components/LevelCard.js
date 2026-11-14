@@ -7,7 +7,7 @@ export class LevelCard extends Phaser.GameObjects.Container {
         super(scene, scene.cameras.main.centerX, scene.cameras.main.centerY);
 
         this.scene = scene;
-        this.info = info;
+        this.info = { ...info };
         this.model = model;
         this.sounds = sounds;
         this.onStart = onStart;
@@ -25,12 +25,11 @@ export class LevelCard extends Phaser.GameObjects.Container {
         this._animateBackground();
         this._createStamp();
 
-        window.levelCard = this;
     }
 
     _createBackground() {
         this.bgRect = createScreenBlackRectangle(this.scene);
-        this.bgRect.setOrigin(1);
+        this.bgRect.setPosition(0, 0).setOrigin(0.5);
         this.bgRect.setInteractive();
         this.add(this.bgRect);
     }

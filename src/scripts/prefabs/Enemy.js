@@ -9,7 +9,7 @@ export class Enemy extends MovableObject {
 
         const configs = Object.values(ENEMIES).filter(enemy => enemy.entryLevel <= scene.info.index);
         const config = configs[Phaser.Math.Between(0, configs.length-1)];
-        const frame = Phaser.Math.Between(0, config.frames);
+        const frame = String(Phaser.Math.Between(1, config.frames));
 
         return { x, y, config, frame };
     }
@@ -33,7 +33,7 @@ export class Enemy extends MovableObject {
     reset() {
         const data = Enemy.generateAttr(this.scene);
         super.reset(data.x, data.y);
-        this.setWeapon();
+        this._setWeapon(data.config);
         this.setFrame(data.frame);
     }
 

@@ -1,15 +1,16 @@
 import { Fires } from "./Fires";
 import { Enemy } from "./Enemy";
-import { EVENTS } from "../constants";
+import { EVENTS, GAME_ACTOR_SCALE_MULTIPLIER } from "../constants";
 
 export class Enemies extends Phaser.Physics.Arcade.Group {
     constructor(scene) {
         super(scene.physics.world, scene);
         this.scene = scene;
         this.fires = new Fires(this.scene);
-        this.countMax = this.scene.info.enemies;
+        this.countMax = this.scene.info.isUnlim ? Infinity : this.scene.info.enemies;
         this.killed = 0;
         this.createdCount = 0;
+        this.stopped = false;
         this.timer = this.scene.time.addEvent({
             delay: this.scene.info.enemiesDelay,
             loop: true,
@@ -25,16 +26,19 @@ export class Enemies extends Phaser.Physics.Arcade.Group {
     }
 
     stopTimer(){
+        this.stopped = true;
         this.timer.remove();
     }
     
     createEnemy() {
+        if (this.stopped) return;
         if (this.createdCount >= this.countMax) {
             this.stopTimer();
             return;
         }
 
         const enemy = Enemy.generate(this.scene, this.fires);
+        enemy.setScale(enemy.scaleX * GAME_ACTOR_SCALE_MULTIPLIER);
         enemy.on(EVENTS.KILLED, this.onEnemyKilled, this);
         this.add(enemy);
         enemy.move();

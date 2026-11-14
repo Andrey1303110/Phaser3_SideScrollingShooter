@@ -8,10 +8,11 @@ export class PreloadScene extends CommonScene {
         super(SCENE_NAMES.PRELOAD);
     }
 
-    async preload(){
+    preload(){
         this._createBg();
 
         this._preloadTexts();
+        this._preloadDialogues();
         this._preloadResources();
         this._preloadPlugins();
         this._preloadDialoguesAudio();
@@ -29,12 +30,20 @@ export class PreloadScene extends CommonScene {
 
     _preloadDialoguesAudio() {
         for (let i = 0; i <= CAMPAIGN_LEVELS.at(-1).index; i++) {
-            const texts = this.scene.scene.cache.json.get(`dialogues${i}`);
-            for (let j = 0; j < texts.length; j++) {
-                const name = `level${i}_text${j}_${this.model.lang}`;
-                const path = `./assets/voices/${this.model.lang}/${i}/${j}.mp3`;
-                this.load.audio(name, path);
-            }
+            this.load.once(`filecomplete-json-dialogues${i}`, (key, type, texts) => {
+                for (let j = 0; j < texts.length; j++) {
+                    const name = `level${i}_text${j}_${this.model.lang}`;
+                    const path = `./assets/voices/${this.model.lang}/${i}/${j}.mp3`;
+                    this.load.audio(name, path);
+                }
+            });
+        }
+    }
+
+    _preloadDialogues() {
+        for (let i = 0; i <= CAMPAIGN_LEVELS.length; i++) {
+            this.cache.json.remove(`dialogues${i}`);
+            this.load.json(`dialogues${i}`, `./assets/dialogues/${this.model.lang}/${i}.json`);
         }
     }
 
@@ -48,7 +57,7 @@ export class PreloadScene extends CommonScene {
 
     _setupLoadingBar() {
         this._loadingBar = new LoadingBar(this);
-        this.scene.scene.load.on('complete', () => this._onLoadComplete());
+        this.load.once('complete', () => this._onLoadComplete());
     }
 
     _onLoadComplete() {
@@ -57,7 +66,7 @@ export class PreloadScene extends CommonScene {
             alpha: 0,
             ease: 'Power3',
             duration: 400,
-            onComplete: this.scene.start(SCENE_NAMES.MAIN_MENU),
+            onComplete: () => this.scene.start(SCENE_NAMES.MAIN_MENU),
         });
     }
 }

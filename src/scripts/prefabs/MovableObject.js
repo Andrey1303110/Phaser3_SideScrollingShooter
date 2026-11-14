@@ -10,6 +10,7 @@ export class MovableObject extends Phaser.GameObjects.Sprite {
         this.scene.add.existing(this);
         this.scene.physics.add.existing(this);
         this.body.enable = true;
+        this.setScale(data.scale ?? 1);
 
         this.reward = data.reward;
         this.damage = data.damage;
@@ -18,6 +19,10 @@ export class MovableObject extends Phaser.GameObjects.Sprite {
         this.acceleration = data?.acceleration
 
         this.scene.events.on(EVENTS.UPDATE, this.update, this);
+        this.once('destroy', () => {
+            this.scene.events.off(EVENTS.UPDATE, this.update, this);
+            this.timer?.remove();
+        });
     }
 
     reset(x, y){
@@ -33,6 +38,9 @@ export class MovableObject extends Phaser.GameObjects.Sprite {
     }
 
     setAlive(status){
+        if (!this.body || this.active === status) {
+            return;
+        }
         this.body.enable = status;
         this.setVisible(status);
         this.setActive(status);
@@ -50,6 +58,7 @@ export class MovableObject extends Phaser.GameObjects.Sprite {
         if (this.launch_sound) {
             this.launch_sound.destroy();
         }
+        this.destroy();
     }
 
     isDead(){

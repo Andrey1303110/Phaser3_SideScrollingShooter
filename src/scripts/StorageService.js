@@ -1,16 +1,30 @@
 export class StorageService {
     static get(key, def, parser) {
-        const value = localStorage.getItem(key);
+        let value;
+        try {
+            value = localStorage.getItem(key);
+        } catch {
+            return def;
+        }
         if (value === null) {
             return def;
         }
         if (parser) {
-            return parser(value);
+            try {
+                const parsed = parser(value);
+                return typeof parsed === 'number' && !Number.isFinite(parsed) ? def : parsed;
+            } catch {
+                return def;
+            }
         }
         return value;
     }
   
     static set(key, value) {
-        localStorage.setItem(key, value);
+        try {
+            localStorage.setItem(key, value);
+        } catch {
+            // Keep the game playable when browser storage is unavailable or full.
+        }
     }
 }
