@@ -5,6 +5,16 @@
         "UPGRADE": "UPGRADE",
         "INFO": "ABOUT THE GAME"
     },
+    "Pause": {
+        "TITLE": "Paused",
+        "RESUME": "Continue",
+        "RESTART": "Restart",
+        "TO_CAMPAIGN": "Campaign map",
+        "TO_MENU": "Main menu",
+        "CAMPAIGN": "Campaign",
+        "LEVEL": "Level",
+        "SURVIVAL": "Survival"
+    },
     "Info": {
         "TITLE": "About the game",
         "BACK": "Back to menu",

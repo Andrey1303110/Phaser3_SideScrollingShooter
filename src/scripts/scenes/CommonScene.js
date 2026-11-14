@@ -35,6 +35,15 @@ export class CommonScene extends Phaser.Scene {
         this.load.image('bg', './assets/sprites/bg.png');
     }
 
+    _playTransitionSound(key) {
+        // These one-shot cues belong to the global sound manager, not the
+        // scene's sounds collection, so scene shutdown cannot cut them short.
+        const sound = this.sound.add(key);
+        sound.once(Phaser.Sound.Events.COMPLETE, sound.destroy, sound);
+        if (!sound.play()) sound.destroy();
+        return sound;
+    }
+
     _createAvailableMoney(){
         const style = {
             font: `${config.width * 0.038}px ${getFontName()}`,

@@ -5,6 +5,16 @@
         "UPGRADE": "Апгрейд",
         "INFO": "ПРО ГРУ"
     },
+    "Pause": {
+        "TITLE": "Пауза",
+        "RESUME": "Продовжити",
+        "RESTART": "Заново",
+        "TO_CAMPAIGN": "До мапи",
+        "TO_MENU": "До меню",
+        "CAMPAIGN": "Кампанія",
+        "LEVEL": "Рівень",
+        "SURVIVAL": "Виживання"
+    },
     "Info": {
         "TITLE": "Про гру",
         "BACK": "До меню",

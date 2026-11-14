@@ -248,7 +248,6 @@ export class CampaignScene extends CommonScene {
             select: this.sound.add('select'),
             error: this.sound.add('error'),
             stamp: this.sound.add('stamp'),
-            ready: this.sound.add('ready'),
             whoosh_map: this.sound.add('whoosh_map'),
             fire_effect: this.sound.add('fire_effect'),
             campaign_complete_song: this.sound.add('campaign_complete_song'),
@@ -258,8 +257,8 @@ export class CampaignScene extends CommonScene {
     _gameStart(info) {
         const bgRect = createScreenBlackRectangle(this);
         bgRect.setDepth(DEPTH_LAYERS.COVER_SCREEN);
-        const duration = this.sounds.ready.duration * 1000 * 0.85;
-        this.sounds.ready.play();
+        const sound = this._playTransitionSound('ready');
+        const duration = sound.duration * 1000 * 0.85;
 
         return tweenPromise(this, {
             targets: bgRect,
