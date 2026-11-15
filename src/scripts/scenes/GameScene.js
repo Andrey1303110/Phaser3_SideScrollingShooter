@@ -2,7 +2,7 @@ import { config } from '../main';
 import { Player } from '../prefabs/Player';
 import { Enemies } from '../prefabs/Enemies';
 import { Boom } from '../prefabs/Boom';
-import { SCENE_NAMES, DEPTH_LAYERS, EVENTS, JOYSTICK_GAP, JOYSTICK_RADIUS, LEVEL_REQUIRED_SCORE_MULTIPLIER, LEVEL_REQUIRED_SCORE, LEVEL_SCORE_MULTIPLIER, WEAPONS, ENEMIES, CAMPAIGN_LEVELS, LEVEL_HI_SCORES_SEPARATOR, GAME_ACTOR_SCALE_MULTIPLIER } from '../constants';
+import { SCENE_NAMES, DEPTH_LAYERS, EVENTS, JOYSTICK_GAP, JOYSTICK_RADIUS, LEVEL_REQUIRED_SCORE_MULTIPLIER, LEVEL_REQUIRED_SCORE, LEVEL_SCORE_MULTIPLIER, WEAPONS, ENEMIES, CAMPAIGN_LEVELS, LEVEL_BACKGROUNDS, LEVEL_HI_SCORES_SEPARATOR, GAME_ACTOR_SCALE_MULTIPLIER } from '../constants';
 import { CommonScene } from './CommonScene';
 import { UI, uiUnit, uiText, createButton } from '../ui';
 import { HealthBar } from '../classes/HealthBar';
@@ -109,25 +109,34 @@ export class GameScene extends CommonScene {
     _createBg(data) {
         const { height, width } = config;
 
-        const bgImage = data?.isUnlim ? `bg${Phaser.Math.Between(1, CAMPAIGN_LEVELS.length)}` : `bg${data.index}`;
+        this._backgroundLevel = data?.isUnlim ? Phaser.Math.Between(1, CAMPAIGN_LEVELS.length) : data.index;
+        const atmosphere = LEVEL_BACKGROUNDS[this._backgroundLevel - 1];
 
         this.speed = CAMPAIGN_LEVELS[this._currentLevelScene-1].velocity;
 
         const layers = [
-            { texture: bgImage, speedMultiplier: 1 },
-            { texture: 'trees_mid', speedMultiplier: 2 },
-            { texture: 'trees_near', speedMultiplier: 3.5 },
+            { texture: `bg${this._backgroundLevel}`, speedMultiplier: 1, depth: -5 },
+            { texture: atmosphere.clouds, speedMultiplier: 0.45, depth: -3 },
+            { texture: 'trees_mid', speedMultiplier: 1.5, depth: -2 },
+            { texture: 'trees_near', speedMultiplier: 2.2, depth: -1 },
         ];
 
-        this._backgroundLayers = layers.map(({ texture, speedMultiplier }, index) => {
+        this._backgroundLayers = layers.map(({ texture, speedMultiplier, depth }) => {
             const source = this.textures.get(texture).getSourceImage();
             const sprite = this.add.tileSprite(0, 0, width, height, texture)
                 .setOrigin(0)
                 .setTileScale(height / source.height)
-                .setDepth(DEPTH_LAYERS.NONE - layers.length + index);
+                .setDepth(depth);
 
             return { sprite, speedMultiplier };
         });
+
+        this._celestialBody = null;
+        if (atmosphere.celestial) {
+            this._celestialBody = this.add.image(width * 0.7, height * 0.19, atmosphere.celestial)
+                .setDisplaySize(height * 0.17, height * 0.17)
+                .setDepth(-4);
+        }
     }
 
     _updateBackground(delta) {
@@ -138,6 +147,15 @@ export class GameScene extends CommonScene {
             sprite.tilePositionX = (sprite.tilePositionX + distance * speedMultiplier / sprite.tileScaleX)
                 % sprite.displayFrame.width;
         });
+
+        if (this._celestialBody) {
+            const body = this._celestialBody;
+            body.x -= distance * 0.1;
+            // Only one sun or moon is visible; wrap once it has fully left the screen.
+            const halfWidth = body.displayWidth / 2;
+            const span = config.width + body.displayWidth;
+            body.x = ((body.x + halfWidth) % span + span) % span - halfWidth;
+        }
     }
 
     _createScoreText() {

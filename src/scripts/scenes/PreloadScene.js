@@ -1,4 +1,4 @@
-import { ATLAS_FILES, AUDIO_FILES, CAMPAIGN_LEVELS, IMAGE_FILES, SCENE_NAMES } from '../constants';
+import { ATLAS_FILES, AUDIO_FILES, CAMPAIGN_LEVELS, IMAGE_FILES, PARALLAX_IMAGE_FILES, SCENE_NAMES } from '../constants';
 import { CommonScene } from './CommonScene';
 import { LoadingBar } from '../classes/LoadingBar';
 import { tweenPromise } from '../Utils';
@@ -59,6 +59,7 @@ export class PreloadScene extends CommonScene {
 
         ATLAS_FILES.forEach(name => this.load.atlas(name, `./assets/sprites/${name}.png`, `./assets/sprites/${name}.json`));
         IMAGE_FILES.forEach(name => this.load.image(name, `./assets/sprites/${name}.png`));
+        PARALLAX_IMAGE_FILES.forEach(name => this.load.image(name, `./assets/sprites/${name}.png`));
         AUDIO_FILES.forEach(name => this.load.audio(name, `./assets/sounds/${name}.mp3`));
     }
 

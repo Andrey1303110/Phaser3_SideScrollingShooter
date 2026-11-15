@@ -1,7 +1,10 @@
 # Changelog
 
-## 1.5.1
+## 1.5.2
 
+- Updated city artwork and added level-specific clouds, sun and moon with independent parallax speeds.
+
+## 1.5.1
 - Added saved auto-fire and separate joystick/fire-button opacity settings.
 - Moved pause away from screen edges and enlarged health bars and score text.
 

@@ -24,6 +24,27 @@ export const ATLAS_FILES = ['dragon', 'jet', 'strategic_jet', 'helicopter', 'boo
 // Only .png
 export const IMAGE_FILES = ['fire', 'flag', 'rocket', 'missile', 'missile_2', 'map', 'ruby', 'return', 'pause', 'scale', 'reload', 'velocity', 'progress_bar', 'progress_bar_fill', 'skobeeva', 'chief_commander', 'commander', 'president', 'next', 'life_icon', 'health_bar_empty', 'health_bar_fill', 'health', 'explosion_particle', 'fire_button', 'trees_mid', 'trees_near'];
 
+// Matches the level order and atmosphere specified in game_parallax/README.txt.
+export const LEVEL_BACKGROUNDS = [
+    { clouds: 'clouds_night', celestial: 'moon' },
+    { clouds: 'clouds_day', celestial: 'sun' },
+    { clouds: 'clouds_dawn', celestial: 'sun' },
+    { clouds: 'clouds_sunset', celestial: 'sun' },
+    { clouds: 'clouds_night', celestial: null },
+    { clouds: 'clouds_day', celestial: 'sun' },
+    { clouds: 'clouds_night', celestial: 'moon' },
+    { clouds: 'clouds_sunset', celestial: 'sun' },
+    { clouds: 'clouds_dawn', celestial: 'sun' },
+    { clouds: 'clouds_day', celestial: 'sun' },
+    { clouds: 'clouds_night', celestial: null },
+    { clouds: 'clouds_day', celestial: 'sun' },
+    { clouds: 'clouds_night', celestial: 'moon' },
+    { clouds: 'clouds_dawn', celestial: 'sun' },
+    { clouds: 'clouds_sunset', celestial: 'sun' },
+];
+
+export const PARALLAX_IMAGE_FILES = ['sun', 'moon', 'clouds_day', 'clouds_dawn', 'clouds_sunset', 'clouds_night'];
+
 // Only .mp3
 export const AUDIO_FILES = ['error', 'rocket_launch', 'fire_launch', 'missile_launch', 'missile_2_launch', 'explosion_small', 'wings', 'ready', 'lose', 'win', 'upgrade', 'level_up', 'whoosh', 'click', 'fire_effect', 'campaign_complete_song'];
 
