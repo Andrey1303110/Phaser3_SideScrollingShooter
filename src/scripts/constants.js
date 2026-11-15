@@ -22,7 +22,7 @@ export const EVENTS = {
 export const ATLAS_FILES = ['dragon', 'jet', 'strategic_jet', 'helicopter', 'boom'];
 
 // Only .png
-export const IMAGE_FILES = ['fire', 'flag', 'rocket', 'missile', 'missile_2', 'map', 'ruby', 'return', 'pause', 'scale', 'reload', 'velocity', 'progress_bar', 'progress_bar_fill', 'skobeeva', 'chief_commander', 'commander', 'president', 'next', 'life_icon', 'health_bar_empty', 'health_bar_fill', 'health', 'explosion_particle', 'fire_button'];
+export const IMAGE_FILES = ['fire', 'flag', 'rocket', 'missile', 'missile_2', 'map', 'ruby', 'return', 'pause', 'scale', 'reload', 'velocity', 'progress_bar', 'progress_bar_fill', 'skobeeva', 'chief_commander', 'commander', 'president', 'next', 'life_icon', 'health_bar_empty', 'health_bar_fill', 'health', 'explosion_particle', 'fire_button', 'trees_mid', 'trees_near'];
 
 // Only .mp3
 export const AUDIO_FILES = ['error', 'rocket_launch', 'fire_launch', 'missile_launch', 'missile_2_launch', 'explosion_small', 'wings', 'ready', 'lose', 'win', 'upgrade', 'level_up', 'whoosh', 'click', 'fire_effect', 'campaign_complete_song'];

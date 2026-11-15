@@ -46,7 +46,7 @@ export class GameScene extends CommonScene {
 
     update(time, delta) {
         if (this._blackBG || !this._player.active) return;
-        this._sceneBG.tilePositionX += this._sceneBG.width / 10000 * this.speed * delta / (1000 / 60);
+        this._updateBackground(delta);
         this._player.move();
         this._player.shooting();
         this._healthBar.setPosition(this._player.x, this._player.y - this._player.displayHeight * 0.5);
@@ -102,21 +102,37 @@ export class GameScene extends CommonScene {
     }
 
     _createBg(data) {
-        const { height, width} = config;
+        const { height, width } = config;
 
         const bgImage = data?.isUnlim ? `bg${Phaser.Math.Between(1, CAMPAIGN_LEVELS.length)}` : `bg${data.index}`;
 
-        const realHeight = this.textures.list[bgImage].source[0].height;
-        const scale = height/realHeight;
-
         this.speed = CAMPAIGN_LEVELS[this._currentLevelScene-1].velocity;
 
-        if (scale !== 1) {
-            this.speed /= scale;
-        }
+        const layers = [
+            { texture: bgImage, speedMultiplier: 1 },
+            { texture: 'trees_mid', speedMultiplier: 2 },
+            { texture: 'trees_near', speedMultiplier: 3.5 },
+        ];
 
-        this._sceneBG = this.add.tileSprite(0, 0, width, height, bgImage)
-            .setOrigin(0).setTileScale(scale).setAlpha(0.65);
+        this._backgroundLayers = layers.map(({ texture, speedMultiplier }, index) => {
+            const source = this.textures.get(texture).getSourceImage();
+            const sprite = this.add.tileSprite(0, 0, width, height, texture)
+                .setOrigin(0)
+                .setTileScale(height / source.height)
+                .setDepth(DEPTH_LAYERS.NONE - layers.length + index);
+
+            return { sprite, speedMultiplier };
+        });
+    }
+
+    _updateBackground(delta) {
+        const distance = config.width / 10000 * this.speed * delta / (1000 / 60);
+
+        this._backgroundLayers.forEach(({ sprite, speedMultiplier }) => {
+            // Tile offsets use texture pixels; keep the visible speed independent of scale.
+            sprite.tilePositionX = (sprite.tilePositionX + distance * speedMultiplier / sprite.tileScaleX)
+                % sprite.displayFrame.width;
+        });
     }
 
     _createScoreText() {

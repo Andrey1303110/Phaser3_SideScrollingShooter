@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.5.0
+
+- Replaced all 15 level backgrounds with new location artwork.
+- Added three-layer, frame-rate-independent parallax in campaign and endless modes.
+
 ## 1.4.0
 
 - Increased dialogue text and next-button sizes.
