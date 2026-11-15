@@ -49,13 +49,14 @@ export class Player extends MovableObject {
         this._lastFlightOffset = 0;
         this._flightVelocity = 0;
         this._inputVelocityY = 0;
+        this._controlsStopped = false;
 
         this.maxHealth = this.scene.model.player.maxHealth;
         this.currentHealth = this.scene.model.player.maxHealth;
     }
 
     shooting() {
-        if (!this.active || !this.scene || this.scene._blackBG) return;
+        if (!this.active || !this.scene || this._controlsStopped || this.scene._blackBG) return;
         if ((this.scene.model.autoFireEnabled || this.scene.cursors.space.isDown || this.scene.fireButton?.active) && !this._firesActivate) {
             this.fires.createFire(this);
             this._firesActivate = true;
@@ -72,6 +73,7 @@ export class Player extends MovableObject {
     }
 
     move() {
+        if (this._controlsStopped) return;
         this.body.setVelocity(0);
 
         if (this.y < screenData.top + this.displayHeight / 1.5) {
@@ -87,6 +89,18 @@ export class Player extends MovableObject {
         }
 
         this._handling(); 
+    }
+
+    stopControls() {
+        this._controlsStopped = true;
+        this._reloadTimer?.remove();
+        this._reloadTimer = null;
+        this._tweenFlying?.stop();
+        this._tweenFlying = null;
+        this._inputVelocityY = 0;
+        this._flightVelocity = 0;
+        this.body.stop();
+        this.body.moves = false;
     }
 
     _createAnimation() {
@@ -111,7 +125,7 @@ export class Player extends MovableObject {
     }
 
     _updateFrame(time, delta) {
-        if (!this.active || !this.body) {
+        if (!this.active || !this.body || this._controlsStopped) {
             return;
         }
         this._addTweenFly();

@@ -313,6 +313,8 @@ export class GameScene extends CommonScene {
         this._removeOverlaps();
 
         const isWin = this._player.active;
+        this._player.stopControls();
+        if (this.fireButton) this.fireButton.active = false;
         const sound = this._playTransitionSound(isWin ? 'win' : 'lose');
 
         this._blackBG = this.add.rectangle(config.width * 0.5, config.height * 0.5, config.width, config.height, '0x000000', 0).setInteractive().setDepth(DEPTH_LAYERS.COVER_SCREEN);

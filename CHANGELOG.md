@@ -1,7 +1,11 @@
 # Changelog
 
-## 1.5.2
+## 1.5.3
 
+- Fixed held movement carrying the dragon off screen during the end-of-level transition.
+- Halved helicopter aiming delays and increased flight speeds by 20%.
+
+## 1.5.2
 - Updated city artwork and added level-specific clouds, sun and moon with independent parallax speeds.
 
 ## 1.5.1
