@@ -29,8 +29,8 @@ export class SettingsScene extends CommonScene {
             this.cameras.main.width, this.cameras.main.height, 0x102323, 0.88);
         const u = screenData.width / document.body.clientWidth;
         this._unit = u;
-        const width = Math.min(480 * u, screenData.width - 104 * u);
-        const height = Math.min(288 * u, screenData.height - 32 * u);
+        const width = Math.min(760 * u, screenData.width - 104 * u);
+        const height = Math.min(352 * u, screenData.height - 24 * u);
         const x = (screenData.left + screenData.right) / 2;
         const y = (screenData.top + screenData.bottom) / 2;
         const left = x - width / 2;
@@ -45,17 +45,19 @@ export class SettingsScene extends CommonScene {
         });
         this._createBackArrow();
 
-        const gap = (height - 120 * u) / 3;
-        const rowY = index => top + 78 * u + gap * index;
-        ['SOUND', 'FPS', 'LANGUAGE', 'PROGRESS'].forEach((key, index) => {
-            this.add.text(left + UI.padding * u, rowY(index), this._getText(key), {
-                ...uiText(),
-            }).setOrigin(0, 0.5);
+        const columnWidth = (width - 56 * u) / 2;
+        const columnX = [left + UI.padding * u, left + width / 2 + 12 * u];
+        const gap = (height - 110 * u) / 3;
+        const rowY = index => top + 52 * u + gap * index;
+        ['SOUND', 'FPS', 'LANGUAGE'].forEach((key, index) => {
+            this.add.text(columnX[0], rowY(index), this._getText(key), {
+                ...uiText(15),
+            });
         });
-        const controlX = left + width - 106 * u;
-        this._soundButton = this._button(controlX, rowY(0), 180 * u,
+        const controlX = columnX[0] + columnWidth / 2;
+        this._soundButton = this._button(controlX, rowY(0) + 40 * u, columnWidth,
             this._getText(this.model.soundEnabled ? 'ON' : 'OFF'), () => this._toggleSound());
-        this._fpsButton = this._button(controlX, rowY(1), 180 * u,
+        this._fpsButton = this._button(controlX, rowY(1) + 40 * u, columnWidth,
             this._getText(this.model.showFPS ? 'ON' : 'OFF'), () => {
                 this.model.setShowFPS(!this.model.showFPS);
                 this._status = this._getText('SAVED');
@@ -63,19 +65,72 @@ export class SettingsScene extends CommonScene {
             });
         this._languageButtons = {};
         for (const [index, lang] of ['ukr', 'eng'].entries()) {
-            this._languageButtons[lang] = this._button(controlX + (index ? 47 : -47) * u,
-                rowY(2), 86 * u, lang === 'ukr' ? 'УКР' : 'ENG',
+            const buttonWidth = (columnWidth - 8 * u) / 2;
+            this._languageButtons[lang] = this._button(controlX + (index ? 1 : -1) * (buttonWidth + 8 * u) / 2,
+                rowY(2) + 40 * u, buttonWidth, lang === 'ukr' ? 'УКР' : 'ENG',
                 () => this._changeLanguage(lang), this.model.lang === lang ? 0x367c4b : 0x526b70);
         }
-        this._resetButton = this._button(controlX, rowY(3), 180 * u,
+        this.add.text(columnX[1], rowY(0), this._getText('AUTO_FIRE'), uiText(15));
+        this._autoFireButton = this._button(columnX[1] + columnWidth / 2, rowY(0) + 40 * u,
+            columnWidth, this._getText(this.model.autoFireEnabled ? 'ON' : 'OFF'), () => {
+                this.model.setAutoFireEnabled(!this.model.autoFireEnabled);
+                this._status = this._getText('SAVED');
+                this._render();
+            });
+        this._opacitySliders = {
+            joystick: this._createOpacitySlider(columnX[1], rowY(1), columnWidth,
+                'JOYSTICK_OPACITY', this.model.joystickOpacity, value => this.model.setJoystickOpacity(value)),
+            fire: this._createOpacitySlider(columnX[1], rowY(2), columnWidth,
+                'FIRE_BUTTON_OPACITY', this.model.fireButtonOpacity, value => this.model.setFireButtonOpacity(value)),
+        };
+        const footerY = top + height - 34 * u;
+        this.add.text(columnX[0], footerY, this._getText('PROGRESS'), uiText()).setOrigin(0, 0.5);
+        this._resetButton = this._button(columnX[1] + columnWidth / 2, footerY, columnWidth,
             this._getText('RESET'), () => {
                 this._confirmingReset = true;
                 this._render();
             }, 0xa34537);
-        this.add.text(left + width - 16 * u, top + 30 * u, this._status, {
+        this._statusText = this.add.text(left + width - 16 * u, top + 30 * u, this._status, {
             ...uiText(UI.type.caption, UI.colors.accent),
         }).setOrigin(1, 0.5);
         if (this._confirmingReset) this._createResetDialog();
+    }
+
+    _createOpacitySlider(x, y, width, textKey, value, onChange) {
+        const u = this._unit;
+        this.add.text(x, y, this._getText(textKey), uiText(UI.type.caption));
+        const valueText = this.add.text(x + width, y, '', uiText(UI.type.caption, UI.colors.accent))
+            .setOrigin(1, 0);
+        const trackY = y + 36 * u;
+        const trackX = x + 10 * u;
+        const trackWidth = width - 20 * u;
+        const track = this.add.graphics();
+        const thumb = this.add.circle(0, trackY, 9 * u, 0xe4c284);
+        const draw = () => {
+            track.clear().fillStyle(UI.colors.secondary)
+                .fillRoundedRect(trackX, trackY - 3 * u, trackWidth, 6 * u, 3 * u);
+            if (value > 0) track.fillStyle(UI.colors.primary)
+                .fillRoundedRect(trackX, trackY - 3 * u, trackWidth * value, 6 * u, 3 * u);
+            thumb.x = trackX + trackWidth * value;
+            valueText.setText(`${Math.round(value * 100)}%`);
+        };
+        const hitArea = this.add.zone(x + width / 2, trackY, width, 44 * u)
+            .setInteractive({ useHandCursor: true });
+        this.input.setDraggable(hitArea);
+        const update = pointer => {
+            if (this._changingLanguage || this._confirmingReset) return;
+            const next = Math.round(Phaser.Math.Clamp((pointer.worldX - trackX) / trackWidth, 0, 1) * 100) / 100;
+            if (next === value) return;
+            value = next;
+            onChange(value);
+            draw();
+            this._status = this._getText('SAVED');
+            this._statusText.setText(this._status);
+        };
+        hitArea.on('pointerdown', update);
+        hitArea.on('drag', update);
+        draw();
+        return { hitArea, thumb, valueText };
     }
 
     _createBackArrow() {
@@ -84,7 +139,7 @@ export class SettingsScene extends CommonScene {
 
     _button(x, y, width, text, action, color = UI.colors.primary, parent) {
         return createButton(this, {
-            x, y, width, text, parent,
+            x, y, width, height: 40 * this._unit, text, parent,
             variant: color === 0xa34537 ? 'danger' : color === 0x526b70 ? 'secondary' : 'primary',
             canPress: () => !this._changingLanguage,
             onPress: () => { this.sounds.click.play({ volume: 0.2 }); action(); },

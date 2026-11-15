@@ -49,7 +49,7 @@ export class GameScene extends CommonScene {
         this._updateBackground(delta);
         this._player.move();
         this._player.shooting();
-        this._healthBar.setPosition(this._player.x, this._player.y - this._player.displayHeight * 0.5);
+        this._updateHealthBarPosition();
         this._updateFPSDebugText(this.game.loop.actualFps);
     }
     
@@ -73,8 +73,8 @@ export class GameScene extends CommonScene {
             x: left + JOYSTICK_RADIUS + JOYSTICK_GAP,
             y: bottom - JOYSTICK_RADIUS - JOYSTICK_GAP,
             radius: JOYSTICK_RADIUS,
-            base: this.add.circle(0, 0, JOYSTICK_RADIUS).setStrokeStyle(3.5, 0x1a65ac).setAlpha(0.75),
-            thumb: this.add.circle(0, 0, JOYSTICK_RADIUS * 0.5, 0xcccccc).setAlpha(0.5),
+            base: this.add.circle(0, 0, JOYSTICK_RADIUS).setStrokeStyle(3.5, 0x1a65ac, this.model.joystickOpacity),
+            thumb: this.add.circle(0, 0, JOYSTICK_RADIUS * 0.5, 0xcccccc).setAlpha(this.model.joystickOpacity * 2 / 3),
             dir: '8dir',
         });
 
@@ -87,9 +87,14 @@ export class GameScene extends CommonScene {
         const { right } = screenData;
 
         this.fireButton = this.add.image(right - JOYSTICK_RADIUS - JOYSTICK_GAP, this._joystick.y, 'fire_button')
-            .setAlpha(0.65)
-            .setInteractive()
+            .setAlpha(this.model.fireButtonOpacity)
             .setActive(false)
+            .setDepth(DEPTH_LAYERS.UI);
+
+        // Keep the touch target available even when the button is fully transparent.
+        this._fireButtonHitArea = this.add.zone(this.fireButton.x, this.fireButton.y,
+            this.fireButton.displayWidth, this.fireButton.displayHeight)
+            .setInteractive()
             .setDepth(DEPTH_LAYERS.UI)
             .on('pointerup', () => {
                 this.fireButton.active = false;
@@ -144,15 +149,16 @@ export class GameScene extends CommonScene {
         }
         this._hiScoreBackground?.destroy();
 
-        this.scoreText = this.add.text(right - 16 * u, top + 12 * u, this._currentScore,
-            uiText(UI.type.section)).setOrigin(1, 0).setDepth(DEPTH_LAYERS.UI);
+        this.scoreText = this.add.text(right - 20 * u, top + 16 * u, this._currentScore, {
+            ...uiText(28), fontStyle: 'bold',
+        }).setOrigin(1, 0).setDepth(DEPTH_LAYERS.UI);
 
         if (this.info?.isUnlim) {
             const topScoreText = this._getText('TOP_HIGH_SCORE');
             const x = this.cameras.main.centerX;
             this.hiScoreText = this.add.text(x, top + 20 * u,
                 `${topScoreText} ${this.model.unlimHiScores}`, {
-                    ...uiText(UI.type.body), fontStyle: 'bold',
+                    ...uiText(UI.type.section), fontStyle: 'bold',
                 }).setOrigin(0.5, 0).setDepth(DEPTH_LAYERS.UI + 0.01);
             this._hiScoreBackground = this.add.graphics().setDepth(DEPTH_LAYERS.UI);
             this._hiScoreBackground.fillStyle(UI.colors.panel, 0.96).lineStyle(u, UI.colors.border)
@@ -362,7 +368,7 @@ export class GameScene extends CommonScene {
     _createPauseButton() {
         const u = uiUnit();
         this._pauseButton = createButton(this, {
-            x: screenData.left + 24 * u, y: screenData.top + 24 * u, width: 44 * u, text: '',
+            x: screenData.left + 48 * u, y: screenData.top + 48 * u, width: 44 * u, text: '',
             canPress: () => !this._blackBG,
             onPress: () => {
                 if (this.fireButton) this.fireButton.active = false;
@@ -377,6 +383,15 @@ export class GameScene extends CommonScene {
     _createHealthBar(){
         this._healthBar = new HealthBar(this);
         this._healthBar.setDepth(DEPTH_LAYERS.UI);
+        this._updateHealthBarPosition();
+    }
+
+    _updateHealthBarPosition() {
+        this._healthBar.setPosition(this._player.x, this._player.y - this._player.displayHeight * 0.5);
+        const bounds = this._healthBar.getBounds();
+        const margin = 4 * uiUnit();
+        this._healthBar.x += Math.max(0, screenData.left + margin - bounds.left)
+            - Math.max(0, bounds.right - screenData.right + margin);
     }
 
     _createExpProgressBar(){

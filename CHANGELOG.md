@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.5.1
+
+- Added saved auto-fire and separate joystick/fire-button opacity settings.
+- Moved pause away from screen edges and enlarged health bars and score text.
+
 ## 1.5.0
 
 - Replaced all 15 level backgrounds with new location artwork.

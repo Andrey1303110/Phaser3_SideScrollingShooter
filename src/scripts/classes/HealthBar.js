@@ -1,6 +1,6 @@
 import { tweenPromise } from "../Utils";
 
-const DEFAULT_SCALE = 0.37;
+const DEFAULT_SCALE = 0.44;
 
 export class HealthBar extends Phaser.GameObjects.Container {
     constructor(scene) {

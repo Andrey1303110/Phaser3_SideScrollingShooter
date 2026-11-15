@@ -3,6 +3,7 @@ import { CAMPAIGN_LEVELS, LEVEL_HI_SCORES_SEPARATOR, PLAYER, UPGRADE_MULTIPLIER,
 
 const ABILITY_PREFIX = 'playerAbilityLevel_';
 const CASUALTIES_PREFIX = 'casualties_';
+const clampOpacity = value => Math.max(0, Math.min(1, value));
 
 export class GameModel {
     static _instance = null;
@@ -37,6 +38,9 @@ export class GameModel {
         if (!['eng', 'ukr'].includes(this.lang)) this.lang = '';
         this.soundEnabled = StorageService.get('soundEnabled', true, value => value !== 'false');
         this.showFPS = StorageService.get('showFPS', false, value => value === 'true');
+        this.autoFireEnabled = StorageService.get('autoFireEnabled', false, value => value === 'true');
+        this.joystickOpacity = clampOpacity(StorageService.get('joystickOpacity', 0.75, Number));
+        this.fireButtonOpacity = clampOpacity(StorageService.get('fireButtonOpacity', 0.65, Number));
     }
 
     static getInstance() {
@@ -139,6 +143,23 @@ export class GameModel {
     setShowFPS(enabled) {
         this.showFPS = enabled;
         StorageService.set('showFPS', enabled);
+    }
+
+    setAutoFireEnabled(enabled) {
+        this.autoFireEnabled = enabled;
+        StorageService.set('autoFireEnabled', enabled);
+    }
+
+    setJoystickOpacity(value) {
+        if (!Number.isFinite(value)) return;
+        this.joystickOpacity = clampOpacity(value);
+        StorageService.set('joystickOpacity', this.joystickOpacity);
+    }
+
+    setFireButtonOpacity(value) {
+        if (!Number.isFinite(value)) return;
+        this.fireButtonOpacity = clampOpacity(value);
+        StorageService.set('fireButtonOpacity', this.fireButtonOpacity);
     }
 
     resetProgress() {

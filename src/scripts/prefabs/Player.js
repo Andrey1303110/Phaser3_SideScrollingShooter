@@ -55,9 +55,8 @@ export class Player extends MovableObject {
     }
 
     shooting() {
-        if (!this.active || !this.scene) return;
-        if ((this.scene.cursors.space.isDown || this.scene.fireButton?.active) && !this._firesActivate) {
-            this.scene.fireButton?.setAlpha(0.95);
+        if (!this.active || !this.scene || this.scene._blackBG) return;
+        if ((this.scene.model.autoFireEnabled || this.scene.cursors.space.isDown || this.scene.fireButton?.active) && !this._firesActivate) {
             this.fires.createFire(this);
             this._firesActivate = true;
 
@@ -67,7 +66,6 @@ export class Player extends MovableObject {
                     this._reloadTimer = null;
                     if (!this.active || !this.scene) return;
                     this._firesActivate = false;
-                    this.scene.fireButton?.setAlpha(0.65);
                 }
             });
         }

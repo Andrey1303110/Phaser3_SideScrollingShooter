@@ -4,6 +4,8 @@ Phaser 3 side-scrolling shooter with a campaign, an endless mode, English and Uk
 
 Designed for Android phones in landscape orientation only, running inside a WebView in the packaged app. Move with the left joystick and hold the fire button on the right; use two fingers to move and shoot simultaneously.
 
+Settings include auto-fire without holding the fire button and separate opacity sliders for the joystick and fire button. These preferences are saved on the device.
+
 Use Node.js 22.15.0 or newer and install dependencies with `npm ci`.
 
 - `npm start` starts the Webpack development server.
