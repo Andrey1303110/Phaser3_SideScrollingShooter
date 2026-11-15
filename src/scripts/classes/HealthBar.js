@@ -1,3 +1,5 @@
+import { TIMING } from '../timing';
+import { TEXTURE_KEYS } from '../identifiers';
 import { tweenPromise } from "../Utils";
 
 const DEFAULT_SCALE = 0.44;
@@ -37,7 +39,7 @@ export class HealthBar extends Phaser.GameObjects.Container {
     }
 
     async _tweenUpdate(cutWidth) {
-        const duration = 150;
+        const duration = TIMING.HEALTH_BAR.TWEEN_UPDATE_DURATION_MS;
         const increaseValue = 1.15;
 
         await tweenPromise(this._scene, {
@@ -52,7 +54,7 @@ export class HealthBar extends Phaser.GameObjects.Container {
             targets: this,
             scale: DEFAULT_SCALE,
             ease: 'Power2.out',
-            duration: duration * 0.75,
+            duration: duration * TIMING.HEALTH_BAR.TWEEN_UPDATE_DURATION_FACTOR,
         });
     }
 
@@ -75,16 +77,16 @@ export class HealthBar extends Phaser.GameObjects.Container {
     }
 
     _createHealthBar(){
-        this._healthBar = this._scene.add.sprite(0, 0, 'health_bar_empty')
+        this._healthBar = this._scene.add.sprite(0, 0, TEXTURE_KEYS.HEALTH_BAR_EMPTY)
             .setAlpha(0.95);
-        this._healthBarFill = this._scene.add.sprite(this._healthBar.x - this._healthBar.width * 0.0185, this._healthBar.y, 'health_bar_fill')
+        this._healthBarFill = this._scene.add.sprite(this._healthBar.x - this._healthBar.width * 0.0185, this._healthBar.y, TEXTURE_KEYS.HEALTH_BAR_FILL)
             .setAlpha(0.95);
 
         this.updateHealthBar(true);
     }
 
     _createHeartIcon(){
-        this._heartIcon = this._scene.add.sprite(this._healthBar.x - this._healthBar.width * 0.53, this._healthBar.y, 'life_icon')
+        this._heartIcon = this._scene.add.sprite(this._healthBar.x - this._healthBar.width * 0.53, this._healthBar.y, TEXTURE_KEYS.LIFE_ICON)
             .setAlpha(0.95);
     }
 }

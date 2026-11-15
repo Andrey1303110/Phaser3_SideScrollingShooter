@@ -1,9 +1,10 @@
+import { INPUT_EVENTS, LIFECYCLE_EVENTS, SOUND_KEYS, TEXT_KEYS } from '../identifiers';
 import { CommonScene } from './CommonScene';
 import { CAMPAIGN_LEVELS, SCENE_NAMES, UPGRADE_MULTIPLIER } from '../constants';
 import { screenData, setEndpoints } from '../Utils';
 import { UI, uiText, createButton, createBackArrow } from '../ui';
 
-const SECTIONS = ['ABOUT', 'CONTROLS', 'MODES', 'UPGRADES'];
+const SECTIONS = [TEXT_KEYS.ABOUT, TEXT_KEYS.CONTROLS, TEXT_KEYS.MODES, TEXT_KEYS.UPGRADES];
 const COLORS = { ink: UI.colors.text, muted: UI.colors.muted };
 
 export class InfoScene extends CommonScene {
@@ -19,7 +20,7 @@ export class InfoScene extends CommonScene {
 
     create() {
         this._createBg();
-        this.sounds = { click: this.sound.add('click') };
+        this.sounds = { click: this.sound.add(SOUND_KEYS.CLICK) };
         this._selectedSection = 0;
         this._createLayout();
         this._showSection(0);
@@ -34,9 +35,9 @@ export class InfoScene extends CommonScene {
             this._createLayout();
             this._showSection(this._selectedSection);
         };
-        this.scale.on('resize', resize);
-        this.events.once('shutdown', () => {
-            this.scale.off('resize', resize);
+        this.scale.on(LIFECYCLE_EVENTS.RESIZE, resize);
+        this.events.once(LIFECYCLE_EVENTS.SHUTDOWN, () => {
+            this.scale.off(LIFECYCLE_EVENTS.RESIZE, resize);
             this._content.clearMask(true);
         });
     }
@@ -56,7 +57,7 @@ export class InfoScene extends CommonScene {
             .fillRoundedRect(left, top, width, height, UI.panelRadius * unit)
             .strokeRoundedRect(left, top, width, height, UI.panelRadius * unit);
 
-        this.add.text(left + padding, top + 12 * unit, this._getText('TITLE'), {
+        this.add.text(left + padding, top + 12 * unit, this._getText(TEXT_KEYS.TITLE), {
             ...uiText(UI.type.title),
             wordWrap: { width: width - padding * 3 - 110 * unit },
         });
@@ -102,7 +103,7 @@ export class InfoScene extends CommonScene {
         this._pageLabel = this.add.text(left + width / 2, footerY - 9 * unit, '', {
             fontFamily: 'Arial', fontSize: 16 * unit, color: COLORS.ink,
         }).setOrigin(0.5);
-        this.add.text(left + width / 2, footerY + 11 * unit, this._getText('FOOTER'), {
+        this.add.text(left + width / 2, footerY + 11 * unit, this._getText(TEXT_KEYS.FOOTER), {
             fontFamily: 'Arial', fontSize: 12 * unit, color: COLORS.muted,
         }).setOrigin(0.5);
     }
@@ -175,19 +176,19 @@ export class InfoScene extends CommonScene {
         const wheel = (pointer, objects, dx, dy) => {
             if (inside(pointer)) this._scrollTo(this._scrollOffset + dy * this._unit);
         };
-        this.input.on('pointerdown', down);
-        this.input.on('pointermove', move);
-        this.input.on('pointerup', up);
+        this.input.on(INPUT_EVENTS.POINTERDOWN, down);
+        this.input.on(INPUT_EVENTS.POINTERMOVE, move);
+        this.input.on(INPUT_EVENTS.POINTERUP, up);
         this.input.on('pointerupoutside', up);
-        this.input.on('gameout', cancel);
+        this.input.on(INPUT_EVENTS.GAMEOUT, cancel);
         this.input.on('wheel', wheel);
-        this.events.once('shutdown', () => {
+        this.events.once(LIFECYCLE_EVENTS.SHUTDOWN, () => {
             this._gesture = null;
-            this.input.off('pointerdown', down);
-            this.input.off('pointermove', move);
-            this.input.off('pointerup', up);
+            this.input.off(INPUT_EVENTS.POINTERDOWN, down);
+            this.input.off(INPUT_EVENTS.POINTERMOVE, move);
+            this.input.off(INPUT_EVENTS.POINTERUP, up);
             this.input.off('pointerupoutside', up);
-            this.input.off('gameout', cancel);
+            this.input.off(INPUT_EVENTS.GAMEOUT, cancel);
             this.input.off('wheel', wheel);
         });
     }
@@ -201,7 +202,7 @@ export class InfoScene extends CommonScene {
         keyboard.on('keydown-ESC', back);
         keyboard.on('keydown-LEFT', previous);
         keyboard.on('keydown-RIGHT', next);
-        this.events.once('shutdown', () => {
+        this.events.once(LIFECYCLE_EVENTS.SHUTDOWN, () => {
             keyboard.off('keydown-ESC', back);
             keyboard.off('keydown-LEFT', previous);
             keyboard.off('keydown-RIGHT', next);

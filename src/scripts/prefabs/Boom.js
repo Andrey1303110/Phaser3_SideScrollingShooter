@@ -1,5 +1,7 @@
-const ANIMATION_NAME = 'explosion';
-const FRAME_NAME = 'boom';
+import { TIMING } from '../timing';
+import { ANIMATION_KEYS, TEXTURE_KEYS } from '../identifiers';
+const ANIMATION_NAME = ANIMATION_KEYS.EXPLOSION;
+const FRAME_NAME = TEXTURE_KEYS.BOOM;
 
 export class Boom extends Phaser.GameObjects.Sprite {
     static generate(scene, x, y) {
@@ -36,7 +38,7 @@ export class Boom extends Phaser.GameObjects.Sprite {
         this.scene.anims.create({
             key: ANIMATION_NAME,
             frames,
-            frameRate: 8,
+            frameRate: TIMING.BOOM.CREATE_ANIMATION_FRAME_RATE_FPS,
             repeat: 0,
         });
     }

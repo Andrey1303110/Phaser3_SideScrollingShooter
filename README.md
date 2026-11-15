@@ -8,6 +8,8 @@ Settings include auto-fire without holding the fire button and separate opacity 
 
 Use Node.js 22.15.0 or newer and install dependencies with `npm ci`.
 
+Animation durations, UI delays and timer variation are configured in `src/scripts/timing.js`, grouped by scene or prefab. Millisecond settings use the `_MS` suffix; animation rates use `_FPS`. Weapon reloads and level-specific enemy timings remain in the gameplay configuration in `src/scripts/constants.js`.
+
 - `npm start` starts the Webpack development server.
 - `npm run build` creates the production site in `dist/`.
 

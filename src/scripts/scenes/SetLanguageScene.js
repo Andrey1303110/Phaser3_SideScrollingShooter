@@ -1,3 +1,5 @@
+import { TIMING } from '../timing';
+import { CACHE_KEYS, INPUT_EVENTS, SOUND_KEYS, TEXTURE_KEYS, TEXT_KEYS } from '../identifiers';
 import { delayInMSec, screenData, setEndpoints, tweenPromise } from '../Utils';
 import { FONTS, SCENE_NAMES } from '../constants';
 import { config } from '../main';
@@ -25,26 +27,26 @@ export class SetLanguageScene extends CommonScene {
     preload() {
         super.preload();
 
-        this.load.image('eng', './assets/sprites/eng.png');
-        this.load.image('ukr', './assets/sprites/ukr.png');
-        this.load.image('button', './assets/sprites/button_lang.png');
+        this.load.image(TEXTURE_KEYS.ENG, './assets/sprites/eng.png');
+        this.load.image(TEXTURE_KEYS.UKR, './assets/sprites/ukr.png');
+        this.load.image(TEXTURE_KEYS.BUTTON, './assets/sprites/button_lang.png');
 
-        this.load.audio('click', `./assets/sounds/click.mp3`);
-        this.load.audio('whoosh', `./assets/sounds/whoosh.mp3`);
+        this.load.audio(SOUND_KEYS.CLICK, `./assets/sounds/click.mp3`);
+        this.load.audio(SOUND_KEYS.WHOOSH, `./assets/sounds/whoosh.mp3`);
     }
 
     _addButtonEventListeners(button) {
-        button.on('pointerover', () => button.setAlpha(1));
-        button.on('pointerout', () => button.setAlpha(0.75));
-        button.once('pointerdown', () => this._langSelect(button));
+        button.on(INPUT_EVENTS.POINTEROVER, () => button.setAlpha(1));
+        button.on(INPUT_EVENTS.POINTEROUT, () => button.setAlpha(0.75));
+        button.once(INPUT_EVENTS.POINTERDOWN, () => this._langSelect(button));
     }
 
     async _createButtons() {
-        const delay = 350;
+        const delay = TIMING.SET_LANGUAGE_SCENE.CREATE_BUTTONS_DELAY_MS;
         await delayInMSec(this.scene, delay);
 
-        await this._createButton('ukr', 0.35);
-        await this._createButton('eng', 0.65);
+        await this._createButton(TEXTURE_KEYS.UKR, 0.35);
+        await this._createButton(TEXTURE_KEYS.ENG, 0.65);
     }
 
     async _createButton(name, y){
@@ -58,16 +60,16 @@ export class SetLanguageScene extends CommonScene {
     _createButtonText(button, name) {
         let textTitle;
         switch (name) {
-            case 'ukr':
-                textTitle = 'UKRAINIAN';
+            case TEXTURE_KEYS.UKR:
+                textTitle = TEXT_KEYS.UKRAINIAN;
                 break;
-            case 'eng':
-                textTitle = 'ENGLISH';
+            case TEXTURE_KEYS.ENG:
+                textTitle = TEXT_KEYS.ENGLISH;
                 break;
         }
 
         const textStyle = {
-            font: `${config.width * 0.04}px ${FONTS['eng']}`,
+            font: `${config.width * 0.04}px ${FONTS[TEXTURE_KEYS.ENG]}`,
             fill: '#f0f0f0',
         };
         button.buttonText = this.add.text(button.x - config.width * 0.06, button.y, textTitle, textStyle).setScale(3).setOrigin(0.5).setAlpha(0);
@@ -78,7 +80,7 @@ export class SetLanguageScene extends CommonScene {
     }
 
     _createButtonSprite(buttonName, y) {
-        this._buttons[buttonName] = this.add.image(config.width * 0.5, config.height * y, 'button')
+        this._buttons[buttonName] = this.add.image(config.width * 0.5, config.height * y, TEXTURE_KEYS.BUTTON)
             .setOrigin(0.5)
             .setScale(5)
             .setAlpha(0)
@@ -90,7 +92,7 @@ export class SetLanguageScene extends CommonScene {
     async _createButtonTweens(button) {
         this.sounds.whoosh.play({ volume: 0.33 });
 
-        const duration = 300;
+        const duration = TIMING.SET_LANGUAGE_SCENE.CREATE_BUTTON_TWEENS_DURATION_MS;
         return Promise.all([
             tweenPromise(this, {
                 targets: [ button, button.buttonText ],
@@ -111,18 +113,18 @@ export class SetLanguageScene extends CommonScene {
 
     _createPressLabel() {
         const textStyle = {
-            font: `${config.width * 0.035}px ${FONTS['eng']}`,
+            font: `${config.width * 0.035}px ${FONTS[TEXTURE_KEYS.ENG]}`,
             fill: '#f0f0f0',
         };
         
-        const text = this.scene.scene.cache.json.get('initial_texts')['SelectLanguage'];
+        const text = this.scene.scene.cache.json.get(CACHE_KEYS.INITIAL_TEXTS)['SelectLanguage'];
         const label = this.add.text(config.width * 0.5, screenData.bottom - config.width * 0.025, text, textStyle).setOrigin(0.5, 1).setAlpha(0);
 
         return tweenPromise(this, {
             targets: label,
             alpha: 0.5,
             ease: 'Linear',
-            duration: 350,
+            duration: TIMING.SET_LANGUAGE_SCENE.CREATE_PRESS_LABEL_DURATION_MS,
             onComplete: () => this._playLabelCTA(label),
         });
     }
@@ -133,7 +135,7 @@ export class SetLanguageScene extends CommonScene {
             scale: 1.15,
             alpha: 1,
             ease: 'Linear',
-            duration: 500,
+            duration: TIMING.SET_LANGUAGE_SCENE.PLAY_LABEL_CTA_DURATION_MS,
             repeat: -1,
             yoyo: true,
         });
@@ -154,8 +156,8 @@ export class SetLanguageScene extends CommonScene {
             return;
         }
         this.sounds = {
-            click: this.sound.add('click'),
-            whoosh: this.sound.add('whoosh'),
+            click: this.sound.add(SOUND_KEYS.CLICK),
+            whoosh: this.sound.add(SOUND_KEYS.WHOOSH),
         };
     }
 }

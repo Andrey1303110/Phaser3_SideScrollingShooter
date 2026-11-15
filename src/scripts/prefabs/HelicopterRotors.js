@@ -1,3 +1,4 @@
+import { LIFECYCLE_EVENTS } from '../identifiers';
 // Hub coordinates are local pixels in each helicopter atlas frame.
 const ROTORS = {
     '1': [
@@ -29,10 +30,10 @@ export class HelicopterRotors extends Phaser.GameObjects.Graphics {
         // the rotor stays attached even when the helicopter moves quickly.
         scene.events.on(Phaser.Scenes.Events.POST_UPDATE, this.update, this);
         const remove = () => this.destroy();
-        helicopter.once('destroy', remove);
-        this.once('destroy', () => {
+        helicopter.once(LIFECYCLE_EVENTS.DESTROY, remove);
+        this.once(LIFECYCLE_EVENTS.DESTROY, () => {
             scene.events.off(Phaser.Scenes.Events.POST_UPDATE, this.update, this);
-            helicopter.off('destroy', remove);
+            helicopter.off(LIFECYCLE_EVENTS.DESTROY, remove);
         });
         this.update(0, 0);
     }

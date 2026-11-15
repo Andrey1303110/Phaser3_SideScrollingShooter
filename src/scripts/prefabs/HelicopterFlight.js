@@ -1,10 +1,11 @@
+import { FLIGHT_STATES } from '../identifiers';
 import { screenData } from '../Utils';
 
 export class HelicopterFlight {
     constructor(helicopter, config) {
         this.helicopter = helicopter;
         this.config = config;
-        this.state = 'stopped';
+        this.state = FLIGHT_STATES.STOPPED;
     }
 
     start() {
@@ -14,40 +15,40 @@ export class HelicopterFlight {
         this._cooldown = 0;
         this._setTarget(screenData.left + screenData.width
             * Phaser.Math.Between(this.config.approachPercent.min, this.config.approachPercent.max) / 100,
-            this._clampHeight(helicopter.y), 'approach');
+            this._clampHeight(helicopter.y), FLIGHT_STATES.APPROACH);
         helicopter.body.setVelocity(helicopter.velocity, 0);
     }
 
     stop() {
-        this.state = 'stopped';
+        this.state = FLIGHT_STATES.STOPPED;
         this.helicopter.body.stop();
     }
 
     update(delta) {
-        if (this.state === 'stopped') return;
+        if (this.state === FLIGHT_STATES.STOPPED) return;
         this._cooldown = Math.max(0, this._cooldown - delta);
 
         switch (this.state) {
-            case 'approach':
-            case 'advance':
-            case 'climb':
+            case FLIGHT_STATES.APPROACH:
+            case FLIGHT_STATES.ADVANCE:
+            case FLIGHT_STATES.CLIMB:
                 this._flyToTarget(delta);
                 break;
-            case 'aim':
+            case FLIGHT_STATES.AIM:
                 this._wait -= delta;
                 if (this._wait <= 0 && this._cooldown === 0) {
                     this.helicopter._shooting();
                     this._shots++;
                     this._cooldown = this.config.rocketInterval;
                     this._wait = this.config.recoveryDelay;
-                    this.state = 'recover';
+                    this.state = FLIGHT_STATES.RECOVER;
                 }
                 break;
-            case 'recover':
+            case FLIGHT_STATES.RECOVER:
                 this._wait -= delta;
                 if (this._wait <= 0) this._chooseManeuver();
                 break;
-            case 'exit':
+            case FLIGHT_STATES.EXIT:
                 this._steer(this.helicopter.velocity, 0, delta);
                 break;
         }
@@ -73,7 +74,7 @@ export class HelicopterFlight {
         if (distance < this.config.arrivalDistance && helicopter.body.velocity.length() < this.config.arrivalSpeed) {
             helicopter.body.stop();
             this._wait = this.config.aimDelay;
-            this.state = 'aim';
+            this.state = FLIGHT_STATES.AIM;
             return;
         }
 
@@ -93,7 +94,7 @@ export class HelicopterFlight {
         const helicopter = this.helicopter;
         const exitLine = screenData.left + helicopter.displayWidth / 2 + screenData.width * this.config.exitMargin;
         if (this._shots >= this._shotLimit || helicopter.x <= exitLine + this.config.arrivalDistance) {
-            this.state = 'exit';
+            this.state = FLIGHT_STATES.EXIT;
             return;
         }
 
@@ -103,11 +104,11 @@ export class HelicopterFlight {
             if (Phaser.Math.Between(0, 1) === 0) offset = -offset;
             const target = helicopter.y + offset;
             const y = this._clampHeight(target) === target ? target : this._clampHeight(helicopter.y - offset);
-            this._setTarget(helicopter.x, y, 'climb');
+            this._setTarget(helicopter.x, y, FLIGHT_STATES.CLIMB);
         } else {
             const distance = screenData.width
                 * Phaser.Math.Between(this.config.advancePercent.min, this.config.advancePercent.max) / 100;
-            this._setTarget(Math.max(exitLine, helicopter.x - distance), helicopter.y, 'advance');
+            this._setTarget(Math.max(exitLine, helicopter.x - distance), helicopter.y, FLIGHT_STATES.ADVANCE);
         }
     }
 

@@ -1,3 +1,4 @@
+import { LIFECYCLE_EVENTS } from '../identifiers';
 import { rgbToHex, screenData } from '../Utils';
 import { config } from '../main';
 
@@ -36,7 +37,7 @@ export class LoadingBar {
 
         const onProgress = value => this._showProgressBar(value, params);
         this._scene.load.on('progress', onProgress);
-        this._scene.events.once('shutdown', () => this._scene.load.off('progress', onProgress));
+        this._scene.events.once(LIFECYCLE_EVENTS.SHUTDOWN, () => this._scene.load.off('progress', onProgress));
     }
 
     get graphicsElements() {

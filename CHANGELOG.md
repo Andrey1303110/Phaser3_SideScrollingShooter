@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.5.4
+
+- Moved animation durations, transition delays and timer settings into a shared timing config.
+- Centralized resource names, translation and storage keys, events and state identifiers.
+
 ## 1.5.3
 
 - Fixed held movement carrying the dragon off screen during the end-of-level transition.

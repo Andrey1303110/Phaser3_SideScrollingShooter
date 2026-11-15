@@ -1,8 +1,9 @@
+import { STORAGE_KEYS, STORAGE_PREFIXES, TEXTURE_KEYS } from './identifiers';
 import { StorageService } from "./StorageService";
 import { CAMPAIGN_LEVELS, LEVEL_HI_SCORES_SEPARATOR, PLAYER, UPGRADE_MULTIPLIER, WEAPONS } from "./constants";
 
-const ABILITY_PREFIX = 'playerAbilityLevel_';
-const CASUALTIES_PREFIX = 'casualties_';
+const ABILITY_PREFIX = STORAGE_PREFIXES.PLAYER_ABILITY_LEVEL_;
+const CASUALTIES_PREFIX = STORAGE_PREFIXES.CASUALTIES_;
 const clampOpacity = value => Math.max(0, Math.min(1, value));
 
 export class GameModel {
@@ -13,12 +14,12 @@ export class GameModel {
             return GameModel._instance;
         }
 
-        this.currentLevelScene = StorageService.get('currentLevelScene', 1, Number);
-        this.currentLevelPlayer = StorageService.get('currentLevelPlayer', 1, Number);
-        this.totalScore = StorageService.get('totalScore', 0, Number);
-        this.hiScores = StorageService.get('hiScores', '', String);
-        this.unlimHiScores = StorageService.get('unlimHiScores', 0, Number);
-        this.money = StorageService.get('money', 0, Number);
+        this.currentLevelScene = StorageService.get(STORAGE_KEYS.CURRENT_LEVEL_SCENE, 1, Number);
+        this.currentLevelPlayer = StorageService.get(STORAGE_KEYS.CURRENT_LEVEL_PLAYER, 1, Number);
+        this.totalScore = StorageService.get(STORAGE_KEYS.TOTAL_SCORE, 0, Number);
+        this.hiScores = StorageService.get(STORAGE_KEYS.HI_SCORES, '', String);
+        this.unlimHiScores = StorageService.get(STORAGE_KEYS.UNLIM_HI_SCORES, 0, Number);
+        this.money = StorageService.get(STORAGE_KEYS.MONEY, 0, Number);
         this.player = { ...PLAYER };
         this.fireWeapon = { ...WEAPONS.FIRE };
         this.currentUpgradableStats = { 
@@ -34,13 +35,13 @@ export class GameModel {
             missile: StorageService.get(`${CASUALTIES_PREFIX}missile`, 0, Number),
         };
         
-        this.lang = StorageService.get('lang', '', String);
-        if (!['eng', 'ukr'].includes(this.lang)) this.lang = '';
-        this.soundEnabled = StorageService.get('soundEnabled', true, value => value !== 'false');
-        this.showFPS = StorageService.get('showFPS', false, value => value === 'true');
-        this.autoFireEnabled = StorageService.get('autoFireEnabled', false, value => value === 'true');
-        this.joystickOpacity = clampOpacity(StorageService.get('joystickOpacity', 0.75, Number));
-        this.fireButtonOpacity = clampOpacity(StorageService.get('fireButtonOpacity', 0.65, Number));
+        this.lang = StorageService.get(STORAGE_KEYS.LANG, '', String);
+        if (![TEXTURE_KEYS.ENG, TEXTURE_KEYS.UKR].includes(this.lang)) this.lang = '';
+        this.soundEnabled = StorageService.get(STORAGE_KEYS.SOUND_ENABLED, true, value => value !== 'false');
+        this.showFPS = StorageService.get(STORAGE_KEYS.SHOW_FPS, false, value => value === 'true');
+        this.autoFireEnabled = StorageService.get(STORAGE_KEYS.AUTO_FIRE_ENABLED, false, value => value === 'true');
+        this.joystickOpacity = clampOpacity(StorageService.get(STORAGE_KEYS.JOYSTICK_OPACITY, 0.75, Number));
+        this.fireButtonOpacity = clampOpacity(StorageService.get(STORAGE_KEYS.FIRE_BUTTON_OPACITY, 0.65, Number));
     }
 
     static getInstance() {
@@ -77,7 +78,7 @@ export class GameModel {
 
     setMoney(value) {
         this.money = value;
-        StorageService.set('money', this.money);
+        StorageService.set(STORAGE_KEYS.MONEY, this.money);
     }
   
     addTotalScore(amount) {
@@ -87,12 +88,12 @@ export class GameModel {
 
     setTotalScore(value) {
         this.totalScore = value;
-        StorageService.set('totalScore', this.totalScore);
+        StorageService.set(STORAGE_KEYS.TOTAL_SCORE, this.totalScore);
     }
 
     setHiScores(value) {
         this.hiScores = value;
-        StorageService.set('hiScores', this.hiScores);
+        StorageService.set(STORAGE_KEYS.HI_SCORES, this.hiScores);
     }
 
     getLevelHiScore(level) {
@@ -107,59 +108,59 @@ export class GameModel {
 
     setUnlimHiScores(value) {
         this.unlimHiScores = value;
-        StorageService.set('unlimHiScores', this.unlimHiScores);
+        StorageService.set(STORAGE_KEYS.UNLIM_HI_SCORES, this.unlimHiScores);
     }
 
     initSceneLevel() {
         this.currentLevelScene = 1;
-        StorageService.set('currentLevelScene', this.currentLevelScene);
+        StorageService.set(STORAGE_KEYS.CURRENT_LEVEL_SCENE, this.currentLevelScene);
     }
   
     increaseSceneLevel() {
         this.currentLevelScene++;
-        StorageService.set('currentLevelScene', this.currentLevelScene);
+        StorageService.set(STORAGE_KEYS.CURRENT_LEVEL_SCENE, this.currentLevelScene);
     }
 
     increasePlayerLevel() {
         this.currentLevelPlayer++;
-        StorageService.set('currentLevelPlayer', this.currentLevelPlayer);
+        StorageService.set(STORAGE_KEYS.CURRENT_LEVEL_PLAYER, this.currentLevelPlayer);
     }
 
     initPlayerLevel() {
         this.currentLevelPlayer = 1;
-        StorageService.set('currentLevelPlayer', this.currentLevelPlayer);
+        StorageService.set(STORAGE_KEYS.CURRENT_LEVEL_PLAYER, this.currentLevelPlayer);
     }
 
     setLang(lang) {
         this.lang = lang;
-        StorageService.set('lang', lang);
+        StorageService.set(STORAGE_KEYS.LANG, lang);
     }
 
     setSoundEnabled(enabled) {
         this.soundEnabled = enabled;
-        StorageService.set('soundEnabled', enabled);
+        StorageService.set(STORAGE_KEYS.SOUND_ENABLED, enabled);
     }
 
     setShowFPS(enabled) {
         this.showFPS = enabled;
-        StorageService.set('showFPS', enabled);
+        StorageService.set(STORAGE_KEYS.SHOW_FPS, enabled);
     }
 
     setAutoFireEnabled(enabled) {
         this.autoFireEnabled = enabled;
-        StorageService.set('autoFireEnabled', enabled);
+        StorageService.set(STORAGE_KEYS.AUTO_FIRE_ENABLED, enabled);
     }
 
     setJoystickOpacity(value) {
         if (!Number.isFinite(value)) return;
         this.joystickOpacity = clampOpacity(value);
-        StorageService.set('joystickOpacity', this.joystickOpacity);
+        StorageService.set(STORAGE_KEYS.JOYSTICK_OPACITY, this.joystickOpacity);
     }
 
     setFireButtonOpacity(value) {
         if (!Number.isFinite(value)) return;
         this.fireButtonOpacity = clampOpacity(value);
-        StorageService.set('fireButtonOpacity', this.fireButtonOpacity);
+        StorageService.set(STORAGE_KEYS.FIRE_BUTTON_OPACITY, this.fireButtonOpacity);
     }
 
     resetProgress() {
@@ -208,12 +209,12 @@ export class GameModel {
             const key = stats[i];
             const savedLevel = StorageService.get(`${ABILITY_PREFIX}${key}`, 1, Number);
             const level = Number.isSafeInteger(savedLevel) && savedLevel >= 1 ? savedLevel : 1;
-            const base = key === 'health' ? PLAYER.maxHealth : WEAPONS.FIRE[key];
-            const multiplier = key === 'reload' ? 1 - UPGRADE_MULTIPLIER : 1 + UPGRADE_MULTIPLIER;
+            const base = key === TEXTURE_KEYS.HEALTH ? PLAYER.maxHealth : WEAPONS.FIRE[key];
+            const multiplier = key === TEXTURE_KEYS.RELOAD ? 1 - UPGRADE_MULTIPLIER : 1 + UPGRADE_MULTIPLIER;
             const value = base * Math.pow(multiplier, level - 1);
             const valid = Number.isFinite(value) && value > 0;
             this.currentUpgradableStats[key] = valid ? level : 1;
-            if (key === 'health') this.player.maxHealth = valid ? value : base;
+            if (key === TEXTURE_KEYS.HEALTH) this.player.maxHealth = valid ? value : base;
             else this.fireWeapon[key] = valid ? value : base;
         }
         this.fireWeapon.maxSpeed = this.fireWeapon.velocity;
@@ -221,16 +222,16 @@ export class GameModel {
 
     upgradePlayerAbility(key) {
         switch (key) {
-            case 'health':
+            case TEXTURE_KEYS.HEALTH:
                 this.player.maxHealth += this.player.maxHealth * UPGRADE_MULTIPLIER;
                 break;
-            case 'reload':
+            case TEXTURE_KEYS.RELOAD:
                 this.fireWeapon[key] -= this.fireWeapon[key] * UPGRADE_MULTIPLIER;
                 break;
-            case 'scale':
+            case TEXTURE_KEYS.SCALE:
                 this.fireWeapon[key] += this.fireWeapon[key] * UPGRADE_MULTIPLIER;
                 break;
-            case 'velocity':
+            case TEXTURE_KEYS.VELOCITY:
                 this.fireWeapon[key] += this.fireWeapon[key] * UPGRADE_MULTIPLIER;
                 this.fireWeapon.maxSpeed = this.fireWeapon.velocity;
                 break;

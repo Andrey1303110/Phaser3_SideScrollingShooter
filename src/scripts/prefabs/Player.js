@@ -1,13 +1,15 @@
+import { TIMING } from '../timing';
+import { ANIMATION_KEYS, FRAME_KEYS, LIFECYCLE_EVENTS, TEXTURE_KEYS } from '../identifiers';
 import { screenData } from "../Utils";
 import { EVENTS } from "../constants";
 import { config } from "../main";
 import { Fires } from "./Fires";
 import { MovableObject } from "./MovableObject";
 
-const PLAYER_TEXTURE_NAME = 'dragon';
-const ANIMATION_NAME = 'fly';
-const FRAME_RATE = 8;
-const FRAME_DURATION = 1000 / FRAME_RATE;
+const PLAYER_TEXTURE_NAME = TEXTURE_KEYS.DRAGON;
+const ANIMATION_NAME = ANIMATION_KEYS.FLY;
+const FRAME_RATE = TIMING.PLAYER.DEFAULT_FRAME_RATE_FPS;
+const FRAME_DURATION = TIMING.PLAYER.FRAME_SECONDS_TO_MS / FRAME_RATE;
 
 export class Player extends MovableObject {
     constructor(data) {
@@ -35,7 +37,7 @@ export class Player extends MovableObject {
         this.weapon = data.weapon;
 
         this.scene.events.on(EVENTS.UPDATE, this._updateFrame, this);
-        this.once('destroy', () => {
+        this.once(LIFECYCLE_EVENTS.DESTROY, () => {
             this.scene.events.off(EVENTS.UPDATE, this._updateFrame, this);
             this._reloadTimer?.remove();
             this._reloadTimer = null;
@@ -146,18 +148,18 @@ export class Player extends MovableObject {
 
         this._lastFrame = this.frame.name;
 
-        if (this.frame.name === 'dragon3') {
+        if (this.frame.name === FRAME_KEYS.DRAGON3) {
             this.scene.sounds.wings.play({volume: 0.1});
             return this._tweenFly(false);
         }
-        if (this.frame.name === 'dragon6') {
+        if (this.frame.name === FRAME_KEYS.DRAGON6) {
             return this._tweenFly(true);
         }
     }
 
     _tweenFly(isDown) {
         const height = this.displayHeight * 0.2;
-        const duration = FRAME_DURATION * 2.5;
+        const duration = FRAME_DURATION * TIMING.PLAYER.TWEEN_FLY_DURATION_FACTOR;
 
         this._tweenFlying?.stop();
 

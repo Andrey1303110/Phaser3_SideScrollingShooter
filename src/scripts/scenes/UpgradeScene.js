@@ -1,11 +1,13 @@
+import { TIMING } from '../timing';
+import { ANIMATION_KEYS, FRAME_KEYS, LIFECYCLE_EVENTS, SOUND_KEYS, TEXTURE_KEYS, TEXT_KEYS } from '../identifiers';
 import { FIRE_WEAPON_DEFAULT_SCALE, SCENE_NAMES, UPGRADE_MULTIPLIER } from '../constants';
 import { CommonScene } from './CommonScene';
 import { screenData, setEndpoints } from '../Utils';
 import { UI, uiText, createButton } from '../ui';
 
 const STATS = {
-    health: 'HEALTH_TITLE', reload: 'RELOAD_TITLE',
-    velocity: 'VELOCITY_TITLE', scale: 'SCALE_TITLE',
+    health: TEXT_KEYS.HEALTH_TITLE, reload: TEXT_KEYS.RELOAD_TITLE,
+    velocity: TEXT_KEYS.VELOCITY_TITLE, scale: TEXT_KEYS.SCALE_TITLE,
 };
 
 export class UpgradeScene extends CommonScene {
@@ -17,11 +19,11 @@ export class UpgradeScene extends CommonScene {
     }
 
     create() {
-        this.sounds = { click: this.sound.add('click'), upgrade: this.sound.add('upgrade') };
+        this.sounds = { click: this.sound.add(SOUND_KEYS.CLICK), upgrade: this.sound.add(SOUND_KEYS.UPGRADE) };
         this._render();
         const resize = () => { setEndpoints(); this._render(); };
-        this.scale.on('resize', resize);
-        this.events.once('shutdown', () => this.scale.off('resize', resize));
+        this.scale.on(LIFECYCLE_EVENTS.RESIZE, resize);
+        this.events.once(LIFECYCLE_EVENTS.SHUTDOWN, () => this.scale.off(LIFECYCLE_EVENTS.RESIZE, resize));
     }
 
     _render() {
@@ -34,11 +36,11 @@ export class UpgradeScene extends CommonScene {
         this._unit = u;
         this._createReturnButton();
         this.add.text(screenData.left + 56 * u, screenData.top + 12 * u,
-            this._getText('TITLE'), uiText(UI.type.title));
+            this._getText(TEXT_KEYS.TITLE), uiText(UI.type.title));
         this._moneyValueText = this.add.text(screenData.right - 16 * u, screenData.top + 24 * u,
             String(this.model.money), uiText(UI.type.button, UI.colors.accent)).setOrigin(1, 0.5);
         this._moneyIcon = this.add.image(this._moneyValueText.getBounds().left - 16 * u,
-            screenData.top + 24 * u, 'ruby').setDisplaySize(18 * u, 18 * u);
+            screenData.top + 24 * u, TEXTURE_KEYS.RUBY).setDisplaySize(18 * u, 18 * u);
         const compact = screenData.height / u < 320;
         const left = screenData.left + screenData.width * 0.33;
         const width = screenData.right - left - 16 * u;
@@ -61,23 +63,23 @@ export class UpgradeScene extends CommonScene {
                 x: left + width - 44 * u, y: y + height / 2, width: 76 * u, text: '',
                 variant: 'primary', onPress: () => this._upgrade(key),
             });
-            button.root.add(this.add.image(18 * u, 0, 'ruby').setDisplaySize(18 * u, 18 * u));
+            button.root.add(this.add.image(18 * u, 0, TEXTURE_KEYS.RUBY).setDisplaySize(18 * u, 18 * u));
             this.buttons[key] = button;
         });
         const areaWidth = left - screenData.left - 32 * u;
         const x = screenData.left + 16 * u + areaWidth / 2;
         const y = top + (height * 4 + gap * 3) / 2;
-        if (!this.anims.exists('menu-fly')) {
-            this.anims.create({ key: 'menu-fly', frames: this.anims.generateFrameNames('dragon',
-                { prefix: 'dragon', start: 1, end: 6 }), frameRate: 8, repeat: -1 });
+        if (!this.anims.exists(ANIMATION_KEYS.MENU_FLY)) {
+            this.anims.create({ key: ANIMATION_KEYS.MENU_FLY, frames: this.anims.generateFrameNames(TEXTURE_KEYS.DRAGON,
+                { prefix: TEXTURE_KEYS.DRAGON, start: 1, end: 6 }), frameRate: TIMING.UPGRADE_SCENE.RENDER_FRAME_RATE_FPS, repeat: -1 });
         }
-        this._player = this.add.sprite(x, y, 'dragon', 'dragon1')
-            .setScale(Math.min(180 * u, areaWidth * 0.9) / 153).play('menu-fly');
-        this.tweens.add({ targets: this._player, y: y - 4 * u, duration: 1300, yoyo: true,
+        this._player = this.add.sprite(x, y, TEXTURE_KEYS.DRAGON, FRAME_KEYS.DRAGON1)
+            .setScale(Math.min(180 * u, areaWidth * 0.9) / 153).play(ANIMATION_KEYS.MENU_FLY);
+        this.tweens.add({ targets: this._player, y: y - 4 * u, duration: TIMING.UPGRADE_SCENE.RENDER_DURATION_MS, yoyo: true,
             repeat: -1, ease: 'Sine.InOut' });
         if (!compact) {
             this.add.text((screenData.left + screenData.right) / 2, screenData.bottom - 16 * u,
-                this._getText('BOTTOM_DESCRIPTION').replace('{percent}', Math.round(UPGRADE_MULTIPLIER * 100)),
+                this._getText(TEXT_KEYS.BOTTOM_DESCRIPTION).replace('{percent}', Math.round(UPGRADE_MULTIPLIER * 100)),
                 { ...uiText(UI.type.caption, UI.colors.muted), align: 'center',
                     wordWrap: { width: screenData.width - 32 * u } }).setOrigin(0.5, 1);
         }
@@ -85,8 +87,8 @@ export class UpgradeScene extends CommonScene {
     }
 
     _value(key) {
-        if (key === 'health') return Math.round(this.model.player.maxHealth);
-        if (key === 'scale') return Math.round(this.model.fireWeapon.scale * FIRE_WEAPON_DEFAULT_SCALE * 100);
+        if (key === TEXTURE_KEYS.HEALTH) return Math.round(this.model.player.maxHealth);
+        if (key === TEXTURE_KEYS.SCALE) return Math.round(this.model.fireWeapon.scale * FIRE_WEAPON_DEFAULT_SCALE * 100);
         return Math.round(this.model.fireWeapon[key]);
     }
 
@@ -102,7 +104,7 @@ export class UpgradeScene extends CommonScene {
             button.clicked = this._cooldown;
             button.setText(String(button.cost)).setEnabled(button.active);
             button.label.setX(-6 * u);
-            this.statsText[key].setText(this._value(key) + ' · ' + this._getText('LEVEL_TEXT').trim() + ' ' + level);
+            this.statsText[key].setText(this._value(key) + ' · ' + this._getText(TEXT_KEYS.LEVEL_TEXT).trim() + ' ' + level);
         }
     }
 
@@ -114,7 +116,7 @@ export class UpgradeScene extends CommonScene {
         this._cooldown = true;
         this.sounds.upgrade.play({ volume: 0.2 });
         this._refresh();
-        this.tweens.add({ targets: button.root, alpha: { from: 0.65, to: 1 }, duration: 220 });
-        this.time.delayedCall(1000, () => { this._cooldown = false; this._refresh(); });
+        this.tweens.add({ targets: button.root, alpha: { from: 0.65, to: 1 }, duration: TIMING.UPGRADE_SCENE.UPGRADE_DURATION_MS });
+        this.time.delayedCall(TIMING.UPGRADE_SCENE.UPGRADE_DELAY_MS, () => { this._cooldown = false; this._refresh(); });
     }
 }

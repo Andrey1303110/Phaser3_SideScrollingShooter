@@ -1,3 +1,5 @@
+import { TIMING } from '../timing';
+import { TEXTURE_KEYS } from '../identifiers';
 import { Resolver } from '../Resolver';
 import { screenData, tweenPromise } from '../Utils';
 import { UI, uiUnit, uiText, createButton } from '../ui';
@@ -23,7 +25,7 @@ export class DialogBox extends Phaser.GameObjects.Container {
                 targets: element,
                 x: element.x + config.width,
                 ease: 'Cubic.easeOut',
-                duration: 625,
+                duration: TIMING.DIALOG_BOX.SHOW_ENTER_DURATION_MS,
             })
         ));
     }
@@ -35,7 +37,7 @@ export class DialogBox extends Phaser.GameObjects.Container {
                 targets: element,
                 x: element.x - config.width,
                 ease: 'Cubic.easeIn',
-                duration: 425,
+                duration: TIMING.DIALOG_BOX.SHOW_EXIT_DURATION_MS,
             })
         ));
         this._elements.forEach(element => element.destroy());
@@ -78,7 +80,7 @@ export class DialogBox extends Phaser.GameObjects.Container {
             width: UI.dialogueButtonSize * u, height: UI.dialogueButtonSize * u,
             text: '', enabled: false, onPress: () => this._skipDialog(),
         });
-        this._skipControl.root.add(this._scene.add.image(0, 0, 'next').setDisplaySize(36 * u, 36 * u));
+        this._skipControl.root.add(this._scene.add.image(0, 0, TEXTURE_KEYS.NEXT).setDisplaySize(36 * u, 36 * u));
         this._skipButton = this._skipControl.root.setAlpha(0).setDepth(DEPTH_LAYERS.DIALOGUES);
     }
 
@@ -115,7 +117,7 @@ export class DialogBox extends Phaser.GameObjects.Container {
             targets: this._skipButton,
             alpha: 1,
             ease: 'Power1',
-            duration: 250,
+            duration: TIMING.DIALOG_BOX.SHOW_SKIP_BUTTON_DURATION_MS,
             onComplete: () => this._skipControl.setEnabled(true)
         });
     }
@@ -126,7 +128,7 @@ export class DialogBox extends Phaser.GameObjects.Container {
             targets: this._skipButton,
             alpha: 0,
             ease: 'Power1',
-            duration: 150,
+            duration: TIMING.DIALOG_BOX.HIDE_SKIP_BUTTON_DURATION_MS,
             onComplete: () => this._skipButton.destroy()
         });
     }

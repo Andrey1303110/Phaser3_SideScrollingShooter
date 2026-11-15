@@ -1,3 +1,5 @@
+import { TIMING } from '../timing';
+import { LIFECYCLE_EVENTS, SOUND_KEYS, TEXTURE_KEYS, TEXT_KEYS, UI_ACTIONS } from '../identifiers';
 import { SCENE_NAMES } from '../constants';
 import { CommonScene } from './CommonScene';
 import { screenData, setEndpoints } from '../Utils';
@@ -12,13 +14,13 @@ export class PauseScene extends CommonScene {
 
     create() {
         this._info = { ...this.scene.get(SCENE_NAMES.GAME).info };
-        this.sounds = { click: this.sound.add('click') };
+        this.sounds = { click: this.sound.add(SOUND_KEYS.CLICK) };
         this._transitioning = true;
         this._exiting = false;
         this._createMenu();
         this._panel.setAlpha(0).setScale(0.96);
         this.tweens.add({
-            targets: this._panel, alpha: 1, scale: 1, duration: 160, ease: 'Cubic.Out',
+            targets: this._panel, alpha: 1, scale: 1, duration: TIMING.PAUSE_SCENE.CREATE_DURATION_MS, ease: 'Cubic.Out',
             onComplete: () => { this._transitioning = false; },
         });
 
@@ -30,8 +32,8 @@ export class PauseScene extends CommonScene {
             this._createMenu();
             this._transitioning = false;
         };
-        this.scale.on('resize', resize);
-        this.events.once('shutdown', () => this.scale.off('resize', resize));
+        this.scale.on(LIFECYCLE_EVENTS.RESIZE, resize);
+        this.events.once(LIFECYCLE_EVENTS.SHUTDOWN, () => this.scale.off(LIFECYCLE_EVENTS.RESIZE, resize));
     }
 
     _createMenu() {
@@ -53,11 +55,11 @@ export class PauseScene extends CommonScene {
             .strokeRoundedRect(-width / 2, -height / 2, width, height, UI.panelRadius * unit);
         this._panel.add(background);
 
-        const title = this.add.text(0, -height / 2 + 22 * unit, this._getText('TITLE'), {
+        const title = this.add.text(0, -height / 2 + 22 * unit, this._getText(TEXT_KEYS.TITLE), {
             ...uiText(UI.type.title),
         }).setOrigin(0.5, 0);
-        const context = this._info.isUnlim ? this._getText('SURVIVAL')
-            : `${this._getText('CAMPAIGN')} · ${this._getText('LEVEL')} ${this._info.index}`;
+        const context = this._info.isUnlim ? this._getText(TEXT_KEYS.SURVIVAL)
+            : `${this._getText(TEXT_KEYS.CAMPAIGN)} · ${this._getText(TEXT_KEYS.LEVEL)} ${this._info.index}`;
         const subtitle = this.add.text(0, -height / 2 + 52 * unit, context, {
             ...uiText(UI.type.caption, UI.colors.muted),
         }).setOrigin(0.5, 0);
@@ -67,11 +69,11 @@ export class PauseScene extends CommonScene {
         const secondaryWidth = (buttonWidth - 12 * unit) / 2;
         this._buttons = [
             this._createButton(0, -height / 2 + 106 * unit, buttonWidth, 44 * unit,
-                this._getText('RESUME'), 'play', true),
+                this._getText(TEXT_KEYS.RESUME), UI_ACTIONS.PLAY, true),
             this._createButton(-(secondaryWidth + 12 * unit) / 2, -height / 2 + 162 * unit,
-                secondaryWidth, 44 * unit, this._getText('RESTART'), 'restart'),
+                secondaryWidth, 44 * unit, this._getText(TEXT_KEYS.RESTART), UI_ACTIONS.RESTART),
             this._createButton((secondaryWidth + 12 * unit) / 2, -height / 2 + 162 * unit,
-                secondaryWidth, 44 * unit, this._getText(this._info.isUnlim ? 'TO_MENU' : 'TO_CAMPAIGN'), 'return'),
+                secondaryWidth, 44 * unit, this._getText(this._info.isUnlim ? TEXT_KEYS.TO_MENU : TEXT_KEYS.TO_CAMPAIGN), TEXTURE_KEYS.RETURN),
         ];
     }
 
@@ -90,21 +92,21 @@ export class PauseScene extends CommonScene {
         this._exiting = true;
         this.sounds.click.play({ volume: 0.2 });
         this.tweens.add({
-            targets: this._panel, alpha: 0, scale: 0.96, duration: 100, ease: 'Cubic.In',
+            targets: this._panel, alpha: 0, scale: 0.96, duration: TIMING.PAUSE_SCENE.CLOSE_DURATION_MS, ease: 'Cubic.In',
             onComplete: () => this._handleScreen(command),
         });
     }
 
     _handleScreen(command) {
         switch (command) {
-            case 'play':
+            case UI_ACTIONS.PLAY:
                 this.scene.resume(SCENE_NAMES.GAME);
                 this.scene.stop();
             break;
-            case 'restart':
+            case UI_ACTIONS.RESTART:
                 this.scene.start(SCENE_NAMES.GAME, { ...this._info });
             break;
-            case 'return':
+            case TEXTURE_KEYS.RETURN:
                 const destination = this._info.isUnlim ? SCENE_NAMES.MAIN_MENU : SCENE_NAMES.CAMPAIGN;
                 this.scene.stop(SCENE_NAMES.GAME);
                 this.scene.start(destination);

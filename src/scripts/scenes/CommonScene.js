@@ -1,3 +1,4 @@
+import { LIFECYCLE_EVENTS, TEXTURE_KEYS } from '../identifiers';
 import { GameModel } from '../GameModel';
 import { getSceneTexts, setEndpoints } from '../Utils';
 import { SCENE_NAMES } from '../constants';
@@ -13,7 +14,7 @@ export class CommonScene extends Phaser.Scene {
 
     init() {
         this.sound.mute = !this.model.soundEnabled;
-        this.events.once('shutdown', () => {
+        this.events.once(LIFECYCLE_EVENTS.SHUTDOWN, () => {
             Object.values(this.sounds ?? {}).forEach(sound => sound.destroy());
             this.sounds = null;
         });
@@ -33,7 +34,7 @@ export class CommonScene extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('bg', './assets/sprites/bg.png');
+        this.load.image(TEXTURE_KEYS.BG, './assets/sprites/bg.png');
     }
 
     _playTransitionSound(key) {
@@ -46,7 +47,7 @@ export class CommonScene extends Phaser.Scene {
     }
 
     _createBg() {
-        const bg = this.add.image(this.scene.scene.cameras.main.midPoint.x, this.scene.scene.cameras.main.midPoint.y, 'bg')
+        const bg = this.add.image(this.scene.scene.cameras.main.midPoint.x, this.scene.scene.cameras.main.midPoint.y, TEXTURE_KEYS.BG)
             .setAlpha(0.925)
             .setOrigin(0.5)
             .setInteractive();

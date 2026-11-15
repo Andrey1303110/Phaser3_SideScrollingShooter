@@ -1,3 +1,4 @@
+import { TIMING } from '../timing';
 import { screenData } from "../Utils";
 import { ENEMIES } from "../constants";
 import { MovableObject } from "./MovableObject";
@@ -65,7 +66,7 @@ export class Enemy extends MovableObject {
 
     _addTimer() {
         this.timer = this.scene.time.addEvent({
-            delay: this.weapon.reload * (Phaser.Math.Between(70, 130) * 0.01),
+            delay: this.weapon.reload * (Phaser.Math.Between(TIMING.ENEMY.RELOAD_INTERVAL_MIN_PERCENT, TIMING.ENEMY.RELOAD_INTERVAL_MAX_PERCENT) * TIMING.ENEMY.PERCENT_TO_RATIO),
             loop: true,
             callback: () => this._shooting(),
         });

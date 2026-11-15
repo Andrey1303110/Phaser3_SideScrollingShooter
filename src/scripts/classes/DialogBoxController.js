@@ -1,11 +1,13 @@
+import { TIMING } from '../timing';
+import { resourceKey } from '../identifiers';
 import { DialogBox } from './DialogBox';
 import { config } from '../main';
 import { DEPTH_LAYERS } from '../constants';
 import { delayInMSec, tweenPromise } from '../Utils';
 
-const MIN_SHOW_DURATION = 2500;
-const READING_MS_PER_CHARACTER = 65;
-const SHOW_DELAY = 200;
+const MIN_SHOW_DURATION = TIMING.DIALOG_BOX_CONTROLLER.DEFAULT_MIN_SHOW_DURATION_MS;
+const READING_MS_PER_CHARACTER = TIMING.DIALOG_BOX_CONTROLLER.DEFAULT_READING_MS_PER_CHARACTER_MS;
+const SHOW_DELAY = TIMING.DIALOG_BOX_CONTROLLER.DEFAULT_SHOW_DELAY_MS;
 
 export class DialogBoxController {
     constructor(scene) {
@@ -53,7 +55,7 @@ export class DialogBoxController {
             targets: this._darkBg,
             alpha,
             ease: 'Power1',
-            duration: 250,
+            duration: TIMING.DIALOG_BOX_CONTROLLER.TOGGLE_SHOWING_BG_DURATION_MS,
         });
 
         if (!value) { 
@@ -65,9 +67,9 @@ export class DialogBoxController {
     async _playShowingDialog(dialogBox, levelIndex, i, text) {
         await dialogBox.showEnter();
         
-        const soundName = `level${levelIndex}_text${i}_${this._scene.model.lang}`;
+        const soundName = resourceKey.voice(levelIndex, i, this._scene.model.lang);
         const sound = this._scene.sounds[soundName];
-        const duration = Math.max(sound ? sound.duration * 1000 : text.length * READING_MS_PER_CHARACTER, MIN_SHOW_DURATION);
+        const duration = Math.max(sound ? sound.duration * TIMING.DIALOG_BOX_CONTROLLER.VOICE_SECONDS_TO_MS : text.length * READING_MS_PER_CHARACTER, MIN_SHOW_DURATION);
     
         sound?.play();
         await Promise.race([
@@ -83,6 +85,6 @@ export class DialogBoxController {
      * @param {number} fileId 
      */
     _setData(fileId) {
-        this._data = this._scene.cache.json.get(`dialogues${fileId}`);
+        this._data = this._scene.cache.json.get(resourceKey.dialogues(fileId));
     }
 }

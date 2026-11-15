@@ -1,3 +1,5 @@
+import { TIMING } from '../timing';
+import { CACHE_KEYS, LIFECYCLE_EVENTS, PLUGIN_KEYS, resourceKey } from '../identifiers';
 import { ATLAS_FILES, AUDIO_FILES, CAMPAIGN_LEVELS, IMAGE_FILES, PARALLAX_IMAGE_FILES, SCENE_NAMES } from '../constants';
 import { CommonScene } from './CommonScene';
 import { LoadingBar } from '../classes/LoadingBar';
@@ -26,20 +28,20 @@ export class PreloadScene extends CommonScene {
     }
 
     _preloadTexts() {
-        this.cache.json.remove('texts');
-        this.load.json('texts', `./assets/texts/${this.model.lang}.json`);
+        this.cache.json.remove(CACHE_KEYS.TEXTS);
+        this.load.json(CACHE_KEYS.TEXTS, `./assets/texts/${this.model.lang}.json`);
     }
 
     _preloadPlugins(){
-        this.load.plugin('rexvirtualjoystickplugin', './assets/plugins/rexvirtualjoystickplugin.min.js', true);
+        this.load.plugin(PLUGIN_KEYS.REXVIRTUALJOYSTICKPLUGIN, './assets/plugins/rexvirtualjoystickplugin.min.js', true);
     }
 
     _preloadDialoguesAudio() {
         for (let i = 0; i <= CAMPAIGN_LEVELS.at(-1).index; i++) {
-            this.load.once(`filecomplete-json-dialogues${i}`, (key, type, texts) => {
+            this.load.once(resourceKey.dialogueLoaded(i), (key, type, texts) => {
                 for (let j = 0; j < texts.length; j++) {
                     if (texts[j].audio === false) continue;
-                    const name = `level${i}_text${j}_${this.model.lang}`;
+                    const name = resourceKey.voice(i, j, this.model.lang);
                     const path = `./assets/voices/${this.model.lang}/${i}/${j}.mp3`;
                     this.load.audio(name, path);
                 }
@@ -49,13 +51,13 @@ export class PreloadScene extends CommonScene {
 
     _preloadDialogues() {
         for (let i = 0; i <= CAMPAIGN_LEVELS.length; i++) {
-            this.cache.json.remove(`dialogues${i}`);
-            this.load.json(`dialogues${i}`, `./assets/dialogues/${this.model.lang}/${i}.json`);
+            this.cache.json.remove(resourceKey.dialogues(i));
+            this.load.json(resourceKey.dialogues(i), `./assets/dialogues/${this.model.lang}/${i}.json`);
         }
     }
 
     _preloadResources() {
-        CAMPAIGN_LEVELS.forEach(level => this.load.image(`bg${level.index}`, `./assets/sprites/bg${level.index}.png`));
+        CAMPAIGN_LEVELS.forEach(level => this.load.image(resourceKey.background(level.index), `./assets/sprites/bg${level.index}.png`));
 
         ATLAS_FILES.forEach(name => this.load.atlas(name, `./assets/sprites/${name}.png`, `./assets/sprites/${name}.json`));
         IMAGE_FILES.forEach(name => this.load.image(name, `./assets/sprites/${name}.png`));
@@ -65,7 +67,7 @@ export class PreloadScene extends CommonScene {
 
     _setupLoadingBar() {
         this._loadingBar = new LoadingBar(this);
-        this.load.once('complete', () => this._onLoadComplete());
+        this.load.once(LIFECYCLE_EVENTS.COMPLETE, () => this._onLoadComplete());
     }
 
     _onLoadComplete() {
@@ -73,7 +75,7 @@ export class PreloadScene extends CommonScene {
             targets: this._loadingBar.graphicsElements,
             alpha: 0,
             ease: 'Power3',
-            duration: 400,
+            duration: TIMING.PRELOAD_SCENE.ON_LOAD_COMPLETE_DURATION_MS,
             onComplete: () => this.scene.start(this._destination),
         });
     }

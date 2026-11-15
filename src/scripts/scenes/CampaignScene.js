@@ -1,3 +1,5 @@
+import { TIMING } from '../timing';
+import { INPUT_EVENTS, LIFECYCLE_EVENTS, SOUND_KEYS, TEXTURE_KEYS, TEXT_KEYS } from '../identifiers';
 import { screenData, setEndpoints, delayInMSec, tweenPromise } from '../Utils';
 import { DialogBoxController } from '../classes/DialogBoxController';
 import { CAMPAIGN_LEVELS, DEPTH_LAYERS, SCENE_NAMES, ENEMIES } from '../constants';
@@ -7,10 +9,10 @@ import { UI, createButton, createBackArrow } from '../ui';
 import { CampaignMap } from './components/CampaignMap';
 
 const CASUALTIES = {
-    jet: 'TOTAL_CASUALTIES_JEST',
-    helicopter: 'TOTAL_CASUALTIES_HELICOPTERS',
-    rocket: 'TOTAL_CASUALTIES_ROCKETS',
-    missile: 'TOTAL_CASUALTIES_MISSILES',
+    jet: TEXT_KEYS.TOTAL_CASUALTIES_JEST,
+    helicopter: TEXT_KEYS.TOTAL_CASUALTIES_HELICOPTERS,
+    rocket: TEXT_KEYS.TOTAL_CASUALTIES_ROCKETS,
+    missile: TEXT_KEYS.TOTAL_CASUALTIES_MISSILES,
 };
 
 export class CampaignScene extends CommonScene {
@@ -41,8 +43,8 @@ export class CampaignScene extends CommonScene {
             if (this._busy) this._needsLayout = true;
             else this._render();
         };
-        this.scale.on('resize', resize);
-        this.events.once('shutdown', () => this.scale.off('resize', resize));
+        this.scale.on(LIFECYCLE_EVENTS.RESIZE, resize);
+        this.events.once(LIFECYCLE_EVENTS.SHUTDOWN, () => this.scale.off(LIFECYCLE_EVENTS.RESIZE, resize));
         if (this._showIntro) this._playIntro();
     }
 
@@ -53,7 +55,7 @@ export class CampaignScene extends CommonScene {
         this._ui = this.add.container();
         this._unit = screenData.width / document.body.clientWidth;
         const u = this._unit;
-        const background = this.add.image(config.width / 2, config.height / 2, 'bg');
+        const background = this.add.image(config.width / 2, config.height / 2, TEXTURE_KEYS.BG);
         background.setScale(Math.max(config.width / background.width, config.height / background.height));
         this._ui.add([background, this.add.rectangle(0, 0, config.width, config.height, 0x102323, 0.9).setOrigin(0)]);
         const panelWidth = Math.min(300 * u, Math.max(224 * u, screenData.width * 0.32));
@@ -70,9 +72,9 @@ export class CampaignScene extends CommonScene {
         if (this._celebrate) {
             const toast = this._text(this._mapView.x + this._mapView.width / 2,
                 screenData.top + 59 * u,
-                this._getText(this.model.currentLevelScene > CAMPAIGN_LEVELS.length ? 'CAMPAIGN_COMPLETE' : 'MISSION_COMPLETE'),
+                this._getText(this.model.currentLevelScene > CAMPAIGN_LEVELS.length ? TEXT_KEYS.CAMPAIGN_COMPLETE : TEXT_KEYS.MISSION_COMPLETE),
                 14, '#e4c284').setOrigin(0.5, 0).setWordWrapWidth(this._mapView.width - 12 * u).setAlign('center');
-            this.tweens.add({ targets: toast, alpha: 0, delay: 2000, duration: 400 });
+            this.tweens.add({ targets: toast, alpha: 0, delay: TIMING.CAMPAIGN_SCENE.RENDER_DELAY_MS, duration: TIMING.CAMPAIGN_SCENE.RENDER_DURATION_MS });
             this._celebrate = false;
         }
     }
@@ -99,23 +101,23 @@ export class CampaignScene extends CommonScene {
         const left = screenData.left;
         const top = screenData.top;
         this._backButton = createBackArrow(this, { parent: this._ui, canPress: () => !this._busy });
-        this._text(left + 56 * u, top + 9 * u, this._getText('TITLE'), UI.type.title);
+        this._text(left + 56 * u, top + 9 * u, this._getText(TEXT_KEYS.TITLE), UI.type.title);
         const completed = Math.min(this.model.currentLevelScene - 1, CAMPAIGN_LEVELS.length);
         this._text(left + 56 * u, top + 35 * u,
-            this._getText('PROGRESS').replace('{done}', completed).replace('{total}', CAMPAIGN_LEVELS.length), 12, '#a3b9aa');
+            this._getText(TEXT_KEYS.PROGRESS).replace('{done}', completed).replace('{total}', CAMPAIGN_LEVELS.length), 12, '#a3b9aa');
         const wallet = this._text(screenData.right - 16 * u, top + 26 * u,
             String(this.model.money), 16, '#efd99f').setOrigin(1, 0.5);
-        const ruby = this.add.image(wallet.getBounds().left - 15 * u, top + 26 * u, 'ruby').setDisplaySize(18 * u, 18 * u);
+        const ruby = this.add.image(wallet.getBounds().left - 15 * u, top + 26 * u, TEXTURE_KEYS.RUBY).setDisplaySize(18 * u, 18 * u);
         this._ui.add(ruby);
         this._reportButton = this._button(this._ui, ruby.x - 70 * u, top + 26 * u,
-            100 * u, 44 * u, this._getText('REPORT'), () => this._openReport());
+            100 * u, 44 * u, this._getText(TEXT_KEYS.REPORT), () => this._openReport());
     }
 
     _createLegend() {
         const u = this._unit;
         const y = screenData.bottom - 18 * u;
         const items = [
-            ['LIBERATED', 0x8fbb95], ['CURRENT', 0xe5ba70], ['LOCKED', 0x718c90],
+            [TEXT_KEYS.LIBERATED, 0x8fbb95], [TEXT_KEYS.CURRENT, 0xe5ba70], [TEXT_KEYS.LOCKED, 0x718c90],
         ];
         const step = this._mapView.width / items.length;
         items.forEach(([key, color], index) => {
@@ -146,30 +148,30 @@ export class CampaignScene extends CommonScene {
         this._previousButton.label.setFontSize(24 * u);
         this._nextButton.label.setFontSize(24 * u);
         this._text(p.x + p.width / 2, p.y + 24 * u,
-            this._getText('MISSION_NUMBER').replace('{level}', level.index).replace('{total}', CAMPAIGN_LEVELS.length),
+            this._getText(TEXT_KEYS.MISSION_NUMBER).replace('{level}', level.index).replace('{total}', CAMPAIGN_LEVELS.length),
             12, '#adc4b2', root).setOrigin(0.5);
-        const title = this._text(p.x + 16 * u, p.y + 54 * u, this._getText('LEVEL_' + level.index + '_NAME'), UI.type.section, '#f3ead6', root);
+        const title = this._text(p.x + 16 * u, p.y + 54 * u, this._getText(TEXT_KEYS.LEVEL_ + level.index + '_NAME'), UI.type.section, '#f3ead6', root);
         title.setWordWrapWidth(p.width - 32 * u);
         while (title.height > 48 * u && parseFloat(title.style.fontSize) > 16 * u) title.setFontSize(parseFloat(title.style.fontSize) - u);
         this._text(p.x + 16 * u, p.y + 104 * u,
-            this._getText(!available ? 'LOCKED_HINT' : completed ? 'LIBERATED' : 'CURRENT')
+            this._getText(!available ? TEXT_KEYS.LOCKED_HINT : completed ? TEXT_KEYS.LIBERATED : TEXT_KEYS.CURRENT)
                 .replace('{level}', level.index - 1), 12, available ? '#d8ba7e' : '#93aaa0', root);
         const types = Object.values(ENEMIES).filter(enemy => enemy.entryLevel <= level.index)
-            .map(enemy => this._getText('TYPE_' + enemy.texture.toUpperCase()));
+            .map(enemy => this._getText(TEXT_KEYS.TYPE_ + enemy.texture.toUpperCase()));
         this._text(p.x + 16 * u, p.y + 124 * u, types.join(' · '), UI.type.caption, '#b3c9bc', root)
             .setWordWrapWidth(p.width - 32 * u);
         if (p.height >= 290 * u) {
             this._text(p.x + 16 * u, p.y + 172 * u,
-                this._getText('TARGETS').replace('{count}', level.enemies), 14, '#d3dfd2', root);
+                this._getText(TEXT_KEYS.TARGETS).replace('{count}', level.enemies), 14, '#d3dfd2', root);
             this._text(p.x + 16 * u, p.y + 195 * u,
-                this._getText('RECORD').replace('{score}', this.model.getLevelHiScore(level.index)), 14, '#a3b9ab', root);
+                this._getText(TEXT_KEYS.RECORD).replace('{score}', this.model.getLevelHiScore(level.index)), 14, '#a3b9ab', root);
         }
         const width = p.width - 32 * u;
         this._briefingButton = this._button(root, p.x + p.width / 2, p.y + p.height - 80 * u,
-            width, 44 * u, this._getText(this._lastBriefingLevel === level.index ? 'REPLAY_BRIEFING' : 'BRIEFING'),
+            width, 44 * u, this._getText(this._lastBriefingLevel === level.index ? TEXT_KEYS.REPLAY_BRIEFING : TEXT_KEYS.BRIEFING),
             () => this._playBriefing(level.index, true), available);
         this._startButton = this._button(root, p.x + p.width / 2, p.y + p.height - 28 * u,
-            width, 44 * u, this._getText(available ? 'START' : 'LOCKED'), () => this._startMission(), available, true);
+            width, 44 * u, this._getText(available ? TEXT_KEYS.START : TEXT_KEYS.LOCKED), () => this._startMission(), available, true);
     }
 
     async _selectMission(level) {
@@ -191,7 +193,7 @@ export class CampaignScene extends CommonScene {
         this._busy = true;
         this._closeModal();
         try {
-            await delayInMSec(this, 200);
+            await delayInMSec(this, TIMING.CAMPAIGN_SCENE.PLAY_BRIEFING_DELAY_MS);
             await this._dialogBoxController.flowShow(index);
             if (!this.sys.isActive()) return false;
             this._lastBriefingLevel = index;
@@ -206,7 +208,7 @@ export class CampaignScene extends CommonScene {
     }
 
     async _playIntro() {
-        await delayInMSec(this, 400);
+        await delayInMSec(this, TIMING.CAMPAIGN_SCENE.PLAY_INTRO_DELAY_MS);
         await this._dialogBoxController.flowShow(0);
         if (!this.sys.isActive()) return;
         this._busy = false;
@@ -222,7 +224,7 @@ export class CampaignScene extends CommonScene {
         const root = this.add.container().setDepth(DEPTH_LAYERS.UI);
         this._modal = root;
         const cover = this.add.rectangle(x, y, screenData.width, screenData.height, 0x071616, 0.8).setInteractive();
-        cover.on('pointerup', () => this._closeModal());
+        cover.on(INPUT_EVENTS.POINTERUP, () => this._closeModal());
         const panel = this.add.rectangle(x, y, width, height, 0x203a38).setInteractive();
         root.add([cover, panel]);
         this._text(x - width / 2 + 18 * u, y - height / 2 + 18 * u, title, 20, '#f3ead6', root);
@@ -240,18 +242,18 @@ export class CampaignScene extends CommonScene {
     _openCluster(levels) {
         if (this._busy) return;
         const u = this._unit;
-        const frame = this._modalFrame(this._getText('KYIV_MISSIONS'), 232 * u);
+        const frame = this._modalFrame(this._getText(TEXT_KEYS.KYIV_MISSIONS), 232 * u);
         this._clusterButtons = levels.map((level, index) => this._button(frame.root,
             frame.left + frame.width / 2, frame.top + (82 + index * 52) * u,
             frame.width - 32 * u, 44 * u,
-            level.index + ' · ' + this._getText('LEVEL_' + level.index + '_NAME'),
+            level.index + ' · ' + this._getText(TEXT_KEYS.LEVEL_ + level.index + '_NAME'),
             () => this._selectMission(level), true, level.index === this._selected.index));
     }
 
     _openReport() {
         if (this._busy) return;
         const u = this._unit;
-        const frame = this._modalFrame(this._getText('REPORT_TITLE'), 264 * u);
+        const frame = this._modalFrame(this._getText(TEXT_KEYS.REPORT_TITLE), 264 * u);
         Object.entries(CASUALTIES).forEach(([key, text], index) => {
             const y = frame.top + (76 + index * 36) * u;
             this._text(frame.left + 20 * u, y, this._getText(text), 15, '#b8cdbf', frame.root);
@@ -259,14 +261,14 @@ export class CampaignScene extends CommonScene {
                 '#efdab1', frame.root).setOrigin(1, 0);
         });
         this._text(frame.left + 20 * u, frame.top + 226 * u,
-            this._getText('RECORD').replace('{score}', this.model.getLevelHiScore(this._selected.index)), 13, '#9cb5a6', frame.root);
+            this._getText(TEXT_KEYS.RECORD).replace('{score}', this.model.getLevelHiScore(this._selected.index)), 13, '#9cb5a6', frame.root);
     }
 
     _createSounds() {
         this.sounds = {
-            click: this.sound.add('click'),
-            fire_effect: this.sound.add('fire_effect'),
-            campaign_complete_song: this.sound.add('campaign_complete_song'),
+            click: this.sound.add(SOUND_KEYS.CLICK),
+            fire_effect: this.sound.add(SOUND_KEYS.FIRE_EFFECT),
+            campaign_complete_song: this.sound.add(SOUND_KEYS.CAMPAIGN_COMPLETE_SONG),
         };
         for (let i = 0; i <= CAMPAIGN_LEVELS.length; i++) {
             const lines = this.cache.json.get('dialogues' + i);
@@ -285,9 +287,9 @@ export class CampaignScene extends CommonScene {
         this.sounds.campaign_complete_song.stop();
         const cover = this.add.rectangle(config.width / 2, config.height / 2, config.width, config.height,
             0x071616, 0).setInteractive().setDepth(DEPTH_LAYERS.COVER_SCREEN);
-        const sound = this._playTransitionSound('ready');
+        const sound = this._playTransitionSound(SOUND_KEYS.READY);
         return tweenPromise(this, {
-            targets: cover, fillAlpha: 1, duration: sound.duration * 850,
+            targets: cover, fillAlpha: 1, duration: sound.duration * TIMING.CAMPAIGN_SCENE.GAME_START_DURATION_FACTOR,
             onComplete: () => this.scene.start(SCENE_NAMES.GAME, info),
         });
     }

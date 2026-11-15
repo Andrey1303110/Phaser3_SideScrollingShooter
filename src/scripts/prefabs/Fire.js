@@ -1,3 +1,5 @@
+import { TIMING } from '../timing';
+import { LIFECYCLE_EVENTS, TEXTURE_KEYS, TEXT_KEYS } from '../identifiers';
 import { delayInMSec } from '../Utils';
 import { WEAPONS } from '../constants';
 import { config } from '../main';
@@ -22,7 +24,7 @@ export class Fire extends MovableObject {
         this._setup(data);
         this._addParticles(data.particlesSetting);
 
-        this.once('destroy', () => this._onKilled());
+        this.once(LIFECYCLE_EVENTS.DESTROY, () => this._onKilled());
     }
 
     move(){
@@ -65,7 +67,7 @@ export class Fire extends MovableObject {
     }
 
     async _rocketMove() {
-        const randomDelay = Phaser.Math.Between(500, 1000);
+        const randomDelay = Phaser.Math.Between(TIMING.FIRE.ROCKET_MANEUVER_MIN_DELAY_MS, TIMING.FIRE.ROCKET_MANEUVER_MAX_DELAY_MS);
         
         if (this.isDead()) {
             return;
@@ -82,7 +84,7 @@ export class Fire extends MovableObject {
             return;
         } 
         this.body.setVelocityY(230);
-        await delayInMSec(this.scene, 225);
+        await delayInMSec(this.scene, TIMING.FIRE.MISSILE_MOVE_DELAY_MS);
         if (!this.active || !this.body) return;
         this.body.setVelocityY(this.velocity * 0.035);
     }
@@ -92,7 +94,7 @@ export class Fire extends MovableObject {
             return;
         }
         this.body.setVelocityY(280);
-        await delayInMSec(this.scene, 225);
+        await delayInMSec(this.scene, TIMING.FIRE.MISSILE2MOVE_DELAY_MS);
         if (!this.active || !this.body) return;
         this.body.setVelocityY(this.velocity * 0.05);
     }
@@ -103,8 +105,8 @@ export class Fire extends MovableObject {
         }
 
         // todo add react particle speed x on updated speed from source fire or make it depends by multiplier from original speed 
-        this._emitter = this.scene.add.particles(0, 0, 'explosion_particle', {
-            blendMode: 'ADD',
+        this._emitter = this.scene.add.particles(0, 0, TEXTURE_KEYS.EXPLOSION_PARTICLE, {
+            blendMode: TEXT_KEYS.ADD,
             follow: this,
             followOffset: {
                 x: this.width * 0.225

@@ -1,3 +1,4 @@
+import { INPUT_EVENTS, LIFECYCLE_EVENTS, SOUND_KEYS, TEXTURE_KEYS, TEXT_KEYS } from '../identifiers';
 import { CommonScene } from './CommonScene';
 import { SCENE_NAMES } from '../constants';
 import { screenData, setEndpoints } from '../Utils';
@@ -9,7 +10,7 @@ export class SettingsScene extends CommonScene {
     }
 
     create() {
-        this.sounds = { click: this.sound.add('click') };
+        this.sounds = { click: this.sound.add(SOUND_KEYS.CLICK) };
         this._confirmingReset = false;
         this._changingLanguage = false;
         this._status = '';
@@ -18,8 +19,8 @@ export class SettingsScene extends CommonScene {
             setEndpoints();
             this._render();
         };
-        this.scale.on('resize', resize);
-        this.events.once('shutdown', () => this.scale.off('resize', resize));
+        this.scale.on(LIFECYCLE_EVENTS.RESIZE, resize);
+        this.events.once(LIFECYCLE_EVENTS.SHUTDOWN, () => this.scale.off(LIFECYCLE_EVENTS.RESIZE, resize));
     }
 
     _render() {
@@ -40,7 +41,7 @@ export class SettingsScene extends CommonScene {
         panel.fillStyle(UI.colors.panel, 0.98).lineStyle(1.5 * u, UI.colors.border)
             .fillRoundedRect(left, top, width, height, UI.panelRadius * u)
             .strokeRoundedRect(left, top, width, height, UI.panelRadius * u);
-        this.add.text(left + UI.padding * u, top + UI.padding * u, this._getText('TITLE'), {
+        this.add.text(left + UI.padding * u, top + UI.padding * u, this._getText(TEXT_KEYS.TITLE), {
             ...uiText(UI.type.title),
         });
         this._createBackArrow();
@@ -49,44 +50,44 @@ export class SettingsScene extends CommonScene {
         const columnX = [left + UI.padding * u, left + width / 2 + 12 * u];
         const gap = (height - 110 * u) / 3;
         const rowY = index => top + 52 * u + gap * index;
-        ['SOUND', 'FPS', 'LANGUAGE'].forEach((key, index) => {
+        [TEXT_KEYS.SOUND, TEXT_KEYS.FPS, TEXT_KEYS.LANGUAGE].forEach((key, index) => {
             this.add.text(columnX[0], rowY(index), this._getText(key), {
                 ...uiText(15),
             });
         });
         const controlX = columnX[0] + columnWidth / 2;
         this._soundButton = this._button(controlX, rowY(0) + 40 * u, columnWidth,
-            this._getText(this.model.soundEnabled ? 'ON' : 'OFF'), () => this._toggleSound());
+            this._getText(this.model.soundEnabled ? TEXT_KEYS.ON : TEXT_KEYS.OFF), () => this._toggleSound());
         this._fpsButton = this._button(controlX, rowY(1) + 40 * u, columnWidth,
-            this._getText(this.model.showFPS ? 'ON' : 'OFF'), () => {
+            this._getText(this.model.showFPS ? TEXT_KEYS.ON : TEXT_KEYS.OFF), () => {
                 this.model.setShowFPS(!this.model.showFPS);
-                this._status = this._getText('SAVED');
+                this._status = this._getText(TEXT_KEYS.SAVED);
                 this._render();
             });
         this._languageButtons = {};
-        for (const [index, lang] of ['ukr', 'eng'].entries()) {
+        for (const [index, lang] of [TEXTURE_KEYS.UKR, TEXTURE_KEYS.ENG].entries()) {
             const buttonWidth = (columnWidth - 8 * u) / 2;
             this._languageButtons[lang] = this._button(controlX + (index ? 1 : -1) * (buttonWidth + 8 * u) / 2,
-                rowY(2) + 40 * u, buttonWidth, lang === 'ukr' ? 'УКР' : 'ENG',
+                rowY(2) + 40 * u, buttonWidth, lang === TEXTURE_KEYS.UKR ? 'УКР' : TEXT_KEYS.ENG,
                 () => this._changeLanguage(lang), this.model.lang === lang ? 0x367c4b : 0x526b70);
         }
-        this.add.text(columnX[1], rowY(0), this._getText('AUTO_FIRE'), uiText(15));
+        this.add.text(columnX[1], rowY(0), this._getText(TEXT_KEYS.AUTO_FIRE), uiText(15));
         this._autoFireButton = this._button(columnX[1] + columnWidth / 2, rowY(0) + 40 * u,
-            columnWidth, this._getText(this.model.autoFireEnabled ? 'ON' : 'OFF'), () => {
+            columnWidth, this._getText(this.model.autoFireEnabled ? TEXT_KEYS.ON : TEXT_KEYS.OFF), () => {
                 this.model.setAutoFireEnabled(!this.model.autoFireEnabled);
-                this._status = this._getText('SAVED');
+                this._status = this._getText(TEXT_KEYS.SAVED);
                 this._render();
             });
         this._opacitySliders = {
             joystick: this._createOpacitySlider(columnX[1], rowY(1), columnWidth,
-                'JOYSTICK_OPACITY', this.model.joystickOpacity, value => this.model.setJoystickOpacity(value)),
+                TEXT_KEYS.JOYSTICK_OPACITY, this.model.joystickOpacity, value => this.model.setJoystickOpacity(value)),
             fire: this._createOpacitySlider(columnX[1], rowY(2), columnWidth,
-                'FIRE_BUTTON_OPACITY', this.model.fireButtonOpacity, value => this.model.setFireButtonOpacity(value)),
+                TEXT_KEYS.FIRE_BUTTON_OPACITY, this.model.fireButtonOpacity, value => this.model.setFireButtonOpacity(value)),
         };
         const footerY = top + height - 34 * u;
-        this.add.text(columnX[0], footerY, this._getText('PROGRESS'), uiText()).setOrigin(0, 0.5);
+        this.add.text(columnX[0], footerY, this._getText(TEXT_KEYS.PROGRESS), uiText()).setOrigin(0, 0.5);
         this._resetButton = this._button(columnX[1] + columnWidth / 2, footerY, columnWidth,
-            this._getText('RESET'), () => {
+            this._getText(TEXT_KEYS.RESET), () => {
                 this._confirmingReset = true;
                 this._render();
             }, 0xa34537);
@@ -124,11 +125,11 @@ export class SettingsScene extends CommonScene {
             value = next;
             onChange(value);
             draw();
-            this._status = this._getText('SAVED');
+            this._status = this._getText(TEXT_KEYS.SAVED);
             this._statusText.setText(this._status);
         };
-        hitArea.on('pointerdown', update);
-        hitArea.on('drag', update);
+        hitArea.on(INPUT_EVENTS.POINTERDOWN, update);
+        hitArea.on(INPUT_EVENTS.DRAG, update);
         draw();
         return { hitArea, thumb, valueText };
     }
@@ -149,7 +150,7 @@ export class SettingsScene extends CommonScene {
     _toggleSound() {
         this.model.setSoundEnabled(!this.model.soundEnabled);
         this.sound.mute = !this.model.soundEnabled;
-        this._status = this._getText('SAVED');
+        this._status = this._getText(TEXT_KEYS.SAVED);
         this._render();
     }
 
@@ -168,25 +169,25 @@ export class SettingsScene extends CommonScene {
             .setInteractive();
         const background = this.add.graphics().fillStyle(UI.colors.panel)
             .fillRoundedRect(x - width / 2, y - 112 * u, width, 224 * u, UI.panelRadius * u);
-        const title = this.add.text(x, y - 84 * u, this._getText('CONFIRM_TITLE'), {
+        const title = this.add.text(x, y - 84 * u, this._getText(TEXT_KEYS.CONFIRM_TITLE), {
             ...uiText(UI.type.title), fontStyle: 'bold',
         }).setOrigin(0.5);
-        const message = this.add.text(x, y - 43 * u, this._getText('CONFIRM_BODY'), {
+        const message = this.add.text(x, y - 43 * u, this._getText(TEXT_KEYS.CONFIRM_BODY), {
             ...uiText(), align: 'center',
             wordWrap: { width: width - 40 * u },
         }).setOrigin(0.5, 0);
         layer.add([cover, background, title, message]);
         const buttonWidth = (width - 52 * u) / 2;
         this._cancelButton = this._button(x - (buttonWidth + 12 * u) / 2, y + 74 * u,
-            buttonWidth, this._getText('CANCEL'), () => {
+            buttonWidth, this._getText(TEXT_KEYS.CANCEL), () => {
                 this._confirmingReset = false;
                 this._render();
             }, 0x526b70, layer);
         this._confirmButton = this._button(x + (buttonWidth + 12 * u) / 2, y + 74 * u,
-            buttonWidth, this._getText('RESET'), () => {
+            buttonWidth, this._getText(TEXT_KEYS.RESET), () => {
                 this.model.resetProgress();
                 this._confirmingReset = false;
-                this._status = this._getText('RESET_DONE');
+                this._status = this._getText(TEXT_KEYS.RESET_DONE);
                 this._render();
             }, 0xa34537, layer);
     }

@@ -1,3 +1,4 @@
+import { CACHE_KEYS } from './identifiers';
 import { GameModel } from "./GameModel";
 import { FONTS } from "./constants";
 import { config } from "./main";
@@ -45,7 +46,7 @@ export function setEndpoints() {
  * @returns {object} texts for the scene
  */
 export function getSceneTexts(scene) {
-    const texts = scene.cache.json.get('texts');
+    const texts = scene.cache.json.get(CACHE_KEYS.TEXTS);
     if (!texts || !scene.name) {
         return {};
     }

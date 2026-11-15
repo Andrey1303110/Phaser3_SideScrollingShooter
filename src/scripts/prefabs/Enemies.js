@@ -1,9 +1,10 @@
+import { TIMING } from '../timing';
 import { Fires } from "./Fires";
 import { Enemy } from "./Enemy";
 import { EVENTS, GAME_ACTOR_SCALE_MULTIPLIER } from "../constants";
 import { screenData } from "../Utils";
 
-const FIRST_ENEMY_DELAY = 1500;
+const FIRST_ENEMY_DELAY = TIMING.ENEMIES.DEFAULT_FIRST_ENEMY_DELAY_MS;
 
 export class Enemies extends Phaser.Physics.Arcade.Group {
     constructor(scene) {
@@ -28,7 +29,7 @@ export class Enemies extends Phaser.Physics.Arcade.Group {
             return;
         }
         this.timer = this.scene.time.addEvent({
-            delay: this.scene.info.enemiesDelay * (Phaser.Math.Between(50, 150) * 0.01),
+            delay: this.scene.info.enemiesDelay * (Phaser.Math.Between(TIMING.ENEMIES.SPAWN_INTERVAL_MIN_PERCENT, TIMING.ENEMIES.SPAWN_INTERVAL_MAX_PERCENT) * TIMING.ENEMIES.PERCENT_TO_RATIO),
             callback: () => this.tick(),
         });
     }

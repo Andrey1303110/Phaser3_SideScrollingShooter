@@ -1,3 +1,4 @@
+import { INPUT_EVENTS, TEXTURE_KEYS } from './identifiers';
 import { screenData } from './Utils';
 
 export const UI = {
@@ -59,13 +60,13 @@ export function createButton(scene, { x, y, width, height = UI.buttonHeight * ui
         setText(value) { label.setText(value); fit(); return control; },
         setSelected(value) { selected = value; draw(); return control; },
     };
-    hitArea.on('pointerdown', pointer => {
+    hitArea.on(INPUT_EVENTS.POINTERDOWN, pointer => {
         if (!enabled || !canPress()) return;
         pointerId = pointer.id;
         draw(true);
     });
-    hitArea.on('pointerout', () => { pointerId = null; draw(); });
-    hitArea.on('pointerup', pointer => {
+    hitArea.on(INPUT_EVENTS.POINTEROUT, () => { pointerId = null; draw(); });
+    hitArea.on(INPUT_EVENTS.POINTERUP, pointer => {
         if (pointerId !== pointer.id || !enabled || !canPress()) return;
         pointerId = null;
         draw();
@@ -80,14 +81,14 @@ export function createBackArrow(scene, { parent, canPress = () => true } = {}) {
     const u = uiUnit();
     const root = scene.add.container(screenData.left + 24 * u, screenData.top + 24 * u);
     if (parent) parent.add(root);
-    const icon = scene.add.image(0, 0, 'return');
+    const icon = scene.add.image(0, 0, TEXTURE_KEYS.RETURN);
     icon.setScale(24 * u / icon.height).setAlpha(0.9);
     const hitArea = scene.add.zone(0, 0, 44 * u, 44 * u).setInteractive({ useHandCursor: true });
     root.add([icon, hitArea]);
     let pointerId = null;
-    hitArea.on('pointerdown', pointer => { if (canPress()) pointerId = pointer.id; });
-    hitArea.on('pointerout', () => { pointerId = null; });
-    hitArea.on('pointerup', pointer => {
+    hitArea.on(INPUT_EVENTS.POINTERDOWN, pointer => { if (canPress()) pointerId = pointer.id; });
+    hitArea.on(INPUT_EVENTS.POINTEROUT, () => { pointerId = null; });
+    hitArea.on(INPUT_EVENTS.POINTERUP, pointer => {
         if (pointerId !== pointer.id || !canPress()) return;
         pointerId = null;
         scene._onReturnButtonClick();

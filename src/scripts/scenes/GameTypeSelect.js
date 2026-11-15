@@ -1,12 +1,14 @@
+import { TIMING } from '../timing';
+import { ANIMATION_KEYS, FRAME_KEYS, INPUT_EVENTS, LIFECYCLE_EVENTS, SOUND_KEYS, TEXTURE_KEYS, TEXT_KEYS } from '../identifiers';
 import { screenData, setEndpoints } from '../Utils';
 import { SCENE_NAMES, UNLIMITED_LEVEL, CAMPAIGN_LEVELS } from '../constants';
 import { CommonScene } from './CommonScene';
 import { UI, createButton } from '../ui';
 
 const ACTIONS = [
-    { text: 'CAMPAIGN', scene: SCENE_NAMES.CAMPAIGN, icon: 'flag', primary: true },
-    { text: 'UNLIM', scene: SCENE_NAMES.GAME, icon: 'infinity', caption: 'SURVIVAL_HINT' },
-    { text: 'UPGRADE', scene: SCENE_NAMES.UPGRADE, icon: 'upgrade', caption: 'UPGRADE_HINT' },
+    { text: TEXT_KEYS.CAMPAIGN, scene: SCENE_NAMES.CAMPAIGN, icon: TEXTURE_KEYS.FLAG, primary: true },
+    { text: TEXT_KEYS.UNLIM, scene: SCENE_NAMES.GAME, icon: 'infinity', caption: TEXT_KEYS.SURVIVAL_HINT },
+    { text: TEXT_KEYS.UPGRADE, scene: SCENE_NAMES.UPGRADE, icon: SOUND_KEYS.UPGRADE, caption: TEXT_KEYS.UPGRADE_HINT },
 ];
 
 export class GameTypeSelect extends CommonScene {
@@ -20,7 +22,7 @@ export class GameTypeSelect extends CommonScene {
     }
 
     create() {
-        this.sounds = { click: this.sound.add('click') };
+        this.sounds = { click: this.sound.add(SOUND_KEYS.CLICK) };
         this._build();
         const resize = () => {
             if (this._transitioning) return;
@@ -29,8 +31,8 @@ export class GameTypeSelect extends CommonScene {
             this.children.removeAll(true);
             this._build(false);
         };
-        this.scale.on('resize', resize);
-        this.events.once('shutdown', () => this.scale.off('resize', resize));
+        this.scale.on(LIFECYCLE_EVENTS.RESIZE, resize);
+        this.events.once(LIFECYCLE_EVENTS.SHUTDOWN, () => this.scale.off(LIFECYCLE_EVENTS.RESIZE, resize));
     }
 
     _build(animate = true) {
@@ -58,7 +60,7 @@ export class GameTypeSelect extends CommonScene {
                 this.tweens.add({
                     targets: button, alpha: { from: 0, to: 1 },
                     y: { from: button.y + 12 * u, to: button.y },
-                    duration: 280, delay: index * 60, ease: 'Cubic.Out',
+                    duration: TIMING.GAME_TYPE_SELECT.BUILD_DURATION_MS, delay: index * TIMING.GAME_TYPE_SELECT.CARD_STAGGER_MS, ease: 'Cubic.Out',
                 });
             }
         });
@@ -69,7 +71,7 @@ export class GameTypeSelect extends CommonScene {
         const u = this._unit;
         const top = screenData.top + 26 * u;
         this.add.rectangle(left, top + 6 * u, 20 * u, 2 * u, 0xe0b36b).setOrigin(0, 0.5);
-        this.add.text(left + 30 * u, top, this._getText('TAGLINE'), {
+        this.add.text(left + 30 * u, top, this._getText(TEXT_KEYS.TAGLINE), {
             fontFamily: 'Arial', fontSize: 11 * u, fontStyle: 'bold', color: '#dfbe87',
         });
         const title = this.add.text(left - 2 * u, top + 24 * u, 'INVADERS\nMUST DIE', {
@@ -86,17 +88,17 @@ export class GameTypeSelect extends CommonScene {
             glow.fillStyle(0x86b787, 0.025).fillCircle(x, y, dragonWidth * (0.35 + i * 0.12));
         }
         this.add.ellipse(x, areaBottom + 3 * u, dragonWidth * 0.75, 9 * u, 0x071516, 0.45);
-        if (!this.anims.exists('menu-fly')) {
+        if (!this.anims.exists(ANIMATION_KEYS.MENU_FLY)) {
             this.anims.create({
-                key: 'menu-fly',
-                frames: this.anims.generateFrameNames('dragon', { prefix: 'dragon', start: 1, end: 6 }),
-                frameRate: 8, repeat: -1,
+                key: ANIMATION_KEYS.MENU_FLY,
+                frames: this.anims.generateFrameNames(TEXTURE_KEYS.DRAGON, { prefix: TEXTURE_KEYS.DRAGON, start: 1, end: 6 }),
+                frameRate: TIMING.GAME_TYPE_SELECT.CREATE_HERO_FRAME_RATE_FPS, repeat: -1,
             });
         }
-        this._dragon = this.add.sprite(x, y, 'dragon', 'dragon1')
-            .setScale(dragonWidth / 153).play('menu-fly');
+        this._dragon = this.add.sprite(x, y, TEXTURE_KEYS.DRAGON, FRAME_KEYS.DRAGON1)
+            .setScale(dragonWidth / 153).play(ANIMATION_KEYS.MENU_FLY);
         this.tweens.add({
-            targets: this._dragon, y: y - 4 * u, duration: 1300,
+            targets: this._dragon, y: y - 4 * u, duration: TIMING.GAME_TYPE_SELECT.CREATE_HERO_DURATION_MS,
             yoyo: true, repeat: -1, ease: 'Sine.InOut',
         });
     }
@@ -121,8 +123,8 @@ export class GameTypeSelect extends CommonScene {
             fontStyle: 'bold', color: '#f6f1e4',
         });
         const campaignCaption = this.model.currentLevelScene > CAMPAIGN_LEVELS.length
-            ? this._getText('CAMPAIGN_DONE')
-            : this._getText('MISSION_HINT')
+            ? this._getText(TEXT_KEYS.CAMPAIGN_DONE)
+            : this._getText(TEXT_KEYS.MISSION_HINT)
                 .replace('{level}', this.model.currentLevelScene)
                 .replace('{total}', CAMPAIGN_LEVELS.length);
         const caption = this.add.text(64 * u, 40 * u,
@@ -148,11 +150,11 @@ export class GameTypeSelect extends CommonScene {
     _drawIcon(parent, icon, x, y) {
         const u = this._unit;
         const g = this.add.graphics().lineStyle(2 * u, 0xd9e7d0);
-        if (icon === 'flag') {
+        if (icon === TEXTURE_KEYS.FLAG) {
             g.lineBetween(x - 7 * u, y + 11 * u, x - 7 * u, y - 11 * u);
             g.fillStyle(0xd9e7d0).fillTriangle(x - 7 * u, y - 11 * u,
                 x + 12 * u, y - 5 * u, x - 7 * u, y + u);
-        } else if (icon === 'upgrade') {
+        } else if (icon === SOUND_KEYS.UPGRADE) {
             for (const offset of [-5, 5]) {
                 g.beginPath().moveTo(x - 9 * u, y + (offset + 3) * u)
                     .lineTo(x, y + (offset - 5) * u)
@@ -168,14 +170,14 @@ export class GameTypeSelect extends CommonScene {
 
     _bindPress(hitArea, action, draw = () => {}) {
         let pointerId = null;
-        hitArea.on('pointerover', () => draw(true));
-        hitArea.on('pointerdown', pointer => {
+        hitArea.on(INPUT_EVENTS.POINTEROVER, () => draw(true));
+        hitArea.on(INPUT_EVENTS.POINTERDOWN, pointer => {
             if (this._transitioning) return;
             pointerId = pointer.id;
             draw(true);
         });
-        hitArea.on('pointerout', () => { pointerId = null; draw(false); });
-        hitArea.on('pointerup', pointer => {
+        hitArea.on(INPUT_EVENTS.POINTEROUT, () => { pointerId = null; draw(false); });
+        hitArea.on(INPUT_EVENTS.POINTERUP, pointer => {
             if (pointer.id !== pointerId || this._transitioning) return;
             pointerId = null;
             draw(false);
@@ -187,7 +189,7 @@ export class GameTypeSelect extends CommonScene {
         const u = this._unit;
         const y = screenData.bottom - 32 * u;
         this._footerButtons = [];
-        for (const [index, key] of ['INFO', 'SETTINGS'].entries()) {
+        for (const [index, key] of [TEXT_KEYS.INFO, TEXT_KEYS.SETTINGS].entries()) {
             this._footerButtons.push(createButton(this, {
                 x: left + (index ? 202 : 51) * u, y, width: (index ? 176 : 102) * u,
                 text: this._getText(key), canPress: () => !this._transitioning,
@@ -198,9 +200,9 @@ export class GameTypeSelect extends CommonScene {
             fontFamily: 'Arial', fontSize: 15 * u, fontStyle: 'bold', color: '#f1deae',
         }).setOrigin(1, 0.5);
         const rubyX = wallet.getBounds().left - 16 * u;
-        this.add.image(rubyX, y, 'ruby').setDisplaySize(18 * u, 18 * u);
+        this.add.image(rubyX, y, TEXTURE_KEYS.RUBY).setDisplaySize(18 * u, 18 * u);
         this.add.text(rubyX - 24 * u, y,
-            this._getText('PLAYER_LEVEL').replace('{level}', this.model.currentLevelPlayer), {
+            this._getText(TEXT_KEYS.PLAYER_LEVEL).replace('{level}', this.model.currentLevelPlayer), {
                 fontFamily: 'Arial', fontSize: 13 * u, color: '#9db6a8',
             }).setOrigin(1, 0.5);
     }
@@ -211,7 +213,7 @@ export class GameTypeSelect extends CommonScene {
         this.sounds.click.play({ volume: 0.2 });
         this.tweens.killAll();
         this.tweens.add({
-            targets: button ?? this._dragon, alpha: 0.55, duration: 140,
+            targets: button ?? this._dragon, alpha: 0.55, duration: TIMING.GAME_TYPE_SELECT.GAME_SELECT_DURATION_MS,
             onComplete: () => this._startNewScene(sceneName),
         });
     }

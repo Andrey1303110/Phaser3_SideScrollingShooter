@@ -1,3 +1,4 @@
+import { LIFECYCLE_EVENTS } from '../identifiers';
 import { EVENTS } from '../constants';
 
 export class MovableObject extends Phaser.GameObjects.Sprite {
@@ -19,7 +20,7 @@ export class MovableObject extends Phaser.GameObjects.Sprite {
         this.acceleration = data.acceleration;
 
         this.scene.events.on(EVENTS.UPDATE, this.update, this);
-        this.once('destroy', () => {
+        this.once(LIFECYCLE_EVENTS.DESTROY, () => {
             this.scene.events.off(EVENTS.UPDATE, this.update, this);
             this.timer?.remove();
         });

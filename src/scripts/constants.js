@@ -1,3 +1,4 @@
+import { SOUND_KEYS, TEXTURE_KEYS } from './identifiers';
 export const SCENE_NAMES = {
     BOOT: 'Boot',
     DISCLAIMER: 'Disclaimer',
@@ -19,34 +20,34 @@ export const EVENTS = {
 }
 
 // Only .png + .json
-export const ATLAS_FILES = ['dragon', 'jet', 'strategic_jet', 'helicopter', 'boom'];
+export const ATLAS_FILES = [TEXTURE_KEYS.DRAGON, TEXTURE_KEYS.JET, TEXTURE_KEYS.STRATEGIC_JET, TEXTURE_KEYS.HELICOPTER, TEXTURE_KEYS.BOOM];
 
 // Only .png
-export const IMAGE_FILES = ['fire', 'flag', 'rocket', 'missile', 'missile_2', 'map', 'ruby', 'return', 'pause', 'scale', 'reload', 'velocity', 'progress_bar', 'progress_bar_fill', 'skobeeva', 'chief_commander', 'commander', 'president', 'next', 'life_icon', 'health_bar_empty', 'health_bar_fill', 'health', 'explosion_particle', 'fire_button', 'trees_mid', 'trees_near'];
+export const IMAGE_FILES = [TEXTURE_KEYS.FIRE, TEXTURE_KEYS.FLAG, TEXTURE_KEYS.ROCKET, TEXTURE_KEYS.MISSILE, TEXTURE_KEYS.MISSILE_2, TEXTURE_KEYS.MAP, TEXTURE_KEYS.RUBY, TEXTURE_KEYS.RETURN, TEXTURE_KEYS.PAUSE, TEXTURE_KEYS.SCALE, TEXTURE_KEYS.RELOAD, TEXTURE_KEYS.VELOCITY, TEXTURE_KEYS.PROGRESS_BAR, TEXTURE_KEYS.PROGRESS_BAR_FILL, TEXTURE_KEYS.SKOBEEVA, TEXTURE_KEYS.CHIEF_COMMANDER, TEXTURE_KEYS.COMMANDER, TEXTURE_KEYS.PRESIDENT, TEXTURE_KEYS.NEXT, TEXTURE_KEYS.LIFE_ICON, TEXTURE_KEYS.HEALTH_BAR_EMPTY, TEXTURE_KEYS.HEALTH_BAR_FILL, TEXTURE_KEYS.HEALTH, TEXTURE_KEYS.EXPLOSION_PARTICLE, TEXTURE_KEYS.FIRE_BUTTON, TEXTURE_KEYS.TREES_MID, TEXTURE_KEYS.TREES_NEAR];
 
 // Matches the level order and atmosphere specified in game_parallax/README.txt.
 export const LEVEL_BACKGROUNDS = [
-    { clouds: 'clouds_night', celestial: 'moon' },
-    { clouds: 'clouds_day', celestial: 'sun' },
-    { clouds: 'clouds_dawn', celestial: 'sun' },
-    { clouds: 'clouds_sunset', celestial: 'sun' },
-    { clouds: 'clouds_night', celestial: null },
-    { clouds: 'clouds_day', celestial: 'sun' },
-    { clouds: 'clouds_night', celestial: 'moon' },
-    { clouds: 'clouds_sunset', celestial: 'sun' },
-    { clouds: 'clouds_dawn', celestial: 'sun' },
-    { clouds: 'clouds_day', celestial: 'sun' },
-    { clouds: 'clouds_night', celestial: null },
-    { clouds: 'clouds_day', celestial: 'sun' },
-    { clouds: 'clouds_night', celestial: 'moon' },
-    { clouds: 'clouds_dawn', celestial: 'sun' },
-    { clouds: 'clouds_sunset', celestial: 'sun' },
+    { clouds: TEXTURE_KEYS.CLOUDS_NIGHT, celestial: TEXTURE_KEYS.MOON },
+    { clouds: TEXTURE_KEYS.CLOUDS_DAY, celestial: TEXTURE_KEYS.SUN },
+    { clouds: TEXTURE_KEYS.CLOUDS_DAWN, celestial: TEXTURE_KEYS.SUN },
+    { clouds: TEXTURE_KEYS.CLOUDS_SUNSET, celestial: TEXTURE_KEYS.SUN },
+    { clouds: TEXTURE_KEYS.CLOUDS_NIGHT, celestial: null },
+    { clouds: TEXTURE_KEYS.CLOUDS_DAY, celestial: TEXTURE_KEYS.SUN },
+    { clouds: TEXTURE_KEYS.CLOUDS_NIGHT, celestial: TEXTURE_KEYS.MOON },
+    { clouds: TEXTURE_KEYS.CLOUDS_SUNSET, celestial: TEXTURE_KEYS.SUN },
+    { clouds: TEXTURE_KEYS.CLOUDS_DAWN, celestial: TEXTURE_KEYS.SUN },
+    { clouds: TEXTURE_KEYS.CLOUDS_DAY, celestial: TEXTURE_KEYS.SUN },
+    { clouds: TEXTURE_KEYS.CLOUDS_NIGHT, celestial: null },
+    { clouds: TEXTURE_KEYS.CLOUDS_DAY, celestial: TEXTURE_KEYS.SUN },
+    { clouds: TEXTURE_KEYS.CLOUDS_NIGHT, celestial: TEXTURE_KEYS.MOON },
+    { clouds: TEXTURE_KEYS.CLOUDS_DAWN, celestial: TEXTURE_KEYS.SUN },
+    { clouds: TEXTURE_KEYS.CLOUDS_SUNSET, celestial: TEXTURE_KEYS.SUN },
 ];
 
-export const PARALLAX_IMAGE_FILES = ['sun', 'moon', 'clouds_day', 'clouds_dawn', 'clouds_sunset', 'clouds_night'];
+export const PARALLAX_IMAGE_FILES = [TEXTURE_KEYS.SUN, TEXTURE_KEYS.MOON, TEXTURE_KEYS.CLOUDS_DAY, TEXTURE_KEYS.CLOUDS_DAWN, TEXTURE_KEYS.CLOUDS_SUNSET, TEXTURE_KEYS.CLOUDS_NIGHT];
 
 // Only .mp3
-export const AUDIO_FILES = ['error', 'rocket_launch', 'fire_launch', 'missile_launch', 'missile_2_launch', 'explosion_small', 'wings', 'ready', 'lose', 'win', 'upgrade', 'level_up', 'whoosh', 'click', 'fire_effect', 'campaign_complete_song'];
+export const AUDIO_FILES = [SOUND_KEYS.ERROR, SOUND_KEYS.ROCKET_LAUNCH, SOUND_KEYS.FIRE_LAUNCH, SOUND_KEYS.MISSILE_LAUNCH, SOUND_KEYS.MISSILE_2_LAUNCH, SOUND_KEYS.EXPLOSION_SMALL, SOUND_KEYS.WINGS, SOUND_KEYS.READY, SOUND_KEYS.LOSE, SOUND_KEYS.WIN, SOUND_KEYS.UPGRADE, SOUND_KEYS.LEVEL_UP, SOUND_KEYS.WHOOSH, SOUND_KEYS.CLICK, SOUND_KEYS.FIRE_EFFECT, SOUND_KEYS.CAMPAIGN_COMPLETE_SONG];
 
 export const FONTS = {
     eng: 'DishOut',
@@ -97,8 +98,8 @@ export const WEAPONS = {
         },
         scale: 0.4,
         reward: 0,
-        texture: 'fire',
-        sound: 'fire_launch',
+        texture: TEXTURE_KEYS.FIRE,
+        sound: SOUND_KEYS.FIRE_LAUNCH,
     },
     ROCKET: {
         reload: 1750,
@@ -117,8 +118,8 @@ export const WEAPONS = {
         scale: 0.4,
         damage: 25,
         reward: 100,
-        texture: 'rocket',
-        sound: 'rocket_launch',
+        texture: TEXTURE_KEYS.ROCKET,
+        sound: SOUND_KEYS.ROCKET_LAUNCH,
     },
     MISSILE: {
         reload: 2000,
@@ -137,8 +138,8 @@ export const WEAPONS = {
         scale: 0.375,
         damage: 40,
         reward: 150,
-        texture: 'missile',
-        sound: 'missile_launch',
+        texture: TEXTURE_KEYS.MISSILE,
+        sound: SOUND_KEYS.MISSILE_LAUNCH,
     },
     MISSILE_2: {
         reload: 2500,
@@ -157,8 +158,8 @@ export const WEAPONS = {
         scale: 0.4,
         damage: 60,
         reward: 750,
-        texture: 'missile_2',
-        sound: 'missile_2_launch',
+        texture: TEXTURE_KEYS.MISSILE_2,
+        sound: SOUND_KEYS.MISSILE_2_LAUNCH,
     }
 };
 
@@ -166,7 +167,7 @@ export const ENEMIES = {
     HELICOPTER: {
         weapon: WEAPONS.ROCKET,
         scale: 0.9,
-        texture: 'helicopter',
+        texture: TEXTURE_KEYS.HELICOPTER,
         frames: 4,
         reward: 275,
         entryLevel: 0,
@@ -175,7 +176,7 @@ export const ENEMIES = {
         velocity: -250,
         weapon: WEAPONS.MISSILE,
         scale: 0.76,
-        texture: 'jet',
+        texture: TEXTURE_KEYS.JET,
         frames: 4,
         reward: 375,
         entryLevel: 5,
@@ -184,7 +185,7 @@ export const ENEMIES = {
         velocity: -200,
         weapon: WEAPONS.MISSILE_2,
         scale: 0.85,
-        texture: 'strategic_jet',
+        texture: TEXTURE_KEYS.STRATEGIC_JET,
         frames: 4,
         reward: 500,
         entryLevel: 10,

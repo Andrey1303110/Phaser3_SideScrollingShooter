@@ -1,0 +1,101 @@
+// Animation, transition and timer tuning. MS values are milliseconds; FPS values are frames per second.
+// FACTOR values scale another duration or define a time conversion.
+export const TIMING = Object.freeze({
+    DIALOG_BOX: Object.freeze({
+        SHOW_ENTER_DURATION_MS: 625,
+        SHOW_EXIT_DURATION_MS: 425,
+        SHOW_SKIP_BUTTON_DURATION_MS: 250,
+        HIDE_SKIP_BUTTON_DURATION_MS: 150,
+    }),
+    DIALOG_BOX_CONTROLLER: Object.freeze({
+        DEFAULT_MIN_SHOW_DURATION_MS: 2500,
+        DEFAULT_READING_MS_PER_CHARACTER_MS: 65,
+        DEFAULT_SHOW_DELAY_MS: 200,
+        TOGGLE_SHOWING_BG_DURATION_MS: 250,
+        VOICE_SECONDS_TO_MS: 1000,
+    }),
+    HEALTH_BAR: Object.freeze({
+        TWEEN_UPDATE_DURATION_MS: 150,
+        TWEEN_UPDATE_DURATION_FACTOR: 0.75,
+    }),
+    BOOM: Object.freeze({
+        CREATE_ANIMATION_FRAME_RATE_FPS: 8,
+    }),
+    ENEMIES: Object.freeze({
+        DEFAULT_FIRST_ENEMY_DELAY_MS: 1500,
+        SPAWN_INTERVAL_MIN_PERCENT: 50,
+        SPAWN_INTERVAL_MAX_PERCENT: 150,
+        PERCENT_TO_RATIO: 0.01,
+    }),
+    ENEMY: Object.freeze({
+        RELOAD_INTERVAL_MIN_PERCENT: 70,
+        RELOAD_INTERVAL_MAX_PERCENT: 130,
+        PERCENT_TO_RATIO: 0.01,
+    }),
+    FIRE: Object.freeze({
+        ROCKET_MANEUVER_MIN_DELAY_MS: 500,
+        ROCKET_MANEUVER_MAX_DELAY_MS: 1000,
+        MISSILE_MOVE_DELAY_MS: 225,
+        MISSILE2MOVE_DELAY_MS: 225,
+    }),
+    PLAYER: Object.freeze({
+        DEFAULT_FRAME_RATE_FPS: 8,
+        FRAME_SECONDS_TO_MS: 1000,
+        TWEEN_FLY_DURATION_FACTOR: 2.5,
+    }),
+    BOOT_SCENE: Object.freeze({
+        CREATE_LOGO_ANIMATION_DURATION_MS: 1500,
+        CREATE_PRESS_LABEL_DURATION_MS: 350,
+        LAUNCH_PRESS_LABEL_CTA_DURATION_MS: 500,
+    }),
+    CAMPAIGN_SCENE: Object.freeze({
+        RENDER_DELAY_MS: 2000,
+        RENDER_DURATION_MS: 400,
+        PLAY_BRIEFING_DELAY_MS: 200,
+        PLAY_INTRO_DELAY_MS: 400,
+        GAME_START_DURATION_FACTOR: 850,
+    }),
+    DISCLAIMER_SCENE: Object.freeze({
+        CREATE_DELAY_MS: 2500,
+        CREATE_TEXT_LABEL_DURATION_MS: 500,
+        CREATE_PRESS_LABEL_DURATION_MS: 350,
+        PLAY_CTA_DURATION_MS: 500,
+        TWEEN_HIDE_SCENE_DURATION_MS: 500,
+    }),
+    GAME_SCENE: Object.freeze({
+        ON_PLAYER_HIT_DURATION_MS: 125,
+        SOUND_SECONDS_TO_MS: 1000,
+        END_TRANSITION_SOUND_FRACTION: 0.85,
+        INCREASE_LEVEL_DURATION_MS: 500,
+    }),
+    GAME_TYPE_SELECT: Object.freeze({
+        BUILD_DURATION_MS: 280,
+        CARD_STAGGER_MS: 60,
+        CREATE_HERO_FRAME_RATE_FPS: 8,
+        CREATE_HERO_DURATION_MS: 1300,
+        GAME_SELECT_DURATION_MS: 140,
+    }),
+    PAUSE_SCENE: Object.freeze({
+        CREATE_DURATION_MS: 160,
+        CLOSE_DURATION_MS: 100,
+    }),
+    PRELOAD_SCENE: Object.freeze({
+        ON_LOAD_COMPLETE_DURATION_MS: 400,
+    }),
+    SET_LANGUAGE_SCENE: Object.freeze({
+        CREATE_BUTTONS_DELAY_MS: 350,
+        CREATE_BUTTON_TWEENS_DURATION_MS: 300,
+        CREATE_PRESS_LABEL_DURATION_MS: 350,
+        PLAY_LABEL_CTA_DURATION_MS: 500,
+    }),
+    UPGRADE_SCENE: Object.freeze({
+        RENDER_FRAME_RATE_FPS: 8,
+        RENDER_DURATION_MS: 1300,
+        UPGRADE_DURATION_MS: 220,
+        UPGRADE_DELAY_MS: 1000,
+    }),
+    CAMPAIGN_MAP: Object.freeze({
+        MARKER_PULSE_DURATION_MS: 1000,
+        MARKER_ENTER_DURATION_MS: 400,
+    }),
+});

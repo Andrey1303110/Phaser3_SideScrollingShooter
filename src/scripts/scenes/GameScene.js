@@ -1,3 +1,5 @@
+import { TIMING } from '../timing';
+import { INPUT_EVENTS, PLUGIN_KEYS, SOUND_KEYS, TEXTURE_KEYS, TEXT_KEYS, resourceKey } from '../identifiers';
 import { config } from '../main';
 import { Player } from '../prefabs/Player';
 import { Enemies } from '../prefabs/Enemies';
@@ -69,7 +71,7 @@ export class GameScene extends CommonScene {
     _addJoystick(){
         const { left, bottom } = screenData;
 
-        this._joystick = this.plugins.get('rexvirtualjoystickplugin').add(this, {
+        this._joystick = this.plugins.get(PLUGIN_KEYS.REXVIRTUALJOYSTICKPLUGIN).add(this, {
             x: left + JOYSTICK_RADIUS + JOYSTICK_GAP,
             y: bottom - JOYSTICK_RADIUS - JOYSTICK_GAP,
             radius: JOYSTICK_RADIUS,
@@ -86,7 +88,7 @@ export class GameScene extends CommonScene {
     _addFireButton(){
         const { right } = screenData;
 
-        this.fireButton = this.add.image(right - JOYSTICK_RADIUS - JOYSTICK_GAP, this._joystick.y, 'fire_button')
+        this.fireButton = this.add.image(right - JOYSTICK_RADIUS - JOYSTICK_GAP, this._joystick.y, TEXTURE_KEYS.FIRE_BUTTON)
             .setAlpha(this.model.fireButtonOpacity)
             .setActive(false)
             .setDepth(DEPTH_LAYERS.UI);
@@ -96,11 +98,11 @@ export class GameScene extends CommonScene {
             this.fireButton.displayWidth, this.fireButton.displayHeight)
             .setInteractive()
             .setDepth(DEPTH_LAYERS.UI)
-            .on('pointerup', () => {
+            .on(INPUT_EVENTS.POINTERUP, () => {
                 this.fireButton.active = false;
             }, this)
-            .on('pointerout', () => { this.fireButton.active = false; })
-            .on('pointerdown', () => {
+            .on(INPUT_EVENTS.POINTEROUT, () => { this.fireButton.active = false; })
+            .on(INPUT_EVENTS.POINTERDOWN, () => {
                 this.fireButton.active = true;
                 this._player.shooting();
             }, this);
@@ -115,10 +117,10 @@ export class GameScene extends CommonScene {
         this.speed = CAMPAIGN_LEVELS[this._currentLevelScene-1].velocity;
 
         const layers = [
-            { texture: `bg${this._backgroundLevel}`, speedMultiplier: 1, depth: -5 },
+            { texture: resourceKey.background(this._backgroundLevel), speedMultiplier: 1, depth: -5 },
             { texture: atmosphere.clouds, speedMultiplier: 0.45, depth: -3 },
-            { texture: 'trees_mid', speedMultiplier: 1.5, depth: -2 },
-            { texture: 'trees_near', speedMultiplier: 2.2, depth: -1 },
+            { texture: TEXTURE_KEYS.TREES_MID, speedMultiplier: 1.5, depth: -2 },
+            { texture: TEXTURE_KEYS.TREES_NEAR, speedMultiplier: 2.2, depth: -1 },
         ];
 
         this._backgroundLayers = layers.map(({ texture, speedMultiplier, depth }) => {
@@ -172,7 +174,7 @@ export class GameScene extends CommonScene {
         }).setOrigin(1, 0).setDepth(DEPTH_LAYERS.UI);
 
         if (this.info?.isUnlim) {
-            const topScoreText = this._getText('TOP_HIGH_SCORE');
+            const topScoreText = this._getText(TEXT_KEYS.TOP_HIGH_SCORE);
             const x = this.cameras.main.centerX;
             this.hiScoreText = this.add.text(x, top + 20 * u,
                 `${topScoreText} ${this.model.unlimHiScores}`, {
@@ -213,13 +215,13 @@ export class GameScene extends CommonScene {
             return;
         }
         this.sounds = {
-            rocket_launch: this.sound.add('rocket_launch'),
-            fire_launch: this.sound.add('fire_launch'),
-            missile_launch: this.sound.add('missile_launch'),
-            missile_2_launch: this.sound.add('missile_2_launch'),
-            explosion_small: this.sound.add('explosion_small'),
-            wings: this.sound.add('wings'),
-            level_up: this.sound.add('level_up'),
+            rocket_launch: this.sound.add(SOUND_KEYS.ROCKET_LAUNCH),
+            fire_launch: this.sound.add(SOUND_KEYS.FIRE_LAUNCH),
+            missile_launch: this.sound.add(SOUND_KEYS.MISSILE_LAUNCH),
+            missile_2_launch: this.sound.add(SOUND_KEYS.MISSILE_2_LAUNCH),
+            explosion_small: this.sound.add(SOUND_KEYS.EXPLOSION_SMALL),
+            wings: this.sound.add(SOUND_KEYS.WINGS),
+            level_up: this.sound.add(SOUND_KEYS.LEVEL_UP),
         };
     }
 
@@ -286,7 +288,7 @@ export class GameScene extends CommonScene {
     _onPlayerHit(source, target) {
         const damage = this._enemies.children.contains(target) ? this._player.maxHealth : target.damage;
         const shakeMagnitude = damage * 2 / this._player.maxHealth * 0.05;
-        const duration = 125;
+        const duration = TIMING.GAME_SCENE.ON_PLAYER_HIT_DURATION_MS;
         const color = [255, 0, 0];
 
         this._player.currentHealth -= damage;
@@ -315,7 +317,7 @@ export class GameScene extends CommonScene {
         const isWin = this._player.active;
         this._player.stopControls();
         if (this.fireButton) this.fireButton.active = false;
-        const sound = this._playTransitionSound(isWin ? 'win' : 'lose');
+        const sound = this._playTransitionSound(isWin ? SOUND_KEYS.WIN : SOUND_KEYS.LOSE);
 
         this._blackBG = this.add.rectangle(config.width * 0.5, config.height * 0.5, config.width, config.height, '0x000000', 0).setInteractive().setDepth(DEPTH_LAYERS.COVER_SCREEN);
         let finalTextLabel = this.add.text(this._blackBG.x, this._blackBG.y, '', {
@@ -339,10 +341,10 @@ export class GameScene extends CommonScene {
     _successLevelComplete(label) {
         if (this.info.isUnlim) {
             this._failureLevelComplete(label);
-            label.text = this._getText('FINAL_TEXT_WIN');
+            label.text = this._getText(TEXT_KEYS.FINAL_TEXT_WIN);
             return;
         }
-        label.text = this._getText('FINAL_TEXT_WIN');
+        label.text = this._getText(TEXT_KEYS.FINAL_TEXT_WIN);
 
         if (this.model.getLevelHiScore(this._currentLevelScene) < this._currentScore) {
             const hiScores = this.model.hiScores.split(LEVEL_HI_SCORES_SEPARATOR);
@@ -356,7 +358,7 @@ export class GameScene extends CommonScene {
     }
 
     _failureLevelComplete(label) {
-        label.text = this._getText('FINAL_TEXT_LOSE');
+        label.text = this._getText(TEXT_KEYS.FINAL_TEXT_LOSE);
 
         if (this.info.isUnlim) {
             const lastHiScore = this.model.unlimHiScores;
@@ -367,7 +369,7 @@ export class GameScene extends CommonScene {
     }
 
     _completeLevelTween(finalTextLabel, sound) {
-        const duration = sound.duration * 1000 * 0.85;
+        const duration = sound.duration * TIMING.GAME_SCENE.SOUND_SECONDS_TO_MS * TIMING.GAME_SCENE.END_TRANSITION_SOUND_FRACTION;
         const scale = finalTextLabel.scale * 2;
         const targets = [this._blackBG, finalTextLabel];
         
@@ -396,7 +398,7 @@ export class GameScene extends CommonScene {
                 this.scene.pause();
             },
         });
-        this._pauseButton.root.setDepth(DEPTH_LAYERS.UI).add(this.add.image(0, 0, 'pause')
+        this._pauseButton.root.setDepth(DEPTH_LAYERS.UI).add(this.add.image(0, 0, TEXTURE_KEYS.PAUSE)
             .setDisplaySize(20 * u, 20 * u).setTintFill(0xf3eddd));
     }
 
@@ -419,9 +421,9 @@ export class GameScene extends CommonScene {
             return;
         }
 
-        this._progressExpBar = this.add.image(this.scene.scene.cameras.main.midPoint.x, screenData.top + config.width * 0.0225, 'progress_bar')
+        this._progressExpBar = this.add.image(this.scene.scene.cameras.main.midPoint.x, screenData.top + config.width * 0.0225, TEXTURE_KEYS.PROGRESS_BAR)
             .setAlpha(0.95);
-        this._progressExpBar.fillProgress = this.add.image(this._progressExpBar.x + this._progressExpBar.displayWidth * 0.1, this._progressExpBar.y + this._progressExpBar.displayHeight * 0.04, 'progress_bar_fill')
+        this._progressExpBar.fillProgress = this.add.image(this._progressExpBar.x + this._progressExpBar.displayWidth * 0.1, this._progressExpBar.y + this._progressExpBar.displayHeight * 0.04, TEXTURE_KEYS.PROGRESS_BAR_FILL)
             .setAlpha(0.95);
         
         this._progressExpBar.levelText = this.add.text(this._progressExpBar.x - this._progressExpBar.displayWidth * 0.38, this._progressExpBar.y - this._progressExpBar.displayHeight * 0.035, this.model.currentLevelPlayer, {
@@ -482,7 +484,7 @@ export class GameScene extends CommonScene {
             x: this._progressExpBar.levelText.x,
             y: this._progressExpBar.levelText.y,
             ease: 'Linear',
-            duration: 500,
+            duration: TIMING.GAME_SCENE.INCREASE_LEVEL_DURATION_MS,
             onComplete: () => {
                 levelTextLabel.destroy();
                 this._progressExpBar.levelText.text = this.model.currentLevelPlayer;
