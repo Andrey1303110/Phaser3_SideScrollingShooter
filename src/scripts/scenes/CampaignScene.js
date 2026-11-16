@@ -1,10 +1,11 @@
 import { TIMING } from '../timing';
 import { INPUT_EVENTS, LIFECYCLE_EVENTS, SOUND_KEYS, TEXTURE_KEYS, TEXT_KEYS } from '../identifiers';
-import { screenData, setEndpoints, delayInMSec, tweenPromise } from '../Utils';
+import { getSceneTexts, screenData, setEndpoints, delayInMSec, tweenPromise } from '../Utils';
 import { DialogBoxController } from '../classes/DialogBoxController';
 import { CAMPAIGN_LEVELS, DEPTH_LAYERS, SCENE_NAMES, ENEMIES } from '../constants';
 import { config } from '../main';
 import { CommonScene } from './CommonScene';
+import { CAMPAIGN_SKILL_BRANCHES, CAMPAIGN_SKILL_MISSIONS } from '../campaignSkills';
 import { UI, createButton, createBackArrow } from '../ui';
 import { CampaignMap } from './components/CampaignMap';
 
@@ -22,6 +23,7 @@ export class CampaignScene extends CommonScene {
 
     init() {
         super.init();
+        this._skillTexts = getSceneTexts(this, 'Skills');
         this._selected = CAMPAIGN_LEVELS[Math.min(this.model.currentLevelScene, CAMPAIGN_LEVELS.length) - 1];
         this._lastBriefingLevel = null;
         this._showIntro = this.model.currentLevelScene === 1 && this.model.totalScore === 0;
@@ -154,13 +156,17 @@ export class CampaignScene extends CommonScene {
         const title = this._text(p.x + p.width / 2, p.y + 54 * u, this._getText(TEXT_KEYS.LEVEL_ + level.index + '_NAME'), UI.type.section, '#f3ead6', root);
         title.setWordWrapWidth(p.width - 32 * u).setOrigin(0.5, 0).setAlign('center');
         while (title.height > 48 * u && parseFloat(title.style.fontSize) > 16 * u) title.setFontSize(parseFloat(title.style.fontSize) - u);
-        this._text(p.x + 16 * u, p.y + 104 * u,
-            this._getText(!available ? TEXT_KEYS.LOCKED_HINT : completed ? TEXT_KEYS.LIBERATED : TEXT_KEYS.CURRENT)
-                .replace('{level}', level.index - 1), 16, available ? '#e4c990' : '#b5c7bd', root)
-            .setWordWrapWidth(p.width - 32 * u);
+        const skillIndex = CAMPAIGN_SKILL_MISSIONS.indexOf(level.index);
+        if (skillIndex >= 0) this._renderSkillReward(root, skillIndex, completed);
+        if (skillIndex < 0 || p.height >= 330 * u) {
+            this._text(p.x + 16 * u, p.y + (skillIndex < 0 ? 104 : 145) * u,
+                this._getText(!available ? TEXT_KEYS.LOCKED_HINT : completed ? TEXT_KEYS.LIBERATED : TEXT_KEYS.CURRENT)
+                    .replace('{level}', level.index - 1), 16, available ? '#e4c990' : '#b5c7bd', root)
+                .setWordWrapWidth(p.width - 32 * u);
+        }
         const types = Object.values(ENEMIES).filter(enemy => enemy.entryLevel <= level.index)
             .map(enemy => this._getText(TEXT_KEYS.TYPE_ + enemy.texture.toUpperCase()));
-        if (p.height >= 310 * u) {
+        if (p.height >= 310 * u && skillIndex < 0) {
             this._text(p.x + 16 * u, p.y + 146 * u, types.join(' · '), UI.type.caption, '#b3c9bc', root)
                 .setWordWrapWidth(p.width - 32 * u);
         }
@@ -170,12 +176,31 @@ export class CampaignScene extends CommonScene {
             this._text(p.x + 16 * u, p.y + 244 * u,
                 this._getText(TEXT_KEYS.RECORD).replace('{score}', this.model.getLevelHiScore(level.index)), 14, '#a3b9ab', root);
         }
-        const width = p.width - 32 * u;
-        this._briefingButton = this._button(root, p.x + p.width / 2, p.y + p.height - 80 * u,
+        const sideBySide = p.height < 236 * u;
+        const width = sideBySide ? (p.width - 40 * u) / 2 : p.width - 32 * u;
+        const center = p.x + p.width / 2;
+        const offset = sideBySide ? (width + 8 * u) / 2 : 0;
+        this._briefingButton = this._button(root, center - offset, p.y + p.height - (sideBySide ? 28 : 80) * u,
             width, 44 * u, this._getText(this._lastBriefingLevel === level.index ? TEXT_KEYS.REPLAY_BRIEFING : TEXT_KEYS.BRIEFING),
             () => this._playBriefing(level.index, true), available);
-        this._startButton = this._button(root, p.x + p.width / 2, p.y + p.height - 28 * u,
+        this._startButton = this._button(root, center + offset, p.y + p.height - 28 * u,
             width, 44 * u, this._getText(available ? TEXT_KEYS.START : TEXT_KEYS.LOCKED), () => this._startMission(), available, true);
+    }
+
+    _renderSkillReward(root, index, completed) {
+        const p = this._panel;
+        const u = this._unit;
+        const texts = this._skillTexts;
+        const branch = CAMPAIGN_SKILL_BRANCHES[this.model.campaignSkillBranch];
+        if (completed && this.model.canChooseCampaignSkillBranch) {
+            this._button(root, p.x + p.width / 2, p.y + 120 * u, p.width - 32 * u, 44 * u,
+                texts.CHOICE_AVAILABLE,
+                () => this.scene.start(SCENE_NAMES.UPGRADE, { showSkills: true, fromCampaign: true }));
+            return;
+        }
+        const reward = index === 0 ? texts.BRANCH_REWARD : branch ? texts[branch.skills[index]] : texts.TIER_REWARD;
+        this._text(p.x + 16 * u, p.y + 98 * u, (completed ? texts.RECEIVED : texts.REWARD).replace('{reward}', reward),
+            UI.type.caption, '#e4c990', root).setWordWrapWidth(p.width - 32 * u);
     }
 
     async _selectMission(level) {

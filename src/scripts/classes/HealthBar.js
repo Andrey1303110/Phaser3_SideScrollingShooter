@@ -26,19 +26,20 @@ export class HealthBar extends Phaser.GameObjects.Container {
         }
 
         const cutWidth = this._healthBarFill.width * Math.max(0, Math.min(1, progressValue));
+        this._pendingCutWidth = cutWidth;
 
         if (isForce) {
             return this._onUpdateComplete(cutWidth);
         }
 
-        return this._tweenUpdate(cutWidth);
+        return this._tweenUpdate();
     }
 
     _onUpdateComplete(cutWidth) {
         this._healthBarFill.setCrop(0, 0, cutWidth, this._healthBarFill.height);
     }
 
-    async _tweenUpdate(cutWidth) {
+    async _tweenUpdate() {
         const duration = TIMING.HEALTH_BAR.TWEEN_UPDATE_DURATION_MS;
         const increaseValue = 1.15;
 
@@ -47,7 +48,7 @@ export class HealthBar extends Phaser.GameObjects.Container {
             scale: DEFAULT_SCALE * increaseValue,
             ease: 'Power2.in',
             duration,
-            onComplete: () => this._onUpdateComplete(cutWidth)
+            onComplete: () => this._onUpdateComplete(this._pendingCutWidth)
         });
 
         await tweenPromise(this._scene, {

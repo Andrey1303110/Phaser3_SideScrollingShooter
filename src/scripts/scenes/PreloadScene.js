@@ -1,5 +1,5 @@
 import { TIMING } from '../timing';
-import { CACHE_KEYS, LIFECYCLE_EVENTS, PLUGIN_KEYS, resourceKey } from '../identifiers';
+import { CACHE_KEYS, LIFECYCLE_EVENTS, PLUGIN_KEYS, TEXTURE_KEYS, resourceKey } from '../identifiers';
 import { ATLAS_FILES, AUDIO_FILES, CAMPAIGN_LEVELS, IMAGE_FILES, PARALLAX_IMAGE_FILES, SCENE_NAMES } from '../constants';
 import { CommonScene } from './CommonScene';
 import { LoadingBar } from '../classes/LoadingBar';
@@ -57,6 +57,8 @@ export class PreloadScene extends CommonScene {
     }
 
     _preloadResources() {
+        this.load.image(TEXTURE_KEYS.SKILL_PREVIEW_BG, './assets/sprites/skill_preview_bg.png');
+        this.load.image(TEXTURE_KEYS.SKILL_ICONS, './assets/sprites/skill_icons.png');
         CAMPAIGN_LEVELS.forEach(level => this.load.image(resourceKey.background(level.index), `./assets/sprites/bg${level.index}.png`));
 
         ATLAS_FILES.forEach(name => this.load.atlas(name, `./assets/sprites/${name}.png`, `./assets/sprites/${name}.json`));

@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.7.0
+
+- Added a permanent choice between Attack and Defense after the first victory in Kharkiv. The next two skills unlock after the first victories in Vinnytsia and Dnipro.
+- Added the skill tree to Upgrades, the next skill to the stats screen, and first-victory rewards to mission cards.
+- Added double fire, piercing fireballs, and an automatic beam for Attack. Added a shield, life steal, and double campaign experience for Defense.
+- Illustrated the skill tree and added animated previews for all six skills, with matching effects in battle.
+- Aligned fire and beam emission with the dragon's mouth, tucked effects behind its head, and tapered the beam's origin in battle and previews.
+
 ## 1.6.1
 
 - Added a card highlight, icon pulse and a sparkling dragon effect when applying an upgrade.

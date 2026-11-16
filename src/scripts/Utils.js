@@ -42,15 +42,12 @@ export function setEndpoints() {
 
 /**
  * Retrieves texts for the given scene based on its name
- * @param {string} scene 
- * @returns {object} texts for the scene
+ * @param {Phaser.Scene} scene
+ * @param {string} [group]
+ * @returns {object} localized texts for the group
  */
-export function getSceneTexts(scene) {
-    const texts = scene.cache.json.get(CACHE_KEYS.TEXTS);
-    if (!texts || !scene.name) {
-        return {};
-    }
-    return texts[scene.name] ?? {};
+export function getSceneTexts(scene, group = scene.name) {
+    return scene.cache.json.get(CACHE_KEYS.TEXTS)?.[group] ?? {};
 }
 
 /**

@@ -4,9 +4,11 @@ import { delayInMSec } from '../Utils';
 import { WEAPONS } from '../constants';
 import { config } from '../main';
 import { MovableObject } from './MovableObject'
+import { CAMPAIGN_SKILL_BALANCE } from '../campaignSkills';
+import { dragonMouth } from '../skillEffects';
 
 export class Fire extends MovableObject {
-    static generate(scene, source) {
+    static generate(scene, source, options) {
         const data = {
             scene: scene,
             x: source.x + source.displayWidth * 0.5 * source.weapon.origin.x,
@@ -15,14 +17,29 @@ export class Fire extends MovableObject {
             ...source.weapon,
         };
 
-        return new Fire(data);
+        if (source.texture.key === TEXTURE_KEYS.DRAGON) {
+            Object.assign(data, dragonMouth(source), { emissionDepth: source.depth - 0.1 });
+        }
+
+        return new Fire(data, options);
     }
 
-    constructor(data) {
+    constructor(data, { direction = 0, targets = 1 } = {}) {
         super(data);
 
+        this._spreadDirection = direction;
+        this.targetsRemaining = targets;
         this._setup(data);
-        this._addParticles(data.particlesSetting);
+        if (targets > 1) this.setTint(0xffca85);
+        const particles = targets > 1 && data.particlesSetting
+            ? { ...data.particlesSetting, tint: [0xffa337, 0xffda77, 0xfff1bb], lifespan: { min: 110, max: 320 } }
+            : data.particlesSetting;
+        this._addParticles(particles);
+        if (data.emissionDepth !== undefined) {
+            this.setDepth(data.emissionDepth).setAlpha(0);
+            this._emitter?.setDepth(data.emissionDepth);
+            this._emergeTween = this.scene.tweens.add({ targets: this, alpha: 1, duration: 90 });
+        }
 
         this.once(LIFECYCLE_EVENTS.DESTROY, () => this._onKilled());
     }
@@ -32,7 +49,7 @@ export class Fire extends MovableObject {
             return;
         }
 
-        this._playLaunchSound();
+        if (this._spreadDirection !== 1) this._playLaunchSound();
         this.body.setAccelerationX(this.acceleration);
 
         switch (this.texture.key) {
@@ -64,6 +81,7 @@ export class Fire extends MovableObject {
 
     _fireMove() {
         this.body.setVelocityX(this.velocity * 0.3);
+        this.body.setVelocityY(this.velocity * CAMPAIGN_SKILL_BALANCE.doubleFireSpread * this._spreadDirection);
     }
 
     async _rocketMove() {
@@ -122,6 +140,7 @@ export class Fire extends MovableObject {
     }
 
     _onKilled() {
+        this._emergeTween?.stop();
         this._emitter?.destroy();
     }
 }

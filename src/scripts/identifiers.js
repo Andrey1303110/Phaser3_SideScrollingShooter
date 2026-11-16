@@ -52,6 +52,8 @@ export const TEXTURE_KEYS = Object.freeze({
     ROCKET: "rocket",
     RUBY: "ruby",
     SCALE: "scale",
+    SKILL_ICONS: "skill_icons",
+    SKILL_PREVIEW_BG: "skill_preview_bg",
     SKOBEEVA: "skobeeva",
     STRATEGIC_JET: "strategic_jet",
     SUN: "sun",
@@ -158,6 +160,8 @@ export const TEXT_KEYS = Object.freeze({
 
 export const STORAGE_KEYS = Object.freeze({
     AUTO_FIRE_ENABLED: "autoFireEnabled",
+    CAMPAIGN_EXPERIENCE_BONUS: "campaignExperienceBonus",
+    CAMPAIGN_SKILL_BRANCH: "campaignSkillBranch",
     CURRENT_LEVEL_PLAYER: "currentLevelPlayer",
     CURRENT_LEVEL_SCENE: "currentLevelScene",
     FIRE_BUTTON_OPACITY: "fireButtonOpacity",

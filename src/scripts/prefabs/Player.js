@@ -5,6 +5,7 @@ import { EVENTS } from "../constants";
 import { config } from "../main";
 import { Fires } from "./Fires";
 import { MovableObject } from "./MovableObject";
+import { CAMPAIGN_SKILL_BALANCE } from '../campaignSkills';
 
 const PLAYER_TEXTURE_NAME = TEXTURE_KEYS.DRAGON;
 const ANIMATION_NAME = ANIMATION_KEYS.FLY;
@@ -60,7 +61,13 @@ export class Player extends MovableObject {
     shooting() {
         if (!this.active || !this.scene || this._controlsStopped || this.scene._blackBG) return;
         if ((this.scene.model.autoFireEnabled || this.scene.cursors.space.isDown || this.scene.fireButton?.active) && !this._firesActivate) {
-            this.fires.createFire(this);
+            if (this.scene.fireSkillTier > 0) {
+                const targets = this.scene.fireSkillTier >= 2 ? CAMPAIGN_SKILL_BALANCE.piercingTargets : 1;
+                this.fires.createFire(this, { direction: -1, targets });
+                this.fires.createFire(this, { direction: 1, targets });
+            } else {
+                this.fires.createFire(this);
+            }
             this._firesActivate = true;
 
             this._reloadTimer = this.scene.time.addEvent({

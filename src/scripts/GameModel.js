@@ -1,6 +1,7 @@
 import { STORAGE_KEYS, STORAGE_PREFIXES, TEXTURE_KEYS } from './identifiers';
 import { StorageService } from "./StorageService";
 import { CAMPAIGN_LEVELS, LEVEL_HI_SCORES_SEPARATOR, PLAYER, UPGRADE_MULTIPLIER, WEAPONS } from "./constants";
+import { CAMPAIGN_SKILL_BRANCHES, CAMPAIGN_SKILL_MISSIONS } from './campaignSkills';
 
 const ABILITY_PREFIX = STORAGE_PREFIXES.PLAYER_ABILITY_LEVEL_;
 const CASUALTIES_PREFIX = STORAGE_PREFIXES.CASUALTIES_;
@@ -17,6 +18,9 @@ export class GameModel {
         this.currentLevelScene = StorageService.get(STORAGE_KEYS.CURRENT_LEVEL_SCENE, 1, Number);
         this.currentLevelPlayer = StorageService.get(STORAGE_KEYS.CURRENT_LEVEL_PLAYER, 1, Number);
         this.totalScore = StorageService.get(STORAGE_KEYS.TOTAL_SCORE, 0, Number);
+        this._campaignExperienceBonus = StorageService.get(STORAGE_KEYS.CAMPAIGN_EXPERIENCE_BONUS, 0, Number);
+        const savedBranch = StorageService.get(STORAGE_KEYS.CAMPAIGN_SKILL_BRANCH, '');
+        this._campaignSkillBranch = Object.hasOwn(CAMPAIGN_SKILL_BRANCHES, savedBranch) ? savedBranch : '';
         this.hiScores = StorageService.get(STORAGE_KEYS.HI_SCORES, '', String);
         this.unlimHiScores = StorageService.get(STORAGE_KEYS.UNLIM_HI_SCORES, 0, Number);
         this.money = StorageService.get(STORAGE_KEYS.MONEY, 0, Number);
@@ -81,9 +85,35 @@ export class GameModel {
         StorageService.set(STORAGE_KEYS.MONEY, this.money);
     }
   
-    addTotalScore(amount) {
-        this.totalScore += amount;
-        this.setTotalScore(this.totalScore);
+    addTotalScore(amount, experienceMultiplier = 1) {
+        this.setTotalScore(this.totalScore + amount);
+        if (experienceMultiplier > 1) {
+            this._campaignExperienceBonus += amount * (experienceMultiplier - 1);
+            StorageService.set(STORAGE_KEYS.CAMPAIGN_EXPERIENCE_BONUS, this._campaignExperienceBonus);
+        }
+    }
+
+    get campaignExperience() {
+        return this.totalScore + this._campaignExperienceBonus;
+    }
+
+    get campaignSkillBranch() {
+        return this._campaignSkillBranch;
+    }
+
+    get campaignSkillTier() {
+        return CAMPAIGN_SKILL_MISSIONS.filter(mission => this.currentLevelScene > mission).length;
+    }
+
+    get canChooseCampaignSkillBranch() {
+        return this.campaignSkillTier > 0 && !this.campaignSkillBranch;
+    }
+
+    chooseCampaignSkillBranch(branch) {
+        if (!this.canChooseCampaignSkillBranch || !Object.hasOwn(CAMPAIGN_SKILL_BRANCHES, branch)) return false;
+        this._campaignSkillBranch = branch;
+        StorageService.set(STORAGE_KEYS.CAMPAIGN_SKILL_BRANCH, branch);
+        return true;
     }
 
     setTotalScore(value) {
@@ -166,6 +196,10 @@ export class GameModel {
     resetProgress() {
         this.initSceneLevel();
         this.initPlayerLevel();
+        this._campaignSkillBranch = '';
+        this._campaignExperienceBonus = 0;
+        StorageService.set(STORAGE_KEYS.CAMPAIGN_SKILL_BRANCH, '');
+        StorageService.set(STORAGE_KEYS.CAMPAIGN_EXPERIENCE_BONUS, 0);
         this.initMoney();
         this.initHiScores();
         this.initCasualties();

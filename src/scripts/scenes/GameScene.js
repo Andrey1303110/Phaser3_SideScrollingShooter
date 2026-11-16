@@ -8,7 +8,9 @@ import { SCENE_NAMES, DEPTH_LAYERS, EVENTS, JOYSTICK_GAP, JOYSTICK_RADIUS, LEVEL
 import { CommonScene } from './CommonScene';
 import { UI, uiUnit, uiText, createButton } from '../ui';
 import { HealthBar } from '../classes/HealthBar';
-import { getFontName, screenData, tweenPromise } from '../Utils';
+import { getFontName, getSceneTexts, screenData, tweenPromise } from '../Utils';
+import { BRANCH, CAMPAIGN_SKILL_BALANCE as SKILLS, CAMPAIGN_SKILL_MISSIONS } from '../campaignSkills';
+import { animateSkillBurst, dragonMouth, drawSkillBeam, drawSkillShield } from '../skillEffects';
 
 export class GameScene extends CommonScene {
     constructor() {
@@ -26,6 +28,14 @@ export class GameScene extends CommonScene {
         this._currentScore = 0;
         this._blackBG = null;
         this.debugFPSText = null;
+        this._offerBranch = false;
+        const branch = this.info.isUnlim ? '' : this.model.campaignSkillBranch;
+        const tier = this.model.campaignSkillTier;
+        this.fireSkillTier = branch === BRANCH.FIRE ? tier : 0;
+        this._survivalSkillTier = branch === BRANCH.SURVIVAL ? tier : 0;
+        this._vampirismKills = 0;
+        this._shield = null;
+        this._beamTimer = null;
     }
 
     create(data) {
@@ -41,6 +51,7 @@ export class GameScene extends CommonScene {
         this._createPauseButton();
         this._createExpProgressBar();
         this._createFPSDebugText();
+        this._createCampaignSkillHud();
 
         this._setupEvents();
         this._setupOverlapping();
@@ -52,6 +63,7 @@ export class GameScene extends CommonScene {
         this._player.move();
         this._player.shooting();
         this._updateHealthBarPosition();
+        this._updateCampaignSkillHud();
         this._updateFPSDebugText(this.game.loop.actualFps);
     }
     
@@ -243,50 +255,56 @@ export class GameScene extends CommonScene {
     }
 
     _onOverlap(source, target) {
-        if (!source.active || !target.active) return;
+        if (this._blackBG || !source.active || !target.active) return;
         // Arcade may supply group members before the individual player object.
         if (target === this._player) [source, target] = [target, source];
         if (target.x > config.width + target.displayWidth * 0.25) {
             return;
         }
 
-        if (source !== this._player && target !== this._player) {
-            if (!this.info?.isUnlim) {
-                let casualtiesName = target.texture.key;
-
-                if (target.texture.key === ENEMIES.STRATEGIC_JET.texture) {
-                    casualtiesName = ENEMIES.JET.texture;
-                } else if (target.texture.key === WEAPONS.MISSILE_2.texture) {
-                    casualtiesName = WEAPONS.MISSILE.texture;
-                }
-
-                this.model.increaseCasualties(casualtiesName);
-            }
-
-            const reward = Number((target.reward * Math.pow(LEVEL_SCORE_MULTIPLIER, this._currentLevelScene - 1)).toFixed(0));
-            this._currentScore += reward;
-
-            if (!this.info?.isUnlim) {
-                this.model.addTotalScore(reward);
-            }
-            this.scoreText.text = this._currentScore;
-            this._updateExpProgressBar();
-        }
-
         if (source === this._player) {
             this._onPlayerHit(source, target);
         } else {
-            source.setAlive(false);
+            if (this.fireSkillTier >= 2) {
+                animateSkillBurst(this, target.x, target.y, target.displayWidth * 0.21, 0xffc76a, SKILLS.beamFadeMs, DEPTH_LAYERS.UI);
+            }
+            if (--source.targetsRemaining === 0) source.setAlive(false);
+            this._onTargetHit(target);
         }
+        this._destroyTarget(target);
+    }
 
+    _onTargetHit(target) {
+        const reward = Number((target.reward * Math.pow(LEVEL_SCORE_MULTIPLIER, this._currentLevelScene - 1)).toFixed(0));
+        this._currentScore += reward;
+        this.scoreText.text = this._currentScore;
+        if (!this.info.isUnlim) {
+            let casualtiesName = target.texture.key;
+            if (casualtiesName === ENEMIES.STRATEGIC_JET.texture) casualtiesName = ENEMIES.JET.texture;
+            if (casualtiesName === WEAPONS.MISSILE_2.texture) casualtiesName = WEAPONS.MISSILE.texture;
+            this.model.increaseCasualties(casualtiesName);
+            this.model.addTotalScore(reward, this._survivalSkillTier >= 3 ? SKILLS.experienceMultiplier : 1);
+            this._updateExpProgressBar();
+        }
+        if (this._survivalSkillTier >= 2 && this._enemies.contains(target)) this._countVampirismKill();
+    }
+
+    _destroyTarget(target) {
         const { x, y } = target;
-        target.setAlive(false);
         this.sounds.explosion_small.play();
         Boom.generate(this, x, y);
+        target.setAlive(false);
     }
 
     _onPlayerHit(source, target) {
-        const damage = this._enemies.children.contains(target) ? this._player.maxHealth : target.damage;
+        const aircraft = this._enemies.contains(target);
+        if (!aircraft && this._shield?.visible) {
+            this._shield.setVisible(false);
+            animateSkillBurst(this, target.x, target.y, this._player.displayWidth * 0.48,
+                0x77e7ff, SKILLS.healFadeMs, DEPTH_LAYERS.UI + 1);
+            return;
+        }
+        const damage = aircraft ? this._player.maxHealth : target.damage;
         const shakeMagnitude = damage * 2 / this._player.maxHealth * 0.05;
         const duration = TIMING.GAME_SCENE.ON_PLAYER_HIT_DURATION_MS;
         const color = [255, 0, 0];
@@ -299,6 +317,88 @@ export class GameScene extends CommonScene {
 
         if (this._player.currentHealth <= 0) {
             source.setAlive(false);
+        }
+    }
+
+    _createCampaignSkillHud() {
+        const u = uiUnit();
+        this._skillTexts = getSceneTexts(this, 'Skills');
+        this._skillHud = null;
+        if (this._survivalSkillTier > 0) {
+            const shield = this.add.graphics().setPosition(this._player.x, this._player.y).setDepth(DEPTH_LAYERS.UI);
+            drawSkillShield(shield, 0, 0, this._player.displayWidth + 16 * u, this._player.displayHeight + 12 * u, 0.87);
+            this.tweens.add({ targets: shield, alpha: 0.65, duration: 800, yoyo: true, repeat: -1, ease: 'Sine.InOut' });
+            this._shield = shield;
+            this._player.once(Phaser.GameObjects.Events.DESTROY, () => shield.destroy());
+        }
+        if (this.fireSkillTier >= 3) {
+            this._beamTimer = this.time.addEvent({
+                delay: SKILLS.beamIntervalMs,
+                loop: true,
+                callback: () => this._fireBeam(),
+            });
+        }
+        if (this._beamTimer || this._survivalSkillTier >= 2) {
+            this._skillHud = this.add.text((screenData.left + screenData.right) / 2,
+                screenData.bottom - 16 * u, '', uiText(UI.type.caption, UI.colors.accent))
+                .setOrigin(0.5, 1).setDepth(DEPTH_LAYERS.UI);
+            this._updateCampaignSkillHud();
+        }
+    }
+
+    _updateCampaignSkillHud() {
+        this._shield?.setPosition(this._player.x, this._player.y);
+        if (!this._skillHud) return;
+        let text = this._beamTimer
+            ? this._skillTexts.BEAM_TIMER.replace('{seconds}', Math.ceil(this._beamTimer.getRemaining() / 1000))
+            : this._skillTexts.VAMPIRISM_COUNTER.replace('{count}', this._vampirismKills).replace('{total}', SKILLS.vampirismKills);
+        if (this._survivalSkillTier >= 3) text += '   ·   ' + this._skillTexts.XP_SHORT + ' ×2';
+        this._skillHud.setText(text);
+    }
+
+    _countVampirismKill() {
+        if (++this._vampirismKills < SKILLS.vampirismKills) return;
+        this._vampirismKills = 0;
+        const player = this._player;
+        if (player.currentHealth >= player.maxHealth) return;
+        player.currentHealth = Math.min(player.maxHealth, player.currentHealth + player.maxHealth * SKILLS.vampirismHealFraction);
+        this._healthBar.updateHealthBar(true);
+        animateSkillBurst(this, player.x, player.y, player.displayWidth * 0.54, 0x83eaa4, SKILLS.healFadeMs, DEPTH_LAYERS.UI + 1);
+    }
+
+    _fireBeam() {
+        if (this._blackBG || !this._player.active) return;
+        const { x, y } = dragonMouth(this._player);
+        const width = screenData.right - x;
+        if (width <= 0) return;
+        const band = new Phaser.Geom.Rectangle(x, y - SKILLS.beamWidth / 2, width, SKILLS.beamWidth);
+        const beam = this.add.graphics().setDepth(this._player.depth - 0.1);
+        const state = { progress: 0 };
+        const draw = () => {
+            if (!this._player.active) { beam.clear(); return; }
+            const { x, y } = dragonMouth(this._player);
+            const width = screenData.right - x;
+            const alpha = 1 - state.progress;
+            beam.clear();
+            drawSkillBeam(beam, x, y, width, SKILLS.beamWidth, alpha);
+            for (let index = 0; index < 12; index++) {
+                const sparkX = x + width * (index + 1) / 13;
+                const away = (index % 2 === 0 ? -1 : 1) * SKILLS.beamWidth * (0.25 + state.progress);
+                beam.lineStyle(2, 0xffcd77, alpha * 0.75).lineBetween(sparkX, y + away, sparkX + 15 * alpha, y + away);
+            }
+        };
+        draw();
+        this.sounds.fire_launch.play({ volume: 0.42 });
+        this.tweens.add({ targets: state, progress: 1, duration: SKILLS.beamFadeMs,
+            onUpdate: draw, onComplete: () => beam.destroy() });
+        for (const target of [...this._enemies.fires.getChildren(), ...this._enemies.getChildren()]) {
+            if (this._blackBG) break;
+            if (!target.active || !target.body) continue;
+            const body = target.body;
+            if (body.right <= band.left || body.left >= band.right || body.bottom <= band.top || body.top >= band.bottom) continue;
+            animateSkillBurst(this, target.x, target.y, target.displayWidth * 0.25, 0xffbb64, SKILLS.healFadeMs, DEPTH_LAYERS.UI);
+            this._onTargetHit(target);
+            this._destroyTarget(target);
         }
     }
 
@@ -354,6 +454,7 @@ export class GameScene extends CommonScene {
 
         if (this.model.currentLevelScene <= this._currentLevelScene) {
             this.model.increaseSceneLevel();
+            this._offerBranch = this._currentLevelScene === CAMPAIGN_SKILL_MISSIONS[0] && this.model.canChooseCampaignSkillBranch;
         }
     }
 
@@ -381,8 +482,11 @@ export class GameScene extends CommonScene {
             ease: 'Linear',
             duration,
             onComplete: () => {
+                if (this._offerBranch) {
+                    this.scene.start(SCENE_NAMES.UPGRADE, { showSkills: true, fromCampaign: true });
+                    return;
+                }
                 this.scene.start(this.info?.isUnlim ? SCENE_NAMES.MAIN_MENU : SCENE_NAMES.CAMPAIGN);
-                this.scene.stop();
             },
         });
     }
@@ -442,16 +546,12 @@ export class GameScene extends CommonScene {
         }
 
         let score = this._calculateScore();
-        let currentProgress = (this.model.totalScore - score.start)/score.diff;
-        
-        if (this.model.currentLevelPlayer < 2) {
-            currentProgress = this.model.totalScore/score.diff;
-        } 
-        
+        const experience = this.model.campaignExperience;
+        let currentProgress = (experience - score.start) / score.diff;
         while (currentProgress >= 1) {
             this._increaseLevel();
             score = this._calculateScore();
-            currentProgress = (this.model.totalScore - score.start) / score.diff;
+            currentProgress = (experience - score.start) / score.diff;
         }
 
         const fill = this._progressExpBar.fillProgress;
