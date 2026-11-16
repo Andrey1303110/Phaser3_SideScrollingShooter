@@ -10,6 +10,14 @@ const STATS = {
     velocity: TEXT_KEYS.VELOCITY_TITLE, scale: TEXT_KEYS.SCALE_TITLE,
 };
 
+// Match the dominant colors of the corresponding icon textures.
+const UPGRADE_COLORS = {
+    health: 0xee000d,
+    reload: 0x9cdd05,
+    velocity: 0xffdc45,
+    scale: 0x0291f7,
+};
+
 export class UpgradeScene extends CommonScene {
     constructor() { super(SCENE_NAMES.UPGRADE); }
 
@@ -49,12 +57,18 @@ export class UpgradeScene extends CommonScene {
         const height = Math.max(52 * u, Math.min(64 * u, (screenData.height - 116 * u - gap * 3) / 4));
         this.buttons = {};
         this.statsText = {};
+        this._upgradeEffects = {};
         Object.entries(STATS).forEach(([key, title], index) => {
             const y = top + index * (height + gap);
             const panel = this.add.graphics().fillStyle(UI.colors.panel).lineStyle(u, UI.colors.border, 0.8);
             panel.fillRoundedRect(left, y, width, height, UI.radius * u)
                 .strokeRoundedRect(left, y, width, height, UI.radius * u);
-            this.add.image(left + 24 * u, y + height / 2, key).setDisplaySize(24 * u, 24 * u);
+            const color = UPGRADE_COLORS[key];
+            const highlight = this.add.graphics().fillStyle(color, 0.3).lineStyle(3 * u, color)
+                .fillRoundedRect(left, y, width, height, UI.radius * u)
+                .strokeRoundedRect(left, y, width, height, UI.radius * u).setAlpha(0);
+            const icon = this.add.image(left + 24 * u, y + height / 2, key).setDisplaySize(24 * u, 24 * u);
+            this._upgradeEffects[key] = { highlight, icon };
             const textWidth = width - 144 * u;
             this.add.text(left + 48 * u, y + height / 2 - 10 * u, this._getText(title), {
                 ...uiText(UI.type.body), wordWrap: { width: textWidth },
@@ -117,7 +131,43 @@ export class UpgradeScene extends CommonScene {
         this._cooldown = true;
         this.sounds.upgrade.play({ volume: 0.2 });
         this._refresh();
-        this.tweens.add({ targets: button.root, alpha: { from: 0.65, to: 1 }, duration: TIMING.UPGRADE_SCENE.UPGRADE_DURATION_MS });
+        this._playUpgradeEffect(key);
         this.time.delayedCall(TIMING.UPGRADE_SCENE.UPGRADE_DELAY_MS, () => { this._cooldown = false; this._refresh(); });
+    }
+
+    _playUpgradeEffect(key) {
+        const u = this._unit;
+        const { highlight, icon } = this._upgradeEffects[key];
+        const color = UPGRADE_COLORS[key];
+        const textColor = '#' + color.toString(16).padStart(6, '0');
+        const stats = this.statsText[key];
+        const pulseDuration = TIMING.UPGRADE_SCENE.UPGRADE_DURATION_MS;
+        const effectDuration = TIMING.UPGRADE_SCENE.EFFECT_DURATION_MS;
+        this.tweens.add({ targets: highlight, alpha: { from: 1, to: 0 },
+            duration: effectDuration, ease: 'Sine.In' });
+        this.tweens.add({ targets: icon, scaleX: icon.scaleX * 1.25, scaleY: icon.scaleY * 1.25,
+            duration: pulseDuration, yoyo: true, ease: 'Sine.InOut' });
+        stats.setColor(textColor);
+        this.tweens.add({ targets: stats, alpha: { from: 0.75, to: 1 }, duration: effectDuration,
+            onComplete: () => stats.setColor(UI.colors.muted) });
+
+        // Pulse the preview without interrupting its idle flight animation.
+        this.tweens.add({ targets: this._player, scaleX: this._player.scaleX * 1.08,
+            scaleY: this._player.scaleY * 1.08, duration: pulseDuration, yoyo: true, ease: 'Sine.InOut' });
+        const x = this._player.x;
+        const y = this._player.y;
+        const radius = Math.min(72 * u, this._player.displayWidth * 0.45);
+        const ring = this.add.circle(x, y, radius, color, 0.1).setStrokeStyle(4 * u, color);
+        this.tweens.add({ targets: ring, scale: { from: 0.55, to: 1.25 }, alpha: { from: 1, to: 0 },
+            duration: effectDuration, ease: 'Sine.In', onComplete: () => ring.destroy() });
+        for (let index = 0; index < 12; index++) {
+            const angle = index * Math.PI / 6;
+            const dx = Math.cos(angle) * radius;
+            const dy = Math.sin(angle) * radius * 0.8;
+            const spark = this.add.circle(x + dx * 0.4, y + dy * 0.4, 4.5 * u, color);
+            this.tweens.add({ targets: spark, x: x + dx, y: y + dy,
+                scale: 0.2, alpha: 0, duration: effectDuration, ease: 'Cubic.Out',
+                onComplete: () => spark.destroy() });
+        }
     }
 }

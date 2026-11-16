@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.6.1
+
+- Added a card highlight, icon pulse and a sparkling dragon effect when applying an upgrade.
+- Made upgrade effects brighter and matched their colors to the icons: red health, lime reload, yellow speed and blue fire size.
+
 ## 1.6.0
 
 - Stopped automatically playing briefings when opening completed mission cards.

@@ -92,6 +92,7 @@ export const TIMING = Object.freeze({
         RENDER_FRAME_RATE_FPS: 8,
         RENDER_DURATION_MS: 1300,
         UPGRADE_DURATION_MS: 220,
+        EFFECT_DURATION_MS: 650,
         UPGRADE_DELAY_MS: 1000,
     }),
     CAMPAIGN_MAP: Object.freeze({
