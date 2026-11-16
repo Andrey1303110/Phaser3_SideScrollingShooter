@@ -1,8 +1,9 @@
 import { TIMING } from '../timing';
 import { CACHE_KEYS, INPUT_EVENTS, SOUND_KEYS, TEXTURE_KEYS } from '../identifiers';
 import { screenData, setEndpoints, tweenPromise } from '../Utils';
-import { FONTS, SCENE_NAMES } from '../constants';
+import { SCENE_NAMES } from '../constants';
 import { config } from '../main';
+import { uiText } from '../ui';
 import { CommonScene } from './CommonScene';
 
 export class BootScene extends CommonScene {
@@ -57,8 +58,7 @@ export class BootScene extends CommonScene {
 
     _createPressLabel() {
         const textStyle = {
-            font: `${config.width * 0.035}px ${FONTS[TEXTURE_KEYS.ENG]}`,
-            fill: '#f0f0f0',
+            ...uiText(22), align: 'center', wordWrap: { width: screenData.width * 0.85 },
         };
         
         const text = this.scene.scene.cache.json.get(CACHE_KEYS.INITIAL_TEXTS)['Press'];
@@ -68,7 +68,7 @@ export class BootScene extends CommonScene {
 
         return tweenPromise(this, {
             targets: label,
-            alpha: 0.5,
+            alpha: 0.85,
             ease: 'Linear',
             duration: TIMING.BOOT_SCENE.CREATE_PRESS_LABEL_DURATION_MS,
             onComplete,
@@ -81,7 +81,7 @@ export class BootScene extends CommonScene {
 
         this.tweens.add({
             targets: label,
-            scale: 1.15,
+            scale: 1.05,
             alpha: 1,
             ease: 'Linear',
             duration: TIMING.BOOT_SCENE.LAUNCH_PRESS_LABEL_CTA_DURATION_MS,

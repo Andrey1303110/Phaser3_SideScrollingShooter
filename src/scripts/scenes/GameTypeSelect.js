@@ -19,6 +19,7 @@ export class GameTypeSelect extends CommonScene {
     init() {
         super.init();
         this._transitioning = false;
+        this._cardsEntered = false;
     }
 
     create() {
@@ -29,7 +30,7 @@ export class GameTypeSelect extends CommonScene {
             setEndpoints();
             this.tweens.killAll();
             this.children.removeAll(true);
-            this._build(false);
+            this._build(!this._cardsEntered);
         };
         this.scale.on(LIFECYCLE_EVENTS.RESIZE, resize);
         this.events.once(LIFECYCLE_EVENTS.SHUTDOWN, () => this.scale.off(LIFECYCLE_EVENTS.RESIZE, resize));
@@ -49,7 +50,7 @@ export class GameTypeSelect extends CommonScene {
             0x102323, 0.88).setOrigin(0);
         this._createHero(left, actionX - left - 24 * u);
 
-        const cardHeight = Math.min(72 * u, (screenData.height - 120 * u) / 3);
+        const cardHeight = Math.min(88 * u, (screenData.height - 120 * u) / 3);
         const stackHeight = cardHeight * 3 + 20 * u;
         const top = screenData.top + (screenData.height - 64 * u - stackHeight) / 2;
         ACTIONS.forEach((action, index) => {
@@ -57,10 +58,18 @@ export class GameTypeSelect extends CommonScene {
                 actionWidth, cardHeight, action);
             this._buttons.push(button);
             if (animate) {
+                // Set the initial state before the stagger delay to avoid a visible flash.
+                const targetX = button.x;
+                const targetY = button.y;
+                button.setAlpha(0).setScale(0.96).setPosition(targetX + 32 * u, targetY + 12 * u);
+                button.hitArea.input.enabled = false;
                 this.tweens.add({
-                    targets: button, alpha: { from: 0, to: 1 },
-                    y: { from: button.y + 12 * u, to: button.y },
+                    targets: button, alpha: 1, scale: 1, x: targetX, y: targetY,
                     duration: TIMING.GAME_TYPE_SELECT.BUILD_DURATION_MS, delay: index * TIMING.GAME_TYPE_SELECT.CARD_STAGGER_MS, ease: 'Cubic.Out',
+                    onComplete: () => {
+                        button.hitArea.input.enabled = true;
+                        if (index === ACTIONS.length - 1) this._cardsEntered = true;
+                    },
                 });
             }
         });
@@ -71,10 +80,10 @@ export class GameTypeSelect extends CommonScene {
         const u = this._unit;
         const top = screenData.top + 26 * u;
         this.add.rectangle(left, top + 6 * u, 20 * u, 2 * u, 0xe0b36b).setOrigin(0, 0.5);
-        this.add.text(left + 30 * u, top, this._getText(TEXT_KEYS.TAGLINE), {
-            fontFamily: 'Arial', fontSize: 11 * u, fontStyle: 'bold', color: '#dfbe87',
+        const tagline = this.add.text(left + 30 * u, top, this._getText(TEXT_KEYS.TAGLINE), {
+            fontFamily: 'Arial', fontSize: UI.type.caption * u, fontStyle: 'bold', color: '#dfbe87', wordWrap: { width: width - 30 * u },
         });
-        const title = this.add.text(left - 2 * u, top + 24 * u, 'INVADERS\nMUST DIE', {
+        const title = this.add.text(left - 2 * u, tagline.getBounds().bottom + 12 * u, 'INVADERS\nMUST DIE', {
             fontFamily: 'Arial', fontSize: Math.min(44 * u, width * 0.145),
             fontStyle: 'bold', color: '#f6edda', lineSpacing: -2 * u,
         });
@@ -118,20 +127,25 @@ export class GameTypeSelect extends CommonScene {
                 .strokeRoundedRect(0, 0, width, height, UI.radius * u);
         };
         draw(false);
-        const title = this.add.text(64 * u, 13 * u, this._getText(action.text), {
+        const title = this.add.text(58 * u, 0, this._getText(action.text), {
             fontFamily: 'Arial', fontSize: UI.type.section * u,
-            fontStyle: 'bold', color: '#f6f1e4',
+            fontStyle: 'bold', color: '#f6f1e4', wordWrap: { width: width - 90 * u },
         });
         const campaignCaption = this.model.currentLevelScene > CAMPAIGN_LEVELS.length
             ? this._getText(TEXT_KEYS.CAMPAIGN_DONE)
             : this._getText(TEXT_KEYS.MISSION_HINT)
                 .replace('{level}', this.model.currentLevelScene)
                 .replace('{total}', CAMPAIGN_LEVELS.length);
-        const caption = this.add.text(64 * u, 40 * u,
+        const caption = this.add.text(58 * u, 0,
             action.primary ? campaignCaption : this._getText(action.caption), {
-                fontFamily: 'Arial', fontSize: 13 * u,
-                color: action.primary ? '#d4e8d0' : '#a8bcb5',
+                fontFamily: 'Arial', fontSize: UI.type.caption * u,
+                color: action.primary ? '#d4e8d0' : '#c1d1c9', wordWrap: { width: width - 90 * u },
             });
+        const showCaption = title.height + caption.height + 16 * u <= height;
+        caption.setVisible(showCaption);
+        const textHeight = title.height + (showCaption ? caption.height + 4 * u : 0);
+        title.y = (height - textHeight) / 2;
+        caption.y = title.y + title.height + 4 * u;
         const arrow = this.add.graphics().lineStyle(1.8 * u, 0xd4e1d1, 0.8);
         arrow.beginPath().moveTo(width - 24 * u, height / 2 - 5 * u)
             .lineTo(width - 19 * u, height / 2).lineTo(width - 24 * u, height / 2 + 5 * u).strokePath();
@@ -197,13 +211,13 @@ export class GameTypeSelect extends CommonScene {
             }));
         }
         const wallet = this.add.text(screenData.right - screenData.width * 0.055, y, this.model.money, {
-            fontFamily: 'Arial', fontSize: 15 * u, fontStyle: 'bold', color: '#f1deae',
+            fontFamily: 'Arial', fontSize: UI.type.button * u, fontStyle: 'bold', color: '#f1deae',
         }).setOrigin(1, 0.5);
         const rubyX = wallet.getBounds().left - 16 * u;
         this.add.image(rubyX, y, TEXTURE_KEYS.RUBY).setDisplaySize(18 * u, 18 * u);
         this.add.text(rubyX - 24 * u, y,
             this._getText(TEXT_KEYS.PLAYER_LEVEL).replace('{level}', this.model.currentLevelPlayer), {
-                fontFamily: 'Arial', fontSize: 13 * u, color: '#9db6a8',
+                fontFamily: 'Arial', fontSize: UI.type.caption * u, color: '#9db6a8',
             }).setOrigin(1, 0.5);
     }
 

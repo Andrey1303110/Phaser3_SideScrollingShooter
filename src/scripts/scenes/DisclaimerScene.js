@@ -1,7 +1,8 @@
 import { TIMING } from '../timing';
-import { CACHE_KEYS, INPUT_EVENTS, SOUND_KEYS, TEXTURE_KEYS } from '../identifiers';
-import { delayInMSec, screenData, tweenPromise } from '../Utils';
-import { FONTS, SCENE_NAMES } from '../constants';
+import { CACHE_KEYS, INPUT_EVENTS, LIFECYCLE_EVENTS, SOUND_KEYS } from '../identifiers';
+import { delayInMSec, screenData, setEndpoints, tweenPromise } from '../Utils';
+import { SCENE_NAMES } from '../constants';
+import { uiText, uiUnit } from '../ui';
 import { config } from '../main';
 import { CommonScene } from './CommonScene';
 
@@ -11,8 +12,15 @@ export class DisclaimerScene extends CommonScene {
     }
 
     async create() {
+        setEndpoints();
         this._createBg();
         this._createSounds();
+        const resize = () => { setEndpoints(); this._layoutText(); };
+        this.scale.on(LIFECYCLE_EVENTS.RESIZE, resize);
+        this.events.once(LIFECYCLE_EVENTS.SHUTDOWN, () => {
+            this.scale.off(LIFECYCLE_EVENTS.RESIZE, resize);
+            this._textLabel?.clearMask(true);
+        });
         await this._createTextLabel();
         await delayInMSec(this.scene, TIMING.DISCLAIMER_SCENE.CREATE_DELAY_MS);
         await this._createPressLabel();
@@ -33,14 +41,24 @@ export class DisclaimerScene extends CommonScene {
     _createTextLabel() {
         const text = this.scene.scene.cache.json.get(CACHE_KEYS.INITIAL_TEXTS)['Disclaimer'];
         this._textLabel = this.add.text(this.scene.scene.cameras.main.midPoint.x, this.scene.scene.cameras.main.midPoint.y - config.width * 0.035, text, {
-            font: `${config.width * 0.0225}px ${FONTS[TEXTURE_KEYS.ENG]}`,
-            fill: '#d9d9d9',
+            ...uiText(18, '#f3eddd'),
             align: 'center',
         }).setOrigin(0.5).setAlpha(0);
+        this._maskShape = this.add.graphics().setVisible(false);
+        this._textLabel.setMask(this._maskShape.createGeometryMask());
+        this._layoutText();
+        this._scrollOffset = 0;
+        const inside = pointer => pointer.y >= this._viewTop && pointer.y < this._viewBottom;
+        this.input.on('wheel', (pointer, objects, dx, dy) => {
+            if (inside(pointer)) this._scrollText(dy * uiUnit());
+        });
+        this.input.on(INPUT_EVENTS.POINTERMOVE, pointer => {
+            if (pointer.isDown && inside(pointer)) this._scrollText(pointer.prevPosition.y - pointer.y);
+        });
 
         return tweenPromise(this, {
             targets: this._textLabel,
-            alpha: 0.85,
+            alpha: 1,
             ease: 'Linear',
             duration: TIMING.DISCLAIMER_SCENE.CREATE_TEXT_LABEL_DURATION_MS,
         });
@@ -48,17 +66,17 @@ export class DisclaimerScene extends CommonScene {
 
     _createPressLabel() {
         const textStyle = {
+            ...uiText(20, '#ffcf87'),
             align: 'center',
-            font: `${config.width * 0.035}px ${FONTS[TEXTURE_KEYS.ENG]}`,
-            fill: '#C40000',
         };
         
         const text = this.scene.scene.cache.json.get(CACHE_KEYS.INITIAL_TEXTS)['DisclaimerPress'];
         this._pressLabel = this.add.text(config.width * 0.5, screenData.bottom - config.width * 0.01, text, textStyle).setOrigin(0.5, 1).setAlpha(0);
+        this._layoutText();
 
         return tweenPromise(this, {
             targets: this._pressLabel,
-            alpha: 0.5,
+            alpha: 1,
             ease: 'Linear',
             duration: TIMING.DISCLAIMER_SCENE.CREATE_PRESS_LABEL_DURATION_MS,
             onComplete: () => this._playCTA(),
@@ -68,8 +86,7 @@ export class DisclaimerScene extends CommonScene {
     _playCTA() {
         return tweenPromise(this, {
             targets: this._pressLabel,
-            scale: 1.15,
-            alpha: 1,
+            alpha: 0.8,
             ease: 'Linear',
             duration: TIMING.DISCLAIMER_SCENE.PLAY_CTA_DURATION_MS,
             repeat: -1,
@@ -105,7 +122,30 @@ export class DisclaimerScene extends CommonScene {
     }
 
     _createInteractivity() {
-        this._blackBG.setInteractive();
-        this._blackBG.once(INPUT_EVENTS.POINTERDOWN, () => this._onClick());
+        this._pressLabel.setInteractive({ useHandCursor: true });
+        this._pressLabel.once(INPUT_EVENTS.POINTERDOWN, () => this._onClick());
+    }
+
+    _layoutText() {
+        if (!this._textLabel) return;
+        const u = uiUnit();
+        const center = (screenData.left + screenData.right) / 2;
+        this._viewTop = screenData.top + 16 * u;
+        this._viewBottom = screenData.bottom - 96 * u;
+        this._textLabel.setStyle(uiText(18)).setWordWrapWidth(screenData.width - 48 * u);
+        this._maskShape.clear().fillStyle(0xffffff).fillRect(screenData.left,
+            this._viewTop, screenData.width, this._viewBottom - this._viewTop);
+        this._textLabel.setX(center).setOrigin(0.5, 0);
+        this._scrollOffset = 0;
+        this._scrollText(0);
+        this._pressLabel?.setStyle(uiText(20, '#ffcf87')).setWordWrapWidth(screenData.width - 32 * u)
+            .setPosition(center, screenData.bottom - 16 * u);
+    }
+
+    _scrollText(delta) {
+        const height = this._viewBottom - this._viewTop;
+        const maxScroll = Math.max(0, this._textLabel.height - height);
+        this._scrollOffset = Phaser.Math.Clamp((this._scrollOffset || 0) + delta, 0, maxScroll);
+        this._textLabel.y = this._viewTop + Math.max(0, (height - this._textLabel.height) / 2) - this._scrollOffset;
     }
 }

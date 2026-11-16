@@ -81,7 +81,7 @@ export class CampaignScene extends CommonScene {
 
     _text(x, y, text, size = 16, color = '#f2ead8', parent = this._ui) {
         const label = this.add.text(x, y, text, {
-            fontFamily: 'Arial', fontSize: size * this._unit, color,
+            fontFamily: 'Arial', fontSize: Math.max(UI.type.caption, size) * this._unit, color,
         });
         parent.add(label);
         return label;
@@ -103,7 +103,7 @@ export class CampaignScene extends CommonScene {
         this._backButton = createBackArrow(this, { parent: this._ui, canPress: () => !this._busy });
         this._text(left + 56 * u, top + 9 * u, this._getText(TEXT_KEYS.TITLE), UI.type.title);
         const completed = Math.min(this.model.currentLevelScene - 1, CAMPAIGN_LEVELS.length);
-        this._text(left + 56 * u, top + 35 * u,
+        this._text(left + 56 * u, top + 43 * u,
             this._getText(TEXT_KEYS.PROGRESS).replace('{done}', completed).replace('{total}', CAMPAIGN_LEVELS.length), 12, '#a3b9aa');
         const wallet = this._text(screenData.right - 16 * u, top + 26 * u,
             String(this.model.money), 16, '#efd99f').setOrigin(1, 0.5);
@@ -115,7 +115,7 @@ export class CampaignScene extends CommonScene {
 
     _createLegend() {
         const u = this._unit;
-        const y = screenData.bottom - 18 * u;
+        const y = screenData.bottom - 24 * u;
         const items = [
             [TEXT_KEYS.LIBERATED, 0x8fbb95], [TEXT_KEYS.CURRENT, 0xe5ba70], [TEXT_KEYS.LOCKED, 0x718c90],
         ];
@@ -123,7 +123,8 @@ export class CampaignScene extends CommonScene {
         items.forEach(([key, color], index) => {
             const x = this._mapView.x + index * step;
             this._ui.add(this.add.circle(x + 4 * u, y, 3.5 * u, color));
-            this._text(x + 12 * u, y, this._getText(key), 12, '#a6bbae').setOrigin(0, 0.5);
+            this._text(x + 12 * u, y, this._getText(key), 16, '#c1d1c9').setOrigin(0, 0.5)
+                .setWordWrapWidth(step - 16 * u).setAlign('center');
         });
     }
 
@@ -150,20 +151,23 @@ export class CampaignScene extends CommonScene {
         this._text(p.x + p.width / 2, p.y + 24 * u,
             this._getText(TEXT_KEYS.MISSION_NUMBER).replace('{level}', level.index).replace('{total}', CAMPAIGN_LEVELS.length),
             12, '#adc4b2', root).setOrigin(0.5);
-        const title = this._text(p.x + 16 * u, p.y + 54 * u, this._getText(TEXT_KEYS.LEVEL_ + level.index + '_NAME'), UI.type.section, '#f3ead6', root);
-        title.setWordWrapWidth(p.width - 32 * u);
+        const title = this._text(p.x + p.width / 2, p.y + 54 * u, this._getText(TEXT_KEYS.LEVEL_ + level.index + '_NAME'), UI.type.section, '#f3ead6', root);
+        title.setWordWrapWidth(p.width - 32 * u).setOrigin(0.5, 0).setAlign('center');
         while (title.height > 48 * u && parseFloat(title.style.fontSize) > 16 * u) title.setFontSize(parseFloat(title.style.fontSize) - u);
         this._text(p.x + 16 * u, p.y + 104 * u,
             this._getText(!available ? TEXT_KEYS.LOCKED_HINT : completed ? TEXT_KEYS.LIBERATED : TEXT_KEYS.CURRENT)
-                .replace('{level}', level.index - 1), 12, available ? '#d8ba7e' : '#93aaa0', root);
+                .replace('{level}', level.index - 1), 16, available ? '#e4c990' : '#b5c7bd', root)
+            .setWordWrapWidth(p.width - 32 * u);
         const types = Object.values(ENEMIES).filter(enemy => enemy.entryLevel <= level.index)
             .map(enemy => this._getText(TEXT_KEYS.TYPE_ + enemy.texture.toUpperCase()));
-        this._text(p.x + 16 * u, p.y + 124 * u, types.join(' · '), UI.type.caption, '#b3c9bc', root)
-            .setWordWrapWidth(p.width - 32 * u);
-        if (p.height >= 290 * u) {
-            this._text(p.x + 16 * u, p.y + 172 * u,
+        if (p.height >= 310 * u) {
+            this._text(p.x + 16 * u, p.y + 146 * u, types.join(' · '), UI.type.caption, '#b3c9bc', root)
+                .setWordWrapWidth(p.width - 32 * u);
+        }
+        if (p.height >= 370 * u) {
+            this._text(p.x + 16 * u, p.y + 218 * u,
                 this._getText(TEXT_KEYS.TARGETS).replace('{count}', level.enemies), 14, '#d3dfd2', root);
-            this._text(p.x + 16 * u, p.y + 195 * u,
+            this._text(p.x + 16 * u, p.y + 244 * u,
                 this._getText(TEXT_KEYS.RECORD).replace('{score}', this.model.getLevelHiScore(level.index)), 14, '#a3b9ab', root);
         }
         const width = p.width - 32 * u;
@@ -178,7 +182,7 @@ export class CampaignScene extends CommonScene {
         if (this._busy) return;
         this._selected = level;
         this._render();
-        if (level.index <= this.model.currentLevelScene) await this._playBriefing(level.index);
+        if (level.index === this.model.currentLevelScene) await this._playBriefing(level.index);
     }
 
     async _startMission() {

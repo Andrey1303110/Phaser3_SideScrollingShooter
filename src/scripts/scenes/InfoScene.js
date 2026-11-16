@@ -59,7 +59,7 @@ export class InfoScene extends CommonScene {
 
         this.add.text(left + padding, top + 12 * unit, this._getText(TEXT_KEYS.TITLE), {
             ...uiText(UI.type.title),
-            wordWrap: { width: width - padding * 3 - 110 * unit },
+            wordWrap: { width: width - padding * 2 },
         });
 
         this._backButton = createBackArrow(this);
@@ -88,7 +88,7 @@ export class InfoScene extends CommonScene {
             wordWrap: { width: this._view.width - 12 * unit },
         });
         this._body = this.add.text(0, 0, '', {
-            fontFamily: 'Arial', fontSize: 17 * unit, color: COLORS.ink,
+            fontFamily: 'Arial', fontSize: UI.type.body * unit, color: COLORS.ink,
             wordWrap: { width: this._view.width - 12 * unit }, lineSpacing: 5 * unit,
         });
         this._content.add([this._heading, this._body]);
@@ -100,11 +100,12 @@ export class InfoScene extends CommonScene {
             '←', () => this._selectSection((this._selectedSection + SECTIONS.length - 1) % SECTIONS.length));
         this._createTouchButton(left + width - padding - buttonHeight / 2, footerY, buttonHeight, buttonHeight,
             '→', () => this._selectSection((this._selectedSection + 1) % SECTIONS.length));
-        this._pageLabel = this.add.text(left + width / 2, footerY - 9 * unit, '', {
+        this._pageLabel = this.add.text(left + width / 2, footerY - 16 * unit, '', {
             fontFamily: 'Arial', fontSize: 16 * unit, color: COLORS.ink,
         }).setOrigin(0.5);
-        this.add.text(left + width / 2, footerY + 11 * unit, this._getText(TEXT_KEYS.FOOTER), {
-            fontFamily: 'Arial', fontSize: 12 * unit, color: COLORS.muted,
+        this.add.text(left + width / 2, footerY + 9 * unit, this._getText(TEXT_KEYS.FOOTER), {
+            fontFamily: 'Arial', fontSize: UI.type.caption * unit, color: COLORS.muted, align: 'center',
+            wordWrap: { width: width - padding * 2 - 112 * unit },
         }).setOrigin(0.5);
     }
 

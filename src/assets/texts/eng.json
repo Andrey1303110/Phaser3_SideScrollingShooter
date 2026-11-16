@@ -116,7 +116,7 @@
         "TITLE": "Upgrades",
         "HEALTH_TITLE": "Health",
         "RELOAD_TITLE": "Reload time (ms)",
-        "VELOCITY_TITLE": "Fire speed (px/s)",
+        "VELOCITY_TITLE": "Speed (m/s)",
         "SCALE_TITLE": "Fire size (%)",
         "LEVEL_TEXT": "Lvl. ",
         "BOTTOM_DESCRIPTION": "Each upgrade improves its stat by {percent}%."

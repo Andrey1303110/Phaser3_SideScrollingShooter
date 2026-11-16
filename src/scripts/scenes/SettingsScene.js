@@ -48,11 +48,11 @@ export class SettingsScene extends CommonScene {
 
         const columnWidth = (width - 56 * u) / 2;
         const columnX = [left + UI.padding * u, left + width / 2 + 12 * u];
-        const gap = (height - 110 * u) / 3;
-        const rowY = index => top + 52 * u + gap * index;
+        const gap = (height - 120 * u) / 3;
+        const rowY = index => top + 58 * u + gap * index;
         [TEXT_KEYS.SOUND, TEXT_KEYS.FPS, TEXT_KEYS.LANGUAGE].forEach((key, index) => {
             this.add.text(columnX[0], rowY(index), this._getText(key), {
-                ...uiText(15),
+                ...uiText(UI.type.body),
             });
         });
         const controlX = columnX[0] + columnWidth / 2;
@@ -71,7 +71,7 @@ export class SettingsScene extends CommonScene {
                 rowY(2) + 40 * u, buttonWidth, lang === TEXTURE_KEYS.UKR ? 'УКР' : TEXT_KEYS.ENG,
                 () => this._changeLanguage(lang), this.model.lang === lang ? 0x367c4b : 0x526b70);
         }
-        this.add.text(columnX[1], rowY(0), this._getText(TEXT_KEYS.AUTO_FIRE), uiText(15));
+        this.add.text(columnX[1], rowY(0), this._getText(TEXT_KEYS.AUTO_FIRE), uiText(UI.type.body));
         this._autoFireButton = this._button(columnX[1] + columnWidth / 2, rowY(0) + 40 * u,
             columnWidth, this._getText(this.model.autoFireEnabled ? TEXT_KEYS.ON : TEXT_KEYS.OFF), () => {
                 this.model.setAutoFireEnabled(!this.model.autoFireEnabled);
@@ -99,10 +99,12 @@ export class SettingsScene extends CommonScene {
 
     _createOpacitySlider(x, y, width, textKey, value, onChange) {
         const u = this._unit;
-        this.add.text(x, y, this._getText(textKey), uiText(UI.type.caption));
+        this.add.text(x, y, this._getText(textKey), {
+            ...uiText(UI.type.caption), wordWrap: { width: width - 54 * u },
+        });
         const valueText = this.add.text(x + width, y, '', uiText(UI.type.caption, UI.colors.accent))
             .setOrigin(1, 0);
-        const trackY = y + 36 * u;
+        const trackY = y + 46 * u;
         const trackX = x + 10 * u;
         const trackWidth = width - 20 * u;
         const track = this.add.graphics();

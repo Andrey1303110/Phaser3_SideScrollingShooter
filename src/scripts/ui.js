@@ -3,7 +3,7 @@ import { screenData } from './Utils';
 
 export const UI = {
     font: 'Arial',
-    type: { title: 24, section: 20, body: 17, button: 16, caption: 13, dialogue: 23 },
+    type: { title: 28, section: 22, body: 18, button: 18, caption: 16, dialogue: 23 },
     dialogueButtonSize: 64,
     buttonHeight: 44,
     gap: 12,
@@ -21,7 +21,8 @@ export const UI = {
 export const uiUnit = () => screenData.width / document.body.clientWidth;
 
 export function uiText(size = UI.type.body, color = UI.colors.text) {
-    return { fontFamily: UI.font, fontSize: size * uiUnit(), color };
+    return { fontFamily: UI.font, fontSize: size * uiUnit(), color,
+        resolution: Math.max(1, (window.devicePixelRatio || 1) / uiUnit()) };
 }
 
 export function createButton(scene, { x, y, width, height = UI.buttonHeight * uiUnit(), text,
@@ -31,7 +32,9 @@ export function createButton(scene, { x, y, width, height = UI.buttonHeight * ui
     const root = scene.add.container(x, y);
     if (parent) parent.add(root);
     const background = scene.add.graphics();
-    const label = scene.add.text(0, 0, text, uiText(fontSize)).setOrigin(0.5);
+    const label = scene.add.text(0, 0, text, {
+        ...uiText(fontSize), align: 'center', padding: { top: 2 * u, bottom: 2 * u },
+    }).setOrigin(0.5);
     const hitArea = scene.add.zone(0, 0, width, height).setInteractive({ useHandCursor: true });
     root.add([background, label, hitArea]);
     let pointerId = null;
@@ -45,8 +48,13 @@ export function createButton(scene, { x, y, width, height = UI.buttonHeight * ui
         label.setColor(enabled ? UI.colors.text : UI.colors.disabledText);
     };
     const fit = () => {
-        label.setFontSize(fontSize * u);
-        if (label.width > width - 24 * u) label.setFontSize(fontSize * u * (width - 24 * u) / label.width);
+        // Wrap localized labels first; never shrink a button into unreadable text.
+        label.setWordWrapWidth(width - 16 * u, true).setFontSize(fontSize * u);
+        const minimum = Math.min(fontSize, UI.type.caption) * u;
+        while ((label.width > width - 12 * u || label.height > height - 4 * u)
+            && parseFloat(label.style.fontSize) > minimum) {
+            label.setFontSize(Math.max(minimum, parseFloat(label.style.fontSize) - u));
+        }
     };
     const control = {
         root, background, label, hitArea,

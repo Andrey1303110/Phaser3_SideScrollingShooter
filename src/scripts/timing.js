@@ -69,8 +69,8 @@ export const TIMING = Object.freeze({
         INCREASE_LEVEL_DURATION_MS: 500,
     }),
     GAME_TYPE_SELECT: Object.freeze({
-        BUILD_DURATION_MS: 280,
-        CARD_STAGGER_MS: 60,
+        BUILD_DURATION_MS: 480,
+        CARD_STAGGER_MS: 100,
         CREATE_HERO_FRAME_RATE_FPS: 8,
         CREATE_HERO_DURATION_MS: 1300,
         GAME_SELECT_DURATION_MS: 140,

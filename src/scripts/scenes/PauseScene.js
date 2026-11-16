@@ -61,7 +61,7 @@ export class PauseScene extends CommonScene {
         const context = this._info.isUnlim ? this._getText(TEXT_KEYS.SURVIVAL)
             : `${this._getText(TEXT_KEYS.CAMPAIGN)} · ${this._getText(TEXT_KEYS.LEVEL)} ${this._info.index}`;
         const subtitle = this.add.text(0, -height / 2 + 52 * unit, context, {
-            ...uiText(UI.type.caption, UI.colors.muted),
+            ...uiText(UI.type.caption, UI.colors.muted), align: 'center', wordWrap: { width: width - 32 * unit },
         }).setOrigin(0.5, 0);
         this._panel.add([title, subtitle]);
 

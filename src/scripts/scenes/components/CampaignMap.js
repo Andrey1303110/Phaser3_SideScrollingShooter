@@ -38,7 +38,7 @@ export class CampaignMap extends Phaser.GameObjects.Container {
             }
             if (chosen) marker.add(scene.add.circle(0, 0, 19 * u).setStrokeStyle(u, 0xf3e7cb, 0.8));
             if (completed) {
-                const flag = scene.add.image(0, 2 * u, TEXTURE_KEYS.FLAG).setDisplaySize(14 * u, 22 * u).setOrigin(0.4, 0.8);
+                const flag = scene.add.image(0, 2 * u, TEXTURE_KEYS.FLAG).setDisplaySize(28 * u, 44 * u).setOrigin(0.4, 0.8);
                 marker.add(flag);
                 if (celebrate && levels.some(level => level.index === scene.model.currentLevelScene - 1)) {
                     scene.tweens.add({ targets: flag, alpha: { from: 0, to: 1 },
@@ -49,7 +49,7 @@ export class CampaignMap extends Phaser.GameObjects.Container {
                     .setStrokeStyle(1.5 * u, current ? 0xe5ba70 : available ? 0x9ac29e : 0x63848b));
             }
             if (levels.length > 1) {
-                marker.add(scene.add.text(0, -25 * u, scene._getText(TEXT_KEYS.KYIV_CLUSTER), { fontFamily: 'Arial', fontSize: 11 * u,
+                marker.add(scene.add.text(0, (completed ? -46 : -25) * u, scene._getText(TEXT_KEYS.KYIV_CLUSTER), { fontFamily: 'Arial', fontSize: 16 * u,
                     color: '#f5e9d2', backgroundColor: '#27483d', padding: { x: 4 * u, y: 2 * u } }).setOrigin(0.5));
             }
             const clustered = levels.length > 1;

@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.6.0
+
+- Stopped automatically playing briefings when opening completed mission cards.
+- Doubled the size of completed-mission flags on the campaign map.
+- Added a staggered fade, slide and scale entrance for the three main menu cards.
+- Enlarged small labels across menus, mission details, settings, upgrades and the game HUD.
+- Centered multiline button labels and wrapped long translations without shrinking below a readable size.
+- Improved text contrast and canvas text sharpness on high-density displays.
+- Made the disclaimer readable with scrolling on smaller screens.
+
 ## 1.5.4
 
 - Moved animation durations, transition delays and timer settings into a shared timing config.

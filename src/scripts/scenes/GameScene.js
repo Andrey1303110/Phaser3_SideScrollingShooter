@@ -321,8 +321,8 @@ export class GameScene extends CommonScene {
 
         this._blackBG = this.add.rectangle(config.width * 0.5, config.height * 0.5, config.width, config.height, '0x000000', 0).setInteractive().setDepth(DEPTH_LAYERS.COVER_SCREEN);
         let finalTextLabel = this.add.text(this._blackBG.x, this._blackBG.y, '', {
-            font: `${config.width * 0.03}px ${getFontName()}`,
-            fill: '#EA0000',
+            ...uiText(26, '#ffcf87'), align: 'center',
+            wordWrap: { width: screenData.width * 0.45 },
         }).setOrigin(0.5).setAlpha(0).setDepth(DEPTH_LAYERS.MAX);
 
         if (isWin) {
@@ -421,15 +421,17 @@ export class GameScene extends CommonScene {
             return;
         }
 
-        this._progressExpBar = this.add.image(this.scene.scene.cameras.main.midPoint.x, screenData.top + config.width * 0.0225, TEXTURE_KEYS.PROGRESS_BAR)
+        const u = uiUnit();
+        this._progressExpBar = this.add.image(this.scene.scene.cameras.main.midPoint.x, screenData.top + 32 * u, TEXTURE_KEYS.PROGRESS_BAR)
+            .setDisplaySize(192 * u, 45 * u)
             .setAlpha(0.95);
         this._progressExpBar.fillProgress = this.add.image(this._progressExpBar.x + this._progressExpBar.displayWidth * 0.1, this._progressExpBar.y + this._progressExpBar.displayHeight * 0.04, TEXTURE_KEYS.PROGRESS_BAR_FILL)
+            .setDisplaySize(141 * u, 17 * u)
             .setAlpha(0.95);
         
         this._progressExpBar.levelText = this.add.text(this._progressExpBar.x - this._progressExpBar.displayWidth * 0.38, this._progressExpBar.y - this._progressExpBar.displayHeight * 0.035, this.model.currentLevelPlayer, {
-            font: `${this._progressExpBar.displayHeight * 0.53}px ${getFontName()}`,
-            fill: '#FFFFFF',
-        }).setOrigin(0.5).setAlpha(0.75);
+            ...uiText(UI.type.section), fontStyle: 'bold',
+        }).setOrigin(0.5);
 
         this._updateExpProgressBar();
     }

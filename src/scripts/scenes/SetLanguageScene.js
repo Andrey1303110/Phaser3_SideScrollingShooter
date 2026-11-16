@@ -1,8 +1,9 @@
 import { TIMING } from '../timing';
 import { CACHE_KEYS, INPUT_EVENTS, SOUND_KEYS, TEXTURE_KEYS, TEXT_KEYS } from '../identifiers';
 import { delayInMSec, screenData, setEndpoints, tweenPromise } from '../Utils';
-import { FONTS, SCENE_NAMES } from '../constants';
+import { SCENE_NAMES } from '../constants';
 import { config } from '../main';
+import { uiText } from '../ui';
 import { CommonScene } from './CommonScene';
 
 export class SetLanguageScene extends CommonScene {
@@ -69,8 +70,7 @@ export class SetLanguageScene extends CommonScene {
         }
 
         const textStyle = {
-            font: `${config.width * 0.04}px ${FONTS[TEXTURE_KEYS.ENG]}`,
-            fill: '#f0f0f0',
+            ...uiText(24), align: 'center',
         };
         button.buttonText = this.add.text(button.x - config.width * 0.06, button.y, textTitle, textStyle).setScale(3).setOrigin(0.5).setAlpha(0);
     }
@@ -96,14 +96,14 @@ export class SetLanguageScene extends CommonScene {
         return Promise.all([
             tweenPromise(this, {
                 targets: [ button, button.buttonText ],
-                alpha: 0.675,
+                alpha: 1,
                 scale: 0.85,
                 ease: 'Linear',
                 duration,
             }),
             tweenPromise(this, {
                 targets: button.buttonFlag,
-                alpha: 0.675,
+                alpha: 1,
                 scale: 0.4,
                 ease: 'Linear',
                 duration,
@@ -113,8 +113,7 @@ export class SetLanguageScene extends CommonScene {
 
     _createPressLabel() {
         const textStyle = {
-            font: `${config.width * 0.035}px ${FONTS[TEXTURE_KEYS.ENG]}`,
-            fill: '#f0f0f0',
+            ...uiText(22), align: 'center', wordWrap: { width: screenData.width * 0.85 },
         };
         
         const text = this.scene.scene.cache.json.get(CACHE_KEYS.INITIAL_TEXTS)['SelectLanguage'];
@@ -122,7 +121,7 @@ export class SetLanguageScene extends CommonScene {
 
         return tweenPromise(this, {
             targets: label,
-            alpha: 0.5,
+            alpha: 0.85,
             ease: 'Linear',
             duration: TIMING.SET_LANGUAGE_SCENE.CREATE_PRESS_LABEL_DURATION_MS,
             onComplete: () => this._playLabelCTA(label),
@@ -132,7 +131,7 @@ export class SetLanguageScene extends CommonScene {
     _playLabelCTA(label) {
         this.tweens.add({
             targets: label,
-            scale: 1.15,
+            scale: 1.05,
             alpha: 1,
             ease: 'Linear',
             duration: TIMING.SET_LANGUAGE_SCENE.PLAY_LABEL_CTA_DURATION_MS,

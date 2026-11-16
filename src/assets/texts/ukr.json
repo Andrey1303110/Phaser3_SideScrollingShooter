@@ -116,7 +116,7 @@
         "TITLE": "Покращення",
         "HEALTH_TITLE": "Здоров’я",
         "RELOAD_TITLE": "Перезаряджання (мс)",
-        "VELOCITY_TITLE": "Вогонь (пікс/с)",
+        "VELOCITY_TITLE": "Швидкість (м/с)",
         "SCALE_TITLE": "Розмір вогню (%)",
         "LEVEL_TEXT": "Рів.",
         "BOTTOM_DESCRIPTION": "Кожне покращення змінює характеристику на {percent}%."

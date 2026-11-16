@@ -41,12 +41,12 @@ export class UpgradeScene extends CommonScene {
             String(this.model.money), uiText(UI.type.button, UI.colors.accent)).setOrigin(1, 0.5);
         this._moneyIcon = this.add.image(this._moneyValueText.getBounds().left - 16 * u,
             screenData.top + 24 * u, TEXTURE_KEYS.RUBY).setDisplaySize(18 * u, 18 * u);
-        const compact = screenData.height / u < 320;
+        const compact = screenData.height / u <= 360;
         const left = screenData.left + screenData.width * 0.33;
         const width = screenData.right - left - 16 * u;
         const top = screenData.top + (compact ? 54 : 62) * u;
         const gap = (compact ? 4 : 8) * u;
-        const height = Math.max(44 * u, Math.min(56 * u, (screenData.height - 116 * u - gap * 3) / 4));
+        const height = Math.max(52 * u, Math.min(64 * u, (screenData.height - 116 * u - gap * 3) / 4));
         this.buttons = {};
         this.statsText = {};
         Object.entries(STATS).forEach(([key, title], index) => {
@@ -55,10 +55,11 @@ export class UpgradeScene extends CommonScene {
             panel.fillRoundedRect(left, y, width, height, UI.radius * u)
                 .strokeRoundedRect(left, y, width, height, UI.radius * u);
             this.add.image(left + 24 * u, y + height / 2, key).setDisplaySize(24 * u, 24 * u);
-            const name = this.add.text(left + 48 * u, y + 4 * u, this._getText(title), uiText());
-            const textWidth = width - 148 * u;
-            if (name.width > textWidth) name.setFontSize(UI.type.body * u * textWidth / name.width);
-            this.statsText[key] = this.add.text(left + 48 * u, y + 25 * u, '', uiText(UI.type.caption, UI.colors.muted));
+            const textWidth = width - 144 * u;
+            this.add.text(left + 48 * u, y + height / 2 - 10 * u, this._getText(title), {
+                ...uiText(UI.type.body), wordWrap: { width: textWidth },
+            }).setOrigin(0, 0.5);
+            this.statsText[key] = this.add.text(left + 48 * u, y + height / 2 + 13 * u, '', uiText(UI.type.caption, UI.colors.muted)).setOrigin(0, 0.5);
             const button = createButton(this, {
                 x: left + width - 44 * u, y: y + height / 2, width: 76 * u, text: '',
                 variant: 'primary', onPress: () => this._upgrade(key),
