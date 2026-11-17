@@ -1,6 +1,98 @@
-{"frames":[
-    {"filename":"1", "frame":{"x":0,"y":66,"w":225,"h":52},"rotated":false,"trimmed":false,"spriteSourceSize":{"x":0,"y":0,"w":225,"h":52},"sourceSize":{"w":225,"h":52}},
-    {"filename":"2", "frame":{"x":0,"y":119,"w":225,"h":51},"rotated":false,"trimmed":false,"spriteSourceSize":{"x":0,"y":0,"w":225,"h":51},"sourceSize":{"w":225,"h":51}},
-    {"filename":"3", "frame":{"x":0,"y":0,"w":225,"h":65},"rotated":false,"trimmed":false,"spriteSourceSize":{"x":0,"y":0,"w":225,"h":65},"sourceSize":{"w":225,"h":65}},
-    {"filename":"4", "frame":{"x":0,"y":171,"w":225,"h":49},"rotated":false,"trimmed":false,"spriteSourceSize":{"x":0,"y":0,"w":225,"h":49},"sourceSize":{"w":225,"h":49}}],
-"meta":{"app":"https://www.leshylabs.com/apps/sstool/","version":"Leshy SpriteSheet Tool v0.8.4","image":"jet.png","size":{"w":225,"h":220},"scale":1}}
+{
+  "frames": [
+    {
+      "filename": "1",
+      "frame": {
+        "x": 0,
+        "y": 132,
+        "w": 450,
+        "h": 104
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 450,
+        "h": 104
+      },
+      "sourceSize": {
+        "w": 450,
+        "h": 104
+      }
+    },
+    {
+      "filename": "2",
+      "frame": {
+        "x": 0,
+        "y": 238,
+        "w": 450,
+        "h": 102
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 450,
+        "h": 102
+      },
+      "sourceSize": {
+        "w": 450,
+        "h": 102
+      }
+    },
+    {
+      "filename": "3",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 450,
+        "h": 130
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 450,
+        "h": 130
+      },
+      "sourceSize": {
+        "w": 450,
+        "h": 130
+      }
+    },
+    {
+      "filename": "4",
+      "frame": {
+        "x": 0,
+        "y": 342,
+        "w": 450,
+        "h": 98
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 450,
+        "h": 98
+      },
+      "sourceSize": {
+        "w": 450,
+        "h": 98
+      }
+    }
+  ],
+  "meta": {
+    "app": "https://www.leshylabs.com/apps/sstool/",
+    "version": "Leshy SpriteSheet Tool v0.8.4",
+    "image": "jet.png",
+    "size": {
+      "w": 450,
+      "h": 440
+    },
+    "scale": "2"
+  }
+}

@@ -1,20 +1,21 @@
 import { LIFECYCLE_EVENTS } from '../identifiers';
-// Hub coordinates are local pixels in each helicopter atlas frame.
+import { ACTOR_ART_DENSITY } from '../actorArt';
+// Hub coordinates in logical pixels; the atlas uses twice this resolution.
 const ROTORS = {
     '1': [
-        { x: 72, y: 12, radius: 66, depth: 4, blades: 3, speed: 42 },
-        { x: 72, y: 21, radius: 64, depth: 4, blades: 3, speed: -42 },
+        { x: 73, y: 7, radius: 62, depth: 3, blades: 3, speed: 42 },
+        { x: 73, y: 22, radius: 64, depth: 3, blades: 3, speed: -42 },
     ],
     '2': [
-        { x: 78, y: 10, radius: 77, depth: 4, blades: 5, speed: 42 },
-        { x: 181, y: 22, radius: 9, depth: 9, blades: 3, speed: 66 },
+        { x: 77, y: 5, radius: 65, depth: 3, blades: 3, speed: 42 },
+        { x: 77, y: 20, radius: 67, depth: 3, blades: 3, speed: -42 },
     ],
     '3': [
-        { x: 62, y: 6, radius: 79, depth: 4, blades: 5, speed: 42 },
-        { x: 185, y: 16, radius: 9, depth: 9, blades: 3, speed: 66 },
+        { x: 68, y: 5, radius: 66, depth: 3, blades: 5, speed: 42 },
+        { x: 187, y: 19, radius: 9, depth: 9, blades: 3, speed: 66 },
     ],
     '4': [
-        { x: 64, y: 7, radius: 70, depth: 4, blades: 5, speed: 42 },
+        { x: 64, y: 8, radius: 64, depth: 3, blades: 5, speed: 42 },
         { x: 169, y: 13, radius: 8, depth: 8, blades: 4, speed: 66 },
     ],
 };
@@ -43,16 +44,16 @@ export class HelicopterRotors extends Phaser.GameObjects.Graphics {
         this._elapsed += delta / 1000;
         this.setPosition(helicopter.x, helicopter.y)
             .setRotation(helicopter.rotation)
-            .setScale(helicopter.scaleX * (helicopter.flipX ? -1 : 1),
-                helicopter.scaleY * (helicopter.flipY ? -1 : 1))
+            .setScale(helicopter.scaleX * ACTOR_ART_DENSITY * (helicopter.flipX ? -1 : 1),
+                helicopter.scaleY * ACTOR_ART_DENSITY * (helicopter.flipY ? -1 : 1))
             .setAlpha(helicopter.alpha)
             .setVisible(helicopter.visible)
             .setDepth(helicopter.depth + 0.01);
         this.clear();
 
         for (const rotor of ROTORS[helicopter.frame.name]) {
-            const x = rotor.x - helicopter.displayOriginX;
-            const y = rotor.y - helicopter.displayOriginY;
+            const x = rotor.x - helicopter.displayOriginX / ACTOR_ART_DENSITY;
+            const y = rotor.y - helicopter.displayOriginY / ACTOR_ART_DENSITY;
             this.fillStyle(0xbac9c7, 0.16);
             this.fillEllipse(x, y, rotor.radius * 2, rotor.depth * 2);
             this.lineStyle(1.5, 0x35433f, 0.75);

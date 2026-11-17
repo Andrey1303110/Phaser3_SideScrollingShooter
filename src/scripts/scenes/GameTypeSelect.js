@@ -105,7 +105,8 @@ export class GameTypeSelect extends CommonScene {
             });
         }
         this._dragon = this.add.sprite(x, y, TEXTURE_KEYS.DRAGON, FRAME_KEYS.DRAGON1)
-            .setScale(dragonWidth / 153).play(ANIMATION_KEYS.MENU_FLY);
+            .play(ANIMATION_KEYS.MENU_FLY);
+        this._dragon.setScale(dragonWidth / this._dragon.width);
         this.tweens.add({
             targets: this._dragon, y: y - 4 * u, duration: TIMING.GAME_TYPE_SELECT.CREATE_HERO_DURATION_MS,
             yoyo: true, repeat: -1, ease: 'Sine.InOut',

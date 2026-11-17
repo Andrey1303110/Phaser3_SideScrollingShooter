@@ -1,6 +1,98 @@
-{"frames":[
-    {"filename":"1","frame":{"x":0,"y":0,"w":165,"h":84},"rotated":false,"trimmed":false,"spriteSourceSize":{"x":0,"y":0,"w":165,"h":84},"sourceSize":{"w":165,"h":84}},
-    {"filename":"2","frame":{"x":0,"y":85,"w":190,"h":66},"rotated":false,"trimmed":false,"spriteSourceSize":{"x":0,"y":0,"w":190,"h":66},"sourceSize":{"w":190,"h":66}},
-    {"filename":"3","frame":{"x":0,"y":152,"w":204,"h":64},"rotated":false,"trimmed":false,"spriteSourceSize":{"x":0,"y":0,"w":204,"h":64},"sourceSize":{"w":204,"h":64}},
-    {"filename":"4","frame":{"x":0,"y":218,"w":180,"h":59},"rotated":false,"trimmed":false,"spriteSourceSize":{"x":0,"y":0,"w":180,"h":59},"sourceSize":{"w":180,"h":59}}],
-"meta":{"app":"https://www.leshylabs.com/apps/sstool/","version":"Leshy SpriteSheet Tool v0.8.4","image":"helicopter.png","size":{"w":210,"h":285},"scale":1}}
+{
+  "frames": [
+    {
+      "filename": "1",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 330,
+        "h": 168
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 330,
+        "h": 168
+      },
+      "sourceSize": {
+        "w": 330,
+        "h": 168
+      }
+    },
+    {
+      "filename": "2",
+      "frame": {
+        "x": 0,
+        "y": 170,
+        "w": 380,
+        "h": 132
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 380,
+        "h": 132
+      },
+      "sourceSize": {
+        "w": 380,
+        "h": 132
+      }
+    },
+    {
+      "filename": "3",
+      "frame": {
+        "x": 0,
+        "y": 304,
+        "w": 408,
+        "h": 128
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 408,
+        "h": 128
+      },
+      "sourceSize": {
+        "w": 408,
+        "h": 128
+      }
+    },
+    {
+      "filename": "4",
+      "frame": {
+        "x": 0,
+        "y": 436,
+        "w": 360,
+        "h": 118
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 360,
+        "h": 118
+      },
+      "sourceSize": {
+        "w": 360,
+        "h": 118
+      }
+    }
+  ],
+  "meta": {
+    "app": "https://www.leshylabs.com/apps/sstool/",
+    "version": "Leshy SpriteSheet Tool v0.8.4",
+    "image": "helicopter.png",
+    "size": {
+      "w": 420,
+      "h": 570
+    },
+    "scale": "2"
+  }
+}

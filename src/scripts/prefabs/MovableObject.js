@@ -1,5 +1,6 @@
 import { LIFECYCLE_EVENTS } from '../identifiers';
 import { EVENTS } from '../constants';
+import { actorArtDensity } from '../actorArt';
 
 export class MovableObject extends Phaser.GameObjects.Sprite {
     constructor(data){
@@ -11,7 +12,7 @@ export class MovableObject extends Phaser.GameObjects.Sprite {
         this.scene.add.existing(this);
         this.scene.physics.add.existing(this);
         this.body.enable = true;
-        this.setScale(data.scale ?? 1);
+        this.setScale((data.scale ?? 1) / actorArtDensity(data.texture));
 
         this.reward = data.reward;
         this.damage = data.damage;

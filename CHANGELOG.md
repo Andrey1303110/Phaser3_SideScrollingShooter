@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.8.0
+
+- Redrew the green dragon with shaded scales and more detailed wings, preserving the six flight poses, 8 FPS cadence and frame-3 wing sound.
+- Added detailed fighter, bomber and helicopter artwork at twice the original atlas resolution, keeping world sizes and collision bounds unchanged.
+- Aligned helicopter rotor overlays with the new artwork and retained the dragon's mouth emission point.
+- Extended the beam and its hit band to the visible camera edge, beyond the movement area's side margin.
+
 ## 1.7.0
 
 - Added a permanent choice between Attack and Defense after the first victory in Kharkiv. The next two skills unlock after the first victories in Vinnytsia and Dnipro.

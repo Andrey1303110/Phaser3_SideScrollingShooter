@@ -143,7 +143,8 @@ export class UpgradeScene extends CommonScene {
                 { prefix: TEXTURE_KEYS.DRAGON, start: 1, end: 6 }), frameRate: TIMING.UPGRADE_SCENE.RENDER_FRAME_RATE_FPS, repeat: -1 });
         }
         this._player = this.add.sprite(x, y, TEXTURE_KEYS.DRAGON, FRAME_KEYS.DRAGON1)
-            .setScale(Math.min(158 * u, areaWidth * 0.85, statsHeight * 0.6) / 153).play(ANIMATION_KEYS.MENU_FLY);
+            .play(ANIMATION_KEYS.MENU_FLY);
+        this._player.setScale(Math.min(158 * u, areaWidth * 0.85, statsHeight * 0.6) / this._player.width);
         this.tweens.add({ targets: this._player, y: y - 4 * u, duration: TIMING.UPGRADE_SCENE.RENDER_DURATION_MS, yoyo: true,
             repeat: -1, ease: 'Sine.InOut' });
         const texts = this._skillTexts;

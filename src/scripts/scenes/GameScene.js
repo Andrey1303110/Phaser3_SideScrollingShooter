@@ -1,4 +1,5 @@
 import { TIMING } from '../timing';
+import { ACTOR_ART_DENSITY } from '../actorArt';
 import { INPUT_EVENTS, PLUGIN_KEYS, SOUND_KEYS, TEXTURE_KEYS, TEXT_KEYS, resourceKey } from '../identifiers';
 import { config } from '../main';
 import { Player } from '../prefabs/Player';
@@ -212,7 +213,7 @@ export class GameScene extends CommonScene {
 
     _createPlayer() {
         this._player = new Player({ scene: this });
-        this._player.setScale(this.model.player.scale * GAME_ACTOR_SCALE_MULTIPLIER);
+        this._player.setScale(this.model.player.scale * GAME_ACTOR_SCALE_MULTIPLIER / ACTOR_ART_DENSITY);
         this._player.setDepth(DEPTH_LAYERS.UI);
 
         this._player.once(EVENTS.KILLED, () => this._onLevelComplete());
@@ -369,7 +370,7 @@ export class GameScene extends CommonScene {
     _fireBeam() {
         if (this._blackBG || !this._player.active) return;
         const { x, y } = dragonMouth(this._player);
-        const width = screenData.right - x;
+        const width = this.cameras.main.worldView.right - x;
         if (width <= 0) return;
         const band = new Phaser.Geom.Rectangle(x, y - SKILLS.beamWidth / 2, width, SKILLS.beamWidth);
         const beam = this.add.graphics().setDepth(this._player.depth - 0.1);
@@ -377,7 +378,7 @@ export class GameScene extends CommonScene {
         const draw = () => {
             if (!this._player.active) { beam.clear(); return; }
             const { x, y } = dragonMouth(this._player);
-            const width = screenData.right - x;
+            const width = this.cameras.main.worldView.right - x;
             const alpha = 1 - state.progress;
             beam.clear();
             drawSkillBeam(beam, x, y, width, SKILLS.beamWidth, alpha);
