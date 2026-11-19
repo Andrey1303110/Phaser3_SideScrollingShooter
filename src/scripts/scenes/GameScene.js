@@ -276,6 +276,7 @@ export class GameScene extends CommonScene {
     }
 
     _onTargetHit(target) {
+        this.model.achievements.recordHit(target.texture.key, this._enemies.contains(target), this.info.isUnlim);
         const reward = Number((target.reward * Math.pow(LEVEL_SCORE_MULTIPLIER, this._currentLevelScene - 1)).toFixed(0));
         this._currentScore += reward;
         this.scoreText.text = this._currentScore;
@@ -447,6 +448,7 @@ export class GameScene extends CommonScene {
         }
         label.text = this._getText(TEXT_KEYS.FINAL_TEXT_WIN);
 
+        this.model.achievements.recordVictory(this._player.currentHealth, this._player.maxHealth);
         if (this.model.getLevelHiScore(this._currentLevelScene) < this._currentScore) {
             const hiScores = this.model.hiScores.split(LEVEL_HI_SCORES_SEPARATOR);
             hiScores[this._currentLevelScene - 1] = this._currentScore;

@@ -10,6 +10,8 @@ import { SetLanguageScene } from './scenes/SetLanguageScene';
 import { DisclaimerScene } from './scenes/DisclaimerScene';
 import { InfoScene } from './scenes/InfoScene';
 import { SettingsScene } from './scenes/SettingsScene';
+import { AchievementsScene } from './scenes/AchievementsScene';
+import { AchievementNotice } from './scenes/AchievementNotice';
 
 export const config = {
     type: Phaser.AUTO,
@@ -33,7 +35,7 @@ export const config = {
         parent: 'gameDiv',
     },
 
-    scene: [BootScene, DisclaimerScene, SetLanguageScene, PreloadScene, GameTypeSelect, CampaignScene, GameScene, PauseScene, UpgradeScene, InfoScene, SettingsScene],
+    scene: [BootScene, DisclaimerScene, SetLanguageScene, PreloadScene, GameTypeSelect, CampaignScene, GameScene, PauseScene, UpgradeScene, InfoScene, SettingsScene, AchievementsScene, AchievementNotice],
 };
 
 export const game = new Phaser.Game(config);

@@ -2,6 +2,7 @@ import { STORAGE_KEYS, STORAGE_PREFIXES, TEXTURE_KEYS } from './identifiers';
 import { StorageService } from "./StorageService";
 import { CAMPAIGN_LEVELS, LEVEL_HI_SCORES_SEPARATOR, PLAYER, UPGRADE_MULTIPLIER, WEAPONS } from "./constants";
 import { CAMPAIGN_SKILL_BRANCHES, CAMPAIGN_SKILL_MISSIONS } from './campaignSkills';
+import { AchievementBook } from './achievements';
 
 const ABILITY_PREFIX = STORAGE_PREFIXES.PLAYER_ABILITY_LEVEL_;
 const CASUALTIES_PREFIX = STORAGE_PREFIXES.CASUALTIES_;
@@ -46,6 +47,7 @@ export class GameModel {
         this.autoFireEnabled = StorageService.get(STORAGE_KEYS.AUTO_FIRE_ENABLED, false, value => value === 'true');
         this.joystickOpacity = clampOpacity(StorageService.get(STORAGE_KEYS.JOYSTICK_OPACITY, 0.75, Number));
         this.fireButtonOpacity = clampOpacity(StorageService.get(STORAGE_KEYS.FIRE_BUTTON_OPACITY, 0.65, Number));
+        this.achievements = new AchievementBook(this);
     }
 
     static getInstance() {
@@ -58,6 +60,7 @@ export class GameModel {
     initGameData() {
         // Each field already has a default; a zero score does not mean no save exists.
         this.initAbilitiesByLevel();
+        this.achievements.refresh({ notify: false, saveCounts: true });
     }
   
     initMoney() {
@@ -113,6 +116,7 @@ export class GameModel {
         if (!this.canChooseCampaignSkillBranch || !Object.hasOwn(CAMPAIGN_SKILL_BRANCHES, branch)) return false;
         this._campaignSkillBranch = branch;
         StorageService.set(STORAGE_KEYS.CAMPAIGN_SKILL_BRANCH, branch);
+        this.achievements.refresh();
         return true;
     }
 
@@ -149,11 +153,13 @@ export class GameModel {
     increaseSceneLevel() {
         this.currentLevelScene++;
         StorageService.set(STORAGE_KEYS.CURRENT_LEVEL_SCENE, this.currentLevelScene);
+        this.achievements.refresh();
     }
 
     increasePlayerLevel() {
         this.currentLevelPlayer++;
         StorageService.set(STORAGE_KEYS.CURRENT_LEVEL_PLAYER, this.currentLevelPlayer);
+        this.achievements.refresh();
     }
 
     initPlayerLevel() {
@@ -208,6 +214,7 @@ export class GameModel {
         this.fireWeapon = { ...WEAPONS.FIRE };
         this._abilitiesInitialized = false;
         this.initAbilitiesByLevel();
+        this.achievements.reset();
     }
 
     initCasualties() {
@@ -275,6 +282,7 @@ export class GameModel {
 
         this.currentUpgradableStats[key] += 1;
         StorageService.set(`${ABILITY_PREFIX}${key}`, this.currentUpgradableStats[key]);
+        this.achievements.refresh();
     }
 
     increaseCasualties(name) {

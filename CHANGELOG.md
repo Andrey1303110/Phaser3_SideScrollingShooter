@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.9.0
+
+- Added an achievement hall to the main menu with 32 awards across five categories. Each award shows its unlock condition and progress in English or Ukrainian.
+- Added in-game notifications for newly earned awards. Achievement progress is saved between sessions, and existing saves receive credit for milestones they already track.
+
 ## 1.8.1
 
 - Added animated contra-rotating propellers to the Tu-95 and glowing jet exhaust to the other three strategic bombers. The Tu-95 uses propellers for both numeric and string atlas frame names.

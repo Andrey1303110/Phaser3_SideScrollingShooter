@@ -1,5 +1,7 @@
 {
     "MainMenu": {
+        "ACHIEVEMENTS": "Achievements",
+        "ACHIEVEMENTS_HINT": "Your collection of flight patches",
         "CAMPAIGN": "CAMPAIGN",
         "UNLIM": "UNLIM",
         "UPGRADE": "UPGRADE",
@@ -11,6 +13,65 @@
         "SURVIVAL_HINT": "Endless enemy waves",
         "UPGRADE_HINT": "Build a stronger dragon",
         "PLAYER_LEVEL": "Level {level}"
+    },
+    "Achievements": {
+        "title": "Achievement hall",
+        "unlocked": "Achievement unlocked",
+        "collected": "Earned {n} / {total}",
+        "groups": {
+            "flight": "Flight",
+            "campaign": "Campaign",
+            "endless": "Survival",
+            "workshop": "Workshop",
+            "intercepts": "Intercepts"
+        },
+        "conditions": {
+            "level": "Reach dragon level {n}.",
+            "lastBreath": "Finish a mission with less than 5% health.",
+            "mission": "Clear mission {n} · {city}.",
+            "aircraft": "Shoot down {n} aircraft in Survival.",
+            "branch": "Unlock all three abilities in one branch.",
+            "oneSkill": "Raise one stat to level {n}.",
+            "allSkills": "Raise all four stats to level {n}.",
+            "rocket": "Intercept {n} helicopter rockets.",
+            "missile": "Intercept {n} fighter missiles.",
+            "missile_2": "Intercept {n} strategic aircraft missiles."
+        },
+        "finale": "Complete all 15 campaign missions.",
+        "names": {
+            "level_20": "Licensed to Scorch",
+            "level_50": "Cloud Nine Veteran",
+            "level_100": "Crown of the Sky",
+            "lastBreath_1": "Held Together by Scales",
+            "mission_4": "Podil Night Watch",
+            "mission_8": "Wings over Rynok",
+            "mission_12": "Sparks over the Sich",
+            "mission_14": "One More Sunrise",
+            "mission_15": "The Sky Is Ours",
+            "aircraft_20": "Traffic Control",
+            "aircraft_50": "No Fly Zone",
+            "aircraft_100": "Frequent Flamer",
+            "aircraft_500": "Storm with Scales",
+            "branch_3": "Root to Crown",
+            "oneSkill_10": "Fresh from the Forge",
+            "oneSkill_20": "Anvil Apprentice",
+            "oneSkill_40": "Master of One",
+            "allSkills_10": "Four of a Kind",
+            "allSkills_20": "No Soft Spots",
+            "allSkills_40": "Perfectly Forged",
+            "rocket_20": "Return to Rotor",
+            "rocket_50": "Smoke Break",
+            "rocket_100": "Rotor Refunds",
+            "rocket_500": "Ground the Fireworks",
+            "missile_20": "Wrong Address",
+            "missile_50": "Hot Mail",
+            "missile_100": "Contrail Cutter",
+            "missile_500": "Express Cancelled",
+            "missile_2_20": "Violet Hour",
+            "missile_2_50": "Purple Raincheck",
+            "missile_2_100": "Strategy Shredder",
+            "missile_2_500": "Grand Plan, Meet Dragon"
+        }
     },
     "Settings": {
         "TITLE": "Settings",
@@ -27,7 +88,7 @@
         "RESET": "Reset progress",
         "SAVED": "Saved",
         "CONFIRM_TITLE": "Reset all progress?",
-        "CONFIRM_BODY": "Missions, experience, crystals, upgrades and records will be reset. This cannot be undone. Your settings will stay.",
+        "CONFIRM_BODY": "Missions, experience, crystals, upgrades, achievements and records will be reset. This cannot be undone. Your settings will stay.",
         "CANCEL": "Cancel",
         "RESET_DONE": "Progress reset"
     },

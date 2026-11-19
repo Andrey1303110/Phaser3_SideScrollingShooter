@@ -57,6 +57,8 @@ export class PreloadScene extends CommonScene {
     }
 
     _preloadResources() {
+        this.load.spritesheet(TEXTURE_KEYS.ACHIEVEMENT_PATCHES, './assets/sprites/achievement_patches.jpg',
+            { frameWidth: 160, frameHeight: 160 });
         this.load.image(TEXTURE_KEYS.SKILL_PREVIEW_BG, './assets/sprites/skill_preview_bg.png');
         this.load.image(TEXTURE_KEYS.SKILL_ICONS, './assets/sprites/skill_icons.png');
         CAMPAIGN_LEVELS.forEach(level => this.load.image(resourceKey.background(level.index), `./assets/sprites/bg${level.index}.png`));
@@ -78,7 +80,10 @@ export class PreloadScene extends CommonScene {
             alpha: 0,
             ease: 'Power3',
             duration: TIMING.PRELOAD_SCENE.ON_LOAD_COMPLETE_DURATION_MS,
-            onComplete: () => this.scene.start(this._destination),
+            onComplete: () => {
+                if (!this.scene.isActive(SCENE_NAMES.ACHIEVEMENT_NOTICE)) this.scene.launch(SCENE_NAMES.ACHIEVEMENT_NOTICE);
+                this.scene.start(this._destination);
+            },
         });
     }
 }

@@ -5,6 +5,8 @@ export const SCENE_NAMES = {
     SET_LANGUAGE: 'SetLanguage',
     PRELOAD: 'Preload',
     MAIN_MENU: 'MainMenu',
+    ACHIEVEMENTS: 'Achievements',
+    ACHIEVEMENT_NOTICE: 'AchievementNotice',
     INFO: 'Info',
     SETTINGS: 'Settings',
     CAMPAIGN: 'Campaign',

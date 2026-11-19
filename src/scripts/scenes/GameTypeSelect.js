@@ -9,6 +9,7 @@ const ACTIONS = [
     { text: TEXT_KEYS.CAMPAIGN, scene: SCENE_NAMES.CAMPAIGN, icon: TEXTURE_KEYS.FLAG, primary: true },
     { text: TEXT_KEYS.UNLIM, scene: SCENE_NAMES.GAME, icon: 'infinity', caption: TEXT_KEYS.SURVIVAL_HINT },
     { text: TEXT_KEYS.UPGRADE, scene: SCENE_NAMES.UPGRADE, icon: SOUND_KEYS.UPGRADE, caption: TEXT_KEYS.UPGRADE_HINT },
+    { text: TEXT_KEYS.ACHIEVEMENTS, scene: SCENE_NAMES.ACHIEVEMENTS, icon: TEXTURE_KEYS.ACHIEVEMENT_PATCHES, caption: TEXT_KEYS.ACHIEVEMENTS_HINT },
 ];
 
 export class GameTypeSelect extends CommonScene {
@@ -50,8 +51,8 @@ export class GameTypeSelect extends CommonScene {
             0x102323, 0.88).setOrigin(0);
         this._createHero(left, actionX - left - 24 * u);
 
-        const cardHeight = Math.min(88 * u, (screenData.height - 120 * u) / 3);
-        const stackHeight = cardHeight * 3 + 20 * u;
+        const cardHeight = Math.min(88 * u, (screenData.height - 120 * u) / ACTIONS.length);
+        const stackHeight = cardHeight * ACTIONS.length + (ACTIONS.length - 1) * 10 * u;
         const top = screenData.top + (screenData.height - 64 * u - stackHeight) / 2;
         ACTIONS.forEach((action, index) => {
             const button = this._createAction(actionX, top + index * (cardHeight + 10 * u),
@@ -169,6 +170,8 @@ export class GameTypeSelect extends CommonScene {
             g.lineBetween(x - 7 * u, y + 11 * u, x - 7 * u, y - 11 * u);
             g.fillStyle(0xd9e7d0).fillTriangle(x - 7 * u, y - 11 * u,
                 x + 12 * u, y - 5 * u, x - 7 * u, y + u);
+        } else if (icon === TEXTURE_KEYS.ACHIEVEMENT_PATCHES) {
+            parent.add(this.add.image(x, y, icon, 2).setDisplaySize(34 * u, 34 * u));
         } else if (icon === SOUND_KEYS.UPGRADE) {
             for (const offset of [-5, 5]) {
                 g.beginPath().moveTo(x - 9 * u, y + (offset + 3) * u)

@@ -1,5 +1,6 @@
 // Shared resource and application identifiers. Values preserve asset and save compatibility.
 export const TEXTURE_KEYS = Object.freeze({
+    ACHIEVEMENT_PATCHES: "achievement_patches",
     BUTTON: "button",
     BG: "bg",
     BG1: "bg1",
@@ -83,6 +84,8 @@ export const SOUND_KEYS = Object.freeze({
 });
 
 export const TEXT_KEYS = Object.freeze({
+    ACHIEVEMENTS: "ACHIEVEMENTS",
+    ACHIEVEMENTS_HINT: "ACHIEVEMENTS_HINT",
     ABOUT: "ABOUT",
     ADD: "ADD",
     AUTO_FIRE: "AUTO_FIRE",
@@ -159,6 +162,7 @@ export const TEXT_KEYS = Object.freeze({
 });
 
 export const STORAGE_KEYS = Object.freeze({
+    ACHIEVEMENTS: "achievements.v1",
     AUTO_FIRE_ENABLED: "autoFireEnabled",
     CAMPAIGN_EXPERIENCE_BONUS: "campaignExperienceBonus",
     CAMPAIGN_SKILL_BRANCH: "campaignSkillBranch",
