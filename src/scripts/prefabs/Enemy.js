@@ -4,6 +4,7 @@ import { ENEMIES } from "../constants";
 import { MovableObject } from "./MovableObject";
 import { HelicopterRotors } from "./HelicopterRotors";
 import { HelicopterFlight } from "./HelicopterFlight";
+import { AircraftEngines } from './AircraftEngines';
 
 export class Enemy extends MovableObject {
     static generateAttr(scene) {
@@ -34,6 +35,9 @@ export class Enemy extends MovableObject {
             this.rotors = new HelicopterRotors(this.scene, this);
         } else {
             this._addTimer();
+            if (data.texture === ENEMIES.STRATEGIC_JET.texture) {
+                this.engines = new AircraftEngines(this.scene, this);
+            }
         }
     }
 

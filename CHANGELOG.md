@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.8.1
+
+- Added animated contra-rotating propellers to the Tu-95 and glowing jet exhaust to the other three strategic bombers. The Tu-95 uses propellers for both numeric and string atlas frame names.
+
 ## 1.8.0
 
 - Redrew the green dragon with shaded scales and more detailed wings, preserving the six flight poses, 8 FPS cadence and frame-3 wing sound.
