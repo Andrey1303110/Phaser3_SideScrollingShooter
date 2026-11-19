@@ -117,7 +117,7 @@
         "MODES_BODY": "Campaign: survive waves across {levels} locations. Completing a mission unlocks the next one; completed missions can be replayed.\n\nSurvival: an endless stream of enemies. Stay alive and beat your high score. This mode does not grant campaign experience.\n\nFire destroys aircraft and intercepts missiles. Missiles drain health; colliding with an aircraft is fatal. A new attempt starts at full health.",
         "UPGRADES_TAB": "Progress",
         "UPGRADES_TITLE": "Turn points into upgrades",
-        "UPGRADES_BODY": "Destroy aircraft and missiles to score points. In the campaign, points also grant experience: each new player level gives one crystal.\n\nSpend crystals in Upgrade to increase health, fire speed or fire size, or to reduce reload time by {percent}% per upgrade. Fire speed means projectile speed, not movement speed.\n\nProgress, upgrades and records are saved locally on this device. Clearing the app data removes the save."
+        "UPGRADES_BODY": "Destroy aircraft and missiles to score points. In the campaign, points also grant experience: each new player level gives one crystal.\n\nSpend crystals in Upgrade to increase health, fire speed or fire size, or to reduce reload time by {percent}% per upgrade. Fire speed means projectile speed, not movement speed. Your dragon matures each time all four upgrades reach another ten levels.\n\nProgress, upgrades and records are saved locally on this device. Clearing the app data removes the save."
     },
     "Campaign": {
         "TITLE": "Campaign",

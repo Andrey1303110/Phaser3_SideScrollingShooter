@@ -28,6 +28,7 @@ export const TEXTURE_KEYS = Object.freeze({
     CLOUDS_SUNSET: "clouds_sunset",
     COMMANDER: "commander",
     DRAGON: "dragon",
+    DRAGON_FORMS: "dragon_forms",
     ENG: "eng",
     EXPLOSION_PARTICLE: "explosion_particle",
     FIRE: "fire",

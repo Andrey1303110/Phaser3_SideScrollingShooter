@@ -1,11 +1,11 @@
 const GOLD = 0xffbd61;
 const WHITE = 0xfff3ca;
 
-// Atlas frames are 153 × 119; tuck the emission point inside the lower lip.
+// All age forms share this lower-lip anchor in their 306 × 238 atlas frames.
 export function dragonMouth(sprite) {
     return {
-        x: sprite.x + (140 / 153 - sprite.originX) * sprite.displayWidth,
-        y: sprite.y + (76 / 119 - sprite.originY) * sprite.displayHeight,
+        x: sprite.x + (261 / 306 - sprite.originX) * sprite.displayWidth,
+        y: sprite.y + (122 / 238 - sprite.originY) * sprite.displayHeight,
     };
 }
 

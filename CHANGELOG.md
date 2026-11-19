@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.10.0
+
+- Redrew the player as a compact young dragon in level flight. Its torso tilts 45° while the muzzle points forward and the hind legs trail behind. All six wingbeats share the same face, scales and fire origin.
+- The dragon matures each time all four upgrades reach another ten levels. Horns and a copper crest develop through level 40, then the gold markings deepen with each milestone. The menu, upgrade previews and both game modes reflect the player's saved progress.
+- All ages use the same display scale and collision bounds. The finished flight animations ship as a PNG atlas with named frames.
+
 ## 1.9.0
 
 - Added an achievement hall to the main menu with 32 awards across five categories. Each award shows its unlock condition and progress in English or Ukrainian.

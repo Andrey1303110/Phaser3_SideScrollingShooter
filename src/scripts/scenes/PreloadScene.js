@@ -4,6 +4,7 @@ import { ATLAS_FILES, AUDIO_FILES, CAMPAIGN_LEVELS, IMAGE_FILES, PARALLAX_IMAGE_
 import { CommonScene } from './CommonScene';
 import { LoadingBar } from '../classes/LoadingBar';
 import { tweenPromise } from '../Utils';
+import { refreshDragonAppearance } from '../dragonAppearance';
 
 export class PreloadScene extends CommonScene {
     constructor() {
@@ -63,6 +64,7 @@ export class PreloadScene extends CommonScene {
         this.load.image(TEXTURE_KEYS.SKILL_ICONS, './assets/sprites/skill_icons.png');
         CAMPAIGN_LEVELS.forEach(level => this.load.image(resourceKey.background(level.index), `./assets/sprites/bg${level.index}.png`));
 
+        this.load.atlas(TEXTURE_KEYS.DRAGON_FORMS, './assets/sprites/dragon.png', './assets/sprites/dragon.json');
         ATLAS_FILES.forEach(name => this.load.atlas(name, `./assets/sprites/${name}.png`, `./assets/sprites/${name}.json`));
         IMAGE_FILES.forEach(name => this.load.image(name, `./assets/sprites/${name}.png`));
         PARALLAX_IMAGE_FILES.forEach(name => this.load.image(name, `./assets/sprites/${name}.png`));
@@ -75,6 +77,7 @@ export class PreloadScene extends CommonScene {
     }
 
     _onLoadComplete() {
+        refreshDragonAppearance(this);
         return tweenPromise(this.scene.scene, {
             targets: this._loadingBar.graphicsElements,
             alpha: 0,

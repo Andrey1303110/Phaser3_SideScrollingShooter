@@ -1,3 +1,4 @@
+import { refreshDragonAppearance } from '../dragonAppearance';
 import { INPUT_EVENTS, LIFECYCLE_EVENTS, SOUND_KEYS, TEXTURE_KEYS, TEXT_KEYS } from '../identifiers';
 import { CommonScene } from './CommonScene';
 import { SCENE_NAMES } from '../constants';
@@ -188,6 +189,7 @@ export class SettingsScene extends CommonScene {
         this._confirmButton = this._button(x + (buttonWidth + 12 * u) / 2, y + 74 * u,
             buttonWidth, this._getText(TEXT_KEYS.RESET), () => {
                 this.model.resetProgress();
+                refreshDragonAppearance(this);
                 this._confirmingReset = false;
                 this._status = this._getText(TEXT_KEYS.RESET_DONE);
                 this._render();

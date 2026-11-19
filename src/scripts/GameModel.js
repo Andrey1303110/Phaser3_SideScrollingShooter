@@ -100,6 +100,10 @@ export class GameModel {
         return this.totalScore + this._campaignExperienceBonus;
     }
 
+    get dragonAge() {
+        return Math.floor(Math.min(...Object.values(this.currentUpgradableStats)) / 10);
+    }
+
     get campaignSkillBranch() {
         return this._campaignSkillBranch;
     }

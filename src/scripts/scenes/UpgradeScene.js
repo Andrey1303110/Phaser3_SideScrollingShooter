@@ -6,6 +6,7 @@ import { getFontName, getSceneTexts, screenData, setEndpoints } from '../Utils';
 import { UI, uiText, createButton } from '../ui';
 import { BRANCH, CAMPAIGN_SKILL_BRANCHES, CAMPAIGN_SKILL_MISSIONS } from '../campaignSkills';
 import { coverSkillArt, renderCampaignSkillPreview } from './components/CampaignSkillPreview';
+import { refreshDragonAppearance } from '../dragonAppearance';
 
 const TREE_GOLD = 0xe2ba7e;
 const TREE_TEXT = '#f7e8cf';
@@ -409,6 +410,7 @@ export class UpgradeScene extends CommonScene {
         if (!button.active || this._cooldown) return;
         if (!this.model.decreaseMoney(button.cost)) return;
         this.model.upgradePlayerAbility(key);
+        refreshDragonAppearance(this);
         this._cooldown = true;
         this.sounds.upgrade.play({ volume: 0.2 });
         this._refresh();

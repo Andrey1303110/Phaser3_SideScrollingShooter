@@ -1,7 +1,7 @@
 {
   "frames": [
     {
-      "filename": "dragon1",
+      "filename": "age0-1",
       "frame": {
         "x": 2,
         "y": 2,
@@ -10,19 +10,19 @@
       },
       "rotated": false,
       "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
         "w": 306,
         "h": 238
-      },
-      "sourceSize": {
-        "w": 306,
-        "h": 238
       }
     },
     {
-      "filename": "dragon2",
+      "filename": "age0-2",
       "frame": {
         "x": 310,
         "y": 2,
@@ -31,19 +31,19 @@
       },
       "rotated": false,
       "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
         "w": 306,
         "h": 238
-      },
-      "sourceSize": {
-        "w": 306,
-        "h": 238
       }
     },
     {
-      "filename": "dragon3",
+      "filename": "age0-3",
       "frame": {
         "x": 618,
         "y": 2,
@@ -52,19 +52,82 @@
       },
       "rotated": false,
       "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
         "w": 306,
         "h": 238
+      }
+    },
+    {
+      "filename": "age0-4",
+      "frame": {
+        "x": 926,
+        "y": 2,
+        "w": 306,
+        "h": 238
       },
+      "rotated": false,
+      "trimmed": false,
       "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
         "w": 306,
         "h": 238
       }
     },
     {
-      "filename": "dragon4",
+      "filename": "age0-5",
+      "frame": {
+        "x": 1234,
+        "y": 2,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age0-6",
+      "frame": {
+        "x": 1542,
+        "y": 2,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age1-1",
       "frame": {
         "x": 2,
         "y": 242,
@@ -73,19 +136,19 @@
       },
       "rotated": false,
       "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
         "w": 306,
         "h": 238
-      },
-      "sourceSize": {
-        "w": 306,
-        "h": 238
       }
     },
     {
-      "filename": "dragon5",
+      "filename": "age1-2",
       "frame": {
         "x": 310,
         "y": 242,
@@ -94,19 +157,19 @@
       },
       "rotated": false,
       "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
         "w": 306,
         "h": 238
-      },
-      "sourceSize": {
-        "w": 306,
-        "h": 238
       }
     },
     {
-      "filename": "dragon6",
+      "filename": "age1-3",
       "frame": {
         "x": 618,
         "y": 242,
@@ -115,28 +178,592 @@
       },
       "rotated": false,
       "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
         "w": 306,
         "h": 238
+      }
+    },
+    {
+      "filename": "age1-4",
+      "frame": {
+        "x": 926,
+        "y": 242,
+        "w": 306,
+        "h": 238
       },
+      "rotated": false,
+      "trimmed": false,
       "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age1-5",
+      "frame": {
+        "x": 1234,
+        "y": 242,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age1-6",
+      "frame": {
+        "x": 1542,
+        "y": 242,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age2-1",
+      "frame": {
+        "x": 2,
+        "y": 482,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age2-2",
+      "frame": {
+        "x": 310,
+        "y": 482,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age2-3",
+      "frame": {
+        "x": 618,
+        "y": 482,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age2-4",
+      "frame": {
+        "x": 926,
+        "y": 482,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age2-5",
+      "frame": {
+        "x": 1234,
+        "y": 482,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age2-6",
+      "frame": {
+        "x": 1542,
+        "y": 482,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age3-1",
+      "frame": {
+        "x": 2,
+        "y": 722,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age3-2",
+      "frame": {
+        "x": 310,
+        "y": 722,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age3-3",
+      "frame": {
+        "x": 618,
+        "y": 722,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age3-4",
+      "frame": {
+        "x": 926,
+        "y": 722,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age3-5",
+      "frame": {
+        "x": 1234,
+        "y": 722,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age3-6",
+      "frame": {
+        "x": 1542,
+        "y": 722,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age4-1",
+      "frame": {
+        "x": 2,
+        "y": 962,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age4-2",
+      "frame": {
+        "x": 310,
+        "y": 962,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age4-3",
+      "frame": {
+        "x": 618,
+        "y": 962,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age4-4",
+      "frame": {
+        "x": 926,
+        "y": 962,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age4-5",
+      "frame": {
+        "x": 1234,
+        "y": 962,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age4-6",
+      "frame": {
+        "x": 1542,
+        "y": 962,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age5-1",
+      "frame": {
+        "x": 2,
+        "y": 1202,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age5-2",
+      "frame": {
+        "x": 310,
+        "y": 1202,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age5-3",
+      "frame": {
+        "x": 618,
+        "y": 1202,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age5-4",
+      "frame": {
+        "x": 926,
+        "y": 1202,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age5-5",
+      "frame": {
+        "x": 1234,
+        "y": 1202,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age5-6",
+      "frame": {
+        "x": 1542,
+        "y": 1202,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
         "w": 306,
         "h": 238
       }
     }
   ],
   "meta": {
-    "app": "https://www.codeandweb.com/texturepacker",
-    "version": "1.0",
     "image": "dragon.png",
     "format": "RGBA8888",
     "size": {
-      "w": 926,
-      "h": 482
+      "w": 1850,
+      "h": 1442
     },
-    "scale": "2",
-    "smartupdate": "$TexturePacker:SmartUpdate:5d9f7da4e999ce4e29af370841e176ba:1f991f66cc9bbf8323cb511dd2d5fe18:581e962efa07d1f36d42214f5f5ec489$"
+    "scale": "2"
   }
 }
