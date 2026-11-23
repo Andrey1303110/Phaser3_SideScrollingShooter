@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.10.2
+
+- Refined the landmarks in the first eight campaign panoramas, including Odesa's opera house, Kharkiv's Derzhprom and Lviv's Rynok Square.
+- Added the Central Park entrance arch, the Roshen fountain and School No. 2 to the Vinnytsia waterfront panorama.
+
 ## 1.10.1
 
 - Fix briefing autoplay sound, fires sound stopping
