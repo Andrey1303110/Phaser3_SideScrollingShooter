@@ -182,7 +182,7 @@ export class CampaignScene extends CommonScene {
         const offset = sideBySide ? (width + 8 * u) / 2 : 0;
         this._briefingButton = this._button(root, center - offset, p.y + p.height - (sideBySide ? 28 : 80) * u,
             width, 44 * u, this._getText(this._lastBriefingLevel === level.index ? TEXT_KEYS.REPLAY_BRIEFING : TEXT_KEYS.BRIEFING),
-            () => this._playBriefing(level.index, true), available);
+            () => this._playBriefing(level.index), available);
         this._startButton = this._button(root, center + offset, p.y + p.height - 28 * u,
             width, 44 * u, this._getText(available ? TEXT_KEYS.START : TEXT_KEYS.LOCKED), () => this._startMission(), available, true);
     }
@@ -203,22 +203,19 @@ export class CampaignScene extends CommonScene {
             UI.type.caption, '#e4c990', root).setWordWrapWidth(p.width - 32 * u);
     }
 
-    async _selectMission(level) {
+    _selectMission(level) {
         if (this._busy) return;
         this._selected = level;
         this._render();
-        if (level.index === this.model.currentLevelScene) await this._playBriefing(level.index);
     }
 
-    async _startMission() {
+    _startMission() {
         if (this._busy || this._selected.index > this.model.currentLevelScene) return;
-        const level = this._selected;
-        if (await this._playBriefing(level.index)) this._gameStart(level);
+        this._gameStart(this._selected);
     }
 
-    async _playBriefing(index, force = false) {
+    async _playBriefing(index) {
         if (this._busy) return false;
-        if (!force && this._lastBriefingLevel === index) return true;
         this._busy = true;
         this._closeModal();
         try {

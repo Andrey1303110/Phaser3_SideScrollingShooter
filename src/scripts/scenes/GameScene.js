@@ -228,10 +228,7 @@ export class GameScene extends CommonScene {
             return;
         }
         this.sounds = {
-            rocket_launch: this.sound.add(SOUND_KEYS.ROCKET_LAUNCH),
             fire_launch: this.sound.add(SOUND_KEYS.FIRE_LAUNCH),
-            missile_launch: this.sound.add(SOUND_KEYS.MISSILE_LAUNCH),
-            missile_2_launch: this.sound.add(SOUND_KEYS.MISSILE_2_LAUNCH),
             explosion_small: this.sound.add(SOUND_KEYS.EXPLOSION_SMALL),
             wings: this.sound.add(SOUND_KEYS.WINGS),
             level_up: this.sound.add(SOUND_KEYS.LEVEL_UP),

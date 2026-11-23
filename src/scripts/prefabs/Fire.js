@@ -72,11 +72,13 @@ export class Fire extends MovableObject {
         this.body.setVelocityX(sourceVelocity);
         this.body.setMaxSpeed(Math.abs(maxSpeed));
 
-        this._sound = this.scene.sounds[sound];
+        if (this.texture.key !== WEAPONS.FIRE.texture) {
+            this._projectileSound = this.scene.sound.add(sound);
+        }
     }
 
     _playLaunchSound() {
-        this._sound.play();
+        (this._projectileSound ?? this.scene.sounds.fire_launch).play();
     }
 
     _fireMove() {
@@ -140,6 +142,7 @@ export class Fire extends MovableObject {
     }
 
     _onKilled() {
+        this._projectileSound?.destroy();
         this._emergeTween?.stop();
         this._emitter?.destroy();
     }

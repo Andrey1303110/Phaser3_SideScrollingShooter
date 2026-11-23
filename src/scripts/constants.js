@@ -71,8 +71,8 @@ export const UPGRADE_MULTIPLIER = 0.04;
 export const JOYSTICK_RADIUS = 90;
 export const JOYSTICK_GAP = 35;
 export const LEVEL_REQUIRED_SCORE = 1000;
-export const LEVEL_SCORE_MULTIPLIER = 1.225;
-export const LEVEL_REQUIRED_SCORE_MULTIPLIER = 1.3;
+export const LEVEL_SCORE_MULTIPLIER = 1.25;
+export const LEVEL_REQUIRED_SCORE_MULTIPLIER = 1.275;
 
 export const PLAYER = {
     maxHealth: 100,

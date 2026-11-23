@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.10.1
+
+- Fix briefing autoplay sound, fires sound stopping
+- Increase exp gain
+
 ## 1.10.0
 
 - Redrew the player as a compact young dragon in level flight. Its torso tilts 45° while the muzzle points forward and the hind legs trail behind. All six wingbeats share the same face, scales and fire origin.
