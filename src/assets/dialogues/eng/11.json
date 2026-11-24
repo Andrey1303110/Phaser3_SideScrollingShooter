@@ -7,6 +7,13 @@
         "text": "Donetsk on the horizon. The dragon has gone quiet. I am short on words myself."
     },
     {
+        "image": "president",
+        "voice": "Edward",
+        "language": "en",
+        "audio": false,
+        "text": "A woman from Donetsk wrote to me. She’s moved three times over the years. She still carries her house key in her pocket."
+    },
+    {
         "image": "chief_commander",
         "voice": "Daniel",
         "language": "en",

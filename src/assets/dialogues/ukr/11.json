@@ -7,6 +7,13 @@
         "text": "Донецьк на горизонті. Дракон притих. Я теж щось не знаходжу слів."
     },
     {
+        "image": "president",
+        "voice": "Jacques",
+        "language": "uk",
+        "audio": false,
+        "text": "Мені написала жінка з Донецька. Каже, що за ці роки тричі переїжджала, а в кишені досі носить ключ від дому."
+    },
+    {
         "image": "chief_commander",
         "voice": "Oleksandr",
         "language": "uk",

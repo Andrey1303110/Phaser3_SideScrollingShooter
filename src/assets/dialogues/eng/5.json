@@ -40,5 +40,12 @@
         "language": "en",
         "audio": false,
         "text": "Switch it off. Mariupol is waiting for help."
+    },
+    {
+        "image": "president",
+        "voice": "Edward",
+        "language": "en",
+        "audio": false,
+        "text": "If you hear from anyone defending Mariupol, thank them for me. I know every minute counts down there."
     }
 ]

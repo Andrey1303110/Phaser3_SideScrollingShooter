@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.10.3
+
+- Added lines for the President to the Mariupol and Donetsk briefings in Ukrainian and English.
+- Updated the voiceover scripts and added JSON versions with all 83 lines per localization, grouped by character.
+
 ## 1.10.2
 
 - Refined the landmarks in the first eight campaign panoramas, including Odesa's opera house, Kharkiv's Derzhprom and Lviv's Rynok Square.
