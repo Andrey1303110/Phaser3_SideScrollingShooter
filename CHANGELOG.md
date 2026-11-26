@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.11.1
+
+- Enlarged the disclaimer text and let paragraphs wrap to the available screen width.
+- Softened the confirmation prompt animation. Players can tap anywhere to continue or drag to scroll longer text.
+
 ## 1.11.0
 
 - Added full voice acting for the campaign introduction and all 15 mission briefings, with 83 recorded lines per localization. Skobeeva speaks Russian in the Ukrainian version and English in the English version.

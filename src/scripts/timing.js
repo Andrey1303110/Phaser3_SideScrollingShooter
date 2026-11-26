@@ -56,10 +56,10 @@ export const TIMING = Object.freeze({
         GAME_START_DURATION_FACTOR: 850,
     }),
     DISCLAIMER_SCENE: Object.freeze({
-        CREATE_DELAY_MS: 2500,
+        CREATE_DELAY_MS: 400,
         CREATE_TEXT_LABEL_DURATION_MS: 500,
         CREATE_PRESS_LABEL_DURATION_MS: 350,
-        PLAY_CTA_DURATION_MS: 500,
+        PLAY_CTA_DURATION_MS: 1600,
         TWEEN_HIDE_SCENE_DURATION_MS: 500,
     }),
     GAME_SCENE: Object.freeze({

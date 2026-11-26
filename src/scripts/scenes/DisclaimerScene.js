@@ -1,6 +1,6 @@
 import { TIMING } from '../timing';
 import { CACHE_KEYS, INPUT_EVENTS, LIFECYCLE_EVENTS, SOUND_KEYS } from '../identifiers';
-import { delayInMSec, screenData, setEndpoints, tweenPromise } from '../Utils';
+import { screenData, setEndpoints, tweenPromise } from '../Utils';
 import { SCENE_NAMES } from '../constants';
 import { uiText, uiUnit } from '../ui';
 import { config } from '../main';
@@ -11,7 +11,7 @@ export class DisclaimerScene extends CommonScene {
         super(SCENE_NAMES.DISCLAIMER);
     }
 
-    async create() {
+    create() {
         setEndpoints();
         this._createBg();
         this._createSounds();
@@ -21,9 +21,8 @@ export class DisclaimerScene extends CommonScene {
             this.scale.off(LIFECYCLE_EVENTS.RESIZE, resize);
             this._textLabel?.clearMask(true);
         });
-        await this._createTextLabel();
-        await delayInMSec(this.scene, TIMING.DISCLAIMER_SCENE.CREATE_DELAY_MS);
-        await this._createPressLabel();
+        this._createTextLabel();
+        this._createPressLabel();
         this._createInteractivity();
     }
 
@@ -40,7 +39,7 @@ export class DisclaimerScene extends CommonScene {
 
     _createTextLabel() {
         const text = this.scene.scene.cache.json.get(CACHE_KEYS.INITIAL_TEXTS)['Disclaimer'];
-        this._textLabel = this.add.text(this.scene.scene.cameras.main.midPoint.x, this.scene.scene.cameras.main.midPoint.y - config.width * 0.035, text, {
+        this._textLabel = this.add.text(0, 0, text, {
             ...uiText(18, '#f3eddd'),
             align: 'center',
         }).setOrigin(0.5).setAlpha(0);
@@ -53,10 +52,13 @@ export class DisclaimerScene extends CommonScene {
             if (inside(pointer)) this._scrollText(dy * uiUnit());
         });
         this.input.on(INPUT_EVENTS.POINTERMOVE, pointer => {
-            if (pointer.isDown && inside(pointer)) this._scrollText(pointer.prevPosition.y - pointer.y);
+            if (pointer.isDown && pointer.getDistance() > 8 * uiUnit()) {
+                this._dragged = true;
+                if (inside(pointer)) this._scrollText(pointer.prevPosition.y - pointer.y);
+            }
         });
 
-        return tweenPromise(this, {
+        this.tweens.add({
             targets: this._textLabel,
             alpha: 1,
             ease: 'Linear',
@@ -74,20 +76,22 @@ export class DisclaimerScene extends CommonScene {
         this._pressLabel = this.add.text(config.width * 0.5, screenData.bottom - config.width * 0.01, text, textStyle).setOrigin(0.5, 1).setAlpha(0);
         this._layoutText();
 
-        return tweenPromise(this, {
+        this.tweens.add({
             targets: this._pressLabel,
             alpha: 1,
-            ease: 'Linear',
+            ease: 'Sine.easeInOut',
+            delay: TIMING.DISCLAIMER_SCENE.CREATE_DELAY_MS,
             duration: TIMING.DISCLAIMER_SCENE.CREATE_PRESS_LABEL_DURATION_MS,
             onComplete: () => this._playCTA(),
         });
     }
 
     _playCTA() {
-        return tweenPromise(this, {
+        this.tweens.add({
             targets: this._pressLabel,
-            alpha: 0.8,
-            ease: 'Linear',
+            alpha: 0.9,
+            scale: 1.012,
+            ease: 'Sine.easeInOut',
             duration: TIMING.DISCLAIMER_SCENE.PLAY_CTA_DURATION_MS,
             repeat: -1,
             yoyo: true,
@@ -95,6 +99,8 @@ export class DisclaimerScene extends CommonScene {
     }
 
     async _onClick() {
+        this.input.enabled = false;
+        this.tweens.killTweensOf([this._textLabel, this._pressLabel]);
         this.sounds.click.play({ volume: 0.2 });
 
         await this._tweenHideScene();
@@ -107,7 +113,7 @@ export class DisclaimerScene extends CommonScene {
         return tweenPromise(this, {
             targets: [this._blackBG, this._textLabel, this._pressLabel],
             alpha: 0,
-            ease: 'Power3',
+            ease: 'Sine.easeInOut',
             duration: TIMING.DISCLAIMER_SCENE.TWEEN_HIDE_SCENE_DURATION_MS,
         });
     }
@@ -122,8 +128,17 @@ export class DisclaimerScene extends CommonScene {
     }
 
     _createInteractivity() {
-        this._pressLabel.setInteractive({ useHandCursor: true });
-        this._pressLabel.once(INPUT_EVENTS.POINTERDOWN, () => this._onClick());
+        this.input.enabled = true;
+        this._blackBG.setInteractive({ useHandCursor: true });
+        let pressed = null;
+        this._blackBG.on(INPUT_EVENTS.POINTERDOWN, pointer => {
+            pressed = pointer.id;
+            this._dragged = false;
+        });
+        this._blackBG.on(INPUT_EVENTS.POINTERUP, pointer => {
+            if (pressed === pointer.id && !this._dragged && pointer.getDistance() <= 8 * uiUnit()) this._onClick();
+            pressed = null;
+        });
     }
 
     _layoutText() {
@@ -131,15 +146,16 @@ export class DisclaimerScene extends CommonScene {
         const u = uiUnit();
         const center = (screenData.left + screenData.right) / 2;
         this._viewTop = screenData.top + 16 * u;
-        this._viewBottom = screenData.bottom - 96 * u;
-        this._textLabel.setStyle(uiText(18)).setWordWrapWidth(screenData.width - 48 * u);
+        this._pressLabel?.setStyle(uiText(20, '#ffcf87')).setWordWrapWidth(screenData.width - 32 * u)
+            .setPosition(center, screenData.bottom - 12 * u);
+        this._viewBottom = screenData.bottom - (this._pressLabel?.height || 24 * u) - 28 * u;
+        const font = Phaser.Math.Clamp(Math.round(screenData.width / u / 36), 20, 32);
+        this._textLabel.setStyle(uiText(font)).setWordWrapWidth(screenData.width - 40 * u);
         this._maskShape.clear().fillStyle(0xffffff).fillRect(screenData.left,
             this._viewTop, screenData.width, this._viewBottom - this._viewTop);
         this._textLabel.setX(center).setOrigin(0.5, 0);
         this._scrollOffset = 0;
         this._scrollText(0);
-        this._pressLabel?.setStyle(uiText(20, '#ffcf87')).setWordWrapWidth(screenData.width - 32 * u)
-            .setPosition(center, screenData.bottom - 16 * u);
     }
 
     _scrollText(delta) {
