@@ -3,28 +3,24 @@
         "image": "commander",
         "voice": "George",
         "language": "en",
-        "audio": false,
-        "text": "The Mariupol sortie is over. He is quiet, even by the kitchen. Can we give him a rest?"
+        "text": "He’s been by the kitchen door since Mariupol. The cook dropped a pot lid and he didn’t even lift his head. Can we give him another minute?"
     },
     {
         "image": "chief_commander",
         "voice": "Daniel",
         "language": "en",
-        "audio": false,
-        "text": "Yes. While we prepare for Vinnytsia, check his health and upgrades. Do not skimp on what will bring you home."
+        "text": "Let him sleep. After your first win in Vinnytsia, each fireball on the Attack branch can hit up to two targets. On the Defense branch, every four aircraft you bring down will restore a tenth of his maximum health."
     },
     {
         "image": "commander",
         "voice": "George",
         "language": "en",
-        "audio": false,
         "text": "Is the enemy taking a break as well?"
     },
     {
         "image": "chief_commander",
         "voice": "Daniel",
         "language": "en",
-        "audio": false,
-        "text": "Unfortunately, no. Helicopters and jets near the tower. But we do not send an exhausted friend into battle. Prepare first."
+        "text": "No. There are already jets and helicopters near the tower in Vinnytsia. Take a seat anyway, Bondarenko. While he sleeps, you might as well put your feet up."
     }
 ]

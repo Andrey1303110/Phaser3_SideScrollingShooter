@@ -3,28 +3,24 @@
         "image": "chief_commander",
         "voice": "Daniel",
         "language": "en",
-        "audio": false,
-        "text": "Now Kharkiv. Eleven enemy helicopters over the city. There is less time between each arrival."
+        "text": "Eleven helicopters over Kharkiv. One’s still over the city when the next one clears the rooftops. How’s your partner at counting?"
     },
     {
         "image": "commander",
         "voice": "George",
         "language": "en",
-        "audio": false,
         "text": "Eleven. Good thing he has learned to count things other than pigeons."
     },
     {
         "image": "chief_commander",
         "voice": "Daniel",
         "language": "en",
-        "audio": false,
-        "text": "Do not chase every one. After firing, they change altitude or move forward. Keep room to manoeuvre."
+        "text": "Open the skill tree after your first victory here. With Attack, he’ll breathe two fireballs at once. With Defense, he’ll have a shield that can stop one projectile per sortie. You only get to choose your branch once."
     },
     {
         "image": "commander",
         "voice": "George",
         "language": "en",
-        "audio": false,
-        "text": "Understood. We will handle the sky. The people below have heard enough of those engines."
+        "text": "I’ll decide when we land. Those people at the bus stop look up every time an engine goes over. I’d like them to be able to hear their bus coming."
     }
 ]

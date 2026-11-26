@@ -3,35 +3,30 @@
         "image": "commander",
         "voice": "George",
         "language": "en",
-        "audio": false,
         "text": "Pechersk is covered. The dragon is safe. So is the hangar. Though the doorway is a little wider now."
     },
     {
         "image": "chief_commander",
         "voice": "Daniel",
         "language": "en",
-        "audio": false,
-        "text": "Good. Next stop: Odesa. Enemy helicopters are coming in from the coast."
+        "text": "We’ll get the doors fixed. Word from Odesa is that eight helicopters are coming in off the sea. A fisherman on the pier counted them."
     },
     {
         "image": "commander",
         "voice": "George",
         "language": "en",
-        "audio": false,
         "text": "Will they hover before firing again?"
     },
     {
         "image": "chief_commander",
         "voice": "Daniel",
         "language": "en",
-        "audio": false,
-        "text": "Yes. Use that pause. When they launch a rocket, change altitude. The dragon can shoot it down with fire, too."
+        "text": "Yes, they hover for a moment before they fire. Even after a rocket is in the air, your dragon can still shoot it down. There’s a patch in the achievement hall for intercepting twenty helicopter rockets, by the way."
     },
     {
         "image": "commander",
         "voice": "George",
         "language": "en",
-        "audio": false,
-        "text": "Understood. Odesa could use a quiet morning. We will have a word with their helicopters."
+        "text": "If you see that fisherman, tell him we’ll try not to scare off the fish. Can’t speak for the helicopters."
     }
 ]

@@ -3,35 +3,30 @@
         "image": "commander",
         "voice": "George",
         "language": "en",
-        "audio": false,
-        "text": "Donetsk on the horizon. The dragon has gone quiet. I am short on words myself."
+        "text": "Donetsk. I spent the whole trip thinking up something to say when those rooftops came into view. Now I haven’t got a word. Even the dragon’s gone quiet."
     },
     {
         "image": "president",
         "voice": "Edward",
         "language": "en",
-        "audio": false,
-        "text": "A woman from Donetsk wrote to me. She’s moved three times over the years. She still carries her house key in her pocket."
+        "text": "A woman from Donetsk wrote to me. She’s moved three times over the years, and she still carries her old house key. Every morning before she goes out, she pats that pocket to make sure it’s there."
     },
     {
         "image": "chief_commander",
         "voice": "Daniel",
         "language": "en",
-        "audio": false,
-        "text": "People here have waited a long time to go home without checkpoints. We are doing this for them."
+        "text": "I’d like to hear that key turn in the lock. For now there are enemy aircraft over the city. What do you need to know, Bondarenko?"
     },
     {
         "image": "commander",
         "voice": "George",
         "language": "en",
-        "audio": false,
         "text": "All three aircraft types up there?"
     },
     {
         "image": "chief_commander",
         "voice": "Daniel",
         "language": "en",
-        "audio": false,
-        "text": "Yes. A longer wave, too. Pace yourself. Do not get boxed in by missiles. We need you back."
+        "text": "All three. An even hundred this time, so pace yourself all the way to the last one. And call in when you land. I’ve got used to hearing your partner breathing into the microphone."
     }
 ]

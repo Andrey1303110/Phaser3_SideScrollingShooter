@@ -3,35 +3,30 @@
         "image": "chief_commander",
         "voice": "Daniel",
         "language": "en",
-        "audio": false,
-        "text": "Kyiv, Voskresenka. New groups are arriving more often. Helicopters are leaving shorter gaps between launches."
+        "text": "Kyiv again. There’s less and less time between rocket launches over Voskresenka. Which of you hears the engines first these days?"
     },
     {
         "image": "commander",
         "voice": "George",
         "language": "en",
-        "audio": false,
-        "text": "He is watching the horizon on his own now. I think he can tell the engines apart, too."
+        "text": "He does. He cocks his head for a helicopter and stretches his neck out for a jet. At first I thought he had an earache. Now I find myself listening for the difference too."
     },
     {
         "image": "skobeeva",
         "voice": "Emilia",
         "language": "en",
-        "audio": false,
-        "text": "There is no dragon. This is mass panic. We advise pilots not to look up without permission from their commanding officer."
+        "text": "Our newsroom has taken further calls from pilots. Once again, dragons do not exist. Pilots wishing to look up must first obtain written permission from their commanding officer. Forms are available upon landing."
     },
     {
         "image": "commander",
         "voice": "George",
         "language": "en",
-        "audio": false,
-        "text": "Yesterday he was the spare. Today he does not exist. I really must keep up with your broadcasts."
+        "text": "Yesterday he was the spare. Today he doesn’t exist. I miss one broadcast and I’m completely behind."
     },
     {
         "image": "chief_commander",
         "voice": "Daniel",
         "language": "en",
-        "audio": false,
         "text": "Better keep up with the missiles. Voskresenka is below us."
     }
 ]

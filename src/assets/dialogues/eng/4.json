@@ -3,21 +3,18 @@
         "image": "commander",
         "voice": "George",
         "language": "en",
-        "audio": false,
-        "text": "Back to Kyiv? He recognises the Dnipro already. He keeps pulling towards the hangar."
+        "text": "Back to Kyiv? He caught sight of the Dnipro and turned towards the hangar all on his own. How do I tell him it’s a bit early for dinner?"
     },
     {
         "image": "chief_commander",
         "voice": "Daniel",
         "language": "en",
-        "audio": false,
-        "text": "The hangar can wait. A new helicopter wave is over Podil. They are faster and will not spend as long aiming."
+        "text": "You’ll see the hangar soon enough. There are fifteen helicopters over Podil and they take aim faster than the ones you met in Pechersk."
     },
     {
         "image": "commander",
         "voice": "George",
         "language": "en",
-        "audio": false,
         "text": "Then we will keep the greetings short. Cover Podil, then get him some dinner. We could use some ourselves."
     }
 ]

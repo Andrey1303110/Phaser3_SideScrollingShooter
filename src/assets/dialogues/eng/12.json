@@ -3,21 +3,18 @@
         "image": "chief_commander",
         "voice": "Daniel",
         "language": "en",
-        "audio": false,
-        "text": "Zaporizhzhia. After Donetsk, the enemy is shifting aircraft towards the southern front. The sky will be crowded today."
+        "text": "You can hear engines over Zaporizhzhia again. The enemy moved some of its aircraft here after Donetsk. How’s your partner doing after that last hundred?"
     },
     {
         "image": "commander",
         "voice": "George",
         "language": "en",
-        "audio": false,
-        "text": "Upgrades checked. Plenty of strength left. He no longer hides from the engine noise. Now it annoys him."
+        "text": "I checked his upgrades while he had a rest. He used to tuck his head under my elbow when he heard that noise. Today he stretched his wings and gave me a look that said I was the one holding things up."
     },
     {
         "image": "chief_commander",
         "voice": "Daniel",
         "language": "en",
-        "audio": false,
-        "text": "He can be angry. Keep a clear head. Defeat this wave and come back. Kakhovka is next."
+        "text": "You’d better not keep him waiting. Tell him he’s cleared for takeoff and to look after those wings. You’ve got Kakhovka after Zaporizhzhia."
     }
 ]

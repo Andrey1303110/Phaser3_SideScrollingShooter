@@ -1,180 +1,180 @@
-PRESIDENT
+PRESIDENT - darian
 ========================================
 
-Our cities woke to explosions today. Some people are in shelters. Others are already helping their neighbours. The government is working. We are staying here.
+Russia has invaded. In the Kyiv metro, people made room on the benches so the children could lie down. Someone even brought pillows from home. We’re here in Kyiv and we’re keeping the lines open.
 
-Citizens of Ukraine, we are facing a severe ordeal. The heart of our country is under attack by Russia. We cannot allow our independence to be destroyed. We stand up in defense of our freedom and right to exist.
+A baker in Pechersk just called. The bread’s in the oven and his customers are in the shelter across the street. He left me his number. He wants to know as soon as it’s safe for them to come out.
 
-We have a unique reserve. We will use our newest tool, the biological marvel known as the dragon. This creature was not originally designed for combat. However, we had to tame it and train it to defend our skies, turning it into a powerful weapon.
+Open them. Until now, hardly anyone besides his keepers has seen that dragon. Today all of Kyiv will. Bondarenko, his keeper says a hand on his neck will steady him when he hears the engines.
 
-Thank you for your unbending loyalty and bravery, Bondarenko and all defenders of the Homeland. Together we are a force that will crush the enemy and preserve our future. Glory to Ukraine!
+I’ll keep the radio on. I’d like to hear from you myself when you land. Then I owe a baker a phone call. Glory to Ukraine!
 
-If you hear from anyone defending Mariupol, thank them for me. I know every minute counts down there.
+When that medic calls back, thank him for me, and thank the people with him. Even if all he has time to say is ‘we’re here’, make sure he knows you heard him.
 
-A woman from Donetsk wrote to me. She’s moved three times over the years. She still carries her house key in her pocket.
+A woman from Donetsk wrote to me. She’s moved three times over the years, and she still carries her old house key. Every morning before she goes out, she pats that pocket to make sure it’s there.
 
-Bondarenko, Balaklava is ahead. We began by defending one city. Now we have a chance to finish freeing our land.
+Balaklava is ahead. After your first sortie I rang that baker in Pechersk and heard him unbolt his door. Now Crimea is waiting for the all-clear. Bondarenko, this is our chance to finish freeing our land.
 
-That is why you are flying. So people can come home and stop listening for sirens. We are waiting for both of you.
+I can hear him. I’m thinking of that woman from Donetsk with the key in her pocket. I want her to open her own front door again, and I want the two of you back in your hangar. We’ll be waiting.
 
 
-COMMANDER-IN-CHIEF
+COMMANDER-IN-CHIEF - finley
 ========================================
 
-Our reserve is a dragon. Guide him, destroy enemy aircraft and survive each wave. Together, we will free our land, one mission at a time.
+Let them stay. You’ve got a dragon waiting for you at the hangar in Pechersk. You’ll fly together and bring down enemy aircraft over the city. Stay airborne until the wave is over.
 
-Steer with the left joystick and hold the fire button on the right. You can move and shoot at the same time.
+Steer with the left joystick and hold the button on the right to breathe fire. You can keep firing through a turn. Just give yourself time to get used to those wings.
 
-Shoot down missiles with fire, too. In the campaign, destroying enemies and missiles earns experience. Each new player level gives you one crystal.
+His fire can bring down missiles too. In the campaign, you earn experience for every missile you intercept and every aircraft you bring down. Each time you level up, you get one crystal.
 
-Yes. Spend crystals in Upgrade on the dragon’s health, faster or larger fireballs, or a shorter reload time.
+Take it to Upgrade. Spend crystals there to give him more health, bigger or faster fireballs, or a shorter reload. After your first victory in Kharkiv, you’ll also get to choose Attack or Defense for the rest of the campaign.
 
-Russian forces are advancing, and we need to act now. We need to do something until support from Western allies arrives. We need a plan now.
+Five helicopters over Pechersk. It’ll be a while before the all-clear. Mr President, Bondarenko’s in position. Shall we open the hangar?
 
-Bondarenko, as commander of the brigade, I am entrusting you with a responsible mission. Reveal the secret of the dragon, which will be used against enemy air forces. Reveal its taming and training. On your shoulders lies a key role in the defense of our homeland.
+Bondarenko, have your troops hold the doors so he doesn’t catch a wing. Once you’re airborne, the sky over Pechersk is yours to look after.
 
-Bondarenko, the whole Ukraine hopes for you and your brigade. Use the dragon with honor and strength. Let the enemy feel what it means to attack our freedom. For Ukraine!
+Give him a moment. Tell me what worked when you get back. I’ve checked our flight manuals, Bondarenko, and we haven’t got a single page on dragons yet.
 
-Good. Next stop: Odesa. Enemy helicopters are coming in from the coast.
+We’ll get the doors fixed. Word from Odesa is that eight helicopters are coming in off the sea. A fisherman on the pier counted them.
 
-Yes. Use that pause. When they launch a rocket, change altitude. The dragon can shoot it down with fire, too.
+Yes, they hover for a moment before they fire. Even after a rocket is in the air, your dragon can still shoot it down. There’s a patch in the achievement hall for intercepting twenty helicopter rockets, by the way.
 
-Now Kharkiv. Eleven enemy helicopters over the city. There is less time between each arrival.
+Eleven helicopters over Kharkiv. One’s still over the city when the next one clears the rooftops. How’s your partner at counting?
 
-Do not chase every one. After firing, they change altitude or move forward. Keep room to manoeuvre.
+Open the skill tree after your first victory here. With Attack, he’ll breathe two fireballs at once. With Defense, he’ll have a shield that can stop one projectile per sortie. You only get to choose your branch once.
 
-The hangar can wait. A new helicopter wave is over Podil. They are faster and will not spend as long aiming.
+You’ll see the hangar soon enough. There are fifteen helicopters over Podil and they take aim faster than the ones you met in Pechersk.
 
-Mariupol. Jets have been spotted above Azovstal alongside the helicopters. Their missiles are faster and hit harder.
+Mariupol. For the first time, jets have joined the helicopters above Azovstal. If you’re expecting a jet to hover, it’ll be past you before you know it. Its missiles are faster and hit harder, too.
 
-Holding on. We take on the aircraft so they have one less threat overhead.
+They’re holding on. A medic just got through. All I caught was ‘we’re here’ before another plane drowned him out. I’d like to hear him finish that sentence.
 
 Switch it off. Mariupol is waiting for help.
 
-Yes. While we prepare for Vinnytsia, check his health and upgrades. Do not skimp on what will bring you home.
+Let him sleep. After your first win in Vinnytsia, each fireball on the Attack branch can hit up to two targets. On the Defense branch, every four aircraft you bring down will restore a tenth of his maximum health.
 
-Unfortunately, no. Helicopters and jets near the tower. But we do not send an exhausted friend into battle. Prepare first.
+No. There are already jets and helicopters near the tower in Vinnytsia. Take a seat anyway, Bondarenko. While he sleeps, you might as well put your feet up.
 
-Kyiv, Voskresenka. New groups are arriving more often. Helicopters are leaving shorter gaps between launches.
+Kyiv again. There’s less and less time between rocket launches over Voskresenka. Which of you hears the engines first these days?
 
 Better keep up with the missiles. Voskresenka is below us.
 
-Enemy aircraft can reach here, too. Intercept them before another pass over the city. Watch your health. This wave is longer than the last.
+Remember where that coffee shop is. There are fifty aircraft on their way to Lviv. It’s a long wave, so keep an eye on his health.
 
-Dnipro. One last sortie before we head south. More airborne targets than we have faced so far.
+One last sortie over Dnipro before we head south. Your first win here unlocks your branch’s final skill. Attack adds an automatic beam every ten seconds. Defense doubles the experience you earn from campaign targets.
 
-As long as he stays awake. Jets pass quickly. Helicopters linger and change altitude. Keep track of both rhythms.
+Well, I hope he can stay awake without it. A jet will be long gone while the helicopter ahead of you is still settling into a hover. Are you keeping time for him up there?
 
 No. That is why I listen to your reports.
 
-Henichesk. We are beginning the push to free the south. Strategic aircraft have entered the fight.
+We’re starting the push to free the south. People on the shore in Henichesk can hear a low rumble. Those are strategic bombers, Bondarenko. This will be your first encounter with them.
 
-Exactly. Those missiles are much faster and more dangerous. Intercept them with fire or move out of their path early.
+Yes. Their missiles are faster and hit harder than any you’ve seen. If there’s no time for the dragon to shoot one down, change altitude.
 
-People here have waited a long time to go home without checkpoints. We are doing this for them.
+I’d like to hear that key turn in the lock. For now there are enemy aircraft over the city. What do you need to know, Bondarenko?
 
-Yes. A longer wave, too. Pace yourself. Do not get boxed in by missiles. We need you back.
+All three. An even hundred this time, so pace yourself all the way to the last one. And call in when you land. I’ve got used to hearing your partner breathing into the microphone.
 
-Zaporizhzhia. After Donetsk, the enemy is shifting aircraft towards the southern front. The sky will be crowded today.
+You can hear engines over Zaporizhzhia again. The enemy moved some of its aircraft here after Donetsk. How’s your partner doing after that last hundred?
 
-He can be angry. Keep a clear head. Defeat this wave and come back. Kakhovka is next.
+You’d better not keep him waiting. Tell him he’s cleared for takeoff and to look after those wings. You’ve got Kakhovka after Zaporizhzhia.
 
-Kakhovka dam. Our task is to clear enemy aircraft from the area. The dam itself is not a target.
+Kakhovka dam. You can see the streets and houses just beyond it. Your job is to intercept the aircraft over this area. Keep your fire clear of the dam itself.
 
-They can call their retreat whatever they like. We care about what people are left with afterwards.
+Let them talk. I’ve got the number of a local electrician. When you land, I’ll give him a ring and ask if the lights are on.
 
-Two hundred airborne targets here. Our toughest wave yet. Helicopters leave very little aiming time.
+Two hundred aircraft ahead. There’s hardly a pause between rocket launches now. Tell me honestly, do you still have time to call out every turn?
 
-Then trust each other. After this sortie, Crimea remains. But come back from this one first.
+I remember. You were asking how to get him to listen. You could teach me a thing or two now. Get back from Luhansk, and then we’ll talk about Crimea.
 
-Two hundred and fifty targets ahead. Every aircraft type. The shortest gaps. This is the campaign’s final line. Save the celebrations.
+Two hundred and fifty targets over Balaklava. All three aircraft types will be in this wave, with shorter gaps than you’ve seen on any other sortie. I’m staying on the radio until you land.
 
 
-BONDARENKO
+BONDARENKO - edward
 ========================================
 
-Bondarenko reporting. We are getting people into shelters. The troops are asking for orders.
+Bondarenko here. My people are at the shelter entrance, helping everyone down the stairs. Go ahead.
 
 A dragon? All right. How do I get him to listen?
 
-So the better we defend the sky, the stronger our partner can become?
+What do I do with a crystal? I can already picture him trying to bite into the first one.
 
-Understood. Meet me by the hangar in Pechersk. Time to get to know our new partner.
+Understood. I’ll go say hello. If you see smoke rolling out of the hangar, I’ve found him.
 
-As Brigade Commander, I accept this order. The Dragon will be used against enemy air forces. I promise we will defend our Homeland.
+Both doors are wide open, but he’s dug his feet in. He’s looking right at me. Let me get this glove off. Coming, little fellow?
 
 Pechersk is covered. The dragon is safe. So is the hangar. Though the doorway is a little wider now.
 
 Will they hover before firing again?
 
-Understood. Odesa could use a quiet morning. We will have a word with their helicopters.
+If you see that fisherman, tell him we’ll try not to scare off the fish. Can’t speak for the helicopters.
 
 Eleven. Good thing he has learned to count things other than pigeons.
 
-Understood. We will handle the sky. The people below have heard enough of those engines.
+I’ll decide when we land. Those people at the bus stop look up every time an engine goes over. I’d like them to be able to hear their bus coming.
 
-Back to Kyiv? He recognises the Dnipro already. He keeps pulling towards the hangar.
+Back to Kyiv? He caught sight of the Dnipro and turned towards the hangar all on his own. How do I tell him it’s a bit early for dinner?
 
 Then we will keep the greetings short. Cover Podil, then get him some dinner. We could use some ourselves.
 
-Then we keep moving. What about our people on the ground?
+Any word from our people on the ground? Last time we spoke, the radio cut out halfway through a sentence.
 
 He just sneezed at your broadcast. The spare could never do that.
 
-The Mariupol sortie is over. He is quiet, even by the kitchen. Can we give him a rest?
+He’s been by the kitchen door since Mariupol. The cook dropped a pot lid and he didn’t even lift his head. Can we give him another minute?
 
 Is the enemy taking a break as well?
 
-He is watching the horizon on his own now. I think he can tell the engines apart, too.
+He does. He cocks his head for a helicopter and stretches his neck out for a jet. At first I thought he had an earache. Now I find myself listening for the difference too.
 
-Yesterday he was the spare. Today he does not exist. I really must keep up with your broadcasts.
+Yesterday he was the spare. Today he doesn’t exist. I miss one broadcast and I’m completely behind.
 
-Lviv. Rynok Square is quiet. I would like it to stay that way.
+A barista was grinding coffee on Rynok Square. My friend stretched his neck clear over the railing for a sniff. For a moment I forgot what brought us to Lviv. I’d like those people to get to finish their coffee.
 
 Understood. Coffee after landing. No fire in his cup. The barista asked specifically.
 
-He is ready. Though after Lviv, he insists on sniffing every sack of coffee.
+We’re ready. Ever since Lviv he’s had to sniff every sack by the gate. Nothing but nuts and bolts today, much to his disappointment.
 
 Have you ever flown on someone who picks his own rhythm?
 
-Then here is my report: we understand each other. Time to put that to work.
+Then here’s my report. He flicked a wing, I ducked, and for once we got through the hangar doors without so much as scratching the paint. The caretaker came out to shake my hand.
 
 The big ones, carrying the new missiles?
 
-A decent plan. They should stay on that heading, away from our cities.
+They can keep the whole picture. I’ll settle for those planes staying well clear of Henichesk.
 
-Donetsk on the horizon. The dragon has gone quiet. I am short on words myself.
+Donetsk. I spent the whole trip thinking up something to say when those rooftops came into view. Now I haven’t got a word. Even the dragon’s gone quiet.
 
 All three aircraft types up there?
 
-Upgrades checked. Plenty of strength left. He no longer hides from the engine noise. Now it annoys him.
+I checked his upgrades while he had a rest. He used to tuck his head under my elbow when he heard that noise. Today he stretched his wings and gave me a look that said I was the one holding things up.
 
-Understood. Down there are water, power and people’s homes. No jokes here.
+Understood. My father always left the kitchen light on until I got home. I’d like to see lights in those windows down there tonight.
 
-Then we protect the sky and what is beneath it. Moving out.
+Understood. When we get back, let’s make that call together.
 
-Luhansk. Another home that turned out to be so far away.
+Luhansk. Even as a kid I could find it on a map in a second. I had no idea the way home could take this long.
 
-He is holding up. I no longer give every command. Sometimes a pat on the neck is enough.
+I don’t even try anymore. I lay a hand on his neck and he turns. Remember when I did that in Pechersk to steady him? These days I wonder which one of us it steadies.
 
-I remember the old hangar. How he was afraid to come out. Now I can barely keep up with him.
+I remember him digging his feet in at the hangar doors. Today I was still buttoning my jacket when he lowered a wing for me to climb on.
 
-At last, some quiet on the radio. One day I would like to hear the same quiet in the sky.
+Quiet at last. Can you hear him breathing? One day I’d like to open my window in Kyiv and just listen to the city waking up.
 
 Understood. Well, my friend? One last sortie. Then home.
 
 
-SKOBEEVA
+SKOBEEVA - alicia
 ========================================
 
-Dear viewers, we are in the center of events. Our sources claim that there are biolaboratories in Ukraine. This is one of the reasons why Russia decided to attack. It's time to reveal the truth and prevent a threat that could loom over the entire world.
+Our camera crew has found a hangar in Pechersk. We have yet to establish what’s inside. We can confirm that the word ‘biolab’ fits on the news ticker. Stay with us.
 
-The Ukrainian dragon was destroyed yesterday. Today’s footage merely proves that yesterday’s dragon was the spare.
+A dragon over the steelworks? As we reported yesterday, the dragon was destroyed. Our editors have examined today’s footage. Since this one is flying, yesterday’s must have been the spare.
 
-There is no dragon. This is mass panic. We advise pilots not to look up without permission from their commanding officer.
+Our newsroom has taken further calls from pilots. Once again, dragons do not exist. Pilots wishing to look up must first obtain written permission from their commanding officer. Forms are available upon landing.
 
-Our aircraft are making a planned turn. If the footage shows them flying away from the dragon, that is part of the plan.
+That’s our aircraft making a scheduled turn. The camera has also caught a dragon in the left corner. Could we crop that corner, please? Yes, right on schedule.
 
-There is no retreat. Our forces are simply clearing space. Very efficiently. And, for some reason, farther and farther from the dragon.
+Our forces are clearing the airspace in an orderly fashion. You’ll agree that the farther they get from the dragon, the more space they’ve cleared. We showed you a map yesterday. That should suffice.
 
-We have always maintained that dragons do not exist. We will therefore be suspending our live commentary on current events.
+As we have repeatedly reported, dragons do not exist. As one has just appeared on live television, we’re cutting the broadcast short. Put the weather on. Yesterday’s forecast, preferably.

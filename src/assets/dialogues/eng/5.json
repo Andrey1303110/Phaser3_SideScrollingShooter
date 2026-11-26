@@ -3,49 +3,42 @@
         "image": "chief_commander",
         "voice": "Daniel",
         "language": "en",
-        "audio": false,
-        "text": "Mariupol. Jets have been spotted above Azovstal alongside the helicopters. Their missiles are faster and hit harder."
+        "text": "Mariupol. For the first time, jets have joined the helicopters above Azovstal. If you’re expecting a jet to hover, it’ll be past you before you know it. Its missiles are faster and hit harder, too."
     },
     {
         "image": "commander",
         "voice": "George",
         "language": "en",
-        "audio": false,
-        "text": "Then we keep moving. What about our people on the ground?"
+        "text": "Any word from our people on the ground? Last time we spoke, the radio cut out halfway through a sentence."
     },
     {
         "image": "chief_commander",
         "voice": "Daniel",
         "language": "en",
-        "audio": false,
-        "text": "Holding on. We take on the aircraft so they have one less threat overhead."
+        "text": "They’re holding on. A medic just got through. All I caught was ‘we’re here’ before another plane drowned him out. I’d like to hear him finish that sentence."
     },
     {
         "image": "skobeeva",
         "voice": "Emilia",
         "language": "en",
-        "audio": false,
-        "text": "The Ukrainian dragon was destroyed yesterday. Today’s footage merely proves that yesterday’s dragon was the spare."
+        "text": "A dragon over the steelworks? As we reported yesterday, the dragon was destroyed. Our editors have examined today’s footage. Since this one is flying, yesterday’s must have been the spare."
     },
     {
         "image": "commander",
         "voice": "George",
         "language": "en",
-        "audio": false,
         "text": "He just sneezed at your broadcast. The spare could never do that."
     },
     {
         "image": "chief_commander",
         "voice": "Daniel",
         "language": "en",
-        "audio": false,
         "text": "Switch it off. Mariupol is waiting for help."
     },
     {
         "image": "president",
         "voice": "Edward",
         "language": "en",
-        "audio": false,
-        "text": "If you hear from anyone defending Mariupol, thank them for me. I know every minute counts down there."
+        "text": "When that medic calls back, thank him for me, and thank the people with him. Even if all he has time to say is ‘we’re here’, make sure he knows you heard him."
     }
 ]

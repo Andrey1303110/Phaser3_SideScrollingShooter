@@ -3,21 +3,18 @@
         "image": "commander",
         "voice": "George",
         "language": "en",
-        "audio": false,
-        "text": "Lviv. Rynok Square is quiet. I would like it to stay that way."
+        "text": "A barista was grinding coffee on Rynok Square. My friend stretched his neck clear over the railing for a sniff. For a moment I forgot what brought us to Lviv. I’d like those people to get to finish their coffee."
     },
     {
         "image": "chief_commander",
         "voice": "Daniel",
         "language": "en",
-        "audio": false,
-        "text": "Enemy aircraft can reach here, too. Intercept them before another pass over the city. Watch your health. This wave is longer than the last."
+        "text": "Remember where that coffee shop is. There are fifty aircraft on their way to Lviv. It’s a long wave, so keep an eye on his health."
     },
     {
         "image": "commander",
         "voice": "George",
         "language": "en",
-        "audio": false,
         "text": "Understood. Coffee after landing. No fire in his cup. The barista asked specifically."
     }
 ]

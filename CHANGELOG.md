@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.11.0
+
+- Added full voice acting for the campaign introduction and all 15 mission briefings, with 83 recorded lines per localization. Skobeeva speaks Russian in the Ukrainian version and English in the English version.
+- Rewrote campaign dialogue to develop Bondarenko’s partnership with the dragon and explain skill branches, milestone rewards and achievement patches during the relevant briefings.
+
 ## 1.10.3
 
 - Added lines for the President to the Mariupol and Donetsk briefings in Ukrainian and English.

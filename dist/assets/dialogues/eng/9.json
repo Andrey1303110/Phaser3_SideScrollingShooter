@@ -3,42 +3,36 @@
         "image": "chief_commander",
         "voice": "Daniel",
         "language": "en",
-        "audio": false,
-        "text": "Dnipro. One last sortie before we head south. More airborne targets than we have faced so far."
+        "text": "One last sortie over Dnipro before we head south. Your first win here unlocks your branch’s final skill. Attack adds an automatic beam every ten seconds. Defense doubles the experience you earn from campaign targets."
     },
     {
         "image": "commander",
         "voice": "George",
         "language": "en",
-        "audio": false,
-        "text": "He is ready. Though after Lviv, he insists on sniffing every sack of coffee."
+        "text": "We’re ready. Ever since Lviv he’s had to sniff every sack by the gate. Nothing but nuts and bolts today, much to his disappointment."
     },
     {
         "image": "chief_commander",
         "voice": "Daniel",
         "language": "en",
-        "audio": false,
-        "text": "As long as he stays awake. Jets pass quickly. Helicopters linger and change altitude. Keep track of both rhythms."
+        "text": "Well, I hope he can stay awake without it. A jet will be long gone while the helicopter ahead of you is still settling into a hover. Are you keeping time for him up there?"
     },
     {
         "image": "commander",
         "voice": "George",
         "language": "en",
-        "audio": false,
         "text": "Have you ever flown on someone who picks his own rhythm?"
     },
     {
         "image": "chief_commander",
         "voice": "Daniel",
         "language": "en",
-        "audio": false,
         "text": "No. That is why I listen to your reports."
     },
     {
         "image": "commander",
         "voice": "George",
         "language": "en",
-        "audio": false,
-        "text": "Then here is my report: we understand each other. Time to put that to work."
+        "text": "Then here’s my report. He flicked a wing, I ducked, and for once we got through the hangar doors without so much as scratching the paint. The caretaker came out to shake my hand."
     }
 ]

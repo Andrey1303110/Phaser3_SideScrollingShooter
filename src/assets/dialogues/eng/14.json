@@ -3,28 +3,24 @@
         "image": "commander",
         "voice": "George",
         "language": "en",
-        "audio": false,
-        "text": "Luhansk. Another home that turned out to be so far away."
+        "text": "Luhansk. Even as a kid I could find it on a map in a second. I had no idea the way home could take this long."
     },
     {
         "image": "chief_commander",
         "voice": "Daniel",
         "language": "en",
-        "audio": false,
-        "text": "Two hundred airborne targets here. Our toughest wave yet. Helicopters leave very little aiming time."
+        "text": "Two hundred aircraft ahead. There’s hardly a pause between rocket launches now. Tell me honestly, do you still have time to call out every turn?"
     },
     {
         "image": "commander",
         "voice": "George",
         "language": "en",
-        "audio": false,
-        "text": "He is holding up. I no longer give every command. Sometimes a pat on the neck is enough."
+        "text": "I don’t even try anymore. I lay a hand on his neck and he turns. Remember when I did that in Pechersk to steady him? These days I wonder which one of us it steadies."
     },
     {
         "image": "chief_commander",
         "voice": "Daniel",
         "language": "en",
-        "audio": false,
-        "text": "Then trust each other. After this sortie, Crimea remains. But come back from this one first."
+        "text": "I remember. You were asking how to get him to listen. You could teach me a thing or two now. Get back from Luhansk, and then we’ll talk about Crimea."
     }
 ]

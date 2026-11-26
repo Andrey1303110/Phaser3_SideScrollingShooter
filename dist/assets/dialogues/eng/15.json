@@ -3,49 +3,42 @@
         "image": "president",
         "voice": "Edward",
         "language": "en",
-        "audio": false,
-        "text": "Bondarenko, Balaklava is ahead. We began by defending one city. Now we have a chance to finish freeing our land."
+        "text": "Balaklava is ahead. After your first sortie I rang that baker in Pechersk and heard him unbolt his door. Now Crimea is waiting for the all-clear. Bondarenko, this is our chance to finish freeing our land."
     },
     {
         "image": "commander",
         "voice": "George",
         "language": "en",
-        "audio": false,
-        "text": "I remember the old hangar. How he was afraid to come out. Now I can barely keep up with him."
+        "text": "I remember him digging his feet in at the hangar doors. Today I was still buttoning my jacket when he lowered a wing for me to climb on."
     },
     {
         "image": "chief_commander",
         "voice": "Daniel",
         "language": "en",
-        "audio": false,
-        "text": "Two hundred and fifty targets ahead. Every aircraft type. The shortest gaps. This is the campaign’s final line. Save the celebrations."
+        "text": "Two hundred and fifty targets over Balaklava. All three aircraft types will be in this wave, with shorter gaps than you’ve seen on any other sortie. I’m staying on the radio until you land."
     },
     {
         "image": "skobeeva",
         "voice": "Emilia",
         "language": "en",
-        "audio": false,
-        "text": "We have always maintained that dragons do not exist. We will therefore be suspending our live commentary on current events."
+        "text": "As we have repeatedly reported, dragons do not exist. As one has just appeared on live television, we’re cutting the broadcast short. Put the weather on. Yesterday’s forecast, preferably."
     },
     {
         "image": "commander",
         "voice": "George",
         "language": "en",
-        "audio": false,
-        "text": "At last, some quiet on the radio. One day I would like to hear the same quiet in the sky."
+        "text": "Quiet at last. Can you hear him breathing? One day I’d like to open my window in Kyiv and just listen to the city waking up."
     },
     {
         "image": "president",
         "voice": "Edward",
         "language": "en",
-        "audio": false,
-        "text": "That is why you are flying. So people can come home and stop listening for sirens. We are waiting for both of you."
+        "text": "I can hear him. I’m thinking of that woman from Donetsk with the key in her pocket. I want her to open her own front door again, and I want the two of you back in your hangar. We’ll be waiting."
     },
     {
         "image": "commander",
         "voice": "George",
         "language": "en",
-        "audio": false,
         "text": "Understood. Well, my friend? One last sortie. Then home."
     }
 ]

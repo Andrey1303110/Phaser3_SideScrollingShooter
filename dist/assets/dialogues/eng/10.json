@@ -3,35 +3,30 @@
         "image": "chief_commander",
         "voice": "Daniel",
         "language": "en",
-        "audio": false,
-        "text": "Henichesk. We are beginning the push to free the south. Strategic aircraft have entered the fight."
+        "text": "We’re starting the push to free the south. People on the shore in Henichesk can hear a low rumble. Those are strategic bombers, Bondarenko. This will be your first encounter with them."
     },
     {
         "image": "commander",
         "voice": "George",
         "language": "en",
-        "audio": false,
         "text": "The big ones, carrying the new missiles?"
     },
     {
         "image": "chief_commander",
         "voice": "Daniel",
         "language": "en",
-        "audio": false,
-        "text": "Exactly. Those missiles are much faster and more dangerous. Intercept them with fire or move out of their path early."
+        "text": "Yes. Their missiles are faster and hit harder than any you’ve seen. If there’s no time for the dragon to shoot one down, change altitude."
     },
     {
         "image": "skobeeva",
         "voice": "Emilia",
         "language": "en",
-        "audio": false,
-        "text": "Our aircraft are making a planned turn. If the footage shows them flying away from the dragon, that is part of the plan."
+        "text": "That’s our aircraft making a scheduled turn. The camera has also caught a dragon in the left corner. Could we crop that corner, please? Yes, right on schedule."
     },
     {
         "image": "commander",
         "voice": "George",
         "language": "en",
-        "audio": false,
-        "text": "A decent plan. They should stay on that heading, away from our cities."
+        "text": "They can keep the whole picture. I’ll settle for those planes staying well clear of Henichesk."
     }
 ]

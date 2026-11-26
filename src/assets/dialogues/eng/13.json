@@ -3,35 +3,30 @@
         "image": "chief_commander",
         "voice": "Daniel",
         "language": "en",
-        "audio": false,
-        "text": "Kakhovka dam. Our task is to clear enemy aircraft from the area. The dam itself is not a target."
+        "text": "Kakhovka dam. You can see the streets and houses just beyond it. Your job is to intercept the aircraft over this area. Keep your fire clear of the dam itself."
     },
     {
         "image": "commander",
         "voice": "George",
         "language": "en",
-        "audio": false,
-        "text": "Understood. Down there are water, power and people’s homes. No jokes here."
+        "text": "Understood. My father always left the kitchen light on until I got home. I’d like to see lights in those windows down there tonight."
     },
     {
         "image": "skobeeva",
         "voice": "Emilia",
         "language": "en",
-        "audio": false,
-        "text": "There is no retreat. Our forces are simply clearing space. Very efficiently. And, for some reason, farther and farther from the dragon."
+        "text": "Our forces are clearing the airspace in an orderly fashion. You’ll agree that the farther they get from the dragon, the more space they’ve cleared. We showed you a map yesterday. That should suffice."
     },
     {
         "image": "chief_commander",
         "voice": "Daniel",
         "language": "en",
-        "audio": false,
-        "text": "They can call their retreat whatever they like. We care about what people are left with afterwards."
+        "text": "Let them talk. I’ve got the number of a local electrician. When you land, I’ll give him a ring and ask if the lights are on."
     },
     {
         "image": "commander",
         "voice": "George",
         "language": "en",
-        "audio": false,
-        "text": "Then we protect the sky and what is beneath it. Moving out."
+        "text": "Understood. When we get back, let’s make that call together."
     }
 ]

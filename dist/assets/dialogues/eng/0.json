@@ -3,63 +3,54 @@
         "image": "president",
         "voice": "Edward",
         "language": "en",
-        "audio": false,
-        "text": "Our cities woke to explosions today. Some people are in shelters. Others are already helping their neighbours. The government is working. We are staying here."
+        "text": "Russia has invaded. In the Kyiv metro, people made room on the benches so the children could lie down. Someone even brought pillows from home. We’re here in Kyiv and we’re keeping the lines open."
     },
     {
         "image": "commander",
         "voice": "George",
         "language": "en",
-        "audio": false,
-        "text": "Bondarenko reporting. We are getting people into shelters. The troops are asking for orders."
+        "text": "Bondarenko here. My people are at the shelter entrance, helping everyone down the stairs. Go ahead."
     },
     {
         "image": "chief_commander",
         "voice": "Daniel",
         "language": "en",
-        "audio": false,
-        "text": "Our reserve is a dragon. Guide him, destroy enemy aircraft and survive each wave. Together, we will free our land, one mission at a time."
+        "text": "Let them stay. You’ve got a dragon waiting for you at the hangar in Pechersk. You’ll fly together and bring down enemy aircraft over the city. Stay airborne until the wave is over."
     },
     {
         "image": "commander",
         "voice": "George",
         "language": "en",
-        "audio": false,
         "text": "A dragon? All right. How do I get him to listen?"
     },
     {
         "image": "chief_commander",
         "voice": "Daniel",
         "language": "en",
-        "audio": false,
-        "text": "Steer with the left joystick and hold the fire button on the right. You can move and shoot at the same time."
+        "text": "Steer with the left joystick and hold the button on the right to breathe fire. You can keep firing through a turn. Just give yourself time to get used to those wings."
     },
     {
         "image": "chief_commander",
         "voice": "Daniel",
         "language": "en",
-        "audio": false,
-        "text": "Shoot down missiles with fire, too. In the campaign, destroying enemies and missiles earns experience. Each new player level gives you one crystal."
+        "text": "His fire can bring down missiles too. In the campaign, you earn experience for every missile you intercept and every aircraft you bring down. Each time you level up, you get one crystal."
     },
     {
         "image": "commander",
         "voice": "George",
         "language": "en",
-        "audio": false,
-        "text": "So the better we defend the sky, the stronger our partner can become?"
+        "text": "What do I do with a crystal? I can already picture him trying to bite into the first one."
     },
     {
         "image": "chief_commander",
         "voice": "Daniel",
         "language": "en",
-        "audio": false,
-        "text": "Yes. Spend crystals in Upgrade on the dragon’s health, faster or larger fireballs, or a shorter reload time."
+        "text": "Take it to Upgrade. Spend crystals there to give him more health, bigger or faster fireballs, or a shorter reload. After your first victory in Kharkiv, you’ll also get to choose Attack or Defense for the rest of the campaign."
     },
     {
         "image": "commander",
         "voice": "George",
         "language": "en",
-        "audio": false,
-        "text": "Understood. Meet me by the hangar in Pechersk. Time to get to know our new partner."
+        "text": "Understood. I’ll go say hello. If you see smoke rolling out of the hangar, I’ve found him."
     }
 ]
