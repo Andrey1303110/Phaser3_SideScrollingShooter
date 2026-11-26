@@ -11,7 +11,7 @@ export class DisclaimerScene extends CommonScene {
         super(SCENE_NAMES.DISCLAIMER);
     }
 
-    create() {
+    async create() {
         setEndpoints();
         this._createBg();
         this._createSounds();
@@ -24,6 +24,14 @@ export class DisclaimerScene extends CommonScene {
         this._createTextLabel();
         this._createPressLabel();
         this._createInteractivity();
+        await tweenPromise(this, {
+            targets: this._textLabel, alpha: 1, duration: TIMING.DISCLAIMER_SCENE.CREATE_TEXT_LABEL_DURATION_MS,
+        });
+        await tweenPromise(this, {
+            targets: this._pressLabel, alpha: 1, ease: 'Sine.easeInOut',
+            duration: TIMING.DISCLAIMER_SCENE.CREATE_PRESS_LABEL_DURATION_MS,
+        });
+        this._playCTA();
     }
 
     preload() {
@@ -57,13 +65,6 @@ export class DisclaimerScene extends CommonScene {
                 if (inside(pointer)) this._scrollText(pointer.prevPosition.y - pointer.y);
             }
         });
-
-        this.tweens.add({
-            targets: this._textLabel,
-            alpha: 1,
-            ease: 'Linear',
-            duration: TIMING.DISCLAIMER_SCENE.CREATE_TEXT_LABEL_DURATION_MS,
-        });
     }
 
     _createPressLabel() {
@@ -75,15 +76,6 @@ export class DisclaimerScene extends CommonScene {
         const text = this.scene.scene.cache.json.get(CACHE_KEYS.INITIAL_TEXTS)['DisclaimerPress'];
         this._pressLabel = this.add.text(config.width * 0.5, screenData.bottom - config.width * 0.01, text, textStyle).setOrigin(0.5, 1).setAlpha(0);
         this._layoutText();
-
-        this.tweens.add({
-            targets: this._pressLabel,
-            alpha: 1,
-            ease: 'Sine.easeInOut',
-            delay: TIMING.DISCLAIMER_SCENE.CREATE_DELAY_MS,
-            duration: TIMING.DISCLAIMER_SCENE.CREATE_PRESS_LABEL_DURATION_MS,
-            onComplete: () => this._playCTA(),
-        });
     }
 
     _playCTA() {

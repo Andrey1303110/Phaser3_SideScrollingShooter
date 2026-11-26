@@ -56,7 +56,7 @@ export class BootScene extends CommonScene {
         });
     }
 
-    _createPressLabel() {
+    async _createPressLabel() {
         const textStyle = {
             ...uiText(22), align: 'center', wordWrap: { width: screenData.width * 0.85 },
         };
@@ -64,15 +64,14 @@ export class BootScene extends CommonScene {
         const text = this.scene.scene.cache.json.get(CACHE_KEYS.INITIAL_TEXTS)['Press'];
         const label = this.add.text(config.width * 0.5, screenData.bottom - config.width * 0.05, text, textStyle).setOrigin(0.5, 1).setAlpha(0);
         const clickArea = this.add.rectangle(0, 0, config.width, config.height).setOrigin(0);
-        const onComplete = () => this._launchPressLabelCTA(label, clickArea);
 
-        return tweenPromise(this, {
+        await tweenPromise(this, {
             targets: label,
             alpha: 0.85,
             ease: 'Linear',
             duration: TIMING.BOOT_SCENE.CREATE_PRESS_LABEL_DURATION_MS,
-            onComplete,
         });
+        this._launchPressLabelCTA(label, clickArea);
     }
 
     _launchPressLabelCTA(label, clickArea) {

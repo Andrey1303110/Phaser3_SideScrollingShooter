@@ -1,6 +1,6 @@
 import { TIMING } from '../timing';
 import { ANIMATION_KEYS, FRAME_KEYS, INPUT_EVENTS, LIFECYCLE_EVENTS, SOUND_KEYS, TEXTURE_KEYS, TEXT_KEYS } from '../identifiers';
-import { screenData, setEndpoints } from '../Utils';
+import { screenData, setEndpoints, tweenPromise } from '../Utils';
 import { SCENE_NAMES, UNLIMITED_LEVEL, CAMPAIGN_LEVELS } from '../constants';
 import { CommonScene } from './CommonScene';
 import { UI, createButton } from '../ui';
@@ -59,22 +59,27 @@ export class GameTypeSelect extends CommonScene {
                 actionWidth, cardHeight, action);
             this._buttons.push(button);
             if (animate) {
-                // Set the initial state before the stagger delay to avoid a visible flash.
-                const targetX = button.x;
-                const targetY = button.y;
-                button.setAlpha(0).setScale(0.96).setPosition(targetX + 32 * u, targetY + 12 * u);
+                button.setAlpha(0);
                 button.hitArea.input.enabled = false;
-                this.tweens.add({
-                    targets: button, alpha: 1, scale: 1, x: targetX, y: targetY,
-                    duration: TIMING.GAME_TYPE_SELECT.BUILD_DURATION_MS, delay: index * TIMING.GAME_TYPE_SELECT.CARD_STAGGER_MS, ease: 'Cubic.Out',
-                    onComplete: () => {
-                        button.hitArea.input.enabled = true;
-                        if (index === ACTIONS.length - 1) this._cardsEntered = true;
-                    },
-                });
             }
         });
         this._createFooter(left);
+        if (animate) this._showCards(this._buttons, u);
+    }
+
+    async _showCards(buttons, u) {
+        for (const button of buttons) {
+            if (!button.active || this._transitioning || buttons !== this._buttons) return;
+            const { x, y } = button;
+            button.setScale(0.96).setPosition(x + 32 * u, y + 12 * u);
+            await tweenPromise(this, {
+                targets: button, alpha: 1, scale: 1, x, y,
+                duration: TIMING.GAME_TYPE_SELECT.BUILD_DURATION_MS, ease: 'Cubic.Out',
+            });
+            if (!button.active || buttons !== this._buttons) return;
+            button.hitArea.input.enabled = true;
+        }
+        this._cardsEntered = true;
     }
 
     _createHero(left, width) {
@@ -225,15 +230,15 @@ export class GameTypeSelect extends CommonScene {
             }).setOrigin(1, 0.5);
     }
 
-    _gameSelect(button, sceneName) {
+    async _gameSelect(button, sceneName) {
         if (this._transitioning) return;
         this._transitioning = true;
         this.sounds.click.play({ volume: 0.2 });
         this.tweens.killAll();
-        this.tweens.add({
+        await tweenPromise(this, {
             targets: button ?? this._dragon, alpha: 0.55, duration: TIMING.GAME_TYPE_SELECT.GAME_SELECT_DURATION_MS,
-            onComplete: () => this._startNewScene(sceneName),
         });
+        this._startNewScene(sceneName);
     }
 
     _startNewScene(sceneName) {

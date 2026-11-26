@@ -56,7 +56,6 @@ export const TIMING = Object.freeze({
         GAME_START_DURATION_FACTOR: 850,
     }),
     DISCLAIMER_SCENE: Object.freeze({
-        CREATE_DELAY_MS: 400,
         CREATE_TEXT_LABEL_DURATION_MS: 500,
         CREATE_PRESS_LABEL_DURATION_MS: 350,
         PLAY_CTA_DURATION_MS: 1600,
@@ -70,7 +69,6 @@ export const TIMING = Object.freeze({
     }),
     GAME_TYPE_SELECT: Object.freeze({
         BUILD_DURATION_MS: 480,
-        CARD_STAGGER_MS: 100,
         CREATE_HERO_FRAME_RATE_FPS: 8,
         CREATE_HERO_DURATION_MS: 1300,
         GAME_SELECT_DURATION_MS: 140,

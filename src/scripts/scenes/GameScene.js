@@ -469,26 +469,24 @@ export class GameScene extends CommonScene {
         }
     }
 
-    _completeLevelTween(finalTextLabel, sound) {
+    async _completeLevelTween(finalTextLabel, sound) {
         const duration = sound.duration * TIMING.GAME_SCENE.SOUND_SECONDS_TO_MS * TIMING.GAME_SCENE.END_TRANSITION_SOUND_FRACTION;
         const scale = finalTextLabel.scale * 2;
         const targets = [this._blackBG, finalTextLabel];
         
-        return tweenPromise(this, {
+        await tweenPromise(this, {
             targets,
             fillAlpha: 1,
             alpha: 1,
             scale,
             ease: 'Linear',
             duration,
-            onComplete: () => {
-                if (this._offerBranch) {
-                    this.scene.start(SCENE_NAMES.UPGRADE, { showSkills: true, fromCampaign: true });
-                    return;
-                }
-                this.scene.start(this.info?.isUnlim ? SCENE_NAMES.MAIN_MENU : SCENE_NAMES.CAMPAIGN);
-            },
         });
+        if (this._offerBranch) {
+            this.scene.start(SCENE_NAMES.UPGRADE, { showSkills: true, fromCampaign: true });
+            return;
+        }
+        this.scene.start(this.info?.isUnlim ? SCENE_NAMES.MAIN_MENU : SCENE_NAMES.CAMPAIGN);
     }
 
     _createPauseButton() {
@@ -567,7 +565,7 @@ export class GameScene extends CommonScene {
         }
     }
 
-    _increaseLevel(){
+    async _increaseLevel(){
         this.sounds.level_up.play({volume: 0.5});
         this.model.increasePlayerLevel();
         this.model.increaseMoney();
@@ -579,7 +577,7 @@ export class GameScene extends CommonScene {
 
         const scale = this._progressExpBar.levelText.displayWidth/levelTextLabel.displayWidth;
 
-        return tweenPromise(this, {
+        await tweenPromise(this, {
             targets: levelTextLabel,
             alpha: 1,
             scale,
@@ -587,11 +585,9 @@ export class GameScene extends CommonScene {
             y: this._progressExpBar.levelText.y,
             ease: 'Linear',
             duration: TIMING.GAME_SCENE.INCREASE_LEVEL_DURATION_MS,
-            onComplete: () => {
-                levelTextLabel.destroy();
-                this._progressExpBar.levelText.text = this.model.currentLevelPlayer;
-            }
         });
+        levelTextLabel.destroy();
+        this._progressExpBar.levelText.text = this.model.currentLevelPlayer;
     }
 
     _getRequiredScoreOnLevel(level){

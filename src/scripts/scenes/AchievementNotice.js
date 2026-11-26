@@ -1,6 +1,6 @@
 import { GameModel } from '../GameModel';
 import { SCENE_NAMES } from '../constants';
-import { getSceneTexts, screenData } from '../Utils';
+import { delayInMSec, getSceneTexts, screenData, tweenPromise } from '../Utils';
 import { UI, uiText, uiUnit } from '../ui';
 import { drawAchievementArt } from './components/achievementArt';
 
@@ -20,7 +20,10 @@ export class AchievementNotice extends Phaser.Scene {
         if (this.banner || !this.book.pending.length) return;
         const words = getSceneTexts(this, SCENE_NAMES.ACHIEVEMENTS);
         if (!words.names) return;
-        const entry = this.book.pending.shift();
+        this._showBanner(this.book.pending.shift(), words);
+    }
+
+    async _showBanner(entry, words) {
         this.scene.bringToTop();
         const u = uiUnit();
         const width = Math.min(328 * u, screenData.width - 16 * u);
@@ -35,11 +38,10 @@ export class AchievementNotice extends Phaser.Scene {
         banner.add(this.add.text(65 * u, 30 * u, words.names[entry.id], {
             ...uiText(17), fontStyle: 'bold',
         }));
-        this.tweens.add({ targets: banner, alpha: 1, y, duration: 180, hold: 2550, yoyo: true,
-            onComplete: () => {
-                banner.destroy();
-                this.banner = null;
-            },
-        });
+        await tweenPromise(this, { targets: banner, alpha: 1, y, duration: 180 });
+        await delayInMSec(this, 2550);
+        await tweenPromise(this, { targets: banner, alpha: 0, y: y - 12 * u, duration: 180 });
+        banner.destroy();
+        this.banner = null;
     }
 }

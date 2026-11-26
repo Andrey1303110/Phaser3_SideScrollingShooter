@@ -112,25 +112,25 @@ export class DialogBox extends Phaser.GameObjects.Container {
         this._text = content;
     }
 
-    _showSkipButton() {
-        return tweenPromise(this._scene, {
+    async _showSkipButton() {
+        await tweenPromise(this._scene, {
             targets: this._skipButton,
             alpha: 1,
             ease: 'Power1',
             duration: TIMING.DIALOG_BOX.SHOW_SKIP_BUTTON_DURATION_MS,
-            onComplete: () => this._skipControl.setEnabled(true)
         });
+        this._skipControl.setEnabled(true);
     }
 
-    _hideSkipButton() {
+    async _hideSkipButton() {
         this._skipControl.setEnabled(false);
-        return tweenPromise(this._scene, {
+        await tweenPromise(this._scene, {
             targets: this._skipButton,
             alpha: 0,
             ease: 'Power1',
             duration: TIMING.DIALOG_BOX.HIDE_SKIP_BUTTON_DURATION_MS,
-            onComplete: () => this._skipButton.destroy()
         });
+        this._skipButton.destroy();
     }
 
     _skipDialog() {

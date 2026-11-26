@@ -76,9 +76,14 @@ export class CampaignScene extends CommonScene {
                 screenData.top + 59 * u,
                 this._getText(this.model.currentLevelScene > CAMPAIGN_LEVELS.length ? TEXT_KEYS.CAMPAIGN_COMPLETE : TEXT_KEYS.MISSION_COMPLETE),
                 14, '#e4c284').setOrigin(0.5, 0).setWordWrapWidth(this._mapView.width - 12 * u).setAlign('center');
-            this.tweens.add({ targets: toast, alpha: 0, delay: TIMING.CAMPAIGN_SCENE.RENDER_DELAY_MS, duration: TIMING.CAMPAIGN_SCENE.RENDER_DURATION_MS });
+            this._fadeToast(toast);
             this._celebrate = false;
         }
+    }
+
+    async _fadeToast(toast) {
+        await delayInMSec(this, TIMING.CAMPAIGN_SCENE.RENDER_DELAY_MS);
+        if (toast.active) await tweenPromise(this, { targets: toast, alpha: 0, duration: TIMING.CAMPAIGN_SCENE.RENDER_DURATION_MS });
     }
 
     _text(x, y, text, size = 16, color = '#f2ead8', parent = this._ui) {
@@ -307,16 +312,16 @@ export class CampaignScene extends CommonScene {
         }
     }
 
-    _gameStart(info) {
+    async _gameStart(info) {
         this._busy = true;
         this.sounds.fire_effect.stop();
         this.sounds.campaign_complete_song.stop();
         const cover = this.add.rectangle(config.width / 2, config.height / 2, config.width, config.height,
             0x071616, 0).setInteractive().setDepth(DEPTH_LAYERS.COVER_SCREEN);
         const sound = this._playTransitionSound(SOUND_KEYS.READY);
-        return tweenPromise(this, {
+        await tweenPromise(this, {
             targets: cover, fillAlpha: 1, duration: sound.duration * TIMING.CAMPAIGN_SCENE.GAME_START_DURATION_FACTOR,
-            onComplete: () => this.scene.start(SCENE_NAMES.GAME, info),
         });
+        this.scene.start(SCENE_NAMES.GAME, info);
     }
 }

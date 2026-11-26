@@ -2,7 +2,7 @@ import { TIMING } from '../timing';
 import { ANIMATION_KEYS, FRAME_KEYS, LIFECYCLE_EVENTS, SOUND_KEYS, TEXTURE_KEYS, TEXT_KEYS } from '../identifiers';
 import { FIRE_WEAPON_DEFAULT_SCALE, SCENE_NAMES, UPGRADE_MULTIPLIER } from '../constants';
 import { CommonScene } from './CommonScene';
-import { getFontName, getSceneTexts, screenData, setEndpoints } from '../Utils';
+import { delayInMSec, getFontName, getSceneTexts, screenData, setEndpoints } from '../Utils';
 import { UI, uiText, createButton } from '../ui';
 import { BRANCH, CAMPAIGN_SKILL_BRANCHES, CAMPAIGN_SKILL_MISSIONS } from '../campaignSkills';
 import { coverSkillArt, renderCampaignSkillPreview } from './components/CampaignSkillPreview';
@@ -405,7 +405,7 @@ export class UpgradeScene extends CommonScene {
         }
     }
 
-    _upgrade(key) {
+    async _upgrade(key) {
         const button = this.buttons[key];
         if (!button.active || this._cooldown) return;
         if (!this.model.decreaseMoney(button.cost)) return;
@@ -415,10 +415,9 @@ export class UpgradeScene extends CommonScene {
         this.sounds.upgrade.play({ volume: 0.2 });
         this._refresh();
         this._playUpgradeEffect(key);
-        this.time.delayedCall(TIMING.UPGRADE_SCENE.UPGRADE_DELAY_MS, () => {
-            this._cooldown = false;
-            if (!this._showSkills) this._refresh();
-        });
+        await delayInMSec(this, TIMING.UPGRADE_SCENE.UPGRADE_DELAY_MS);
+        this._cooldown = false;
+        if (!this._showSkills) this._refresh();
     }
 
     _playUpgradeEffect(key) {

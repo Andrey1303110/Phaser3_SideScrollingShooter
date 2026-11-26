@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.11.2
+
+- Sequenced interface animations and scene transitions with async/await. Main menu cards now appear one at a time, and the disclaimer prompt fades in after the text while tap-to-continue stays available throughout.
+
 ## 1.11.1
 
 - Enlarged the disclaimer text and let paragraphs wrap to the available screen width.

@@ -48,8 +48,8 @@ export class HealthBar extends Phaser.GameObjects.Container {
             scale: DEFAULT_SCALE * increaseValue,
             ease: 'Power2.in',
             duration,
-            onComplete: () => this._onUpdateComplete(this._pendingCutWidth)
         });
+        this._onUpdateComplete(this._pendingCutWidth);
 
         await tweenPromise(this._scene, {
             targets: this,

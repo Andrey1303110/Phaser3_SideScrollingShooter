@@ -2,7 +2,7 @@ import { TIMING } from '../timing';
 import { LIFECYCLE_EVENTS, SOUND_KEYS, TEXTURE_KEYS, TEXT_KEYS, UI_ACTIONS } from '../identifiers';
 import { SCENE_NAMES } from '../constants';
 import { CommonScene } from './CommonScene';
-import { screenData, setEndpoints } from '../Utils';
+import { screenData, setEndpoints, tweenPromise } from '../Utils';
 import { UI, uiText, createButton } from '../ui';
 
 export class PauseScene extends CommonScene {
@@ -12,18 +12,13 @@ export class PauseScene extends CommonScene {
 
     preload() {}
 
-    create() {
+    async create() {
         this._info = { ...this.scene.get(SCENE_NAMES.GAME).info };
         this.sounds = { click: this.sound.add(SOUND_KEYS.CLICK) };
         this._transitioning = true;
         this._exiting = false;
         this._createMenu();
         this._panel.setAlpha(0).setScale(0.96);
-        this.tweens.add({
-            targets: this._panel, alpha: 1, scale: 1, duration: TIMING.PAUSE_SCENE.CREATE_DURATION_MS, ease: 'Cubic.Out',
-            onComplete: () => { this._transitioning = false; },
-        });
-
         const resize = () => {
             if (this._exiting) return;
             setEndpoints();
@@ -34,6 +29,10 @@ export class PauseScene extends CommonScene {
         };
         this.scale.on(LIFECYCLE_EVENTS.RESIZE, resize);
         this.events.once(LIFECYCLE_EVENTS.SHUTDOWN, () => this.scale.off(LIFECYCLE_EVENTS.RESIZE, resize));
+        await tweenPromise(this, {
+            targets: this._panel, alpha: 1, scale: 1, duration: TIMING.PAUSE_SCENE.CREATE_DURATION_MS, ease: 'Cubic.Out',
+        });
+        this._transitioning = false;
     }
 
     _createMenu() {
@@ -86,15 +85,15 @@ export class PauseScene extends CommonScene {
         }), command };
     }
 
-    _close(command) {
+    async _close(command) {
         if (this._transitioning) return;
         this._transitioning = true;
         this._exiting = true;
         this.sounds.click.play({ volume: 0.2 });
-        this.tweens.add({
+        await tweenPromise(this, {
             targets: this._panel, alpha: 0, scale: 0.96, duration: TIMING.PAUSE_SCENE.CLOSE_DURATION_MS, ease: 'Cubic.In',
-            onComplete: () => this._handleScreen(command),
         });
+        this._handleScreen(command);
     }
 
     _handleScreen(command) {

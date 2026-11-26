@@ -111,7 +111,7 @@ export class SetLanguageScene extends CommonScene {
         ]);
     }
 
-    _createPressLabel() {
+    async _createPressLabel() {
         const textStyle = {
             ...uiText(22), align: 'center', wordWrap: { width: screenData.width * 0.85 },
         };
@@ -119,13 +119,13 @@ export class SetLanguageScene extends CommonScene {
         const text = this.scene.scene.cache.json.get(CACHE_KEYS.INITIAL_TEXTS)['SelectLanguage'];
         const label = this.add.text(config.width * 0.5, screenData.bottom - config.width * 0.025, text, textStyle).setOrigin(0.5, 1).setAlpha(0);
 
-        return tweenPromise(this, {
+        await tweenPromise(this, {
             targets: label,
             alpha: 0.85,
             ease: 'Linear',
             duration: TIMING.SET_LANGUAGE_SCENE.CREATE_PRESS_LABEL_DURATION_MS,
-            onComplete: () => this._playLabelCTA(label),
         });
+        this._playLabelCTA(label);
     }
 
     _playLabelCTA(label) {

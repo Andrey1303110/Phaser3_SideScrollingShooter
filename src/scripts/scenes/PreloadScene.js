@@ -76,17 +76,15 @@ export class PreloadScene extends CommonScene {
         this.load.once(LIFECYCLE_EVENTS.COMPLETE, () => this._onLoadComplete());
     }
 
-    _onLoadComplete() {
+    async _onLoadComplete() {
         refreshDragonAppearance(this);
-        return tweenPromise(this.scene.scene, {
+        await tweenPromise(this, {
             targets: this._loadingBar.graphicsElements,
             alpha: 0,
             ease: 'Power3',
             duration: TIMING.PRELOAD_SCENE.ON_LOAD_COMPLETE_DURATION_MS,
-            onComplete: () => {
-                if (!this.scene.isActive(SCENE_NAMES.ACHIEVEMENT_NOTICE)) this.scene.launch(SCENE_NAMES.ACHIEVEMENT_NOTICE);
-                this.scene.start(this._destination);
-            },
         });
+        if (!this.scene.isActive(SCENE_NAMES.ACHIEVEMENT_NOTICE)) this.scene.launch(SCENE_NAMES.ACHIEVEMENT_NOTICE);
+        this.scene.start(this._destination);
     }
 }
