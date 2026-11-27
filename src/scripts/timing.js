@@ -34,8 +34,6 @@ export const TIMING = Object.freeze({
     }),
     FIRE: Object.freeze({
         OFFSCREEN_SOUND_FADE_MS: 260,
-        ROCKET_MANEUVER_MIN_DELAY_MS: 500,
-        ROCKET_MANEUVER_MAX_DELAY_MS: 1000,
         MISSILE_MOVE_DELAY_MS: 225,
         MISSILE2MOVE_DELAY_MS: 225,
     }),

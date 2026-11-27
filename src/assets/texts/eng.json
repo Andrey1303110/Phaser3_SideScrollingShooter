@@ -114,7 +114,7 @@
         "CONTROLS_BODY": "Drag the left joystick to move; hold the fire button on the right. You can move and shoot at the same time with two fingers. Play in landscape orientation.\n\nEnable auto-fire in Settings to shoot after every reload without holding the button. You can also adjust the opacity of the joystick and fire button separately.\n\nTap the pause icon to pause, resume, restart or leave a level. The arrow button skips the current dialogue line.",
         "MODES_TAB": "Modes",
         "MODES_TITLE": "Campaign or endless survival",
-        "MODES_BODY": "Campaign: survive and shoot down at least a third of the aircraft in each wave across {levels} locations. Completing a mission unlocks the next one; completed missions can be replayed.\n\nSurvival: an endless stream of enemies. Stay alive and beat your high score. This mode does not grant campaign experience.\n\nFire destroys aircraft and intercepts missiles. Missiles drain health; colliding with an aircraft is fatal. A new attempt starts at full health.",
+        "MODES_BODY": "Campaign: survive waves across {levels} locations. Completing a mission unlocks the next one; completed missions can be replayed.\n\nSurvival: an endless stream of enemies. Stay alive and beat your high score. This mode does not grant campaign experience.\n\nFire destroys aircraft and intercepts missiles. Missiles drain health; colliding with an aircraft is fatal. A new attempt starts at full health.",
         "UPGRADES_TAB": "Progress",
         "UPGRADES_TITLE": "Turn points into upgrades",
         "UPGRADES_BODY": "Destroy aircraft and missiles to score points. In the campaign, points also grant experience: each new player level gives one crystal.\n\nSpend crystals in Upgrade to increase health, fire speed or fire size, or to reduce reload time by {percent}% per upgrade. Fire speed means projectile speed, not movement speed. Your dragon matures each time all four upgrades reach another ten levels.\n\nProgress, upgrades and records are saved locally on this device. Clearing the app data removes the save."
@@ -171,7 +171,6 @@
     "GameScene": {
         "TOP_HIGH_SCORE": "High score:",
         "FINAL_TEXT_WIN": "GLORY TO UKRAINE!",
-        "AIRCRAFT_OBJECTIVE": "Aircraft down",
         "FINAL_TEXT_LOSE": "HEROES DON'T DIE!"
     },
     "Upgrade": {

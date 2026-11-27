@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.12.6
+
+- Restore survival as the campaign victory condition and remove the aircraft quota.
+- Aim helicopter rockets at the dragon on launch, giving the player a predictable path to dodge or intercept.
+
 ## 1.12.5
 
 - Require players to survive and shoot down at least one third of campaign aircraft. Show mission progress during play.

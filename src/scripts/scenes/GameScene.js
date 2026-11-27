@@ -27,8 +27,6 @@ export class GameScene extends CommonScene {
         this.fireButton = null;
         this._currentLevelScene = this.info.index;
         this._currentScore = 0;
-        this._aircraftDown = 0;
-        this._requiredKills = this.info.isUnlim ? 0 : Math.ceil(this.info.enemies / 3);
         this._blackBG = null;
         this.debugFPSText = null;
         this._offerBranch = false;
@@ -189,11 +187,6 @@ export class GameScene extends CommonScene {
             ...uiText(28), fontStyle: 'bold',
         }).setOrigin(1, 0).setDepth(DEPTH_LAYERS.UI);
 
-        if (this._requiredKills) {
-            this._objectiveText = this.add.text(right - 20 * u, this.scoreText.getBottomRight().y,
-                this._objectiveLabel(), uiText(16)).setOrigin(1, 0).setDepth(DEPTH_LAYERS.UI);
-        }
-
         if (this.info?.isUnlim) {
             const topScoreText = this._getText(TEXT_KEYS.TOP_HIGH_SCORE);
             const x = this.cameras.main.centerX;
@@ -286,15 +279,7 @@ export class GameScene extends CommonScene {
         this._destroyTarget(target);
     }
 
-    _objectiveLabel() {
-        return this._getText(TEXT_KEYS.AIRCRAFT_OBJECTIVE) + ' ' + this._aircraftDown + '/' + this._requiredKills;
-    }
-
     _onTargetHit(target) {
-        if (this._requiredKills && this._enemies.contains(target)) {
-            this._aircraftDown++;
-            this._objectiveText.setText(this._objectiveLabel());
-        }
         this.model.achievements.recordHit(target.texture.key, this._enemies.contains(target), this.info.isUnlim);
         const reward = Number((target.reward * Math.pow(LEVEL_SCORE_MULTIPLIER, this._currentLevelScene - 1)).toFixed(0));
         this._currentScore += reward;
@@ -441,7 +426,7 @@ export class GameScene extends CommonScene {
         Object.values(this.sounds).forEach(sound => sound.stop());
         this._removeOverlaps();
 
-        const isWin = this._player.active && this._aircraftDown >= this._requiredKills;
+        const isWin = this._player.active;
         this._player.stopControls();
         if (this.fireButton) this.fireButton.active = false;
         const sound = this._playTransitionSound(isWin ? SOUND_KEYS.WIN : SOUND_KEYS.LOSE);
@@ -487,7 +472,7 @@ export class GameScene extends CommonScene {
     }
 
     _failureLevelComplete(label) {
-        label.text = this._player.active && this._requiredKills ? this._objectiveLabel() : this._getText(TEXT_KEYS.FINAL_TEXT_LOSE);
+        label.text = this._getText(TEXT_KEYS.FINAL_TEXT_LOSE);
 
         if (this.info.isUnlim) {
             const lastHiScore = this.model.unlimHiScores;

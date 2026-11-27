@@ -102,17 +102,19 @@ export class Fire extends MovableObject {
         this.body.setVelocityY(this.velocity * CAMPAIGN_SKILL_BALANCE.doubleFireSpread * this._spreadDirection);
     }
 
-    async _rocketMove() {
-        const randomDelay = Phaser.Math.Between(TIMING.FIRE.ROCKET_MANEUVER_MIN_DELAY_MS, TIMING.FIRE.ROCKET_MANEUVER_MAX_DELAY_MS);
-        
-        if (this.isDead()) {
-            return;
-        } 
-        const randomVelocityModifier = (Phaser.Math.Between(-20, 20) * 0.01);
-        await delayInMSec(this.scene, randomDelay);
-        if (!this.active || !this.body) return;
-        this.body.setVelocityY(this.velocity * randomVelocityModifier);
-        this._rocketMove();
+    _rocketMove() {
+        const player = this.scene.player;
+        // Commit to the launch bearing so a player who moves can dodge.
+        const angle = player.active && player.x < this.x
+            ? Phaser.Math.Clamp(Math.atan2(player.y - this.y, this.x - player.x), -Math.PI / 5, Math.PI / 5)
+            : 0;
+        const launchSpeed = Math.abs(this.body.velocity.x) || Math.abs(this.velocity) * 0.3;
+        const dx = -Math.cos(angle);
+        const dy = Math.sin(angle);
+        this.body.setVelocity(dx * launchSpeed, dy * launchSpeed);
+        this.body.setAcceleration(dx * Math.abs(this.acceleration), dy * Math.abs(this.acceleration));
+        this.body.setMaxSpeed(Math.abs(this.maxSpeed));
+        this.rotation = -angle;
     }
 
     async _missileMove() {
