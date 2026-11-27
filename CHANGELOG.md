@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.13.0
+
+- Helicopters and jets can dodge incoming player fire, with a cooldown between attempts.
+- Speed up helicopter maneuvers and shorten aircraft reload times. Standard jets remain the fastest aircraft, followed by strategic jets and helicopters.
+- Replace the missile interception sound and allow 1.5 seconds for combat effects to finish before showing the victory result.
+- Refresh the six English Google Play screenshots and remove 80 unused voice clips.
+
 ## 1.12.6
 
 - Restore survival as the campaign victory condition and remove the aircraft quota.

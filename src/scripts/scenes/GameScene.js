@@ -28,6 +28,7 @@ export class GameScene extends CommonScene {
         this._currentLevelScene = this.info.index;
         this._currentScore = 0;
         this._blackBG = null;
+        this._roundEnding = false;
         this.debugFPSText = null;
         this._offerBranch = false;
         const branch = this.info.isUnlim ? '' : this.model.campaignSkillBranch;
@@ -60,7 +61,7 @@ export class GameScene extends CommonScene {
     }
 
     update(time, delta) {
-        if (this._blackBG || !this._player.active) return;
+        if (this._roundEnding || !this._player.active) return;
         this._updateBackground(delta);
         this._player.move();
         this._player.shooting();
@@ -117,6 +118,7 @@ export class GameScene extends CommonScene {
             }, this)
             .on(INPUT_EVENTS.POINTEROUT, () => { this.fireButton.active = false; })
             .on(INPUT_EVENTS.POINTERDOWN, () => {
+                if (this._roundEnding) return;
                 this.fireButton.active = true;
                 this._player.shooting();
             }, this);
@@ -254,7 +256,7 @@ export class GameScene extends CommonScene {
     }
 
     _onOverlap(source, target) {
-        if (this._blackBG || !source.active || !target.active) return;
+        if (this._roundEnding || !source.active || !target.active) return;
         // Arcade may supply group members before the individual player object.
         if (target === this._player) [source, target] = [target, source];
         if (target.x > config.width + target.displayWidth * 0.25) {
@@ -364,7 +366,7 @@ export class GameScene extends CommonScene {
         let text = this._beamTimer
             ? this._skillTexts.BEAM_TIMER.replace('{seconds}', Math.ceil(this._beamTimer.getRemaining() / 1000))
             : this._skillTexts.VAMPIRISM_COUNTER.replace('{count}', this._vampirismKills).replace('{total}', SKILLS.vampirismKills);
-        if (this._survivalSkillTier >= 3) text += '   ·   ' + this._skillTexts.XP_SHORT + ' ×2';
+        if (this._survivalSkillTier >= 3) text += '   В·   ' + this._skillTexts.XP_SHORT + ' Г—2';
         this._skillHud.setText(text);
     }
 
@@ -380,7 +382,7 @@ export class GameScene extends CommonScene {
     }
 
     _fireBeam() {
-        if (this._blackBG || !this._player.active) return;
+        if (this._roundEnding || !this._player.active) return;
         const { x, y } = dragonMouth(this._player);
         const width = this.cameras.main.worldView.right - x;
         if (width <= 0) return;
@@ -400,7 +402,7 @@ export class GameScene extends CommonScene {
         let hitAircraft = false;
         let hitProjectile = false;
         for (const target of [...this._enemies.fires.getChildren(), ...this._enemies.getChildren()]) {
-            if (this._blackBG) break;
+            if (this._roundEnding) break;
             if (!target.active || !target.body) continue;
             const body = target.body;
             if (body.right <= band.left || body.left >= band.right || body.bottom <= band.top || body.top >= band.bottom) continue;
@@ -419,16 +421,20 @@ export class GameScene extends CommonScene {
     }
 
     _onLevelComplete() {
-        if (this._blackBG) {
-            return;
-        }
-
-        Object.values(this.sounds).forEach(sound => sound.stop());
+        if (this._roundEnding) return;
+        this._roundEnding = true;
         this._removeOverlaps();
-
         const isWin = this._player.active;
         this._player.stopControls();
         if (this.fireButton) this.fireButton.active = false;
+        this._enemies.stopTimer();
+        this._enemies.children.entries.forEach(enemy => enemy.stopTimer());
+
+        if (isWin) this.time.delayedCall(1500, () => this._showRoundResult(true));
+        else this._showRoundResult(false);
+    }
+
+    _showRoundResult(isWin) {
         const sound = this._playTransitionSound(isWin ? SOUND_KEYS.WIN : SOUND_KEYS.LOSE);
 
         this._blackBG = this.add.rectangle(config.width * 0.5, config.height * 0.5, config.width, config.height, '0x000000', 0).setInteractive().setDepth(DEPTH_LAYERS.COVER_SCREEN);
@@ -444,10 +450,6 @@ export class GameScene extends CommonScene {
         }
         this._completeLevelTween(finalTextLabel, sound);
 
-        this._enemies.stopTimer();
-        this._enemies.children.entries.forEach(enemy => {
-            enemy.stopTimer();
-        });
     }
 
     _successLevelComplete(label) {
@@ -506,7 +508,7 @@ export class GameScene extends CommonScene {
         const u = uiUnit();
         this._pauseButton = createButton(this, {
             x: screenData.left + 48 * u, y: screenData.top + 48 * u, width: 44 * u, text: '',
-            canPress: () => !this._blackBG,
+            canPress: () => !this._roundEnding,
             onPress: () => {
                 if (this.fireButton) this.fireButton.active = false;
                 this.scene.launch(SCENE_NAMES.PAUSE);

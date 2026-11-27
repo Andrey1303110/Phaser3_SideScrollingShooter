@@ -23,6 +23,11 @@ export class HelicopterFlight {
         helicopter.body.setVelocity(helicopter.velocity * this.config.approachSpeedMultiplier, 0);
     }
 
+    evade(y) {
+        if (this._shots >= this._shotLimit || this.state === FLIGHT_STATES.EXIT || this.state === FLIGHT_STATES.STOPPED) return;
+        this._setTarget(this._targetX, this._clampHeight(y), FLIGHT_STATES.CLIMB);
+    }
+
     stop() {
         this.state = FLIGHT_STATES.STOPPED;
         this.helicopter.body.stop();
