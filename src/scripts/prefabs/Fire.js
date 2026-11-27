@@ -153,12 +153,32 @@ export class Fire extends MovableObject {
     }
 
     isDead() {
-        return !this.active || !this.body || this.x > config.width + this.displayWidth || this.x < -this.displayWidth
+        return !this.active || !this.body || this._isOffscreen();
+    }
+
+    _isOffscreen() {
+        return this.x > config.width + this.displayWidth || this.x < -this.displayWidth
             || this.y < -this.displayHeight || this.y > config.height + this.displayHeight;
     }
 
+    _releaseLaunchSound() {
+        const sound = this._projectileSound;
+        if (!sound?.isPlaying || !this._isOffscreen() || !this.scene.sys.isActive()) {
+            sound?.destroy();
+            return;
+        }
+
+        const { events, tweens } = this.scene;
+        const dispose = () => {
+            events.off(LIFECYCLE_EVENTS.SHUTDOWN, dispose);
+            sound.destroy();
+        };
+        events.once(LIFECYCLE_EVENTS.SHUTDOWN, dispose);
+        tweens.add({ targets: sound, volume: 0, duration: TIMING.FIRE.OFFSCREEN_SOUND_FADE_MS, onComplete: dispose });
+    }
+
     _onKilled() {
-        this._projectileSound?.destroy();
+        this._releaseLaunchSound();
         this._emergeTween?.stop();
         this._emitter?.destroy();
     }

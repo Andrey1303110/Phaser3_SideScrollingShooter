@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.12.1
+
+- Small fixes
+
 ## 1.12.0
 
 - Update skills effect

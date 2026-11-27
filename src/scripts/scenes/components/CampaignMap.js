@@ -20,6 +20,7 @@ export class CampaignMap extends Phaser.GameObjects.Container {
         const priority = group => Number(group.some(level => level.index === selected.index)) * 2
             + Number(group.some(level => level.index === scene.model.currentLevelScene));
         groups.sort((a, b) => priority(a) - priority(b));
+        const flags = [];
         for (const levels of groups) {
             const x = image.x - image.displayWidth / 2
                 + levels.reduce((sum, level) => sum + level.x, 0) / levels.length / 1000 * image.displayWidth;
@@ -38,11 +39,11 @@ export class CampaignMap extends Phaser.GameObjects.Container {
             }
             if (chosen) marker.add(scene.add.circle(0, 0, 19 * u).setStrokeStyle(u, 0xf3e7cb, 0.8));
             if (completed) {
-                const flag = scene.add.image(0, 2 * u, TEXTURE_KEYS.FLAG).setDisplaySize(28 * u, 44 * u).setOrigin(0.4, 0.8);
-                marker.add(flag);
+                const flag = scene.add.image(x, y + 2 * u, TEXTURE_KEYS.FLAG).setDisplaySize(28 * u, 44 * u).setOrigin(0.4, 0.8);
+                flags.push(flag);
                 if (celebrate && levels.some(level => level.index === scene.model.currentLevelScene - 1)) {
                     scene.tweens.add({ targets: flag, alpha: { from: 0, to: 1 },
-                        y: { from: 10 * u, to: 2 * u }, duration: TIMING.CAMPAIGN_MAP.MARKER_ENTER_DURATION_MS, ease: 'Cubic.Out' });
+                        y: { from: y + 10 * u, to: y + 2 * u }, duration: TIMING.CAMPAIGN_MAP.MARKER_ENTER_DURATION_MS, ease: 'Cubic.Out' });
                 }
             } else {
                 marker.add(scene.add.circle(0, 0, (available ? 10 : 7) * u, available ? 0x367e58 : 0x29464c)
@@ -68,5 +69,7 @@ export class CampaignMap extends Phaser.GameObjects.Container {
             this.add(marker);
             this.markers.push({ levels, hitArea });
         }
+        // Draw completed flags over neighboring dots without changing hit priority.
+        this.add(flags);
     }
 }

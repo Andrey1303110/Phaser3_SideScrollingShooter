@@ -1,6 +1,6 @@
 {
   "name": "invaders-must-die",
-  "version": "1.12.0",
+  "version": "1.12.1",
   "description": "Phaser 3 Side scrolling shooter game",
   "main": "src/scripts/main.js",
   "engines": {

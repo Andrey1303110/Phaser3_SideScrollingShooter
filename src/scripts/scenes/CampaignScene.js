@@ -67,7 +67,15 @@ export class CampaignScene extends CommonScene {
             width: this._panel.x - screenData.left - 32 * u, height: screenData.height - 110 * u };
         this._createHeader();
         this._map = new CampaignMap(this, this._mapView, this._selected,
-            level => this._selectMission(level), levels => this._openCluster(levels), this._celebrate);
+            level => {
+                if (this._busy) return;
+                this.sounds.click.play({ volume: 0.2 });
+                this._selectMission(level);
+            }, levels => {
+                if (this._busy) return;
+                this.sounds.click.play({ volume: 0.2 });
+                this._openCluster(levels);
+            }, this._celebrate);
         this._ui.add(this._map);
         this._createLegend();
         this._renderPanel();

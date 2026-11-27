@@ -12,11 +12,9 @@ const ROTORS = {
     ],
     '3': [
         { x: 68, y: 5, radius: 66, depth: 3, blades: 5, speed: 42 },
-        { x: 187, y: 19, radius: 9, depth: 9, blades: 3, speed: 66 },
     ],
     '4': [
         { x: 64, y: 8, radius: 64, depth: 3, blades: 5, speed: 42 },
-        { x: 169, y: 13, radius: 8, depth: 8, blades: 4, speed: 66 },
     ],
 };
 
