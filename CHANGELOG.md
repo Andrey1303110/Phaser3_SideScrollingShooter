@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.12.2
+
+- Small text fixes.
+
 ## 1.12.1
 
 - Small fixes.
