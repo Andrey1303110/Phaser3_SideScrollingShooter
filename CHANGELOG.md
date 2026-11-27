@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.12.4
+
+- Tinify sprites.
+
 ## 1.12.3
 
 - Add six sound effects for combat, healing, and achievements.
