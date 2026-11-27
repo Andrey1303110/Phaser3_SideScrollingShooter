@@ -41,8 +41,8 @@ export class Enemy extends MovableObject {
         }
     }
 
-    move() {
-        if (this.flight) this.flight.start();
+    move(group) {
+        if (this.flight) this.flight.start(group);
         else super.move();
     }
 

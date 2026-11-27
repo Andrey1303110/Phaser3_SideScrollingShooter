@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.12.5
+
+- Require players to survive and shoot down at least one third of campaign aircraft. Show mission progress during play.
+- Shorten helicopter entry and spread their aiming positions across available airspace.
+
 ## 1.12.4
 
 - Tinify sprites.

@@ -220,7 +220,7 @@ export const ENEMIES = {
 // rocketInterval is the minimum between launches; moving and aiming may extend it.
 export const HELICOPTER_FLIGHT_DEFAULTS = {
     shots: { min: 3, max: 5 },
-    approachPercent: { min: 68, max: 82 },
+    approachSpeedMultiplier: 1.6,
     advancePercent: { min: 12, max: 22 },
     altitudePercent: { min: 18, max: 30 },
     altitudeChangeChance: 0.5,

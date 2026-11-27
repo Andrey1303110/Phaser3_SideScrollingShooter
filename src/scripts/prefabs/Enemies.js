@@ -47,13 +47,13 @@ export class Enemies extends Phaser.Physics.Arcade.Group {
 
         const enemy = Enemy.generate(this.scene, this.fires);
         enemy.setScale(enemy.scaleX * GAME_ACTOR_SCALE_MULTIPLIER);
-        if (this.createdCount === 0) {
+        if (this.createdCount === 0 || enemy.flight) {
             // Enter immediately instead of crossing the offscreen spawn gap.
             enemy.x = screenData.right + enemy.displayWidth * 0.5;
         }
         enemy.on(EVENTS.KILLED, this.onEnemyKilled, this);
         this.add(enemy);
-        enemy.move();
+        enemy.move(this);
         this.createdCount++;
     }
 

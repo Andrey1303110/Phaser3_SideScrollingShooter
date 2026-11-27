@@ -8,15 +8,19 @@ export class HelicopterFlight {
         this.state = FLIGHT_STATES.STOPPED;
     }
 
-    start() {
+    start(group) {
+        this.group = group;
         const helicopter = this.helicopter;
         this._shots = 0;
         this._shotLimit = Phaser.Math.Between(this.config.shots.min, this.config.shots.max);
         this._cooldown = 0;
-        this._setTarget(screenData.left + screenData.width
-            * Phaser.Math.Between(this.config.approachPercent.min, this.config.approachPercent.max) / 100,
+        const entryX = screenData.right - helicopter.displayWidth / 2;
+        const inset = Phaser.Math.Between(2, 8) * screenData.width / 100;
+        this._setTarget(entryX - inset,
             this._clampHeight(helicopter.y), FLIGHT_STATES.APPROACH);
-        helicopter.body.setVelocity(helicopter.velocity, 0);
+        helicopter.y = this._targetY;
+        helicopter.body.reset(helicopter.x, helicopter.y);
+        helicopter.body.setVelocity(helicopter.velocity * this.config.approachSpeedMultiplier, 0);
     }
 
     stop() {
@@ -61,7 +65,26 @@ export class HelicopterFlight {
 
     _setTarget(x, y, state) {
         this._targetX = x;
+        const neighbors = this.group.getChildren().filter(other => other !== this.helicopter
+            && other.active && other.flight && other.flight.state !== FLIGHT_STATES.EXIT
+            && Math.abs(other.flight._targetX - x) < (other.displayWidth + this.helicopter.displayWidth) / 2
+                + 2 * this.config.arrivalDistance);
+        const clearance = height => Math.min(...neighbors.map(other =>
+            Math.abs(other.flight._targetY - height) - (other.displayHeight + this.helicopter.displayHeight) / 2));
         this._targetY = y;
+        const gap = 2 * this.config.arrivalDistance + this.config.heightPadding;
+        let best = clearance(y);
+        if (best < gap) {
+            const top = this._clampHeight(screenData.top);
+            const bottom = this._clampHeight(screenData.bottom);
+            for (let height = top; height <= bottom; height++) {
+                const score = Math.min(gap, clearance(height));
+                if (score > best || (score === best && Math.abs(height - y) < Math.abs(this._targetY - y))) {
+                    this._targetY = height;
+                    best = score;
+                }
+            }
+        }
         this.state = state;
     }
 
@@ -78,7 +101,8 @@ export class HelicopterFlight {
             return;
         }
 
-        const speed = Math.min(this.config.speed, distance * this.config.slowdown);
+        const multiplier = this.state === FLIGHT_STATES.APPROACH ? this.config.approachSpeedMultiplier : 1;
+        const speed = Math.min(this.config.speed * multiplier, distance * this.config.slowdown);
         const length = distance || 1;
         this._steer(dx / length * speed, dy / length * speed, delta);
     }
