@@ -2,14 +2,14 @@
 
 ## 1.12.1
 
-- Small fixes
+- Small fixes.
 
 ## 1.12.0
 
-- Update skills effect
-- Update dragon sprites
-- Update icons
-- Add promo screenshots
+- Update skills effect.
+- Update dragon sprites.
+- Update icons.
+- Add promo screenshots.
 
 ## 1.11.2
 
