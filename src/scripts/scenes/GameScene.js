@@ -189,7 +189,13 @@ export class GameScene extends CommonScene {
             ...uiText(28), fontStyle: 'bold',
         }).setOrigin(1, 0).setDepth(DEPTH_LAYERS.UI);
 
-        if (this.info?.isUnlim) {
+        if (!this.info.isUnlim) {
+            this._remaining = this.info.enemies;
+            this._remainingLabel = this.add.text(right - 20 * u, this.scoreText.getBounds().bottom + 3 * u, '', {
+                ...uiText(15), backgroundColor: '#18302f', padding: { x: 6 * u, y: 3 * u },
+            }).setOrigin(1, 0).setDepth(DEPTH_LAYERS.UI);
+            this._updateRemaining();
+        } else {
             const topScoreText = this._getText(TEXT_KEYS.TOP_HIGH_SCORE);
             const x = this.cameras.main.centerX;
             this.hiScoreText = this.add.text(x, top + 20 * u,
@@ -302,7 +308,16 @@ export class GameScene extends CommonScene {
         if (this._survivalSkillTier >= 2 && this._enemies.contains(target)) this._countVampirismKill(target.x, target.y);
     }
 
+    _updateRemaining() {
+        this._remainingLabel.setText(this._getText('REMAINING').replace('{count}', this._remaining));
+        this.model.saveMissionRemaining(this._currentLevelScene, this._remaining);
+    }
+
     _destroyTarget(target) {
+        if (!this.info.isUnlim && this._enemies.contains(target)) {
+            this._remaining--;
+            this._updateRemaining();
+        }
         const { x, y } = target;
         Boom.generate(this, x, y);
         target.setAlive(false);

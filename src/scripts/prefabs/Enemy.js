@@ -51,6 +51,7 @@ export class Enemy extends MovableObject {
         if (!this.active || !this._firesActivate) return;
         this._reactToFire(time);
         if (this.flight) this.flight.update(delta);
+        else if (this._altitudeChange) this._updateStrategicAltitude(time);
         else if (time >= this._dodgeEnds && this.body.velocity.y !== 0) this.body.setVelocity(this.velocity, 0);
     }
 
@@ -75,11 +76,30 @@ export class Enemy extends MovableObject {
         let offset = Phaser.Math.Between(0, 1) ? distance : -distance;
         if (this.y + offset < top || this.y + offset > bottom) offset = -offset;
         const y = Phaser.Math.Clamp(this.y + offset, top, bottom);
-        if (this.flight) this.flight.evade(y);
+        if (this.texture.key === ENEMIES.STRATEGIC_JET.texture) {
+            // A half-sine velocity profile starts and ends level. Its integral
+            // over the maneuver is the requested change in altitude.
+            const distanceY = y - this.y;
+            const peakSpeed = 48;
+            const duration = Math.max(1, Math.abs(distanceY) * Math.PI * 500 / peakSpeed);
+            this._altitudeChange = { start: time, duration, peak: Math.sign(distanceY) * peakSpeed };
+            this._nextThreatCheck = Math.max(this._nextThreatCheck, time + duration + 350);
+        } else if (this.flight) this.flight.evade(y);
         else {
             const verticalSpeed = Math.abs(this.velocity) * 0.6;
             this.body.setVelocity(this.velocity * 0.8, Math.sign(y - this.y) * verticalSpeed);
             this._dodgeEnds = time + Math.abs(y - this.y) / verticalSpeed * 1000;
+        }
+    }
+
+    _updateStrategicAltitude(time) {
+        const { start, duration, peak } = this._altitudeChange;
+        const progress = (time - start) / duration;
+        if (progress >= 1) {
+            this._altitudeChange = null;
+            this.body.setVelocityY(0);
+        } else {
+            this.body.setVelocityY(peak * Math.sin(Math.PI * progress));
         }
     }
 

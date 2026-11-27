@@ -13,6 +13,14 @@ export class StorageService {
         return typeof parsed === 'number' && !Number.isFinite(parsed) ? def : parsed;
     }
   
+    static remove(key) {
+        try {
+            localStorage.removeItem(key);
+        } catch {
+            // Storage may be disabled.
+        }
+    }
+
     static set(key, value) {
         try {
             localStorage.setItem(key, value);

@@ -1,3 +1,4 @@
+import { createCrystal } from './components/crystal';
 import { TIMING } from '../timing';
 import { INPUT_EVENTS, LIFECYCLE_EVENTS, SOUND_KEYS, TEXTURE_KEYS, TEXT_KEYS } from '../identifiers';
 import { getSceneTexts, screenData, setEndpoints, delayInMSec, tweenPromise } from '../Utils';
@@ -27,7 +28,7 @@ export class CampaignScene extends CommonScene {
         this._selected = CAMPAIGN_LEVELS[Math.min(this.model.currentLevelScene, CAMPAIGN_LEVELS.length) - 1];
         this._lastBriefingLevel = null;
         this._showIntro = this.model.currentLevelScene === 1 && this.model.totalScore === 0;
-        this._busy = this._showIntro;
+        this._busy = false;
         this._needsLayout = false;
         this._celebrate = this._lastProgress !== undefined && this.model.currentLevelScene > this._lastProgress;
         this._lastProgress = this.model.currentLevelScene;
@@ -35,6 +36,7 @@ export class CampaignScene extends CommonScene {
 
     create() {
         this._createSounds();
+        const newMission = this._celebrate && this.model.currentLevelScene <= CAMPAIGN_LEVELS.length;
         this._render();
         this._dialogBoxController = new DialogBoxController(this);
         const music = this.model.currentLevelScene > CAMPAIGN_LEVELS.length
@@ -47,7 +49,8 @@ export class CampaignScene extends CommonScene {
         };
         this.scale.on(LIFECYCLE_EVENTS.RESIZE, resize);
         this.events.once(LIFECYCLE_EVENTS.SHUTDOWN, () => this.scale.off(LIFECYCLE_EVENTS.RESIZE, resize));
-        if (this._showIntro) this._playIntro();
+        if (this._showIntro) this._playBriefing(0);
+        else if (newMission) this._playBriefing(this._selected.index);
     }
 
     _render() {
@@ -122,10 +125,11 @@ export class CampaignScene extends CommonScene {
             this._getText(TEXT_KEYS.PROGRESS).replace('{done}', completed).replace('{total}', CAMPAIGN_LEVELS.length), 12, '#a3b9aa');
         const wallet = this._text(screenData.right - 16 * u, top + 26 * u,
             String(this.model.money), 22, '#efd99f').setOrigin(1, 0.5);
-        const ruby = this.add.image(wallet.getBounds().left - 21 * u, top + 26 * u, TEXTURE_KEYS.RUBY).setDisplaySize(28 * u, 28 * u);
+        const ruby = createCrystal(this, wallet.getBounds().left - 21 * u, top + 26 * u, 28 * u);
         this._ui.add(ruby);
         this.tweens.add({ targets: ruby, y: ruby.y - 3 * u, duration: 900, ease: 'Sine.InOut', yoyo: true, repeat: -1 });
-        this.tweens.add({ targets: ruby, scaleX: ruby.scaleX * 0.16, duration: 760, ease: 'Sine.InOut', yoyo: true, repeat: -1 });
+        this._introButton = this._button(this._ui, ruby.x - 191 * u, top + 26 * u,
+            130 * u, 44 * u, this._getText(TEXT_KEYS.INTRO_BRIEFING), () => this._playBriefing(0));
         this._reportButton = this._button(this._ui, ruby.x - 70 * u, top + 26 * u,
             100 * u, 44 * u, this._getText(TEXT_KEYS.REPORT), () => this._openReport());
     }
@@ -193,6 +197,10 @@ export class CampaignScene extends CommonScene {
         }
         addLine(this._getText(!available ? TEXT_KEYS.LOCKED_HINT : completed ? TEXT_KEYS.LIBERATED : TEXT_KEYS.CURRENT)
             .replace('{level}', level.index - 1), available ? '#e4c990' : '#b5c7bd');
+        const remaining = this.model.getMissionRemaining(level.index);
+        if (remaining !== null) {
+            addLine(this._getText('LAST_REMAINING').replace('{count}', remaining).replace('{total}', level.enemies), '#f0d7a7');
+        }
         const types = Object.values(ENEMIES).filter(enemy => enemy.entryLevel <= level.index)
             .map(enemy => this._getText(TEXT_KEYS.TYPE_ + enemy.texture.toUpperCase()));
         addLine(types.join(' · '), '#b3c9bc');
@@ -231,7 +239,7 @@ export class CampaignScene extends CommonScene {
             await delayInMSec(this, TIMING.CAMPAIGN_SCENE.PLAY_BRIEFING_DELAY_MS);
             await this._dialogBoxController.flowShow(index);
             if (!this.sys.isActive()) return false;
-            this._lastBriefingLevel = index;
+            if (index > 0) this._lastBriefingLevel = index;
             return true;
         } finally {
             if (this.sys.isActive()) {
@@ -240,14 +248,6 @@ export class CampaignScene extends CommonScene {
                 else this._renderPanel();
             }
         }
-    }
-
-    async _playIntro() {
-        await delayInMSec(this, TIMING.CAMPAIGN_SCENE.PLAY_INTRO_DELAY_MS);
-        await this._dialogBoxController.flowShow(0);
-        if (!this.sys.isActive()) return;
-        this._busy = false;
-        if (this._needsLayout) { this._needsLayout = false; this._render(); }
     }
 
     _modalFrame(title, height) {

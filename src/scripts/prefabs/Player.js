@@ -47,6 +47,7 @@ export class Player extends MovableObject {
         });
         this._reloadTimer = null;
         this._lastFrame = null;
+        this._nextShotIsPair = false;
         this._tweenFlying = null;
         this._flightMotion = { offset: 0 };
         this._lastFlightOffset = 0;
@@ -61,13 +62,15 @@ export class Player extends MovableObject {
     shooting() {
         if (!this.active || !this.scene || this._controlsStopped || this.scene._blackBG) return;
         if ((this.scene.model.autoFireEnabled || this.scene.cursors.space.isDown || this.scene.fireButton?.active) && !this._firesActivate) {
-            if (this.scene.fireSkillTier > 0) {
-                const targets = this.scene.fireSkillTier >= 2 ? CAMPAIGN_SKILL_BALANCE.piercingTargets : 1;
+            const tier = this.scene.fireSkillTier;
+            const targets = tier >= 2 ? CAMPAIGN_SKILL_BALANCE.piercingTargets : 1;
+            if (tier && this._nextShotIsPair) {
                 this.fires.createFire(this, { direction: -1, targets });
                 this.fires.createFire(this, { direction: 1, targets });
             } else {
-                this.fires.createFire(this);
+                this.fires.createFire(this, { targets });
             }
+            this._nextShotIsPair = tier > 0 && !this._nextShotIsPair;
             this._firesActivate = true;
 
             this._reloadTimer = this.scene.time.addEvent({
@@ -120,7 +123,7 @@ export class Player extends MovableObject {
         const frames = this.scene.anims.generateFrameNames(PLAYER_TEXTURE_NAME,{
             prefix: PLAYER_TEXTURE_NAME,
             start: 1,
-            end: 6,
+            end: 12,
         });
 
         this.scene.anims.create({
@@ -155,17 +158,17 @@ export class Player extends MovableObject {
 
         this._lastFrame = this.frame.name;
 
-        if (this.frame.name === FRAME_KEYS.DRAGON3) {
+        if (this.frame.name === FRAME_KEYS.DRAGON4) {
             this.scene.sounds.wings.play({volume: 0.1});
             return this._tweenFly(false);
         }
-        if (this.frame.name === FRAME_KEYS.DRAGON6) {
+        if (this.frame.name === FRAME_KEYS.DRAGON10) {
             return this._tweenFly(true);
         }
     }
 
     _tweenFly(isDown) {
-        const height = this.displayHeight * 0.2;
+        const height = this.displayHeight * 0.065;
         const duration = FRAME_DURATION * TIMING.PLAYER.TWEEN_FLY_DURATION_FACTOR;
 
         this._tweenFlying?.stop();

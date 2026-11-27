@@ -1,3 +1,4 @@
+import { createCrystal } from './components/crystal';
 import { ACHIEVEMENTS } from '../achievements';
 import { SCENE_NAMES } from '../constants';
 import { LIFECYCLE_EVENTS, SOUND_KEYS } from '../identifiers';
@@ -27,6 +28,7 @@ export class AchievementsScene extends CommonScene {
     }
 
     renderBook() {
+        this.tweens.killAll();
         this.children.removeAll(true);
         this._createBg();
         const u = uiUnit();
@@ -39,7 +41,10 @@ export class AchievementsScene extends CommonScene {
         const boardLeft = left + (width - boardWidth) / 2;
         this.add.text(Math.max(left + 51 * u, boardLeft), top + 24 * u, words.title,
             { ...uiText(26), fontStyle: 'bold' }).setOrigin(0, 0.5);
-        this.add.text(boardLeft + boardWidth, top + 24 * u,
+        this._wallet = this.add.text(boardLeft + boardWidth, top + 24 * u, String(this.model.money),
+            uiText(18, UI.colors.accent)).setOrigin(1, 0.5);
+        this._walletGem = createCrystal(this, this._wallet.getBounds().left - 14 * u, this._wallet.y, 21 * u);
+        this.add.text(this._walletGem.x - 18 * u, top + 24 * u,
             words.collected.replace('{n}', book.unlocked.size).replace('{total}', ACHIEVEMENTS.length),
             uiText(15, UI.colors.accent)).setOrigin(1, 0.5);
 
@@ -113,6 +118,30 @@ export class AchievementsScene extends CommonScene {
         root.add([title, this.add.text(start, title.y + title.height + 3 * u, description, {
             ...uiText(14, UI.colors.muted), wordWrap: { width: available },
         })]);
+        if (earned) {
+            const claimed = this.model.claimedAchievements.has(entry.id);
+            const label = this.add.text(start, height - pad, claimed ? words.claimed : words.claim,
+                { ...uiText(15, claimed ? UI.colors.muted : '#ffe1a1'), fontStyle: 'bold' }).setOrigin(0, 1);
+            root.add(label);
+            if (!claimed) {
+                const hit = this.add.zone(0, 0, width, height).setOrigin(0).setInteractive({ useHandCursor: true });
+                root.add(hit);
+                hit.once('pointerup', () => {
+                    if (!this.model.claimAchievement(entry.id)) return;
+                    hit.disableInteractive();
+                    label.setText(words.claimed).setColor(UI.colors.muted);
+                    this._wallet.setText(String(this.model.money));
+                    this._walletGem.x = this._wallet.getBounds().left - 14 * u;
+                    this.sounds.click.play({ volume: 0.2 });
+                    const crystal = createCrystal(this, x + pad + size / 2, y + height / 2, size * 0.75);
+                    this.tweens.add({ targets: crystal, y: crystal.y - 18 * u, duration: 210, ease: 'Sine.Out',
+                        onComplete: () => this.tweens.add({ targets: crystal, x: this._walletGem.x, y: this._walletGem.y,
+                            scaleX: this._walletGem.scaleX, scaleY: this._walletGem.scaleY,
+                            duration: 650, ease: 'Cubic.InOut', onComplete: () => crystal.destroy() }) });
+                });
+            }
+            return;
+        }
         const barWidth = available - 57 * u;
         const barY = height - 17 * u;
         surface.fillStyle(0x0c2221).fillRect(start, barY, barWidth, 5 * u);

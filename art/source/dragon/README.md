@@ -2,7 +2,7 @@
 
 The high-resolution ImageGen masters are `flight-parts.png` and `icon-master.png`. Run `node art/source/dragon/pack.cjs` with the art-tool dependency `sharp` available to rebuild the flight atlas, platform icon sizes and the multi-resolution favicon. `src/assets/icons/google-play-512.png` is the upload file for the Google Play listing.
 
-The five painted bodies share shoulder pivots and a mouth anchor at (261, 122) in a 306 × 238 frame. The flight cycle runs at eight frames per second. The sixth atlas row supplies the gold coloration used after the adult stage.
+The five painted bodies share shoulder pivots and a mouth anchor at (261, 122) in a 306 × 238 frame. The flight cycle runs at sixteen frames per second. The sixth atlas row supplies the gold coloration used after the adult stage.
 
 ## ImageGen prompts
 

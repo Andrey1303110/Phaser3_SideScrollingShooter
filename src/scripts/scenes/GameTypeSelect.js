@@ -1,3 +1,4 @@
+import { createCrystal } from './components/crystal';
 import { TIMING } from '../timing';
 import { ANIMATION_KEYS, FRAME_KEYS, INPUT_EVENTS, LIFECYCLE_EVENTS, SOUND_KEYS, TEXTURE_KEYS, TEXT_KEYS } from '../identifiers';
 import { screenData, setEndpoints, tweenPromise } from '../Utils';
@@ -106,7 +107,7 @@ export class GameTypeSelect extends CommonScene {
         if (!this.anims.exists(ANIMATION_KEYS.MENU_FLY)) {
             this.anims.create({
                 key: ANIMATION_KEYS.MENU_FLY,
-                frames: this.anims.generateFrameNames(TEXTURE_KEYS.DRAGON, { prefix: TEXTURE_KEYS.DRAGON, start: 1, end: 6 }),
+                frames: this.anims.generateFrameNames(TEXTURE_KEYS.DRAGON, { prefix: TEXTURE_KEYS.DRAGON, start: 1, end: 12 }),
                 frameRate: TIMING.GAME_TYPE_SELECT.CREATE_HERO_FRAME_RATE_FPS, repeat: -1,
             });
         }
@@ -223,7 +224,7 @@ export class GameTypeSelect extends CommonScene {
             fontFamily: 'Arial', fontSize: UI.type.button * u, fontStyle: 'bold', color: '#f1deae',
         }).setOrigin(1, 0.5);
         const rubyX = wallet.getBounds().left - 16 * u;
-        this.add.image(rubyX, y, TEXTURE_KEYS.RUBY).setDisplaySize(18 * u, 18 * u);
+        createCrystal(this, rubyX, y, 18 * u);
         this.add.text(rubyX - 24 * u, y,
             this._getText(TEXT_KEYS.PLAYER_LEVEL).replace('{level}', this.model.currentLevelPlayer), {
                 fontFamily: 'Arial', fontSize: UI.type.caption * u, color: '#9db6a8',
@@ -242,6 +243,6 @@ export class GameTypeSelect extends CommonScene {
     }
 
     _startNewScene(sceneName) {
-        this.scene.start(sceneName, sceneName === SCENE_NAMES.GAME ? UNLIMITED_LEVEL : undefined);
+        this.scene.start(sceneName, sceneName === SCENE_NAMES.GAME ? UNLIMITED_LEVEL : {});
     }
 }

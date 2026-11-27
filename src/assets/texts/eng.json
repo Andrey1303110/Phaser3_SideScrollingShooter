@@ -71,7 +71,9 @@
             "missile_2_50": "Purple Raincheck",
             "missile_2_100": "Strategy Shredder",
             "missile_2_500": "Grand Plan, Meet Dragon"
-        }
+        },
+        "claim": "Claim 1 crystal",
+        "claimed": "Reward claimed"
     },
     "Settings": {
         "TITLE": "Settings",
@@ -117,7 +119,7 @@
         "MODES_BODY": "Campaign: survive waves across {levels} locations. Completing a mission unlocks the next one; completed missions can be replayed.\n\nSurvival: an endless stream of enemies. Stay alive and beat your high score. This mode does not grant campaign experience.\n\nFire destroys aircraft and intercepts missiles. Missiles drain health; colliding with an aircraft is fatal. A new attempt starts at full health.",
         "UPGRADES_TAB": "Progress",
         "UPGRADES_TITLE": "Turn points into upgrades",
-        "UPGRADES_BODY": "Destroy aircraft and missiles to score points. In the campaign, points also grant experience: each new player level gives one crystal.\n\nSpend crystals in Upgrade to increase health, fire speed or fire size, or to reduce reload time by {percent}% per upgrade. Fire speed means projectile speed, not movement speed. Your dragon matures each time all four upgrades reach another ten levels.\n\nProgress, upgrades and records are saved locally on this device. Clearing the app data removes the save."
+        "UPGRADES_BODY": "Destroy aircraft and missiles to score points. In the campaign, points also grant experience: each new player level gives one crystal.\n\nSpend crystals in Upgrade to increase health, fire speed or fire size, or to reduce reload time by {percent}% per upgrade. Fire speed means projectile speed, not movement speed. Your dragon matures each time all four upgrades reach another five levels.\n\nProgress, upgrades and records are saved locally on this device. Clearing the app data removes the save."
     },
     "Campaign": {
         "TITLE": "Campaign",
@@ -166,12 +168,15 @@
         "LEVEL_12_NAME": "Zaporizhzhia",
         "LEVEL_13_NAME": "Kakhovka HPP",
         "LEVEL_14_NAME": "Luhansk",
-        "LEVEL_15_NAME": "Sevastopol Balaklava"
+        "LEVEL_15_NAME": "Sevastopol Balaklava",
+        "INTRO_BRIEFING": "Introduction",
+        "LAST_REMAINING": "Last sortie · enemies left: {count}/{total}"
     },
     "GameScene": {
         "TOP_HIGH_SCORE": "High score:",
         "FINAL_TEXT_WIN": "GLORY TO UKRAINE!",
-        "FINAL_TEXT_LOSE": "HEROES DON'T DIE!"
+        "FINAL_TEXT_LOSE": "HEROES DON'T DIE!",
+        "REMAINING": "Enemies left: {count}"
     },
     "Upgrade": {
         "TITLE": "Upgrades",
@@ -185,15 +190,15 @@
     "Skills": {
         "STATS": "Stats",
         "TREE": "Skill tree",
-        "AFTER_LEVEL": "After winning level {level}",
-        "LEVEL": "Level {level}",
-        "FIRST_WINS": "Campaign victories",
+        "AFTER_LEVEL": "After victory in mission {level}",
+        "LEVEL": "Mission {level}",
+        "FIRST_WINS": "Available from mission",
         "FIRE": "Attack",
         "SURVIVAL": "Defense",
         "PREVIEW": "Preview",
         "XP_SHORT": "XP",
         "DOUBLE_FIRE": "Double fire",
-        "DOUBLE_FIRE_DETAIL": "Launches two smaller fireballs in a spread",
+        "DOUBLE_FIRE_DETAIL": "Alternates a straight fireball with two smaller shots at ±30°",
         "DOUBLE_PIERCE": "Double pierce",
         "DOUBLE_PIERCE_DETAIL": "Each fireball can hit up to two targets, including missiles",
         "DOUBLE_PIERCE_SHORT": "Double pierce",
@@ -218,7 +223,7 @@
         "RECEIVED": "Received: {reward}",
         "BRANCH_REWARD": "Choose a skill branch",
         "TIER_REWARD": "Next upgrade in your branch",
-        "NEXT": "Next: {skill} · level {level}",
+        "NEXT": "Next: {skill} · after mission {level}",
         "BEAM_TIMER": "Beam · {seconds}s",
         "VAMPIRISM_COUNTER": "Life steal · {count}/{total}"
     }

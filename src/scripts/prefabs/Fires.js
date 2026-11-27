@@ -13,7 +13,7 @@ export class Fires extends Phaser.Physics.Arcade.Group {
             return;
         }
         const fire = Fire.generate(this.scene, source, options);
-        const scale = options ? CAMPAIGN_SKILL_BALANCE.doubleFireScale : 1;
+        const scale = options?.direction ? CAMPAIGN_SKILL_BALANCE.doubleFireScale : 1;
         fire.setScale(source.weapon.scale * GAME_ACTOR_SCALE_MULTIPLIER * scale);
         this.add(fire);
         fire.move();

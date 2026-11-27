@@ -1,10 +1,10 @@
 import { TEXTURE_KEYS } from './identifiers';
 
 const ADULT = 4;
-const BEATS = 6;
+const BEATS = 12;
 
-// Every scene animates the same six frames. Replace only their pixels when the
-// youngest skill crosses a decade, keeping the animation phase and physics body.
+// Every scene animates the same flight frames. Replace only their pixels when the
+// youngest skill crosses a five-level milestone, keeping the animation phase and physics body.
 export function refreshDragonAppearance(scene) {
     const age = scene.model.dragonAge;
     const forms = scene.textures.get(TEXTURE_KEYS.DRAGON_FORMS);
@@ -30,10 +30,10 @@ export function refreshDragonAppearance(scene) {
     ctx.clearRect(0, 0, flight.width, flight.height);
     drawRow(Math.min(age, ADULT));
     if (age > ADULT) {
-        // The elder pigment shares the adult silhouette. Each subsequent decade
+        // The elder pigment shares the adult silhouette. Each subsequent milestone
         // brings out more gold on the crest and more rings on the horns.
-        const elderDecades = age - ADULT;
-        ctx.globalAlpha = elderDecades / (elderDecades + 3);
+        const elderStages = age - ADULT;
+        ctx.globalAlpha = elderStages / (elderStages + 3);
         drawRow(ADULT + 1);
         ctx.globalAlpha = 1;
     }

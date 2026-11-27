@@ -45,7 +45,9 @@ export class Fire extends MovableObject {
                 scale: { start: 0.055, end: 0.008 }, lifespan: { min: 80, max: 200 },
                 tint: targets > 1 ? [0xffd062, 0xfff4c6] : [0xff722b, 0xffca57] }
             : data.particlesSetting;
-        this._addParticles(particles, skillShot ? TEXTURE_KEYS.SKILL_FX : TEXTURE_KEYS.EXPLOSION_PARTICLE);
+        if (data.texture !== TEXTURE_KEYS.ROCKET) {
+            this._addParticles(particles, skillShot ? TEXTURE_KEYS.SKILL_FX : TEXTURE_KEYS.EXPLOSION_PARTICLE);
+        }
         if (data.emissionDepth !== undefined) {
             this.setDepth(data.emissionDepth).setAlpha(0);
             this._emitter?.setDepth(data.emissionDepth);
@@ -98,8 +100,11 @@ export class Fire extends MovableObject {
     }
 
     _fireMove() {
-        this.body.setVelocityX(this.velocity * 0.3);
-        this.body.setVelocityY(this.velocity * CAMPAIGN_SKILL_BALANCE.doubleFireSpread * this._spreadDirection);
+        const angle = CAMPAIGN_SKILL_BALANCE.doubleFireAngle * this._spreadDirection;
+        const dx = Math.cos(angle), dy = Math.sin(angle);
+        this.rotation = angle;
+        this.body.setVelocity(dx * this.velocity * 0.3, dy * this.velocity * 0.3);
+        this.body.setAcceleration(dx * this.acceleration, dy * this.acceleration);
     }
 
     _rocketMove() {
@@ -115,6 +120,12 @@ export class Fire extends MovableObject {
         this.body.setAcceleration(dx * Math.abs(this.acceleration), dy * Math.abs(this.acceleration));
         this.body.setMaxSpeed(Math.abs(this.maxSpeed));
         this.rotation = -angle;
+        const nozzle = this.displayWidth * 0.47;
+        this._addParticles({
+            ...WEAPONS.ROCKET.particlesSetting,
+            followOffset: { x: -dx * nozzle, y: -dy * nozzle },
+            angle: { min: this.angle - 10, max: this.angle + 10 },
+        }, TEXTURE_KEYS.EXPLOSION_PARTICLE);
     }
 
     async _missileMove() {

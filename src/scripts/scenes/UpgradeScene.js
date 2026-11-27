@@ -1,5 +1,7 @@
+import { createCrystal } from './components/crystal';
+import { StorageService } from '../StorageService';
 import { TIMING } from '../timing';
-import { ANIMATION_KEYS, FRAME_KEYS, LIFECYCLE_EVENTS, SOUND_KEYS, TEXTURE_KEYS, TEXT_KEYS } from '../identifiers';
+import { ANIMATION_KEYS, FRAME_KEYS, LIFECYCLE_EVENTS, STORAGE_KEYS, SOUND_KEYS, TEXTURE_KEYS, TEXT_KEYS } from '../identifiers';
 import { FIRE_WEAPON_DEFAULT_SCALE, SCENE_NAMES, UPGRADE_MULTIPLIER } from '../constants';
 import { CommonScene } from './CommonScene';
 import { delayInMSec, getFontName, getSceneTexts, screenData, setEndpoints } from '../Utils';
@@ -31,11 +33,16 @@ export class UpgradeScene extends CommonScene {
     init(data = {}) {
         super.init();
         this._cooldown = false;
-        this._showSkills = Boolean(data.showSkills);
+        this._showSkills = data.showSkills ?? (StorageService.get(STORAGE_KEYS.UPGRADE_TAB, 'stats') === 'skills');
+        if (data.showSkills !== undefined) this._rememberTab();
         this._fromCampaign = Boolean(data.fromCampaign);
         this._skillSelection = { branch: this.model.campaignSkillBranch || BRANCH.FIRE, index: 0 };
         this._confirmBranch = false;
         this._skillTexts = getSceneTexts(this, 'Skills');
+    }
+
+    _rememberTab() {
+        StorageService.set(STORAGE_KEYS.UPGRADE_TAB, this._showSkills ? 'skills' : 'stats');
     }
 
     create() {
@@ -58,7 +65,7 @@ export class UpgradeScene extends CommonScene {
         this.add.rectangle(this.cameras.main.centerX, this.cameras.main.centerY,
             this.cameras.main.width, this.cameras.main.height, 0x0a1c20, this._showSkills ? 0.53 : 0.88);
         const baseUnit = screenData.width / document.body.clientWidth;
-        this._interfaceScale = this._showSkills ? Math.max(1, Math.min(1.8, screenData.height / baseUnit / 480)) : 1;
+        this._interfaceScale = Math.max(1, Math.min(1.8, screenData.height / baseUnit / 480));
         const u = baseUnit * this._interfaceScale;
         this._unit = u;
         const singleRow = screenData.width / u >= 760;
@@ -73,8 +80,8 @@ export class UpgradeScene extends CommonScene {
             this._getText(TEXT_KEYS.TITLE), this._treeType(30, TREE_TEXT)).setOrigin(0, 0.5);
         this._moneyValueText = this.add.text(screenData.right - 16 * u, screenData.top + 24 * u,
             String(this.model.money), this._treeText(UI.type.button, UI.colors.accent)).setOrigin(1, 0.5);
-        this._moneyIcon = this.add.image(this._moneyValueText.getBounds().left - 16 * u,
-            screenData.top + 24 * u, TEXTURE_KEYS.RUBY).setDisplaySize(18 * u, 18 * u);
+        this._moneyIcon = createCrystal(this, this._moneyValueText.getBounds().left - 16 * u,
+            screenData.top + 24 * u, 18 * u);
         const tabWidth = Math.min(176 * u, (screenData.width - 40 * u) / 2);
         [this._skillTexts.STATS, this._skillTexts.TREE].forEach((label, index) => {
             const showSkills = index === 1;
@@ -85,6 +92,7 @@ export class UpgradeScene extends CommonScene {
                 onPress: () => {
                     if (this._showSkills === showSkills) return;
                     this._showSkills = showSkills;
+                    this._rememberTab();
                     this._confirmBranch = false;
                     this.sounds.click.play({ volume: 0.2 });
                     this._render();
@@ -104,11 +112,15 @@ export class UpgradeScene extends CommonScene {
     _renderStats(top) {
         const u = this._unit;
         const compact = screenData.height / u <= 360;
-        const left = screenData.left + screenData.width * 0.33;
+        const left = screenData.left + screenData.width * 0.37;
         const width = screenData.right - left - 16 * u;
         const gap = (compact ? 4 : 8) * u;
         const bottomSpace = (compact ? 12 : 44) * u;
-        const height = Math.min(64 * u, (screenData.bottom - top - bottomSpace - gap * 3) / 4);
+        const height = (screenData.bottom - top - bottomSpace - gap * 3) / 4;
+        const iconSize = Math.min(44 * u, height * 0.62);
+        const textX = left + 16 * u + iconSize + 10 * u;
+        const buttonWidth = Math.min(width * 0.30, 126 * u);
+        const buttonHeight = Math.min(66 * u, height * 0.82);
         this.buttons = {};
         this.statsText = {};
         this._upgradeEffects = {};
@@ -121,31 +133,32 @@ export class UpgradeScene extends CommonScene {
             const highlight = this.add.graphics().fillStyle(color, 0.3).lineStyle(3 * u, color)
                 .fillRoundedRect(left, y, width, height, UI.radius * u)
                 .strokeRoundedRect(left, y, width, height, UI.radius * u).setAlpha(0);
-            const icon = this.add.image(left + 24 * u, y + height / 2, key).setDisplaySize(24 * u, 24 * u);
+            const icon = this.add.image(left + 12 * u + iconSize / 2, y + height / 2, key).setDisplaySize(iconSize, iconSize);
             this._upgradeEffects[key] = { highlight, icon };
-            const textWidth = width - 144 * u;
-            this.add.text(left + 48 * u, y + height / 2 - 9 * u, this._getText(title), {
-                ...uiText(UI.type.body), wordWrap: { width: textWidth },
-            }).setOrigin(0, 0.5);
-            this.statsText[key] = this.add.text(left + 48 * u, y + height / 2 + 11 * u, '', uiText(UI.type.caption, UI.colors.muted)).setOrigin(0, 0.5);
+            const textWidth = left + width - buttonWidth - 18 * u - textX;
+            const name = this.add.text(textX, y + height / 2 - 10 * u, this._getText(title),
+                this._treeText(UI.type.body)).setOrigin(0, 0.5);
+            name.setScale(Math.min(1, textWidth / name.width));
+            this.statsText[key] = this.add.text(textX, y + height / 2 + 11 * u, '', this._treeText(UI.type.caption, UI.colors.muted)).setOrigin(0, 0.5);
             const button = createButton(this, {
-                x: left + width - 44 * u, y: y + height / 2, width: 76 * u, height: Math.min(44 * u, height), text: '',
+                x: left + width - 8 * u - buttonWidth / 2, y: y + height / 2, width: buttonWidth, height: buttonHeight,
+                fontSize: 21 * this._interfaceScale, text: '',
                 variant: 'primary', onPress: () => this._upgrade(key),
             });
-            button.root.add(this.add.image(18 * u, 0, TEXTURE_KEYS.RUBY).setDisplaySize(18 * u, 18 * u));
+            button.root.add(createCrystal(this, buttonWidth * 0.24, 0, Math.min(29 * u, buttonHeight * 0.55)));
             this.buttons[key] = button;
         });
         const areaWidth = left - screenData.left - 32 * u;
         const x = screenData.left + 16 * u + areaWidth / 2;
         const statsHeight = height * 4 + gap * 3;
-        const y = top + statsHeight * 0.31;
+        const y = top + statsHeight * 0.36;
         if (!this.anims.exists(ANIMATION_KEYS.MENU_FLY)) {
             this.anims.create({ key: ANIMATION_KEYS.MENU_FLY, frames: this.anims.generateFrameNames(TEXTURE_KEYS.DRAGON,
-                { prefix: TEXTURE_KEYS.DRAGON, start: 1, end: 6 }), frameRate: TIMING.UPGRADE_SCENE.RENDER_FRAME_RATE_FPS, repeat: -1 });
+                { prefix: TEXTURE_KEYS.DRAGON, start: 1, end: 12 }), frameRate: TIMING.UPGRADE_SCENE.RENDER_FRAME_RATE_FPS, repeat: -1 });
         }
         this._player = this.add.sprite(x, y, TEXTURE_KEYS.DRAGON, FRAME_KEYS.DRAGON1)
             .play(ANIMATION_KEYS.MENU_FLY);
-        this._player.setScale(Math.min(158 * u, areaWidth * 0.85, statsHeight * 0.6) / this._player.width);
+        this._player.setScale(Math.min(areaWidth, statsHeight * 0.83) / this._player.width);
         this.tweens.add({ targets: this._player, y: y - 4 * u, duration: TIMING.UPGRADE_SCENE.RENDER_DURATION_MS, yoyo: true,
             repeat: -1, ease: 'Sine.InOut' });
         const texts = this._skillTexts;
@@ -159,7 +172,7 @@ export class UpgradeScene extends CommonScene {
             summary = next ? latest + '\n' + texts.NEXT.replace('{skill}', texts[next]).replace('{level}', CAMPAIGN_SKILL_MISSIONS[tier])
                 : latest + ' · ' + texts.ACTIVE;
         }
-        this._skillLabel(x, top + statsHeight * 0.76, summary, areaWidth, UI.colors.accent);
+        this._skillLabel(x, top + statsHeight * 0.83, summary, areaWidth, UI.colors.accent);
         if (!compact) {
             this.add.text((screenData.left + screenData.right) / 2, screenData.bottom - 16 * u,
                 this._getText(TEXT_KEYS.BOTTOM_DESCRIPTION).replace('{percent}', Math.round(UPGRADE_MULTIPLIER * 100)),
@@ -263,7 +276,7 @@ export class UpgradeScene extends CommonScene {
             this.add.graphics().fillStyle(0x1b3435, 0.95).lineStyle(u, TREE_GOLD, 0.38)
                 .fillRoundedRect(x - badge / 2, top + 24 * u, badge, 25 * u, 9 * u)
                 .strokeRoundedRect(x - badge / 2, top + 24 * u, badge, 25 * u, 9 * u);
-            this._skillLabel(x, top + 36 * u, texts.LEVEL.replace('{level}', mission), badge, TREE_TEXT, 14);
+            this._skillLabel(x, top + 36 * u, texts.LEVEL.replace('{level}', mission + 1), badge, TREE_TEXT, 14);
         });
         Object.entries(CAMPAIGN_SKILL_BRANCHES).forEach(([branch, data], row) => {
             const y = top + head + tracks * (row === 0 ? 0.25 : 0.75);

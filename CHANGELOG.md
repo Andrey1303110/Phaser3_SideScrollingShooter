@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.14.0
+
+- Alternate a straight fireball with a pair fired 30 degrees above and below it. Update the skill preview and show which mission first benefits from each unlock.
+- Add a replay button for the campaign introduction, automatically play newly unlocked mission briefings, and redesign voice language selection.
+- Show remaining enemy aircraft during campaign missions and save the last sortie's count on each mission card.
+- Award one crystal when the player claims an unlocked achievement. Animate the faceted crystal as it rotates and flies to the wallet.
+- Smooth the dragon's wing and leg animation and update its appearance every five levels across all four stats.
+- Remember the last upgrade tab and enlarge the dragon, stat icons, and purchase controls in the workshop.
+- Align helicopter rocket exhaust with the nozzle and flight direction, and give strategic aircraft slower, smoother altitude changes.
+
 ## 1.13.0
 
 - Helicopters and jets can dodge incoming player fire, with a cooldown between attempts.

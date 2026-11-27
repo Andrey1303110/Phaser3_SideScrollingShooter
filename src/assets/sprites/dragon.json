@@ -127,6 +127,132 @@
       }
     },
     {
+      "filename": "age0-7",
+      "frame": {
+        "x": 1850,
+        "y": 2,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age0-8",
+      "frame": {
+        "x": 2158,
+        "y": 2,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age0-9",
+      "frame": {
+        "x": 2466,
+        "y": 2,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age0-10",
+      "frame": {
+        "x": 2774,
+        "y": 2,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age0-11",
+      "frame": {
+        "x": 3082,
+        "y": 2,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age0-12",
+      "frame": {
+        "x": 3390,
+        "y": 2,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
       "filename": "age1-1",
       "frame": {
         "x": 2,
@@ -235,6 +361,132 @@
       "filename": "age1-6",
       "frame": {
         "x": 1542,
+        "y": 242,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age1-7",
+      "frame": {
+        "x": 1850,
+        "y": 242,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age1-8",
+      "frame": {
+        "x": 2158,
+        "y": 242,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age1-9",
+      "frame": {
+        "x": 2466,
+        "y": 242,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age1-10",
+      "frame": {
+        "x": 2774,
+        "y": 242,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age1-11",
+      "frame": {
+        "x": 3082,
+        "y": 242,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age1-12",
+      "frame": {
+        "x": 3390,
         "y": 242,
         "w": 306,
         "h": 238
@@ -379,6 +631,132 @@
       }
     },
     {
+      "filename": "age2-7",
+      "frame": {
+        "x": 1850,
+        "y": 482,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age2-8",
+      "frame": {
+        "x": 2158,
+        "y": 482,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age2-9",
+      "frame": {
+        "x": 2466,
+        "y": 482,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age2-10",
+      "frame": {
+        "x": 2774,
+        "y": 482,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age2-11",
+      "frame": {
+        "x": 3082,
+        "y": 482,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age2-12",
+      "frame": {
+        "x": 3390,
+        "y": 482,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
       "filename": "age3-1",
       "frame": {
         "x": 2,
@@ -487,6 +865,132 @@
       "filename": "age3-6",
       "frame": {
         "x": 1542,
+        "y": 722,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age3-7",
+      "frame": {
+        "x": 1850,
+        "y": 722,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age3-8",
+      "frame": {
+        "x": 2158,
+        "y": 722,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age3-9",
+      "frame": {
+        "x": 2466,
+        "y": 722,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age3-10",
+      "frame": {
+        "x": 2774,
+        "y": 722,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age3-11",
+      "frame": {
+        "x": 3082,
+        "y": 722,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age3-12",
+      "frame": {
+        "x": 3390,
         "y": 722,
         "w": 306,
         "h": 238
@@ -631,6 +1135,132 @@
       }
     },
     {
+      "filename": "age4-7",
+      "frame": {
+        "x": 1850,
+        "y": 962,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age4-8",
+      "frame": {
+        "x": 2158,
+        "y": 962,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age4-9",
+      "frame": {
+        "x": 2466,
+        "y": 962,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age4-10",
+      "frame": {
+        "x": 2774,
+        "y": 962,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age4-11",
+      "frame": {
+        "x": 3082,
+        "y": 962,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age4-12",
+      "frame": {
+        "x": 3390,
+        "y": 962,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
       "filename": "age5-1",
       "frame": {
         "x": 2,
@@ -755,13 +1385,139 @@
         "w": 306,
         "h": 238
       }
+    },
+    {
+      "filename": "age5-7",
+      "frame": {
+        "x": 1850,
+        "y": 1202,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age5-8",
+      "frame": {
+        "x": 2158,
+        "y": 1202,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age5-9",
+      "frame": {
+        "x": 2466,
+        "y": 1202,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age5-10",
+      "frame": {
+        "x": 2774,
+        "y": 1202,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age5-11",
+      "frame": {
+        "x": 3082,
+        "y": 1202,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
+    },
+    {
+      "filename": "age5-12",
+      "frame": {
+        "x": 3390,
+        "y": 1202,
+        "w": 306,
+        "h": 238
+      },
+      "rotated": false,
+      "trimmed": false,
+      "sourceSize": {
+        "w": 306,
+        "h": 238
+      },
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 306,
+        "h": 238
+      }
     }
   ],
   "meta": {
     "image": "dragon.png",
     "format": "RGBA8888",
     "size": {
-      "w": 1850,
+      "w": 3698,
       "h": 1442
     },
     "scale": "2"

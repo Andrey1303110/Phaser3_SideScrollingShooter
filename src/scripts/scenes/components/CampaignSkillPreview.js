@@ -1,4 +1,5 @@
 import { FRAME_KEYS, TEXTURE_KEYS } from '../../identifiers';
+import { CAMPAIGN_SKILL_BALANCE } from '../../campaignSkills';
 import { WEAPONS } from '../../constants';
 import { createLifeDrain, createSkillBeam, dragonMouth, poseLifeDrain, poseSkillBeam, poseSkillPulse, skillImage } from '../../skillEffects';
 import { uiText, uiUnit } from '../../ui';
@@ -39,11 +40,15 @@ export function renderCampaignSkillPreview(scene, { x, y, width, height, skill, 
     const mouth = dragonMouth(dragon);
     const start = (mouth.x - x) / width;
     const mouthY = (mouth.y - y) / height;
-    const end = 0.91;
-    const pathY = (fraction, direction) => mouthY + direction * 0.27 * (fraction - start) / (end - start);
+    const slope = Math.tan(CAMPAIGN_SKILL_BALANCE.doubleFireAngle) * width / height;
+    const end = isVolley ? Math.min(0.91, start + 0.30 / slope) : 0.91;
+    const pathY = (fraction, direction) => mouthY + direction * slope * (fraction - start);
     const placements = isVolley ? [-1, 1].flatMap(direction => {
         const distances = skill === 'DOUBLE_PIERCE' ? [0.55, 0.82] : [0.78];
-        return distances.map(fraction => ({ fraction, vertical: pathY(fraction, direction) }));
+        return distances.map(distance => {
+            const fraction = start + (end - start) * distance;
+            return { fraction, vertical: pathY(fraction, direction) };
+        });
     }) : isShield ? [] : [{ fraction: 0.79, vertical: mouthY }];
     const targets = placements.map(spot => {
         const jet = scene.add.sprite(px(spot.fraction), py(spot.vertical), TEXTURE_KEYS.JET, '1');
@@ -54,7 +59,7 @@ export function renderCampaignSkillPreview(scene, { x, y, width, height, skill, 
     if (missile) missile.setScale(Math.min(width * 0.16, scale * 0.28) / missile.width);
     const bolts = isVolley ? [-1, 1].map(direction => {
         const image = skillImage(scene, skill === 'DOUBLE_PIERCE' ? 'pierce' : 'volley').setOrigin(0.82, 0.5)
-            .setRotation(Math.atan2(direction * height * 0.27, width * (end - start)));
+            .setRotation(direction * CAMPAIGN_SKILL_BALANCE.doubleFireAngle);
         scene.children.moveBelow(image, dragon);
         return { image, direction };
     }) : [];
@@ -64,7 +69,7 @@ export function renderCampaignSkillPreview(scene, { x, y, width, height, skill, 
     const shards = isShield ? skillImage(scene, 'shatter') : null;
     const drain = isVampirism ? createLifeDrain(scene) : null;
     const xp = isExperience ? skillImage(scene, 'xp') : null;
-    const single = isVampirism || isExperience ? scene.add.image(0, 0, TEXTURE_KEYS.FIRE) : null;
+    const single = isVolley || isVampirism || isExperience ? scene.add.image(0, 0, TEXTURE_KEYS.FIRE) : null;
     const trail = single ? scene.add.particles(0, 0, TEXTURE_KEYS.EXPLOSION_PARTICLE, {
         ...WEAPONS.FIRE.particlesSetting, emitting: false, lifespan: { min: 60, max: 180 },
         speedX: { min: -scale * 0.32, max: 0 }, speedY: { min: -scale * 0.09, max: scale * 0.09 },
@@ -83,12 +88,15 @@ export function renderCampaignSkillPreview(scene, { x, y, width, height, skill, 
     function render() {
         const time = state.time;
         const dragonY = py(0.55) + Math.sin(time * Math.PI * 8) * scale * 0.022;
-        dragon.setY(dragonY).setFrame('dragon' + (1 + Math.floor(time * 24) % 6));
+        dragon.setY(dragonY).setFrame('dragon' + (1 + Math.floor(time * 48) % 12));
         const emission = dragonMouth(dragon);
         fx.clear();
 
         if (isVolley) {
-            const progress = clamp((time - 0.12) / 0.68);
+            const straight = clamp((time - 0.04) / 0.36);
+            single.setVisible(straight > 0 && straight < 1).setPosition(px(start + (0.93 - start) * straight), py(mouthY));
+            if (single.visible) trail.emitParticleAt(single.x, single.y, 2);
+            const progress = clamp((time - 0.49) / 0.40);
             const fraction = start + (end - start) * progress;
             for (const { image, direction } of bolts) {
                 const shot = at(fraction, pathY(fraction, direction));
@@ -96,7 +104,7 @@ export function renderCampaignSkillPreview(scene, { x, y, width, height, skill, 
                     .setScale(scale * 0.40 * Math.min(1, progress * 10) / image.width);
             }
             for (const target of targets) {
-                const hit = 0.12 + (target.fraction - start) / (end - start) * 0.68;
+                const hit = 0.49 + (target.fraction - start) / (end - start) * 0.40;
                 target.jet.setVisible(time < hit);
                 poseSkillPulse(target.impact, target.jet.x, target.jet.y, scale * 0.32, (time - hit) / 0.22);
             }

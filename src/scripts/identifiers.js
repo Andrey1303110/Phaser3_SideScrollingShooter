@@ -98,6 +98,7 @@ export const TEXT_KEYS = Object.freeze({
     ADD: "ADD",
     AUTO_FIRE: "AUTO_FIRE",
     BOTTOM_DESCRIPTION: "BOTTOM_DESCRIPTION",
+    INTRO_BRIEFING: "INTRO_BRIEFING",
     BRIEFING: "BRIEFING",
     CAMPAIGN: "CAMPAIGN",
     CAMPAIGN_COMPLETE: "CAMPAIGN_COMPLETE",
@@ -177,6 +178,7 @@ export const STORAGE_KEYS = Object.freeze({
     CURRENT_LEVEL_PLAYER: "currentLevelPlayer",
     CURRENT_LEVEL_SCENE: "currentLevelScene",
     FIRE_BUTTON_OPACITY: "fireButtonOpacity",
+    UPGRADE_TAB: "upgradeTab",
     HI_SCORES: "hiScores",
     JOYSTICK_OPACITY: "joystickOpacity",
     LANG: "lang",
@@ -243,10 +245,11 @@ export const LANGUAGES = Object.freeze({
 });
 
 export const STORAGE_PREFIXES = Object.freeze({
+    MISSION_REMAINING: "missionRemaining_",
     CASUALTIES_: "casualties_",
     PLAYER_ABILITY_LEVEL_: "playerAbilityLevel_",
 });
 
-export const FRAME_KEYS = Object.freeze({DRAGON1: "dragon1", DRAGON3: "dragon3", DRAGON6: "dragon6"});
+export const FRAME_KEYS = Object.freeze({DRAGON1: "dragon1", DRAGON4: "dragon4", DRAGON10: "dragon10"});
 export const UI_ACTIONS = Object.freeze({PLAY: "play", RESTART: "restart"});
 export const resourceKey = Object.freeze({background: level => `bg${level}`, dialogues: level => `dialogues${level}`, voice: (level, line, lang) => `level${level}_text${line}_${lang}`, dialogueLoaded: level => `filecomplete-json-dialogues${level}`});

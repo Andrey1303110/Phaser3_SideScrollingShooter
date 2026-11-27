@@ -12,7 +12,7 @@ export const CAMPAIGN_SKILL_BRANCHES = {
 
 export const CAMPAIGN_SKILL_BALANCE = {
     doubleFireScale: 0.75,
-    doubleFireSpread: 0.18,
+    doubleFireAngle: Math.PI / 6,
     piercingTargets: 2,
     beamIntervalMs: 10000,
     beamWidth: 20,

@@ -21,14 +21,18 @@ const forms = [
 
 // Wrist and outer wing tip, relative to the shoulder in each animation frame.
 // The tips lag on the power stroke and the sail folds on the way back up.
-const beats = [
-    { wrist: [-35, -101], tip: [-137, -88], bow: -3, tail: 3 },
-    { wrist: [-43, -78],  tip: [-148, -50], bow: -7, tail: 6 },
-    { wrist: [-51, 34],   tip: [-150, 8],   bow: -8, tail: 2 },
-    { wrist: [-38, 59],   tip: [-125, 56],  bow: 5,  tail: -5 },
-    { wrist: [-46, 39],   tip: [-137, 46],  bow: 8,  tail: -6 },
-    { wrist: [-50, -54],  tip: [-141, -21], bow: 6,  tail: -2 },
-];
+const beats = Array.from({ length: 12 }, (_, index) => {
+    const phase = index * Math.PI / 6;
+    const lift = Math.cos(phase);
+    const lag = Math.cos(phase - 0.28);
+    return {
+        wrist: [-44 + 7 * lift, -22 - 74 * lift],
+        tip: [-136 + 9 * Math.sin(phase), -19 - 68 * lag],
+        bow: -5 * Math.sin(phase),
+        tail: 3 * Math.sin(phase - 0.4),
+        paw: 2 * Math.sin(phase - 0.65),
+    };
+});
 
 const wingCrop = [635, 768, 1222, 1180];
 const wingRoot = [1189, 1147];
@@ -108,7 +112,9 @@ function paintFrame(source, width, frame, form, beat) {
         const follow = beat.tail * tailWeight * tailWeight;
         const u = form.lip[0] + dx / sx;
         for (let y = 0; y < outHeight; y++) {
-            const v = form.lip[1] + ((y + 0.5) / scale - lip.y - follow) / sy;
+            const localY = (y + 0.5) / scale - lip.y;
+            const pawWeight = clamp((localY - 60) / 40);
+            const v = form.lip[1] + (localY - follow - beat.paw * pawWeight * pawWeight) / sy;
             paint(x, y, u, v, form.crop, 1, 1);
         }
     }
@@ -168,4 +174,4 @@ async function packIcons() {
     await fs.writeFile(path.join(root, 'favicon.ico'), ico(sizes, await Promise.all(sizes.map(render))));
 }
 
-Promise.all([packFlight(), packIcons()]).catch(error => { console.error(error); process.exitCode = 1; });
+Promise.all(process.argv.includes('--flight-only') ? [packFlight()] : [packFlight(), packIcons()]).catch(error => { console.error(error); process.exitCode = 1; });

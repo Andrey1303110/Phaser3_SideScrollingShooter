@@ -24,7 +24,16 @@ export class GameModel {
         this._campaignSkillBranch = Object.hasOwn(CAMPAIGN_SKILL_BRANCHES, savedBranch) ? savedBranch : '';
         this.hiScores = StorageService.get(STORAGE_KEYS.HI_SCORES, '', String);
         this.unlimHiScores = StorageService.get(STORAGE_KEYS.UNLIM_HI_SCORES, 0, Number);
-        this.money = StorageService.get(STORAGE_KEYS.MONEY, 0, Number);
+        // Older saves store just the balance. New wallets keep claims and funds in one write.
+        let wallet;
+        try {
+            wallet = JSON.parse(StorageService.get(STORAGE_KEYS.MONEY, '0'));
+        } catch {
+            wallet = 0;
+        }
+        const balance = typeof wallet === 'number' ? wallet : wallet?.balance;
+        this.money = Number.isSafeInteger(balance) && balance >= 0 ? balance : 0;
+        this.claimedAchievements = new Set(Array.isArray(wallet?.claimed) ? wallet.claimed : []);
         this.player = { ...PLAYER };
         this.fireWeapon = { ...WEAPONS.FIRE };
         this.currentUpgradableStats = { 
@@ -85,7 +94,9 @@ export class GameModel {
 
     setMoney(value) {
         this.money = value;
-        StorageService.set(STORAGE_KEYS.MONEY, this.money);
+        StorageService.set(STORAGE_KEYS.MONEY, JSON.stringify({
+            balance: this.money, claimed: [...this.claimedAchievements],
+        }));
     }
   
     addTotalScore(amount, experienceMultiplier = 1) {
@@ -101,7 +112,7 @@ export class GameModel {
     }
 
     get dragonAge() {
-        return Math.floor(Math.min(...Object.values(this.currentUpgradableStats)) / 10);
+        return Math.floor(Math.min(...Object.values(this.currentUpgradableStats)) / 5);
     }
 
     get campaignSkillBranch() {
@@ -147,6 +158,22 @@ export class GameModel {
     setUnlimHiScores(value) {
         this.unlimHiScores = value;
         StorageService.set(STORAGE_KEYS.UNLIM_HI_SCORES, this.unlimHiScores);
+    }
+
+    claimAchievement(id) {
+        if (!this.achievements.unlocked.has(id) || this.claimedAchievements.has(id)) return false;
+        this.claimedAchievements.add(id);
+        this.increaseMoney();
+        return true;
+    }
+
+    getMissionRemaining(level) {
+        const saved = StorageService.get(STORAGE_PREFIXES.MISSION_REMAINING + level, null, Number);
+        return Number.isInteger(saved) && saved >= 0 && saved <= CAMPAIGN_LEVELS[level - 1].enemies ? saved : null;
+    }
+
+    saveMissionRemaining(level, remaining) {
+        StorageService.set(STORAGE_PREFIXES.MISSION_REMAINING + level, remaining);
     }
 
     initSceneLevel() {
@@ -210,7 +237,9 @@ export class GameModel {
         this._campaignExperienceBonus = 0;
         StorageService.set(STORAGE_KEYS.CAMPAIGN_SKILL_BRANCH, '');
         StorageService.set(STORAGE_KEYS.CAMPAIGN_EXPERIENCE_BONUS, 0);
+        this.claimedAchievements.clear();
         this.initMoney();
+        for (const level of CAMPAIGN_LEVELS) StorageService.remove(STORAGE_PREFIXES.MISSION_REMAINING + level.index);
         this.initHiScores();
         this.initCasualties();
         this.initUpgradeLevels();

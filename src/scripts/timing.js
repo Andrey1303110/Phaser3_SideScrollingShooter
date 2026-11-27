@@ -38,9 +38,9 @@ export const TIMING = Object.freeze({
         MISSILE2MOVE_DELAY_MS: 225,
     }),
     PLAYER: Object.freeze({
-        DEFAULT_FRAME_RATE_FPS: 8,
+        DEFAULT_FRAME_RATE_FPS: 16,
         FRAME_SECONDS_TO_MS: 1000,
-        TWEEN_FLY_DURATION_FACTOR: 2.5,
+        TWEEN_FLY_DURATION_FACTOR: 6,
     }),
     BOOT_SCENE: Object.freeze({
         CREATE_LOGO_ANIMATION_DURATION_MS: 1500,
@@ -68,7 +68,7 @@ export const TIMING = Object.freeze({
     }),
     GAME_TYPE_SELECT: Object.freeze({
         BUILD_DURATION_MS: 480,
-        CREATE_HERO_FRAME_RATE_FPS: 8,
+        CREATE_HERO_FRAME_RATE_FPS: 16,
         CREATE_HERO_DURATION_MS: 1300,
         GAME_SELECT_DURATION_MS: 140,
     }),
@@ -86,7 +86,7 @@ export const TIMING = Object.freeze({
         PLAY_LABEL_CTA_DURATION_MS: 500,
     }),
     UPGRADE_SCENE: Object.freeze({
-        RENDER_FRAME_RATE_FPS: 8,
+        RENDER_FRAME_RATE_FPS: 16,
         RENDER_DURATION_MS: 1300,
         UPGRADE_DURATION_MS: 220,
         EFFECT_DURATION_MS: 650,

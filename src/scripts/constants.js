@@ -132,8 +132,7 @@ export const WEAPONS = {
         acceleration: -400,
         particlesSetting: {
             quantity: 10,
-            speedX: { min: -25, max: -100 },
-            speedY: { min: -100, max: 100 },
+            speed: { min: 70, max: 130 },
             lifespan: { min: 25, max: 100 },
             alpha: { start: 0.35, end: 0 },
             scale: { start: 0.1, end: 0.2 },
