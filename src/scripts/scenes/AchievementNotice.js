@@ -1,3 +1,4 @@
+import { SOUND_KEYS } from '../identifiers';
 import { GameModel } from '../GameModel';
 import { SCENE_NAMES } from '../constants';
 import { delayInMSec, getSceneTexts, screenData, tweenPromise } from '../Utils';
@@ -39,6 +40,9 @@ export class AchievementNotice extends Phaser.Scene {
             ...uiText(17), fontStyle: 'bold',
         }));
         await tweenPromise(this, { targets: banner, alpha: 1, y, duration: 180 });
+        if (this.cache.audio.exists(SOUND_KEYS.ACHIEVEMENT_UNLOCK)) {
+            this.sound.play(SOUND_KEYS.ACHIEVEMENT_UNLOCK, { volume: 0.24 });
+        }
         await delayInMSec(this, 2550);
         await tweenPromise(this, { targets: banner, alpha: 0, y: y - 12 * u, duration: 180 });
         banner.destroy();

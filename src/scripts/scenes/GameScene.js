@@ -270,6 +270,12 @@ export class GameScene extends CommonScene {
             if (--source.targetsRemaining === 0) source.setAlive(false);
             this._onTargetHit(target);
         }
+        if (source !== this._player) {
+            if (this._enemies.contains(target)) this.sounds.explosion_small.play();
+            else this.sound.play(SOUND_KEYS.MISSILE_INTERCEPT, { volume: 0.36 });
+        } else if (this._enemies.contains(target)) {
+            this.sounds.explosion_small.play();
+        }
         this._destroyTarget(target);
     }
 
@@ -296,7 +302,6 @@ export class GameScene extends CommonScene {
 
     _destroyTarget(target) {
         const { x, y } = target;
-        this.sounds.explosion_small.play();
         Boom.generate(this, x, y);
         target.setAlive(false);
     }
@@ -305,6 +310,7 @@ export class GameScene extends CommonScene {
         const aircraft = this._enemies.contains(target);
         if (!aircraft && this._shield?.visible) {
             this._shield.setVisible(false);
+            this.sound.play(SOUND_KEYS.SHIELD_BREAK, { volume: 0.52 });
             playSkillPulse(this, 'shatter', source.x, source.y, source.displayWidth * 1.28, SKILLS.healFadeMs, DEPTH_LAYERS.DEFAULT);
             return;
         }
@@ -314,6 +320,7 @@ export class GameScene extends CommonScene {
         const color = [255, 0, 0];
 
         this._player.currentHealth -= damage;
+        if (this._player.currentHealth > 0) this.sound.play(SOUND_KEYS.DRAGON_HURT, { volume: 0.54 });
 
         this.cameras.main.flash(duration, ...color);
         this.cameras.main.shake(duration, shakeMagnitude);
@@ -368,6 +375,7 @@ export class GameScene extends CommonScene {
         if (player.currentHealth >= player.maxHealth) return;
         player.currentHealth = Math.min(player.maxHealth, player.currentHealth + player.maxHealth * SKILLS.vampirismHealFraction);
         this._healthBar.updateHealthBar(true);
+        this.sound.play(SOUND_KEYS.VAMPIRISM_HEAL, { volume: 0.28 });
         playLifeDrain(this, fromX, fromY, player, 520, DEPTH_LAYERS.DEFAULT);
     }
 
@@ -386,9 +394,11 @@ export class GameScene extends CommonScene {
             poseSkillBeam(beam, x, y, width, SKILLS.beamWidth, 1 - state.progress);
         };
         draw();
-        this.sounds.fire_launch.play({ volume: 0.42 });
+        this.sound.play(SOUND_KEYS.DRAGON_FIRE_BEAM, { volume: 0.52 });
         this.tweens.add({ targets: state, progress: 1, duration: SKILLS.beamFadeMs,
             onUpdate: draw, onComplete: () => beam.destroy() });
+        let hitAircraft = false;
+        let hitProjectile = false;
         for (const target of [...this._enemies.fires.getChildren(), ...this._enemies.getChildren()]) {
             if (this._blackBG) break;
             if (!target.active || !target.body) continue;
@@ -396,8 +406,12 @@ export class GameScene extends CommonScene {
             if (body.right <= band.left || body.left >= band.right || body.bottom <= band.top || body.top >= band.bottom) continue;
             playSkillPulse(this, 'impact', target.x, target.y, target.displayWidth * 0.95, SKILLS.healFadeMs, DEPTH_LAYERS.DEFAULT);
             this._onTargetHit(target);
+            if (this._enemies.contains(target)) hitAircraft = true;
+            else hitProjectile = true;
             this._destroyTarget(target);
         }
+        if (hitAircraft) this.sounds.explosion_small.play();
+        else if (hitProjectile) this.sound.play(SOUND_KEYS.MISSILE_INTERCEPT, { volume: 0.36 });
     }
 
     _setupEvents() {

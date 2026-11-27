@@ -67,6 +67,12 @@ export const TEXTURE_KEYS = Object.freeze({
 });
 
 export const SOUND_KEYS = Object.freeze({
+    SHIELD_BREAK: "shield_break",
+    DRAGON_HURT: "dragon_hurt",
+    DRAGON_FIRE_BEAM: "dragon_fire_beam",
+    MISSILE_INTERCEPT: "missile_intercept",
+    VAMPIRISM_HEAL: "vampirism_heal",
+    ACHIEVEMENT_UNLOCK: "achievement_unlock",
     CAMPAIGN_COMPLETE_SONG: "campaign_complete_song",
     CLICK: "click",
     ERROR: "error",

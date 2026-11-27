@@ -102,9 +102,9 @@ export class CampaignScene extends CommonScene {
         return label;
     }
 
-    _button(parent, x, y, width, height, text, action, enabled = true, primary = false) {
+    _button(parent, x, y, width, height, text, action, enabled = true, primary = false, round = false) {
         return createButton(this, {
-            x, y, width, height, text, parent, enabled,
+            x, y, width, height, text, parent, enabled, round,
             variant: primary ? 'primary' : 'secondary',
             canPress: () => !this._busy,
             onPress: () => { this.sounds.click.play({ volume: 0.2 }); action(); },
@@ -121,9 +121,11 @@ export class CampaignScene extends CommonScene {
         this._text(left + 56 * u, top + 43 * u,
             this._getText(TEXT_KEYS.PROGRESS).replace('{done}', completed).replace('{total}', CAMPAIGN_LEVELS.length), 12, '#a3b9aa');
         const wallet = this._text(screenData.right - 16 * u, top + 26 * u,
-            String(this.model.money), 16, '#efd99f').setOrigin(1, 0.5);
-        const ruby = this.add.image(wallet.getBounds().left - 15 * u, top + 26 * u, TEXTURE_KEYS.RUBY).setDisplaySize(18 * u, 18 * u);
+            String(this.model.money), 22, '#efd99f').setOrigin(1, 0.5);
+        const ruby = this.add.image(wallet.getBounds().left - 21 * u, top + 26 * u, TEXTURE_KEYS.RUBY).setDisplaySize(28 * u, 28 * u);
         this._ui.add(ruby);
+        this.tweens.add({ targets: ruby, y: ruby.y - 3 * u, duration: 900, ease: 'Sine.InOut', yoyo: true, repeat: -1 });
+        this.tweens.add({ targets: ruby, scaleX: ruby.scaleX * 0.16, duration: 760, ease: 'Sine.InOut', yoyo: true, repeat: -1 });
         this._reportButton = this._button(this._ui, ruby.x - 70 * u, top + 26 * u,
             100 * u, 44 * u, this._getText(TEXT_KEYS.REPORT), () => this._openReport());
     }
@@ -137,9 +139,9 @@ export class CampaignScene extends CommonScene {
         const step = this._mapView.width / items.length;
         items.forEach(([key, color], index) => {
             const x = this._mapView.x + index * step;
-            this._ui.add(this.add.circle(x + 4 * u, y, 3.5 * u, color));
-            this._text(x + 12 * u, y, this._getText(key), 16, '#c1d1c9').setOrigin(0, 0.5)
-                .setWordWrapWidth(step - 16 * u).setAlign('center');
+            this._ui.add(this.add.circle(x + 6 * u, y, 5 * u, color));
+            this._text(x + 17 * u, y, this._getText(key), 18, '#c1d1c9').setOrigin(0, 0.5)
+                .setWordWrapWidth(step - 18 * u).setAlign('center');
         });
     }
 
@@ -158,38 +160,48 @@ export class CampaignScene extends CommonScene {
             .strokeRoundedRect(p.x, p.y, p.width, p.height, 14 * u);
         root.add(panel);
         this._previousButton = this._button(root, p.x + 24 * u, p.y + 24 * u, 44 * u, 44 * u,
-            '‹', () => this._selectMission(CAMPAIGN_LEVELS[level.index - 2]), level.index > 1);
+            '‹', () => this._selectMission(CAMPAIGN_LEVELS[level.index - 2]), level.index > 1, false, true);
         this._nextButton = this._button(root, p.x + p.width - 24 * u, p.y + 24 * u, 44 * u, 44 * u,
-            '›', () => this._selectMission(CAMPAIGN_LEVELS[level.index]), level.index < CAMPAIGN_LEVELS.length);
+            '›', () => this._selectMission(CAMPAIGN_LEVELS[level.index]), level.index < CAMPAIGN_LEVELS.length, false, true);
         this._previousButton.label.setFontSize(24 * u);
         this._nextButton.label.setFontSize(24 * u);
         this._text(p.x + p.width / 2, p.y + 24 * u,
             this._getText(TEXT_KEYS.MISSION_NUMBER).replace('{level}', level.index).replace('{total}', CAMPAIGN_LEVELS.length),
             12, '#adc4b2', root).setOrigin(0.5);
-        const title = this._text(p.x + p.width / 2, p.y + 54 * u, this._getText(TEXT_KEYS.LEVEL_ + level.index + '_NAME'), UI.type.section, '#f3ead6', root);
-        title.setWordWrapWidth(p.width - 32 * u).setOrigin(0.5, 0).setAlign('center');
-        while (title.height > 48 * u && parseFloat(title.style.fontSize) > 16 * u) title.setFontSize(parseFloat(title.style.fontSize) - u);
+        const details = this.add.container(p.x + p.width / 2, p.y + 49 * u);
+        root.add(details);
+        const innerWidth = p.width - 32 * u;
+        const title = this._text(0, 0, this._getText(TEXT_KEYS.LEVEL_ + level.index + '_NAME'),
+            UI.type.section, '#f3ead6', details).setOrigin(0.5, 0).setAlign('center').setWordWrapWidth(innerWidth);
+        let row = title.height + 8 * u;
+        const addLine = (value, color) => {
+            const line = this._text(-innerWidth / 2, row, value, UI.type.caption, color, details).setWordWrapWidth(innerWidth);
+            row += line.height + 5 * u;
+        };
         const skillIndex = CAMPAIGN_SKILL_MISSIONS.indexOf(level.index);
-        if (skillIndex >= 0) this._renderSkillReward(root, skillIndex, completed);
-        if (skillIndex < 0 || p.height >= 330 * u) {
-            this._text(p.x + 16 * u, p.y + (skillIndex < 0 ? 104 : 145) * u,
-                this._getText(!available ? TEXT_KEYS.LOCKED_HINT : completed ? TEXT_KEYS.LIBERATED : TEXT_KEYS.CURRENT)
-                    .replace('{level}', level.index - 1), 16, available ? '#e4c990' : '#b5c7bd', root)
-                .setWordWrapWidth(p.width - 32 * u);
+        if (skillIndex >= 0) {
+            const texts = this._skillTexts;
+            const branch = CAMPAIGN_SKILL_BRANCHES[this.model.campaignSkillBranch];
+            if (completed && this.model.canChooseCampaignSkillBranch) {
+                this._button(details, 0, row + 22 * u, innerWidth, 44 * u, texts.CHOICE_AVAILABLE,
+                    () => this.scene.start(SCENE_NAMES.UPGRADE, { showSkills: true, fromCampaign: true }));
+                row += 49 * u;
+            } else {
+                const reward = skillIndex === 0 ? texts.BRANCH_REWARD : branch ? texts[branch.skills[skillIndex]] : texts.TIER_REWARD;
+                addLine((completed ? texts.RECEIVED : texts.REWARD).replace('{reward}', reward), '#e4c990');
+            }
         }
+        addLine(this._getText(!available ? TEXT_KEYS.LOCKED_HINT : completed ? TEXT_KEYS.LIBERATED : TEXT_KEYS.CURRENT)
+            .replace('{level}', level.index - 1), available ? '#e4c990' : '#b5c7bd');
         const types = Object.values(ENEMIES).filter(enemy => enemy.entryLevel <= level.index)
             .map(enemy => this._getText(TEXT_KEYS.TYPE_ + enemy.texture.toUpperCase()));
-        if (p.height >= 310 * u && skillIndex < 0) {
-            this._text(p.x + 16 * u, p.y + 146 * u, types.join(' · '), UI.type.caption, '#b3c9bc', root)
-                .setWordWrapWidth(p.width - 32 * u);
+        addLine(types.join(' · '), '#b3c9bc');
+        if (p.height >= Math.max(370 * u, row + 218 * u)) {
+            addLine(this._getText(TEXT_KEYS.TARGETS).replace('{count}', level.enemies), '#d3dfd2');
+            addLine(this._getText(TEXT_KEYS.RECORD).replace('{score}', this.model.getLevelHiScore(level.index)), '#a3b9ab');
         }
-        if (p.height >= 370 * u) {
-            this._text(p.x + 16 * u, p.y + 218 * u,
-                this._getText(TEXT_KEYS.TARGETS).replace('{count}', level.enemies), 14, '#d3dfd2', root);
-            this._text(p.x + 16 * u, p.y + 244 * u,
-                this._getText(TEXT_KEYS.RECORD).replace('{score}', this.model.getLevelHiScore(level.index)), 14, '#a3b9ab', root);
-        }
-        const sideBySide = p.height < 236 * u;
+        const sideBySide = p.height < row + 157 * u;
+        details.setScale(Math.min(1, (p.height - (sideBySide ? 105 : 157) * u) / row));
         const width = sideBySide ? (p.width - 40 * u) / 2 : p.width - 32 * u;
         const center = p.x + p.width / 2;
         const offset = sideBySide ? (width + 8 * u) / 2 : 0;
@@ -198,22 +210,6 @@ export class CampaignScene extends CommonScene {
             () => this._playBriefing(level.index), available);
         this._startButton = this._button(root, center + offset, p.y + p.height - 28 * u,
             width, 44 * u, this._getText(available ? TEXT_KEYS.START : TEXT_KEYS.LOCKED), () => this._startMission(), available, true);
-    }
-
-    _renderSkillReward(root, index, completed) {
-        const p = this._panel;
-        const u = this._unit;
-        const texts = this._skillTexts;
-        const branch = CAMPAIGN_SKILL_BRANCHES[this.model.campaignSkillBranch];
-        if (completed && this.model.canChooseCampaignSkillBranch) {
-            this._button(root, p.x + p.width / 2, p.y + 120 * u, p.width - 32 * u, 44 * u,
-                texts.CHOICE_AVAILABLE,
-                () => this.scene.start(SCENE_NAMES.UPGRADE, { showSkills: true, fromCampaign: true }));
-            return;
-        }
-        const reward = index === 0 ? texts.BRANCH_REWARD : branch ? texts[branch.skills[index]] : texts.TIER_REWARD;
-        this._text(p.x + 16 * u, p.y + 98 * u, (completed ? texts.RECEIVED : texts.REWARD).replace('{reward}', reward),
-            UI.type.caption, '#e4c990', root).setWordWrapWidth(p.width - 32 * u);
     }
 
     _selectMission(level) {

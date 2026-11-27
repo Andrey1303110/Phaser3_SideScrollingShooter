@@ -1,4 +1,5 @@
 import { FRAME_KEYS, TEXTURE_KEYS } from '../../identifiers';
+import { WEAPONS } from '../../constants';
 import { createLifeDrain, createSkillBeam, dragonMouth, poseLifeDrain, poseSkillBeam, poseSkillPulse, skillImage } from '../../skillEffects';
 import { uiText, uiUnit } from '../../ui';
 
@@ -64,6 +65,16 @@ export function renderCampaignSkillPreview(scene, { x, y, width, height, skill, 
     const drain = isVampirism ? createLifeDrain(scene) : null;
     const xp = isExperience ? skillImage(scene, 'xp') : null;
     const single = isVampirism || isExperience ? scene.add.image(0, 0, TEXTURE_KEYS.FIRE) : null;
+    const trail = single ? scene.add.particles(0, 0, TEXTURE_KEYS.EXPLOSION_PARTICLE, {
+        ...WEAPONS.FIRE.particlesSetting, emitting: false, lifespan: { min: 60, max: 180 },
+        speedX: { min: -scale * 0.32, max: 0 }, speedY: { min: -scale * 0.09, max: scale * 0.09 },
+        scale: { start: scale * 0.11 / scene.textures.getFrame(TEXTURE_KEYS.EXPLOSION_PARTICLE).width, end: 0 },
+    }) : null;
+    if (single) {
+        scene.children.moveBelow(trail, dragon);
+        scene.children.moveBelow(single, dragon);
+        single.setScale(scale * 0.09 / single.width);
+    }
     const fx = scene.add.graphics();
     const note = isExperience || isVampirism
         ? scene.add.text(px(0.72), py(0.36), '', uiText(15 * textScale, isExperience ? '#ffd58a' : '#96ffba')).setOrigin(0.5)
@@ -109,8 +120,11 @@ export function renderCampaignSkillPreview(scene, { x, y, width, height, skill, 
             const hit = round === hits - 1 ? 0.52 : 0.72;
             const target = targets[0].jet;
             target.setVisible(sub < hit).setX(px(0.87 - 0.14 * Math.min(sub, hit)));
-            single.setVisible(sub < hit).setPosition(emission.x + (target.x - emission.x) * sub / hit, emission.y)
-                .setScale(scale * 0.16 * Math.min(1, sub * 16) / single.width);
+            const progress = clamp(sub / hit);
+            const distance = progress * (0.3 + 0.7 * progress);
+            single.setVisible(sub < hit).setPosition(emission.x + (target.x - emission.x) * distance,
+                emission.y + (target.y - emission.y) * distance).setAlpha(Math.min(1, progress * 8));
+            if (single.visible && progress > 0) trail.emitParticleAt(single.x, single.y, 2);
             poseSkillPulse(targets[0].impact, target.x, target.y, scale * 0.32, (sub - hit) / 0.45);
             const paid = round === hits - 1 && sub >= hit;
             if (isVampirism) {

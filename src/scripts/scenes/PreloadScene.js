@@ -58,7 +58,7 @@ export class PreloadScene extends CommonScene {
     }
 
     _preloadResources() {
-        this.load.spritesheet(TEXTURE_KEYS.ACHIEVEMENT_PATCHES, './assets/sprites/achievement_patches.jpg',
+        this.load.spritesheet(TEXTURE_KEYS.ACHIEVEMENT_PATCHES, './assets/sprites/achievement_patches.png',
             { frameWidth: 160, frameHeight: 160 });
         this.load.image(TEXTURE_KEYS.SKILL_PREVIEW_BG, './assets/sprites/skill_preview_bg.png');
         this.load.image(TEXTURE_KEYS.SKILL_ICONS, './assets/sprites/skill_icons.png');

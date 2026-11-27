@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.12.3
+
+- Add six sound effects for combat, healing, and achievements.
+- Play a single impact sound when the fire beam hits multiple targets.
+- Update campaign navigation, mission details, and skill previews.
+- Update the helicopter sprite.
+
 ## 1.12.2
 
 - Small text fixes.

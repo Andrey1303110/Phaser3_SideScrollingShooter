@@ -27,7 +27,7 @@ export function uiText(size = UI.type.body, color = UI.colors.text) {
 
 export function createButton(scene, { x, y, width, height = UI.buttonHeight * uiUnit(), text,
     onPress, parent, variant = 'secondary', enabled = true, canPress = () => true,
-    fontSize = UI.type.button }) {
+    fontSize = UI.type.button, round = false }) {
     const u = uiUnit();
     const root = scene.add.container(x, y);
     if (parent) parent.add(root);
@@ -42,10 +42,14 @@ export function createButton(scene, { x, y, width, height = UI.buttonHeight * ui
     const draw = (pressed = false) => {
         const style = selected ? 'primary' : variant;
         const color = !enabled ? UI.colors.disabled : UI.colors[style + (pressed ? 'Pressed' : '')];
-        background.clear().fillStyle(color).lineStyle(u, UI.colors.border, 0.9)
+        background.clear().fillStyle(color).lineStyle(u, round && enabled ? 0xc5a36c : UI.colors.border, 0.9);
+        if (round) {
+            const radius = Math.min(width, height) * 0.37;
+            background.fillCircle(0, 0, radius).strokeCircle(0, 0, radius);
+        } else background
             .fillRoundedRect(-width / 2, -height / 2, width, height, UI.radius * u)
             .strokeRoundedRect(-width / 2, -height / 2, width, height, UI.radius * u);
-        label.setColor(enabled ? UI.colors.text : UI.colors.disabledText);
+        label.setColor(enabled ? (round ? UI.colors.accent : UI.colors.text) : UI.colors.disabledText);
     };
     const fit = () => {
         // Wrap localized labels first; never shrink a button into unreadable text.
