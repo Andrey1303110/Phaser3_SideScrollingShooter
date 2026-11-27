@@ -25,16 +25,27 @@ export class Fire extends MovableObject {
     }
 
     constructor(data, { direction = 0, targets = 1 } = {}) {
-        super(data);
+        const skillShot = data.texture === TEXTURE_KEYS.FIRE && direction !== 0;
+        super(skillShot ? { ...data, texture: TEXTURE_KEYS.SKILL_FX, frame: targets > 1 ? 'pierce' : 'volley' } : data);
 
+        this._weaponTexture = data.texture;
         this._spreadDirection = direction;
         this.targetsRemaining = targets;
         this._setup(data);
-        if (targets > 1) this.setTint(0xffca85);
-        const particles = targets > 1 && data.particlesSetting
-            ? { ...data.particlesSetting, tint: [0xffa337, 0xffda77, 0xfff1bb], lifespan: { min: 110, max: 320 } }
+        if (skillShot) {
+            // The painted wake trails behind the original projectile hitbox.
+            const hit = this.scene.textures.getFrame(TEXTURE_KEYS.FIRE);
+            this.setOrigin(0.82, 0.5);
+            this.body.setSize(hit.realWidth, hit.realHeight, false)
+                .setOffset(this.displayOriginX - hit.realWidth / 2, this.displayOriginY - hit.realHeight / 2);
+        }
+        const particles = skillShot
+            ? { ...data.particlesSetting, frame: 'impact', quantity: 2, followOffset: { x: -6, y: 0 },
+                speedX: { min: -95, max: -25 }, speedY: { min: -22, max: 22 },
+                scale: { start: 0.055, end: 0.008 }, lifespan: { min: 80, max: 200 },
+                tint: targets > 1 ? [0xffd062, 0xfff4c6] : [0xff722b, 0xffca57] }
             : data.particlesSetting;
-        this._addParticles(particles);
+        this._addParticles(particles, skillShot ? TEXTURE_KEYS.SKILL_FX : TEXTURE_KEYS.EXPLOSION_PARTICLE);
         if (data.emissionDepth !== undefined) {
             this.setDepth(data.emissionDepth).setAlpha(0);
             this._emitter?.setDepth(data.emissionDepth);
@@ -52,7 +63,7 @@ export class Fire extends MovableObject {
         if (this._spreadDirection !== 1) this._playLaunchSound();
         this.body.setAccelerationX(this.acceleration);
 
-        switch (this.texture.key) {
+        switch (this._weaponTexture) {
             case WEAPONS.ROCKET.texture:
                 this._rocketMove();
                 break;
@@ -68,11 +79,16 @@ export class Fire extends MovableObject {
         }
     }
 
+    update() {
+        super.update();
+        if (this.active && this._spreadDirection) this.rotation = Math.atan2(this.body.velocity.y, this.body.velocity.x);
+    }
+
     _setup({ sourceVelocity, maxSpeed, sound }) {
         this.body.setVelocityX(sourceVelocity);
         this.body.setMaxSpeed(Math.abs(maxSpeed));
 
-        if (this.texture.key !== WEAPONS.FIRE.texture) {
+        if (this._weaponTexture !== WEAPONS.FIRE.texture) {
             this._projectileSound = this.scene.sound.add(sound);
         }
     }
@@ -119,13 +135,13 @@ export class Fire extends MovableObject {
         this.body.setVelocityY(this.velocity * 0.05);
     }
 
-    _addParticles(settings) {
+    _addParticles(settings, texture) {
         if (!settings) {
             return;
         }
 
         // todo add react particle speed x on updated speed from source fire or make it depends by multiplier from original speed 
-        this._emitter = this.scene.add.particles(0, 0, TEXTURE_KEYS.EXPLOSION_PARTICLE, {
+        this._emitter = this.scene.add.particles(0, 0, texture, {
             blendMode: TEXT_KEYS.ADD,
             follow: this,
             followOffset: {
@@ -133,7 +149,7 @@ export class Fire extends MovableObject {
             },
             ...settings
         });
-        this._emitter.tintFill = true;
+        this._emitter.tintFill = texture === TEXTURE_KEYS.EXPLOSION_PARTICLE;
     }
 
     isDead() {

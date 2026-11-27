@@ -54,6 +54,7 @@ export const TEXTURE_KEYS = Object.freeze({
     ROCKET: "rocket",
     RUBY: "ruby",
     SCALE: "scale",
+    SKILL_FX: "skill_fx",
     SKILL_ICONS: "skill_icons",
     SKILL_PREVIEW_BG: "skill_preview_bg",
     SKOBEEVA: "skobeeva",

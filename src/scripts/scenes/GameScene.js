@@ -11,7 +11,7 @@ import { UI, uiUnit, uiText, createButton } from '../ui';
 import { HealthBar } from '../classes/HealthBar';
 import { getFontName, getSceneTexts, screenData, tweenPromise } from '../Utils';
 import { BRANCH, CAMPAIGN_SKILL_BALANCE as SKILLS, CAMPAIGN_SKILL_MISSIONS } from '../campaignSkills';
-import { animateSkillBurst, dragonMouth, drawSkillBeam, drawSkillShield } from '../skillEffects';
+import { createSkillBeam, dragonMouth, playLifeDrain, playSkillPulse, poseSkillBeam, skillImage } from '../skillEffects';
 
 export class GameScene extends CommonScene {
     constructor() {
@@ -37,6 +37,7 @@ export class GameScene extends CommonScene {
         this._vampirismKills = 0;
         this._shield = null;
         this._beamTimer = null;
+        this._xpPulse = null;
     }
 
     create(data) {
@@ -264,7 +265,7 @@ export class GameScene extends CommonScene {
             this._onPlayerHit(source, target);
         } else {
             if (this.fireSkillTier >= 2) {
-                animateSkillBurst(this, target.x, target.y, target.displayWidth * 0.21, 0xffc76a, SKILLS.beamFadeMs, DEPTH_LAYERS.UI);
+                playSkillPulse(this, 'impact', target.x, target.y, target.displayWidth * 0.75, SKILLS.beamFadeMs, DEPTH_LAYERS.DEFAULT);
             }
             if (--source.targetsRemaining === 0) source.setAlive(false);
             this._onTargetHit(target);
@@ -284,8 +285,13 @@ export class GameScene extends CommonScene {
             this.model.increaseCasualties(casualtiesName);
             this.model.addTotalScore(reward, this._survivalSkillTier >= 3 ? SKILLS.experienceMultiplier : 1);
             this._updateExpProgressBar();
+            if (this._survivalSkillTier >= 3 && !this._xpPulse?.active) {
+                const bar = this._progressExpBar;
+                this._xpPulse = playSkillPulse(this, 'xp', bar.x + bar.displayWidth * 0.58, bar.y + 3 * uiUnit(),
+                    34 * uiUnit(), 520, DEPTH_LAYERS.UI);
+            }
         }
-        if (this._survivalSkillTier >= 2 && this._enemies.contains(target)) this._countVampirismKill();
+        if (this._survivalSkillTier >= 2 && this._enemies.contains(target)) this._countVampirismKill(target.x, target.y);
     }
 
     _destroyTarget(target) {
@@ -299,8 +305,7 @@ export class GameScene extends CommonScene {
         const aircraft = this._enemies.contains(target);
         if (!aircraft && this._shield?.visible) {
             this._shield.setVisible(false);
-            animateSkillBurst(this, target.x, target.y, this._player.displayWidth * 0.48,
-                0x77e7ff, SKILLS.healFadeMs, DEPTH_LAYERS.UI + 1);
+            playSkillPulse(this, 'shatter', source.x, source.y, source.displayWidth * 1.28, SKILLS.healFadeMs, DEPTH_LAYERS.DEFAULT);
             return;
         }
         const damage = aircraft ? this._player.maxHealth : target.damage;
@@ -324,9 +329,10 @@ export class GameScene extends CommonScene {
         this._skillTexts = getSceneTexts(this, 'Skills');
         this._skillHud = null;
         if (this._survivalSkillTier > 0) {
-            const shield = this.add.graphics().setPosition(this._player.x, this._player.y).setDepth(DEPTH_LAYERS.UI);
-            drawSkillShield(shield, 0, 0, this._player.displayWidth + 16 * u, this._player.displayHeight + 12 * u, 0.87);
-            this.tweens.add({ targets: shield, alpha: 0.65, duration: 800, yoyo: true, repeat: -1, ease: 'Sine.InOut' });
+            const shield = skillImage(this, 'shield').setPosition(this._player.x, this._player.y)
+                .setDisplaySize(this._player.displayWidth * 1.22 + 12 * u, this._player.displayHeight * 1.25 + 10 * u)
+                .setDepth(DEPTH_LAYERS.DEFAULT).setAlpha(0.94);
+            this.tweens.add({ targets: shield, alpha: 0.74, duration: 1000, yoyo: true, repeat: -1, ease: 'Sine.InOut' });
             this._shield = shield;
             this._player.once(Phaser.GameObjects.Events.DESTROY, () => shield.destroy());
         }
@@ -355,14 +361,14 @@ export class GameScene extends CommonScene {
         this._skillHud.setText(text);
     }
 
-    _countVampirismKill() {
+    _countVampirismKill(fromX = this._player.x, fromY = this._player.y) {
         if (++this._vampirismKills < SKILLS.vampirismKills) return;
         this._vampirismKills = 0;
         const player = this._player;
         if (player.currentHealth >= player.maxHealth) return;
         player.currentHealth = Math.min(player.maxHealth, player.currentHealth + player.maxHealth * SKILLS.vampirismHealFraction);
         this._healthBar.updateHealthBar(true);
-        animateSkillBurst(this, player.x, player.y, player.displayWidth * 0.54, 0x83eaa4, SKILLS.healFadeMs, DEPTH_LAYERS.UI + 1);
+        playLifeDrain(this, fromX, fromY, player, 520, DEPTH_LAYERS.DEFAULT);
     }
 
     _fireBeam() {
@@ -371,20 +377,13 @@ export class GameScene extends CommonScene {
         const width = this.cameras.main.worldView.right - x;
         if (width <= 0) return;
         const band = new Phaser.Geom.Rectangle(x, y - SKILLS.beamWidth / 2, width, SKILLS.beamWidth);
-        const beam = this.add.graphics().setDepth(this._player.depth - 0.1);
+        const beam = createSkillBeam(this).setDepth(this._player.depth - 0.1);
         const state = { progress: 0 };
         const draw = () => {
-            if (!this._player.active) { beam.clear(); return; }
+            if (!this._player.active) { beam.setVisible(false); return; }
             const { x, y } = dragonMouth(this._player);
             const width = this.cameras.main.worldView.right - x;
-            const alpha = 1 - state.progress;
-            beam.clear();
-            drawSkillBeam(beam, x, y, width, SKILLS.beamWidth, alpha);
-            for (let index = 0; index < 12; index++) {
-                const sparkX = x + width * (index + 1) / 13;
-                const away = (index % 2 === 0 ? -1 : 1) * SKILLS.beamWidth * (0.25 + state.progress);
-                beam.lineStyle(2, 0xffcd77, alpha * 0.75).lineBetween(sparkX, y + away, sparkX + 15 * alpha, y + away);
-            }
+            poseSkillBeam(beam, x, y, width, SKILLS.beamWidth, 1 - state.progress);
         };
         draw();
         this.sounds.fire_launch.play({ volume: 0.42 });
@@ -395,7 +394,7 @@ export class GameScene extends CommonScene {
             if (!target.active || !target.body) continue;
             const body = target.body;
             if (body.right <= band.left || body.left >= band.right || body.bottom <= band.top || body.top >= band.bottom) continue;
-            animateSkillBurst(this, target.x, target.y, target.displayWidth * 0.25, 0xffbb64, SKILLS.healFadeMs, DEPTH_LAYERS.UI);
+            playSkillPulse(this, 'impact', target.x, target.y, target.displayWidth * 0.95, SKILLS.healFadeMs, DEPTH_LAYERS.DEFAULT);
             this._onTargetHit(target);
             this._destroyTarget(target);
         }

@@ -50,10 +50,10 @@ module.exports = {
   plugins: [
     new CopyWebpackPlugin({
       patterns: [
-        {
-          from: 'src/assets/',
-          to: 'assets/',
-        },
+        { from: 'src/assets/', to: 'assets/' },
+        { from: 'favicon.ico', to: 'favicon.ico' },
+        { from: 'src/manifest.json', to: 'manifest.json' },
+        { from: 'browserconfig.xml', to: 'browserconfig.xml' },
       ],
     }),
     new HtmlWebpackPlugin({

@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.12.0
+
+- Update skills effect
+- Update dragon sprites
+- Update icons
+- Add promo screenshots
+
 ## 1.11.2
 
 - Sequenced interface animations and scene transitions with async/await. Main menu cards now appear one at a time, and the disclaimer prompt fades in after the text while tap-to-continue stays available throughout.

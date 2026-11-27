@@ -1,10 +1,8 @@
 import { FRAME_KEYS, TEXTURE_KEYS } from '../../identifiers';
-import { dragonMouth, drawSkillBeam, drawSkillBurst, drawSkillShield } from '../../skillEffects';
+import { createLifeDrain, createSkillBeam, dragonMouth, poseLifeDrain, poseSkillBeam, poseSkillPulse, skillImage } from '../../skillEffects';
 import { uiText, uiUnit } from '../../ui';
 
-const ORANGE = 0xffab58;
 const GREEN = 0x74dd9a;
-const BLUE = 0x77e7ff;
 const clamp = value => Math.max(0, Math.min(1, value));
 
 export function coverSkillArt(scene, x, y, width, height) {
@@ -13,15 +11,6 @@ export function coverSkillArt(scene, x, y, width, height) {
     const cropWidth = width / scale;
     const cropHeight = height / scale;
     return art.setScale(scale).setCrop((art.width - cropWidth) / 2, (art.height - cropHeight) / 2, cropWidth, cropHeight);
-}
-
-function drawBolt(graphics, x, y, radius, angle, color) {
-    const dx = Math.cos(angle) * radius;
-    const dy = Math.sin(angle) * radius;
-    graphics.lineStyle(radius, color, 0.22).lineBetween(x - 5 * dx, y - 5 * dy, x, y);
-    graphics.lineStyle(radius * 0.5, color, 0.82).lineBetween(x - 3 * dx, y - 3 * dy, x, y);
-    graphics.fillStyle(color, 0.34).fillCircle(x, y, radius);
-    graphics.fillStyle(0xffffd8).fillCircle(x, y, radius * 0.48);
 }
 
 export function renderCampaignSkillPreview(scene, { x, y, width, height, skill, color, label, xpLabel, unit }) {
@@ -57,12 +46,25 @@ export function renderCampaignSkillPreview(scene, { x, y, width, height, skill, 
     }) : isShield ? [] : [{ fraction: 0.79, vertical: mouthY }];
     const targets = placements.map(spot => {
         const jet = scene.add.sprite(px(spot.fraction), py(spot.vertical), TEXTURE_KEYS.JET, '1');
-        return { ...spot, jet: jet.setScale(Math.min(scale * 0.34, width * 0.19) / jet.width) };
+        jet.setScale(Math.min(scale * 0.34, width * 0.19) / jet.width);
+        return { ...spot, jet, impact: skillImage(scene, 'impact') };
     });
     const missile = isShield ? scene.add.image(px(end), py(0.55), TEXTURE_KEYS.ROCKET) : null;
     if (missile) missile.setScale(Math.min(width * 0.16, scale * 0.28) / missile.width);
+    const bolts = isVolley ? [-1, 1].map(direction => {
+        const image = skillImage(scene, skill === 'DOUBLE_PIERCE' ? 'pierce' : 'volley').setOrigin(0.82, 0.5)
+            .setRotation(Math.atan2(direction * height * 0.27, width * (end - start)));
+        scene.children.moveBelow(image, dragon);
+        return { image, direction };
+    }) : [];
+    const beam = isBeam ? createSkillBeam(scene) : null;
+    if (beam) scene.children.moveBelow(beam, dragon);
+    const shield = isShield ? skillImage(scene, 'shield').setDisplaySize(dragonWidth * 1.35, dragonWidth * 1.1) : null;
+    const shards = isShield ? skillImage(scene, 'shatter') : null;
+    const drain = isVampirism ? createLifeDrain(scene) : null;
+    const xp = isExperience ? skillImage(scene, 'xp') : null;
+    const single = isVampirism || isExperience ? scene.add.image(0, 0, TEXTURE_KEYS.FIRE) : null;
     const fx = scene.add.graphics();
-    if (!isShield && !isVampirism) scene.children.moveBelow(fx, dragon);
     const note = isExperience || isVampirism
         ? scene.add.text(px(0.72), py(0.36), '', uiText(15 * textScale, isExperience ? '#ffd58a' : '#96ffba')).setOrigin(0.5)
         : null;
@@ -77,33 +79,29 @@ export function renderCampaignSkillPreview(scene, { x, y, width, height, skill, 
         if (isVolley) {
             const progress = clamp((time - 0.12) / 0.68);
             const fraction = start + (end - start) * progress;
-            if (progress > 0 && progress < 1) {
-                for (const direction of [-1, 1]) {
-                    const shot = at(fraction, pathY(fraction, direction));
-                    drawBolt(fx, shot.x, shot.y, scale * 0.06 * Math.min(1, progress * 10), direction * 0.32, ORANGE);
-                }
+            for (const { image, direction } of bolts) {
+                const shot = at(fraction, pathY(fraction, direction));
+                image.setVisible(progress > 0 && progress < 1).setPosition(shot.x, shot.y)
+                    .setScale(scale * 0.40 * Math.min(1, progress * 10) / image.width);
             }
             for (const target of targets) {
                 const hit = 0.12 + (target.fraction - start) / (end - start) * 0.68;
                 target.jet.setVisible(time < hit);
-                drawSkillBurst(fx, target.jet.x, target.jet.y, scale * 0.12, (time - hit) / 0.22, ORANGE);
+                poseSkillPulse(target.impact, target.jet.x, target.jet.y, scale * 0.32, (time - hit) / 0.22);
             }
         } else if (isBeam) {
             const active = time >= 0.54 && time < 0.82;
             const strength = active ? 1 - (time - 0.54) / 0.28 : 0;
             const target = targets[0].jet;
             target.setVisible(time < 0.54);
-            if (time < 0.54) {
-                fx.fillStyle(ORANGE, time * 0.9).fillCircle(emission.x, emission.y, scale * (0.02 + time * 0.05));
-            }
-            drawSkillBeam(fx, emission.x, emission.y, px(end) - emission.x, scale * 0.16, strength);
-            drawSkillBurst(fx, target.x, target.y, scale * 0.18, (time - 0.54) / 0.28, ORANGE);
+            poseSkillBeam(beam, emission.x, emission.y, px(end) - emission.x, scale * 0.12, strength, time < 0.54 ? time / 0.54 : 0);
+            poseSkillPulse(targets[0].impact, target.x, target.y, scale * 0.46, (time - 0.54) / 0.28);
         } else if (isShield) {
             const hit = 0.62;
-            const radius = scale * 0.22;
-            missile.setVisible(time < hit).setX(px(end - (end - 0.34) * clamp(time / hit)));
-            if (time < hit) drawSkillShield(fx, dragon.x, dragonY, dragonWidth * 1.25, radius * 1.85, 0.85);
-            drawSkillBurst(fx, px(0.34), dragonY, radius, (time - hit) / 0.34, BLUE);
+            const rim = dragon.x + shield.displayWidth * 0.42;
+            missile.setVisible(time < hit).setX(px(end) + (rim - px(end)) * clamp(time / hit));
+            shield.setVisible(time < hit).setPosition(dragon.x, dragonY).setAlpha(0.88 + 0.1 * Math.sin(time * Math.PI * 4));
+            poseSkillPulse(shards, dragon.x, dragonY, shield.displayWidth, (time - hit) / 0.34);
         } else {
             const hits = isVampirism ? 4 : 1;
             const round = Math.min(hits - 1, Math.floor(time * hits));
@@ -111,8 +109,9 @@ export function renderCampaignSkillPreview(scene, { x, y, width, height, skill, 
             const hit = round === hits - 1 ? 0.52 : 0.72;
             const target = targets[0].jet;
             target.setVisible(sub < hit).setX(px(0.87 - 0.14 * Math.min(sub, hit)));
-            if (sub < hit) drawBolt(fx, px(start + 0.46 * sub / hit), emission.y, scale * 0.055 * Math.min(1, sub * 16), 0, ORANGE);
-            drawSkillBurst(fx, target.x, target.y, scale * 0.14, (sub - hit) / 0.45, ORANGE);
+            single.setVisible(sub < hit).setPosition(emission.x + (target.x - emission.x) * sub / hit, emission.y)
+                .setScale(scale * 0.16 * Math.min(1, sub * 16) / single.width);
+            poseSkillPulse(targets[0].impact, target.x, target.y, scale * 0.32, (sub - hit) / 0.45);
             const paid = round === hits - 1 && sub >= hit;
             if (isVampirism) {
                 fx.fillStyle(0x102427).fillRoundedRect(px(0.10), py(0.83), width * 0.25, 5 * unit, 2 * unit);
@@ -122,8 +121,9 @@ export function renderCampaignSkillPreview(scene, { x, y, width, height, skill, 
                     fx.fillStyle(i < round + Number(sub >= hit) ? GREEN : 0x406358)
                         .fillCircle(px(0.58 + i * 0.08), py(0.85), 2.5 * unit);
                 }
-                if (paid) drawSkillBurst(fx, dragon.x, dragonY, scale * 0.24, (sub - hit) / 0.48, GREEN);
+                poseLifeDrain(drain, target.x, target.y, dragon.x, dragonY, dragonWidth * 1.18, paid ? (sub - hit) / 0.48 : -1);
             }
+            if (isExperience) poseSkillPulse(xp, px(0.58), py(0.58), scale * 0.3, (sub - hit) / 0.48);
             note.setVisible(paid).setText(isVampirism ? '+10%' : '100 → 200 ' + xpLabel);
         }
         fx.fillStyle(color, 0.78).fillRect(x, y + height - 2 * unit, width * time, 2 * unit);
