@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.15.1
+
+- Count enemy aircraft still to come or still in play. Keep aircraft shot down as the mission record.
+- Match campaign skill unlocks to the voiced briefings after victories in missions 3, 6 and 9. Remove the briefing overlay.
+- Spawn campaign aircraft in random groups that grow by one possible aircraft every three missions.
+- Scale achievement rewards from one to ten crystals and credit the difference once for previously claimed rewards.
+
 ## 1.15.0
 
 - Show upgrade prices as groups of crystals and remove stray pixels from five aircraft frames.

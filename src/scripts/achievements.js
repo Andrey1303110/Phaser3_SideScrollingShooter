@@ -3,25 +3,25 @@ import { CAMPAIGN_SKILL_MISSIONS } from './campaignSkills';
 import { STORAGE_KEYS, TEXTURE_KEYS } from './identifiers';
 import { StorageService } from './StorageService';
 
-const series = (group, metric, goals, firstFrame) => goals.map((goal, index) => ({
-    id: `${metric}_${goal}`, group, metric, goal, frame: firstFrame + index,
+const series = (group, metric, goals, rewards, firstFrame) => goals.map((goal, index) => ({
+    id: `${metric}_${goal}`, group, metric, goal, reward: rewards[index], frame: firstFrame + index,
 }));
 const interceptions = [20, 50, 100, 500];
 const finale = CAMPAIGN_LEVELS.length;
 
 export const ACHIEVEMENTS = [
-    ...series('flight', 'level', [20, 50, 100], 0),
-    ...series('flight', 'lastBreath', [1], 3),
-    ...series('campaign', 'mission', [4, 8, 12, 14, finale], 15).map(entry => ({
+    ...series('flight', 'level', [20, 50, 100], [2, 5, 9], 0),
+    ...series('flight', 'lastBreath', [1], [4], 3),
+    ...series('campaign', 'mission', [4, 8, 12, 14, finale], [1, 3, 5, 7, 10], 15).map(entry => ({
         ...entry, frame: 15, location: entry.goal === finale ? null : entry.goal,
     })),
-    ...series('endless', 'aircraft', interceptions, 4),
-    ...series('workshop', 'branch', [CAMPAIGN_SKILL_MISSIONS.length], 8),
-    ...series('workshop', 'oneSkill', [10, 20, 40], 9),
-    ...series('workshop', 'allSkills', [10, 20, 40], 12),
-    ...series('intercepts', TEXTURE_KEYS.ROCKET, interceptions, 16),
-    ...series('intercepts', TEXTURE_KEYS.MISSILE, interceptions, 20),
-    ...series('intercepts', TEXTURE_KEYS.MISSILE_2, interceptions, 24),
+    ...series('endless', 'aircraft', interceptions, [1, 2, 4, 8], 4),
+    ...series('workshop', 'branch', [CAMPAIGN_SKILL_MISSIONS.length], [4], 8),
+    ...series('workshop', 'oneSkill', [10, 20, 40], [1, 3, 6], 9),
+    ...series('workshop', 'allSkills', [10, 20, 40], [3, 5, 9], 12),
+    ...series('intercepts', TEXTURE_KEYS.ROCKET, interceptions, [1, 2, 3, 6], 16),
+    ...series('intercepts', TEXTURE_KEYS.MISSILE, interceptions, [1, 2, 4, 7], 20),
+    ...series('intercepts', TEXTURE_KEYS.MISSILE_2, interceptions, [2, 3, 5, 8], 24),
 ];
 
 const count = value => Number.isSafeInteger(value) && value >= 0 ? value : 0;

@@ -107,8 +107,10 @@ export class AchievementsScene extends CommonScene {
         drawAchievementArt(this, root, entry, pad + size / 2, height / 2, size);
         const start = size + pad * 2;
         const available = width - start - pad;
+        const reward = this.add.text(width - pad, pad, String(entry.reward), uiText(16, UI.colors.accent)).setOrigin(1, 0);
+        root.add([reward, createCrystal(this, reward.x - reward.width - 12 * u, pad + reward.height / 2, 20 * u)]);
         const title = this.add.text(start, pad, words.names[entry.id], {
-            ...uiText(19, earned ? '#f2d392' : UI.colors.text), fontStyle: 'bold', wordWrap: { width: available },
+            ...uiText(19, earned ? '#f2d392' : UI.colors.text), fontStyle: 'bold', wordWrap: { width: available - reward.width - 30 * u },
         });
         let description = words.conditions[entry.metric].replace('{n}', entry.goal);
         if (entry.metric === 'mission') {

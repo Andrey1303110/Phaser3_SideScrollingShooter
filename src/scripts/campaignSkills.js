@@ -1,4 +1,4 @@
-export const CAMPAIGN_SKILL_MISSIONS = [4, 7, 10];
+export const CAMPAIGN_SKILL_MISSIONS = [3, 6, 9];
 
 export const BRANCH = Object.freeze({
     FIRE: 'fire',

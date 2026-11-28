@@ -190,11 +190,12 @@ export class GameScene extends CommonScene {
         }).setOrigin(1, 0).setDepth(DEPTH_LAYERS.UI);
 
         if (!this.info.isUnlim) {
-            this._remaining = this.info.enemies;
+            this._aircraftShotDown = 0;
             this._remainingLabel = this.add.text(right - 20 * u, this.scoreText.getBounds().bottom + 3 * u, '', {
                 ...uiText(15), backgroundColor: '#18302f', padding: { x: 6 * u, y: 3 * u },
             }).setOrigin(1, 0).setDepth(DEPTH_LAYERS.UI);
-            this._updateRemaining();
+            this._enemies.on(EVENTS.ENEMIES_REMAINING, this._updateRemaining, this);
+            this._updateRemaining(this._enemies.remaining);
         } else {
             const topScoreText = this._getText(TEXT_KEYS.TOP_HIGH_SCORE);
             const x = this.cameras.main.centerX;
@@ -295,8 +296,8 @@ export class GameScene extends CommonScene {
         this.scoreText.text = this._currentScore;
         if (!this.info.isUnlim) {
             if (aircraft) {
-                this._remaining--;
-                this._updateRemaining();
+                this._aircraftShotDown++;
+                this.model.recordMissionKills(this._currentLevelScene, this._aircraftShotDown);
             }
             let casualtiesName = target.texture.key;
             if (casualtiesName === ENEMIES.STRATEGIC_JET.texture) casualtiesName = ENEMIES.JET.texture;
@@ -313,9 +314,8 @@ export class GameScene extends CommonScene {
         if (this._survivalSkillTier >= 2 && aircraft) this._countVampirismKill(target.x, target.y);
     }
 
-    _updateRemaining() {
-        this._remainingLabel.setText(this._getText('REMAINING').replace('{count}', this._remaining));
-        this.model.recordMissionKills(this._currentLevelScene, this.info.enemies - this._remaining);
+    _updateRemaining(remaining) {
+        this._remainingLabel.setText(this._getText('REMAINING').replace('{count}', remaining));
     }
 
     _destroyTarget(target) {

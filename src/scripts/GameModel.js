@@ -2,7 +2,7 @@ import { STORAGE_KEYS, STORAGE_PREFIXES, TEXTURE_KEYS } from './identifiers';
 import { StorageService } from "./StorageService";
 import { CAMPAIGN_LEVELS, LEVEL_HI_SCORES_SEPARATOR, PLAYER, UPGRADE_MULTIPLIER, WEAPONS } from "./constants";
 import { CAMPAIGN_SKILL_BRANCHES, CAMPAIGN_SKILL_MISSIONS } from './campaignSkills';
-import { AchievementBook } from './achievements';
+import { ACHIEVEMENTS, AchievementBook } from './achievements';
 
 const ABILITY_PREFIX = STORAGE_PREFIXES.PLAYER_ABILITY_LEVEL_;
 const CASUALTIES_PREFIX = STORAGE_PREFIXES.CASUALTIES_;
@@ -34,6 +34,11 @@ export class GameModel {
         const balance = typeof wallet === 'number' ? wallet : wallet?.balance;
         this.money = Number.isSafeInteger(balance) && balance >= 0 ? balance : 0;
         this.claimedAchievements = new Set(Array.isArray(wallet?.claimed) ? wallet.claimed : []);
+        if (this.claimedAchievements.size && !wallet.tieredRewards) {
+            const topUp = ACHIEVEMENTS.reduce((sum, entry) =>
+                sum + (this.claimedAchievements.has(entry.id) ? entry.reward - 1 : 0), 0);
+            this.setMoney(this.money + topUp);
+        }
         this.player = { ...PLAYER };
         this.fireWeapon = { ...WEAPONS.FIRE };
         this.currentUpgradableStats = { 
@@ -95,7 +100,7 @@ export class GameModel {
     setMoney(value) {
         this.money = value;
         StorageService.set(STORAGE_KEYS.MONEY, JSON.stringify({
-            balance: this.money, claimed: [...this.claimedAchievements],
+            balance: this.money, claimed: [...this.claimedAchievements], tieredRewards: true,
         }));
     }
   
@@ -162,8 +167,10 @@ export class GameModel {
 
     claimAchievement(id) {
         if (!this.achievements.unlocked.has(id) || this.claimedAchievements.has(id)) return false;
+        const entry = ACHIEVEMENTS.find(achievement => achievement.id === id);
+        if (!entry) return false;
         this.claimedAchievements.add(id);
-        this.increaseMoney();
+        this.setMoney(this.money + entry.reward);
         return true;
     }
 

@@ -72,7 +72,7 @@
             "missile_2_100": "Strategy Shredder",
             "missile_2_500": "Grand Plan, Meet Dragon"
         },
-        "claim": "Claim 1 crystal",
+        "claim": "Claim reward",
         "claimed": "Reward claimed"
     },
     "Settings": {
@@ -192,7 +192,6 @@
         "TREE": "Skill tree",
         "AFTER_LEVEL": "After victory in mission {level}",
         "LEVEL": "Mission {level}",
-        "MISSION_RULES": "Skills unlock after victories in missions {missions}.",
         "FIRST_WINS": "After winning mission",
         "FIRE": "Attack",
         "SURVIVAL": "Defense",

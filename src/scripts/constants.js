@@ -17,6 +17,7 @@ export const SCENE_NAMES = {
 
 export const EVENTS = {     
     KILLED: 'killed',
+    ENEMIES_REMAINING: 'enemies-remaining',
     ALL_ENEMIES_KILLED: 'enemies-killed',
     UPDATE: 'update',
 }
