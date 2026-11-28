@@ -80,6 +80,7 @@ export function renderCampaignSkillPreview(scene, { x, y, width, height, skill, 
         scene.children.moveBelow(single, dragon);
         single.setScale(scale * 0.09 / single.width);
     }
+    const healLabel = scene.model.lang === TEXTURE_KEYS.UKR ? '+10\u00a0%' : '+10%';
     const fx = scene.add.graphics();
     const note = isExperience || isVampirism
         ? scene.add.text(px(0.72), py(0.36), '', uiText(15 * textScale, isExperience ? '#ffd58a' : '#96ffba')).setOrigin(0.5)
@@ -146,7 +147,7 @@ export function renderCampaignSkillPreview(scene, { x, y, width, height, skill, 
                 poseLifeDrain(drain, target.x, target.y, dragon.x, dragonY, dragonWidth * 1.18, paid ? (sub - hit) / 0.48 : -1);
             }
             if (isExperience) poseSkillPulse(xp, px(0.58), py(0.58), scale * 0.3, (sub - hit) / 0.48);
-            note.setVisible(paid).setText(isVampirism ? '+10%' : '100 → 200 ' + xpLabel);
+            note.setVisible(paid).setText(isVampirism ? healLabel : '100 → 200 ' + xpLabel);
         }
         fx.fillStyle(color, 0.78).fillRect(x, y + height - 2 * unit, width * time, 2 * unit);
     }

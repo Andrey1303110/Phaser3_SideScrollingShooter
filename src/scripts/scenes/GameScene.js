@@ -381,7 +381,7 @@ export class GameScene extends CommonScene {
         let text = this._beamTimer
             ? this._skillTexts.BEAM_TIMER.replace('{seconds}', Math.ceil(this._beamTimer.getRemaining() / 1000))
             : this._skillTexts.VAMPIRISM_COUNTER.replace('{count}', this._vampirismKills).replace('{total}', SKILLS.vampirismKills);
-        if (this._survivalSkillTier >= 3) text += '   В·   ' + this._skillTexts.XP_SHORT + ' Г—2';
+        if (this._survivalSkillTier >= 3) text += '   ·   ' + this._skillTexts.XP_SHORT + ' ×2';
         this._skillHud.setText(text);
     }
 

@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.14.1
+
+- Revise Ukrainian interface wording and campaign captions, and use «Апгрейд» consistently with the recorded introduction.
+- Fix corrupted symbols in the double-experience HUD.
+
 ## 1.14.0
 
 - Alternate a straight fireball with a pair fired 30 degrees above and below it. Update the skill preview and show which mission first benefits from each unlock.
