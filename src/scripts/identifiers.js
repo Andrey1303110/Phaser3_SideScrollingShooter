@@ -245,6 +245,7 @@ export const LANGUAGES = Object.freeze({
 });
 
 export const STORAGE_PREFIXES = Object.freeze({
+    MISSION_BEST_KILLS: "missionBestKills_",
     MISSION_REMAINING: "missionRemaining_",
     CASUALTIES_: "casualties_",
     PLAYER_ABILITY_LEVEL_: "playerAbilityLevel_",

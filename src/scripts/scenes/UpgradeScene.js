@@ -145,7 +145,8 @@ export class UpgradeScene extends CommonScene {
                 fontSize: 21 * this._interfaceScale, text: '',
                 variant: 'primary', onPress: () => this._upgrade(key),
             });
-            button.root.add(createCrystal(this, buttonWidth * 0.24, 0, Math.min(29 * u, buttonHeight * 0.55)));
+            button.crystals = this.add.container();
+            button.root.add(button.crystals);
             this.buttons[key] = button;
         });
         const areaWidth = left - screenData.left - 32 * u;
@@ -276,7 +277,7 @@ export class UpgradeScene extends CommonScene {
             this.add.graphics().fillStyle(0x1b3435, 0.95).lineStyle(u, TREE_GOLD, 0.38)
                 .fillRoundedRect(x - badge / 2, top + 24 * u, badge, 25 * u, 9 * u)
                 .strokeRoundedRect(x - badge / 2, top + 24 * u, badge, 25 * u, 9 * u);
-            this._skillLabel(x, top + 36 * u, texts.LEVEL.replace('{level}', mission + 1), badge, TREE_TEXT, 14);
+            this._skillLabel(x, top + 36 * u, texts.LEVEL.replace('{level}', mission), badge, TREE_TEXT, 14);
         });
         Object.entries(CAMPAIGN_SKILL_BRANCHES).forEach(([branch, data], row) => {
             const y = top + head + tracks * (row === 0 ? 0.25 : 0.75);
@@ -409,11 +410,26 @@ export class UpgradeScene extends CommonScene {
         for (const key of Object.keys(STATS)) {
             const level = this.model.currentUpgradableStats[key];
             const button = this.buttons[key];
-            button.cost = Math.floor(level / 10) + 1;
+            const cost = Math.floor(level / 10) + 1;
+            if (button.cost !== cost) {
+                button.crystals.removeAll(true);
+                const width = button.hitArea.width * 0.88;
+                const height = button.hitArea.height * 0.8;
+                const columns = Math.min(cost, Math.ceil(Math.sqrt(cost * width / height)));
+                const rows = Math.ceil(cost / columns);
+                const size = Math.min(width / columns, height / rows, 34 * u);
+                for (let i = 0; i < cost; i++) {
+                    const row = Math.floor(i / columns);
+                    const rowCount = Math.min(columns, cost - row * columns);
+                    const x = (i % columns - (rowCount - 1) / 2) * size;
+                    const y = (row - (rows - 1) / 2) * size;
+                    button.crystals.add(createCrystal(this, x, y, size));
+                }
+                button.cost = cost;
+            }
             button.active = !this._cooldown && this.model.money >= button.cost;
             button.clicked = this._cooldown;
-            button.setText(String(button.cost)).setEnabled(button.active);
-            button.label.setX(-6 * u);
+            button.setEnabled(button.active);
             this.statsText[key].setText(this._value(key) + ' · ' + this._getText(TEXT_KEYS.LEVEL_TEXT).trim() + ' ' + level);
         }
     }

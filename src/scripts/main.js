@@ -20,6 +20,7 @@ export const config = {
     input: {
 		activePointers: 5,
 	},
+    callbacks: { postBoot: () => queueMicrotask(updateOrientation) },
     physics: {
         default: 'arcade',
         arcade: {
@@ -33,9 +34,35 @@ export const config = {
         mode: Phaser.Scale.ENVELOP,
         autoCenter: Phaser.Scale.CENTER_BOTH,
         parent: 'gameDiv',
+        fullscreenTarget: document.body,
     },
 
     scene: [BootScene, DisclaimerScene, SetLanguageScene, PreloadScene, GameTypeSelect, CampaignScene, GameScene, PauseScene, UpgradeScene, InfoScene, SettingsScene, AchievementsScene, AchievementNotice],
 };
 
-export const game = new Phaser.Game(config);
+const portrait = window.matchMedia('(orientation: portrait)');
+export let game;
+let suspended = false;
+let pausedSounds = [];
+
+function updateOrientation() {
+    if (portrait.matches) {
+        if (game?.isRunning && !suspended) {
+            game.pause();
+            suspended = true;
+            game.input.enabled = false;
+            pausedSounds = game.sound.sounds.filter(sound => sound.isPlaying && sound.pause());
+        }
+    } else if (!game) {
+        game = new Phaser.Game(config);
+    } else if (suspended) {
+        game.input.enabled = true;
+        game.resume();
+        pausedSounds.forEach(sound => { if (sound.isPaused) sound.resume(); });
+        pausedSounds = [];
+        suspended = false;
+    }
+}
+
+portrait.addEventListener('change', updateOrientation);
+updateOrientation();

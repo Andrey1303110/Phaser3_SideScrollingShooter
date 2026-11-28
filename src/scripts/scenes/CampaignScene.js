@@ -197,9 +197,9 @@ export class CampaignScene extends CommonScene {
         }
         addLine(this._getText(!available ? TEXT_KEYS.LOCKED_HINT : completed ? TEXT_KEYS.LIBERATED : TEXT_KEYS.CURRENT)
             .replace('{level}', level.index - 1), available ? '#e4c990' : '#b5c7bd');
-        const remaining = this.model.getMissionRemaining(level.index);
-        if (remaining !== null) {
-            addLine(this._getText('LAST_REMAINING').replace('{count}', remaining).replace('{total}', level.enemies), '#f0d7a7');
+        if (available) {
+            const best = this.model.getMissionBestKills(level.index);
+            addLine(this._getText('BEST_KILLS').replace('{count}', best).replace('{total}', level.enemies), '#f0d7a7');
         }
         const types = Object.values(ENEMIES).filter(enemy => enemy.entryLevel <= level.index)
             .map(enemy => this._getText(TEXT_KEYS.TYPE_ + enemy.texture.toUpperCase()));

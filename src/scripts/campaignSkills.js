@@ -1,4 +1,4 @@
-export const CAMPAIGN_SKILL_MISSIONS = [3, 6, 9];
+export const CAMPAIGN_SKILL_MISSIONS = [4, 7, 10];
 
 export const BRANCH = Object.freeze({
     FIRE: 'fire',
@@ -12,7 +12,7 @@ export const CAMPAIGN_SKILL_BRANCHES = {
 
 export const CAMPAIGN_SKILL_BALANCE = {
     doubleFireScale: 0.75,
-    doubleFireAngle: Math.PI / 6,
+    doubleFireAngle: Math.PI / 9,
     piercingTargets: 2,
     beamIntervalMs: 10000,
     beamWidth: 20,

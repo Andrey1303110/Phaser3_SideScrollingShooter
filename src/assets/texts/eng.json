@@ -116,7 +116,7 @@
         "CONTROLS_BODY": "Drag the left joystick to move; hold the fire button on the right. You can move and shoot at the same time with two fingers. Play in landscape orientation.\n\nEnable auto-fire in Settings to shoot after every reload without holding the button. You can also adjust the opacity of the joystick and fire button separately.\n\nTap the pause icon to pause, resume, restart or leave a level. The arrow button skips the current dialogue line.",
         "MODES_TAB": "Modes",
         "MODES_TITLE": "Campaign or endless survival",
-        "MODES_BODY": "Campaign: survive waves across {levels} locations. Completing a mission unlocks the next one; completed missions can be replayed.\n\nSurvival: an endless stream of enemies. Stay alive and beat your high score. This mode does not grant campaign experience.\n\nFire destroys aircraft and intercepts missiles. Missiles drain health; colliding with an aircraft is fatal. A new attempt starts at full health.",
+        "MODES_BODY": "Campaign: survive waves across {levels} locations. Completing a mission unlocks the next one; completed missions can be replayed.\n\nSurvival: an endless stream of enemies. Stay alive and beat your high score. Both skill branches and your purchased upgrades are active. Targets grant double experience.\n\nFire destroys aircraft and intercepts missiles. Missiles drain health; colliding with an aircraft is fatal. A new attempt starts at full health.",
         "UPGRADES_TAB": "Progress",
         "UPGRADES_TITLE": "Turn points into upgrades",
         "UPGRADES_BODY": "Destroy aircraft and missiles to score points. In the campaign, points also grant experience: each new player level gives one crystal.\n\nSpend crystals in Upgrade to increase health, fire speed or fire size, or to reduce reload time by {percent}% per upgrade. Fire speed means projectile speed, not movement speed. Your dragon matures each time all four upgrades reach another five levels.\n\nProgress, upgrades and records are saved locally on this device. Clearing the app data removes the save."
@@ -170,7 +170,7 @@
         "LEVEL_14_NAME": "Luhansk",
         "LEVEL_15_NAME": "Sevastopol Balaklava",
         "INTRO_BRIEFING": "Introduction",
-        "LAST_REMAINING": "Last sortie · enemies left: {count}/{total}"
+        "BEST_KILLS": "Best: {count}/{total} aircraft downed"
     },
     "GameScene": {
         "TOP_HIGH_SCORE": "High score:",
@@ -192,13 +192,14 @@
         "TREE": "Skill tree",
         "AFTER_LEVEL": "After victory in mission {level}",
         "LEVEL": "Mission {level}",
-        "FIRST_WINS": "Available from mission",
+        "MISSION_RULES": "Skills unlock after victories in missions {missions}.",
+        "FIRST_WINS": "After winning mission",
         "FIRE": "Attack",
         "SURVIVAL": "Defense",
         "PREVIEW": "Preview",
         "XP_SHORT": "XP",
         "DOUBLE_FIRE": "Double fire",
-        "DOUBLE_FIRE_DETAIL": "Alternates a straight fireball with two smaller shots at ±30°",
+        "DOUBLE_FIRE_DETAIL": "Alternates a straight fireball with two smaller shots at ±20°",
         "DOUBLE_PIERCE": "Double pierce",
         "DOUBLE_PIERCE_DETAIL": "Each fireball can hit up to two targets, including missiles",
         "DOUBLE_PIERCE_SHORT": "Double pierce",
@@ -210,7 +211,7 @@
         "VAMPIRISM": "Life steal",
         "VAMPIRISM_DETAIL": "Every four aircraft destroyed restore 10% of maximum health",
         "DOUBLE_XP": "Double XP",
-        "DOUBLE_XP_DETAIL": "Doubles experience earned from targets in the campaign",
+        "DOUBLE_XP_DETAIL": "Doubles experience earned from targets",
         "CHOOSE_BRANCH": "Choose {branch}",
         "CHOICE_AVAILABLE": "Choose a branch",
         "CHOOSE_HEADER": "Choose {branch}?",

@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.15.0
+
+- Show upgrade prices as groups of crystals and remove stray pixels from five aircraft frames.
+- Require landscape orientation to start or play. Show a rotation prompt in portrait and resume when the device turns back.
+- Unlock campaign skills after winning missions 4, 7 and 10. Show the thresholds in the skill tree, on mission cards and alongside the original briefing audio.
+- Narrow the alternating double shot to 20 degrees on either side of the straight shot.
+- Enable both skill branches, double experience and purchased stat upgrades in survival.
+- Track the best number of aircraft downed per mission, including the last recorded sortie from older saves.
+
 ## 1.14.1
 
 - Revise Ukrainian interface wording and campaign captions, and use «Апгрейд» consistently with the recorded introduction.

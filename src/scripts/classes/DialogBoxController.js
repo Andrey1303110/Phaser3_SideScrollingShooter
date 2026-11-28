@@ -3,7 +3,9 @@ import { resourceKey } from '../identifiers';
 import { DialogBox } from './DialogBox';
 import { config } from '../main';
 import { DEPTH_LAYERS } from '../constants';
-import { delayInMSec, tweenPromise } from '../Utils';
+import { CAMPAIGN_SKILL_MISSIONS } from '../campaignSkills';
+import { uiText, uiUnit } from '../ui';
+import { delayInMSec, tweenPromise, screenData, getSceneTexts } from '../Utils';
 
 const MIN_SHOW_DURATION = TIMING.DIALOG_BOX_CONTROLLER.DEFAULT_MIN_SHOW_DURATION_MS;
 const READING_MS_PER_CHARACTER = TIMING.DIALOG_BOX_CONTROLLER.DEFAULT_READING_MS_PER_CHARACTER_MS;
@@ -33,7 +35,10 @@ export class DialogBoxController {
             const isLast = i === dialogsCount-1;
             const dialogData = this._data[i];
             const dialogBox = new DialogBox(this._scene, dialogData);
+            const mentionsUnlock = ({ 0: 7, 3: 2, 6: 1, 9: 0 })[level] === i;
+            const rule = mentionsUnlock ? this._showUnlockRule() : null;
             await this._playShowingDialog(dialogBox, level, i, dialogData.text);
+            rule?.destroy();
 
             if (isLast) {
                 await delayInMSec(this._scene, SHOW_DELAY);
@@ -41,6 +46,15 @@ export class DialogBoxController {
         }
 
         await this._toggleShowingBg(false);
+    }
+
+    _showUnlockRule() {
+        const u = uiUnit();
+        const text = getSceneTexts(this._scene, 'Skills').MISSION_RULES.replace('{missions}', CAMPAIGN_SKILL_MISSIONS.join(' / '));
+        return this._scene.add.text(screenData.left + screenData.width / 2, screenData.top + 6 * u, text, {
+            ...uiText(15, '#ffe3a9'), align: 'center', backgroundColor: '#18302f',
+            padding: { x: 8 * u, y: 4 * u }, wordWrap: { width: screenData.width - 32 * u },
+        }).setOrigin(0.5, 0).setDepth(DEPTH_LAYERS.DIALOGUES);
     }
 
     async _toggleShowingBg(value) {

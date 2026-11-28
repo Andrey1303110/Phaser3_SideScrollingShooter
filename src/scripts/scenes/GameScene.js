@@ -31,10 +31,10 @@ export class GameScene extends CommonScene {
         this._roundEnding = false;
         this.debugFPSText = null;
         this._offerBranch = false;
-        const branch = this.info.isUnlim ? '' : this.model.campaignSkillBranch;
-        const tier = this.model.campaignSkillTier;
-        this.fireSkillTier = branch === BRANCH.FIRE ? tier : 0;
-        this._survivalSkillTier = branch === BRANCH.SURVIVAL ? tier : 0;
+        const branch = this.model.campaignSkillBranch;
+        const tier = this.info.isUnlim ? CAMPAIGN_SKILL_MISSIONS.length : this.model.campaignSkillTier;
+        this.fireSkillTier = this.info.isUnlim || branch === BRANCH.FIRE ? tier : 0;
+        this._survivalSkillTier = this.info.isUnlim || branch === BRANCH.SURVIVAL ? tier : 0;
         this._vampirismKills = 0;
         this._shield = null;
         this._beamTimer = null;
@@ -198,15 +198,15 @@ export class GameScene extends CommonScene {
         } else {
             const topScoreText = this._getText(TEXT_KEYS.TOP_HIGH_SCORE);
             const x = this.cameras.main.centerX;
-            this.hiScoreText = this.add.text(x, top + 20 * u,
+            this.hiScoreText = this.add.text(x, top + 59 * u,
                 `${topScoreText} ${this.model.unlimHiScores}`, {
                     ...uiText(UI.type.section), fontStyle: 'bold',
                 }).setOrigin(0.5, 0).setDepth(DEPTH_LAYERS.UI + 0.01);
             this._hiScoreBackground = this.add.graphics().setDepth(DEPTH_LAYERS.UI);
             this._hiScoreBackground.fillStyle(UI.colors.panel, 0.96).lineStyle(u, UI.colors.border)
-                .fillRoundedRect(x - this.hiScoreText.width / 2 - 12 * u, top + 12 * u,
+                .fillRoundedRect(x - this.hiScoreText.width / 2 - 12 * u, top + 51 * u,
                     this.hiScoreText.width + 24 * u, this.hiScoreText.height + 16 * u, UI.radius * u)
-                .strokeRoundedRect(x - this.hiScoreText.width / 2 - 12 * u, top + 12 * u,
+                .strokeRoundedRect(x - this.hiScoreText.width / 2 - 12 * u, top + 51 * u,
                     this.hiScoreText.width + 24 * u, this.hiScoreText.height + 16 * u, UI.radius * u);
         }
     }
@@ -214,7 +214,7 @@ export class GameScene extends CommonScene {
     _createFPSDebugText() {
         if (!this.model.showFPS) return;
         const u = uiUnit();
-        this.debugFPSText = this.add.text(this.cameras.main.centerX, screenData.top + 56 * u, '', {
+        this.debugFPSText = this.add.text(this.cameras.main.centerX, screenData.top + (this.info.isUnlim ? 98 : 56) * u, '', {
             ...uiText(UI.type.caption), backgroundColor: '#203a38',
             padding: { x: 8 * u, y: 4 * u },
         }).setOrigin(0.5, 0).setDepth(DEPTH_LAYERS.UI + 0.01);
@@ -288,36 +288,37 @@ export class GameScene extends CommonScene {
     }
 
     _onTargetHit(target) {
-        this.model.achievements.recordHit(target.texture.key, this._enemies.contains(target), this.info.isUnlim);
+        const aircraft = this._enemies.contains(target);
+        this.model.achievements.recordHit(target.texture.key, aircraft, this.info.isUnlim);
         const reward = Number((target.reward * Math.pow(LEVEL_SCORE_MULTIPLIER, this._currentLevelScene - 1)).toFixed(0));
         this._currentScore += reward;
         this.scoreText.text = this._currentScore;
         if (!this.info.isUnlim) {
+            if (aircraft) {
+                this._remaining--;
+                this._updateRemaining();
+            }
             let casualtiesName = target.texture.key;
             if (casualtiesName === ENEMIES.STRATEGIC_JET.texture) casualtiesName = ENEMIES.JET.texture;
             if (casualtiesName === WEAPONS.MISSILE_2.texture) casualtiesName = WEAPONS.MISSILE.texture;
             this.model.increaseCasualties(casualtiesName);
-            this.model.addTotalScore(reward, this._survivalSkillTier >= 3 ? SKILLS.experienceMultiplier : 1);
-            this._updateExpProgressBar();
-            if (this._survivalSkillTier >= 3 && !this._xpPulse?.active) {
-                const bar = this._progressExpBar;
-                this._xpPulse = playSkillPulse(this, 'xp', bar.x + bar.displayWidth * 0.58, bar.y + 3 * uiUnit(),
-                    34 * uiUnit(), 520, DEPTH_LAYERS.UI);
-            }
         }
-        if (this._survivalSkillTier >= 2 && this._enemies.contains(target)) this._countVampirismKill(target.x, target.y);
+        this.model.addTotalScore(reward, this._survivalSkillTier >= 3 ? SKILLS.experienceMultiplier : 1);
+        this._updateExpProgressBar();
+        if (this._survivalSkillTier >= 3 && !this._xpPulse?.active) {
+            const bar = this._progressExpBar;
+            this._xpPulse = playSkillPulse(this, 'xp', bar.x + bar.displayWidth * 0.58, bar.y + 3 * uiUnit(),
+                34 * uiUnit(), 520, DEPTH_LAYERS.UI);
+        }
+        if (this._survivalSkillTier >= 2 && aircraft) this._countVampirismKill(target.x, target.y);
     }
 
     _updateRemaining() {
         this._remainingLabel.setText(this._getText('REMAINING').replace('{count}', this._remaining));
-        this.model.saveMissionRemaining(this._currentLevelScene, this._remaining);
+        this.model.recordMissionKills(this._currentLevelScene, this.info.enemies - this._remaining);
     }
 
     _destroyTarget(target) {
-        if (!this.info.isUnlim && this._enemies.contains(target)) {
-            this._remaining--;
-            this._updateRemaining();
-        }
         const { x, y } = target;
         Boom.generate(this, x, y);
         target.setAlive(false);
@@ -378,11 +379,11 @@ export class GameScene extends CommonScene {
     _updateCampaignSkillHud() {
         this._shield?.setPosition(this._player.x, this._player.y);
         if (!this._skillHud) return;
-        let text = this._beamTimer
-            ? this._skillTexts.BEAM_TIMER.replace('{seconds}', Math.ceil(this._beamTimer.getRemaining() / 1000))
-            : this._skillTexts.VAMPIRISM_COUNTER.replace('{count}', this._vampirismKills).replace('{total}', SKILLS.vampirismKills);
-        if (this._survivalSkillTier >= 3) text += '   ·   ' + this._skillTexts.XP_SHORT + ' ×2';
-        this._skillHud.setText(text);
+        const labels = [];
+        if (this._beamTimer) labels.push(this._skillTexts.BEAM_TIMER.replace('{seconds}', Math.ceil(this._beamTimer.getRemaining() / 1000)));
+        if (this._survivalSkillTier >= 2) labels.push(this._skillTexts.VAMPIRISM_COUNTER.replace('{count}', this._vampirismKills).replace('{total}', SKILLS.vampirismKills));
+        if (this._survivalSkillTier >= 3) labels.push(this._skillTexts.XP_SHORT + ' ×2');
+        this._skillHud.setText(labels.join('   ·   '));
     }
 
     _countVampirismKill(fromX = this._player.x, fromY = this._player.y) {
@@ -549,10 +550,6 @@ export class GameScene extends CommonScene {
     }
 
     _createExpProgressBar(){
-        if (this.info?.isUnlim) {
-            return;
-        }
-
         const u = uiUnit();
         this._progressExpBar = this.add.image(this.scene.scene.cameras.main.midPoint.x, screenData.top + 32 * u, TEXTURE_KEYS.PROGRESS_BAR)
             .setDisplaySize(192 * u, 45 * u)
@@ -569,10 +566,6 @@ export class GameScene extends CommonScene {
     }
 
     _updateExpProgressBar(){
-        if (this.info?.isUnlim) {
-            return;
-        }
-
         let score = this._calculateScore();
         const experience = this.model.campaignExperience;
         let currentProgress = (experience - score.start) / score.diff;

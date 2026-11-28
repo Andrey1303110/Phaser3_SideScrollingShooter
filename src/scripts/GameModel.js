@@ -167,13 +167,18 @@ export class GameModel {
         return true;
     }
 
-    getMissionRemaining(level) {
-        const saved = StorageService.get(STORAGE_PREFIXES.MISSION_REMAINING + level, null, Number);
-        return Number.isInteger(saved) && saved >= 0 && saved <= CAMPAIGN_LEVELS[level - 1].enemies ? saved : null;
+    getMissionBestKills(level) {
+        const total = CAMPAIGN_LEVELS[level - 1].enemies;
+        const best = StorageService.get(STORAGE_PREFIXES.MISSION_BEST_KILLS + level, null, Number);
+        if (Number.isInteger(best) && best >= 0 && best <= total) return best;
+        const remaining = StorageService.get(STORAGE_PREFIXES.MISSION_REMAINING + level, null, Number);
+        return Number.isInteger(remaining) && remaining >= 0 && remaining <= total ? total - remaining : 0;
     }
 
-    saveMissionRemaining(level, remaining) {
-        StorageService.set(STORAGE_PREFIXES.MISSION_REMAINING + level, remaining);
+    recordMissionKills(level, kills) {
+        if (kills > this.getMissionBestKills(level)) {
+            StorageService.set(STORAGE_PREFIXES.MISSION_BEST_KILLS + level, kills);
+        }
     }
 
     initSceneLevel() {
@@ -239,7 +244,10 @@ export class GameModel {
         StorageService.set(STORAGE_KEYS.CAMPAIGN_EXPERIENCE_BONUS, 0);
         this.claimedAchievements.clear();
         this.initMoney();
-        for (const level of CAMPAIGN_LEVELS) StorageService.remove(STORAGE_PREFIXES.MISSION_REMAINING + level.index);
+        for (const level of CAMPAIGN_LEVELS) {
+            StorageService.remove(STORAGE_PREFIXES.MISSION_REMAINING + level.index);
+            StorageService.remove(STORAGE_PREFIXES.MISSION_BEST_KILLS + level.index);
+        }
         this.initHiScores();
         this.initCasualties();
         this.initUpgradeLevels();
